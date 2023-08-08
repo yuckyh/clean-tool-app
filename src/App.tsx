@@ -3,7 +3,6 @@ import { FluentProvider } from '@fluentui/react-components'
 import { webLightTheme, webDarkTheme } from '@fluentui/react-components'
 import type { Theme } from '@fluentui/react-components'
 import ApplyToBody from './components/ApplyToBody'
-import 'modern-normalize'
 import './App.css'
 
 const appTheme: Theme = window.matchMedia('(prefers-color-scheme: dark)')
