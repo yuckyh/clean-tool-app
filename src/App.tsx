@@ -6,15 +6,20 @@ import ApplyToBody from './components/ApplyToBody'
 import 'modern-normalize'
 import './App.css'
 
-const appTheme: Theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? webDarkTheme : webLightTheme
+const appTheme: Theme = window.matchMedia('(prefers-color-scheme: dark)')
+  .matches
+  ? webDarkTheme
+  : webLightTheme
 
 const App = () => {
-  return <StrictMode>
-    <FluentProvider theme={appTheme}>
-      <ApplyToBody />
-      bruh
-    </FluentProvider>
-  </StrictMode>
+  return (
+    <StrictMode>
+      <FluentProvider theme={appTheme}>
+        <ApplyToBody />
+        bruh
+      </FluentProvider>
+    </StrictMode>
+  )
 }
 
 export default App
