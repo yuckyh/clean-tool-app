@@ -7,12 +7,11 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview"
+    "preview": "vite preview --mode development"
   },
   "dependencies": {
     "@fluentui/react-components": "^9.27.4",
     "@tauri-apps/api": "^1.4.0",
-    "modern-normalize": "^2.0.0",
     "plotly.js": "^2.25.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -29,13 +28,16 @@
     "@typescript-eslint/parser": "^6.0.0",
     "@vitejs/plugin-legacy": "^4.1.1",
     "@vitejs/plugin-react-swc": "^3.3.2",
+    "autoprefixer": "^10.4.14",
     "eslint": "^8.45.0",
     "eslint-config-prettier": "^9.0.0",
     "eslint-plugin-prettier": "^5.0.0",
     "eslint-plugin-react": "^7.33.1",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.3",
+    "postcss": "^8.4.27",
     "prettier": "^3.0.1",
+    "prettier-plugin-tailwindcss": "^0.4.1",
     "tailwindcss": "^3.3.3",
     "terser": "^5.19.2",
     "typescript": "^5.0.2",
@@ -53,8 +55,62 @@
   },
   "license": "AGPL-3.0-or-later",
   "packageManager": "yarn@3.6.1",
-  "peerDependencies": {
-    "prettier": "*",
-    "terser": "*"
+  "eslintConfig": {
+    "root": true,
+    "env": {
+      "browser": true,
+      "es2020": true
+    },
+    "extends": [
+      "eslint:recommended",
+      "plugin:@typescript-eslint/stylistic-type-checked",
+      "plugin:react/jsx-runtime",
+      "plugin:react-hooks/recommended",
+      "plugin:prettier/recommended"
+    ],
+    "ignorePatterns": [
+      "dist",
+      ".eslintrc.cjs"
+    ],
+    "parser": "@typescript-eslint/parser",
+    "parserOptions": {
+      "ecmaVersion": "latest",
+      "sourceType": "module",
+      "project": [
+        "./tsconfig.json",
+        "./src/tsconfig.json"
+      ],
+      "tsconfigRootDir": ".",
+      "ecmaFeatures": {
+        "jsx": true
+      }
+    },
+    "settings": {
+      "react": {
+        "version": "detect"
+      }
+    },
+    "plugins": [
+      "react-refresh",
+      "prettier"
+    ],
+    "rules": {
+      "react-refresh/only-export-components": [
+        "warn",
+        {
+          "allowConstantExport": true
+        }
+      ],
+      "prettier/prettier": ["error"]
+    },
+    "prettier": {
+      "singleQuote": true,
+      "trailingComma": "all",
+      "semi": false,
+      "plugins": [
+        "prettier-plugin-tailwindcss"
+      ],
+      "tailwindConfig": "./tailwind.config.ts"
+    }
   }
 }
