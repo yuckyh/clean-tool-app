@@ -2,15 +2,23 @@ import { defineConfig } from 'vite'
 import { env } from 'process'
 import react from '@vitejs/plugin-react-swc'
 import { VitePWA } from 'vite-plugin-pwa'
+import manifest from './manifest.json'
 
 export default defineConfig({
   plugins: [
     react(),
     VitePWA({
       registerType: 'autoUpdate',
+      injectRegister: 'auto',
       devOptions: {
         enabled: true,
       },
+      workbox: {
+        cleanupOutdatedCaches: false,
+        sourcemap: !!env.TAURI_DEBUG,
+        globPatterns: ['**/*.{js,css,html,ico,png,svg}']
+      },
+      manifest,
     }),
   ],
   // prevent vite from obscuring rust errors
