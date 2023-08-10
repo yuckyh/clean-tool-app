@@ -2,6 +2,8 @@ import { defineConfig } from 'vite'
 import { env } from 'process'
 import react from '@vitejs/plugin-react-swc'
 import { VitePWA } from 'vite-plugin-pwa'
+import lightningcss from 'vite-plugin-lightningcss'
+
 import manifest from './manifest.json'
 
 export default defineConfig({
@@ -19,6 +21,11 @@ export default defineConfig({
         globPatterns: ['**/*.{js,css,html,ico,png,svg}']
       },
       manifest,
+    }),
+    lightningcss({
+      browserslist: "last 2 versions",
+      sourceMap: env.NODE_ENV === 'development',
+      minify: env.NODE_ENV === 'production',
     }),
   ],
   // prevent vite from obscuring rust errors
