@@ -3,11 +3,21 @@
     "composite": true,
     "skipLibCheck": true,
     "module": "ESNext",
+
+    /* Bundler mode */
     "forceConsistentCasingInFileNames": true,
     "moduleResolution": "Node",
-    "strict": true,
-    "allowSyntheticDefaultImports": true,
     "resolveJsonModule": true,
+    "allowSyntheticDefaultImports": true,
+
+    /* Linting */
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "allowUnreachableCode": false,
+    "allowUnusedLabels": false,
+    "noFallthroughCasesInSwitch": true,
+    "noUncheckedIndexedAccess": true
   },
-  "include": ["*.config.ts", "manifest.json"],
+  "include": ["*.config.ts", "manifest.json"]
 }

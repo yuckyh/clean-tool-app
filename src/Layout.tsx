@@ -1,17 +1,20 @@
-import { Card, TabList } from "@fluentui/react-components";
-import { Link } from "react-router-dom";
+import { TabList } from '@fluentui/react-components'
+import { Link, Outlet } from 'react-router-dom'
 
 const Layout = () => {
-    return (
-        <main className="grid-cols-3">
-            <TabList>
-                {/* <Link to="/">Test</Link> */}
-            </TabList>
-            {/* <div className="container"> */}
-            <Card></Card>
-            {/* </div> */}
-        </main>
-    )
+  return (
+    <>
+      <aside>
+        <TabList>
+          <Link to="/">Test</Link>
+        </TabList>
+      </aside>
+      <main className="grid-cols-3">
+        <Outlet />
+      </main>
+      <aside></aside>
+    </>
+  )
 }
 
-export default Layout;
+export default Layout

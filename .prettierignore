@@ -1,3 +1,4 @@
 # Ignore artifacts:
 dev-dist
 dist
+pnpm-lock.yaml
