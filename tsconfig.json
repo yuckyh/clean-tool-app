@@ -9,5 +9,5 @@
     "allowSyntheticDefaultImports": true,
     "resolveJsonModule": true,
   },
-  "include": ["*.config.ts", "manifest.json", "postcss.config.js"],
+  "include": ["*.config.ts", "manifest.json"],
 }
