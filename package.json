@@ -10,7 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@fluentui/react-components": "^9.27.4",
+    "@fluentui/react-components": "^9.28.0",
     "@tauri-apps/api": "^1.4.0",
     "plotly.js": "^2.25.1",
     "react": "^18.2.0",
@@ -23,17 +23,17 @@
   },
   "devDependencies": {
     "@tauri-apps/cli": "^1.4.0",
-    "@types/node": "^20.4.8",
+    "@types/eslint": "^8.44.2",
     "@types/plotly.js": "^2.12.26",
-    "@types/react": "^18.2.15",
+    "@types/react": "^18.2.20",
     "@types/react-dom": "^18.2.7",
-    "@types/react-helmet": "^6.1.6",
-    "@typescript-eslint/eslint-plugin": "^6.0.0",
-    "@typescript-eslint/parser": "^6.0.0",
+    "@types/scheduler": "^0.16.3",
+    "@typescript-eslint/eslint-plugin": "^6.3.0",
+    "@typescript-eslint/parser": "^6.3.0",
     "@vitejs/plugin-legacy": "^4.1.1",
     "@vitejs/plugin-react-swc": "^3.3.2",
     "autoprefixer": "^10.4.14",
-    "eslint": "^8.45.0",
+    "eslint": "^8.46.0",
     "eslint-config-prettier": "^9.0.0",
     "eslint-plugin-prettier": "^5.0.0",
     "eslint-plugin-react": "^7.33.1",
@@ -42,10 +42,11 @@
     "postcss": "^8.4.27",
     "prettier": "^3.0.1",
     "prettier-plugin-tailwindcss": "^0.4.1",
+    "supports-color": "^9.4.0",
     "tailwindcss": "^3.3.3",
     "terser": "^5.19.2",
-    "typescript": "^5.0.2",
-    "vite": "^4.4.5",
+    "typescript": "^5.1.6",
+    "vite": "^4.4.9",
     "vite-plugin-pwa": "^0.16.4"
   },
   "description": "A clean tool app for Essilor",
@@ -58,7 +59,6 @@
     "email": "yucky.hito@essilor.com.sg"
   },
   "license": "AGPL-3.0-or-later",
-  "packageManager": "yarn@3.6.1",
   "eslintConfig": {
     "root": true,
     "env": {
@@ -118,5 +118,12 @@
       ],
       "tailwindConfig": "./tailwind.config.ts"
     }
-  }
+  },
+  "postcss": {
+    "plugins": {
+      "tailwindcss": {},
+      "autoprefixer": {}
+    }
+  },
+  "packageManager": "yarn@3.6.1"
 }
