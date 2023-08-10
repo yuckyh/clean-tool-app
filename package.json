@@ -18,7 +18,8 @@
     "react-helmet": "^6.1.0",
     "react-plotly.js": "^2.6.0",
     "react-router-dom": "^6.14.2",
-    "scheduler": "^0.20.0"
+    "scheduler": "^0.20.0",
+    "vite-plugin-lightningcss": "^0.0.5"
   },
   "devDependencies": {
     "@tauri-apps/cli": "^1.4.0",
