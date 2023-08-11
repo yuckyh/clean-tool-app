@@ -2,14 +2,14 @@ import { Title1 } from '@fluentui/react-components'
 import { Helmet } from 'react-helmet'
 import { Outlet } from 'react-router-dom'
 
-const EDA = () => (
+const Explorer = () => (
   <>
     <Helmet>
-      <title>CLEaN Tool - EDA</title>
+      <title>CLEaN Tool - {import.meta.url}</title>
     </Helmet>
-    <Title1>EDA</Title1>
+    <section></section>
     <Outlet />
   </>
 )
 
-export default EDA
+export default Explorer
