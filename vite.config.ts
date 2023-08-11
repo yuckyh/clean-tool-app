@@ -1,5 +1,6 @@
 import { defineConfig, loadEnv } from 'vite'
 import react from '@vitejs/plugin-react-swc'
+import basicSsl from '@vitejs/plugin-basic-ssl'
 import { VitePWA } from 'vite-plugin-pwa'
 import lightningcss from 'vite-plugin-lightningcss'
 import { resolve } from 'path'
@@ -33,6 +34,7 @@ export default defineConfig(({ mode }) => {
         sourceMap: env.NODE_ENV === 'development',
         minify: env.NODE_ENV === 'production',
       }),
+      basicSsl(),
     ],
     // prevent vite from obscuring rust errors
     clearScreen: false,
@@ -40,6 +42,7 @@ export default defineConfig(({ mode }) => {
     server: {
       strictPort: true,
       cors: false,
+      https: true,
     },
     esbuild: {
       jsxInject: `import React from 'react'`,
@@ -57,9 +60,9 @@ export default defineConfig(({ mode }) => {
       sourcemap: !!env.TAURI_DEBUG,
       cssMinify: env.TAURI_DEBUG ? false : 'lightningcss',
     },
-    css: {
-      transformer: 'lightningcss',
-    },
+    // css: {
+    //   transformer: 'lightningcss',
+    // },
     resolve: {
       alias: {
         '@': resolve(__dirname, 'src'),
