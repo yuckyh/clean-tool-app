@@ -20,6 +20,7 @@ const App = () => (
       <RouterProvider
         router={router}
         fallbackElement={<Spinner appearance="primary" size="large" />}
+        future={{ v7_startTransition: true }}
       />
     </FluentProvider>
   </StrictMode>
