@@ -65,8 +65,7 @@
       "plugin:prettier/recommended"
     ],
     "ignorePatterns": [
-      "dist",
-      ".eslintrc.cjs"
+      "dist"
     ],
     "parser": "@typescript-eslint/parser",
     "parserOptions": {
