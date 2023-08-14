@@ -1,5 +1,10 @@
 {
   "name": "clean-tool-app",
+  "webManifest": {
+    "name": "CLEaN Tool App",
+    "short_name": "CleanToolApp",
+    "description": "A clean tool app for Essilor"
+  },
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -10,7 +15,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@fluentui/react-components": "^9.28.0",
+    "@fluentui/react-components": "^9.28.1",
     "@tauri-apps/api": "^1.4.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -20,6 +25,7 @@
     "tailwindcss": "^3.3.3"
   },
   "devDependencies": {
+    "@tailwindcss/container-queries": "^0.1.1",
     "@tauri-apps/cli": "^1.4.0",
     "@types/react": "^18.2.20",
     "@types/react-dom": "^18.2.7",
@@ -28,18 +34,24 @@
     "@typescript-eslint/parser": "^6.3.0",
     "@vitejs/plugin-basic-ssl": "^1.0.1",
     "@vitejs/plugin-react-swc": "^3.3.2",
-    "eslint": "^8.46.0",
+    "autoprefixer": "^10.4.15",
+    "eslint": "^8.47.0",
     "eslint-config-prettier": "^9.0.0",
     "eslint-plugin-prettier": "^5.0.0",
     "eslint-plugin-react": "^7.33.1",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.3",
+    "lightningcss": "^1.21.5",
     "prettier": "^3.0.1",
-    "prettier-plugin-tailwindcss": "^0.4.1",
+    "prettier-plugin-tailwindcss": "^0.5.2",
     "typescript": "^5.1.6",
     "vite": "^4.4.9",
-    "vite-plugin-lightningcss": "^0.0.5",
-    "vite-plugin-pwa": "^0.16.4"
+    "vite-plugin-pwa": "^0.16.4",
+    "workbox-window": "^7.0.0"
+  },
+  "engines": {
+    "node": ">=18",
+    "pnpm": ">=8"
   },
   "description": "A clean tool app for Essilor",
   "repository": {
@@ -72,10 +84,9 @@
       "ecmaVersion": "latest",
       "sourceType": "module",
       "project": [
-        "./tsconfig.json",
-        "./src/tsconfig.json"
+        "tsconfig.json"
       ],
-      "tsconfigRootDir": ".",
+      "tsconfigRootDir": "src",
       "ecmaFeatures": {
         "jsx": true
       }
@@ -100,6 +111,7 @@
   },
   "postcss": {
     "plugins": {
+      "autoprefixer": {},
       "tailwindcss": {}
     }
   },

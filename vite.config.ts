@@ -2,10 +2,9 @@ import { defineConfig, loadEnv } from 'vite'
 import react from '@vitejs/plugin-react-swc'
 import basicSsl from '@vitejs/plugin-basic-ssl'
 import { VitePWA } from 'vite-plugin-pwa'
-import lightningcss from 'vite-plugin-lightningcss'
 import { resolve } from 'path'
 
-import manifest from './manifest.json'
+import { webManifest } from './package.json'
 
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd())
@@ -27,12 +26,7 @@ export default defineConfig(({ mode }) => {
           sourcemap: !!env.TAURI_DEBUG,
           globPatterns: ['**/*.{js,css,html,ico,png,svg}'],
         },
-        manifest,
-      }),
-      lightningcss({
-        browserslist: 'last 2 versions',
-        sourceMap: env.NODE_ENV === 'development',
-        minify: env.NODE_ENV === 'production',
+        manifest: webManifest,
       }),
       basicSsl(),
     ],
@@ -40,6 +34,11 @@ export default defineConfig(({ mode }) => {
     clearScreen: false,
     // Tauri expects a fixed port, fail if that port is not available
     server: {
+      strictPort: true,
+      cors: false,
+      https: true,
+    },
+    preview: {
       strictPort: true,
       cors: false,
       https: true,

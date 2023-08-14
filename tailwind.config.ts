@@ -1,8 +1,9 @@
-/** @type {import('tailwindcss').Config} */
+import type { Config } from 'tailwindcss'
+import containerQueries from '@tailwindcss/container-queries'
+
 export default {
-  content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
-  theme: {
-    extend: {},
-  },
-  plugins: [],
-}
+  content: ["./src/**/*.{ts,tsx}"],
+  theme: {},
+  plugins: [containerQueries],
+} satisfies Config
+
