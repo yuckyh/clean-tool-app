@@ -1,7 +1,16 @@
-import type { NavHandler } from '@/types/router'
+import type { Handle } from '@/types/router'
+import { childRoutes } from './helper'
 
-export const navHandler: NavHandler = {
-  childRoutes(route) {
-    return route.children?.filter((childRoute) => childRoute.path !== '*') ?? []
-  },
+export interface NavHandle extends Handle {
+  childRoutes: Function
+}
+
+export const navHandle: Handle = {
+  id: 'navHandle',
+  childRoutes: childRoutes,
+}
+
+export const progressNavHandle: Handle = {
+  id: 'progressNavHandle',
+  childRoutes: childRoutes,
 }

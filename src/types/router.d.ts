@@ -1,13 +1,12 @@
-import { RouteObject } from 'react-router-dom'
-
-export declare interface Match {
+export interface Match<T extends Handle = Handle> {
   id: string
   pathname: string
   params: Params<string>
   data: unknown
-  handle: unknown
+  handle: T
 }
 
-export declare interface NavHandler {
-  childRoutes(route: RouteObject): RouteObject[]
+interface Handle {
+  id: string
+  [key: string]: Function | string
 }

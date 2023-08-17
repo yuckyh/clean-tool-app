@@ -21,12 +21,7 @@ export default defineConfig(({ mode }) => {
       VitePWA({
         registerType: 'autoUpdate',
         injectRegister: 'auto',
-        devOptions: {
-          enabled: true,
-          // navigateFallbackAllowlist: [/^\/(?!api\/)/],
-        },
         workbox: {
-          sourcemap: isDev,
           globPatterns: ['**/*.{js,css,html,ico,png,svg}'],
         },
         manifest: webManifest,

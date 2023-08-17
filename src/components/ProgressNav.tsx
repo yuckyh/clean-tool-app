@@ -1,6 +1,3 @@
-import { getRouteName } from '@/helpers'
-import { useChildRoutesHandler } from '@/router/hooks'
-// import { NavHandler } from '@/types/router'
 import {
   Subtitle2,
   ProgressBar,
@@ -11,12 +8,12 @@ import {
   webDarkTheme,
   Slider,
 } from '@fluentui/react-components'
+
+import { NavHandle } from '@/router/handlers'
+import { useChildRoutes, useComponentRoute, useRouteName } from '@/hooks'
 import { RouteObject } from 'react-router-dom'
 
-type ProgressNavProps = {
-  navRoutes: RouteObject[]
-  currentStep?: number
-} & ProgressBarProps
+type ProgressNavProps = {} & ProgressBarProps
 
 const useStyles = makeStyles({
   root: {
@@ -36,22 +33,34 @@ const useStyles = makeStyles({
 
 const ProgressNav = ({ ...props }: ProgressNavProps) => {
   const classes = useStyles()
-  const [childRoutes] = useChildRoutesHandler()
+  const componentRoute = useComponentRoute<NavHandle>('progressNavHandle')
 
-  const steps = childRoutes.map((route) => getRouteName(route))
+  const childRoutes = useChildRoutes(componentRoute)
+
+  console.log(componentRoute)
 
   return (
     <div className={classes.root}>
       <ProgressBar title="Progress Bar Navigation" {...props} />
       <div className={classes.labelContainer}>
-        {steps.map((step) => (
-          <Subtitle2 key={step}>{step}</Subtitle2>
+        {childRoutes.map((route) => (
+          <LinkLabel key={`LinkLabel${route.id}`} route={route} />
         ))}
       </div>
       <div className={classes.stepThumbs}></div>
       <Slider></Slider>
     </div>
   )
+}
+
+interface LinkLabelProps {
+  route: RouteObject
+}
+
+const LinkLabel = ({ route }: LinkLabelProps) => {
+  const label = useRouteName(route)
+
+  return <Subtitle2>{label}</Subtitle2>
 }
 
 export default ProgressNav
