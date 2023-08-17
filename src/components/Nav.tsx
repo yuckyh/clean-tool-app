@@ -6,7 +6,6 @@ import {
 } from '@fluentui/react-components'
 import { Helmet } from 'react-helmet'
 import {
-  RouteObject,
   matchRoutes,
   resolvePath,
   useLocation,
@@ -15,29 +14,20 @@ import {
 
 import { getRouteName } from '@/helpers'
 import { routes } from '@/router'
-import { useState } from 'react'
+import { useChildRoutesHandler } from '@/router/hooks'
 
-type NavProps = TabListProps & {
-  navRoutes: RouteObject[]
-}
-
-const Nav = ({ navRoutes, ...props }: NavProps) => {
+const Nav = (props: TabListProps) => {
   const navigate = useNavigate()
   const location = useLocation()
+
+  const [childRoutes, handlerMatch] = useChildRoutesHandler()
   const currentRoute = matchRoutes(routes, location)!.pop()!.route!
   const title = getRouteName(currentRoute!)
-  const [resolvedPaths] = useState(
-    navRoutes.map(
-      (route) => resolvePath(route.path!, location.pathname).pathname,
-    ),
-  )
 
   const handleTabSelect: SelectTabEventHandler = (_event, data) => {
     navigate(data.value ?? '')
     return data.value ?? ''
   }
-
-  console.log(resolvePath)
 
   return (
     <>
@@ -48,10 +38,14 @@ const Nav = ({ navRoutes, ...props }: NavProps) => {
         selectedValue={location.pathname}
         onTabSelect={handleTabSelect}
         {...props}>
-        {navRoutes.map((route, i) => {
+        {childRoutes.map((childRoute) => {
+          const resolvedPath = resolvePath(
+            childRoute.path!,
+            handlerMatch.pathname,
+          ).pathname
           return (
-            <Tab key={route.id} value={resolvedPaths[i]}>
-              {getRouteName(route)}
+            <Tab key={childRoute.id} value={resolvedPath}>
+              {getRouteName(childRoute)}
             </Tab>
           )
         })}

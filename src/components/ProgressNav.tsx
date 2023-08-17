@@ -1,4 +1,6 @@
 import { getRouteName } from '@/helpers'
+import { useChildRoutesHandler } from '@/router/hooks'
+// import { NavHandler } from '@/types/router'
 import {
   Subtitle2,
   ProgressBar,
@@ -32,12 +34,15 @@ const useStyles = makeStyles({
   },
 })
 
-const ProgressNav = ({ navRoutes, ...props }: ProgressNavProps) => {
+const ProgressNav = ({ ...props }: ProgressNavProps) => {
   const classes = useStyles()
-  const steps = navRoutes.map((route) => getRouteName(route))
+  const [childRoutes] = useChildRoutesHandler()
+
+  const steps = childRoutes.map((route) => getRouteName(route))
+
   return (
     <div className={classes.root}>
-      <ProgressBar {...props} />
+      <ProgressBar title="Progress Bar Navigation" {...props} />
       <div className={classes.labelContainer}>
         {steps.map((step) => (
           <Subtitle2 key={step}>{step}</Subtitle2>

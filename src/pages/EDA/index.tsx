@@ -1,17 +1,13 @@
 /* eslint-disable react-refresh/only-export-components */
 import Nav from '@/components/Nav'
-import { routes } from '@/router'
-import { getChildRoutes } from '@/helpers'
-import { Outlet, matchRoutes, useLocation } from 'react-router-dom'
-import { useState } from 'react'
+import { Outlet } from 'react-router-dom'
 
 const EDA = () => {
-  const location = useLocation()
-  const [route] = useState(matchRoutes(routes, location)!.pop()!.route!)
+  // console.log(matchRoutes(routes, location)!.pop()!.route!)
 
   return (
     <>
-      <Nav navRoutes={getChildRoutes(route)} vertical={true} />
+      <Nav vertical={true} />
       <Outlet />
     </>
   )

@@ -1,15 +1,13 @@
 import { useEffect, useState } from 'react'
-import { RouterProvider } from 'react-router-dom'
+import { Outlet } from 'react-router-dom'
+import { Helmet } from 'react-helmet'
 import {
   FluentProvider,
-  Spinner,
   webLightTheme,
   webDarkTheme,
   makeStaticStyles,
 } from '@fluentui/react-components'
-import { Helmet } from 'react-helmet'
 
-import { router } from '@/router'
 import ApplyToBody from '@/components/ApplyToBody'
 import styleString from '@/global.css?inline'
 import { author, description, keywords } from '@/../package.json'
@@ -44,11 +42,7 @@ const App = () => {
         <meta name="keywords" content={keywords.join(',')} />
       </Helmet>
       <ApplyToBody />
-      <RouterProvider
-        router={router}
-        fallbackElement={<Spinner appearance="primary" size="large" />}
-        future={{ v7_startTransition: true }}
-      />
+      <Outlet />
     </FluentProvider>
   )
 }

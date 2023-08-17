@@ -15,6 +15,6 @@
       "@/*": ["./*"]
     }
   },
-  "include": ["."],
+  "include": [".", "./**/*.d.ts"],
   "extends": "../tsconfig.json"
 }

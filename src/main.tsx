@@ -1,7 +1,10 @@
 import { createRoot } from 'react-dom/client'
-import App from '@/App'
 import { StrictMode } from 'react'
+import { RouterProvider } from 'react-router-dom'
 import { registerSW } from 'virtual:pwa-register'
+
+import { router } from '@/router'
+import { Spinner } from '@fluentui/react-components'
 
 const intervalMS = 60 * 60 * 1000
 
@@ -23,6 +26,10 @@ const root = createRoot(rootDOM)
 
 root.render(
   <StrictMode>
-    <App />
+    <RouterProvider
+      router={router}
+      fallbackElement={<Spinner appearance="primary" size="large" />}
+      future={{ v7_startTransition: true }}
+    />
   </StrictMode>,
 )
