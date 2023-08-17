@@ -15,12 +15,14 @@ import Variable from '@/pages/EDA/Variable'
 import Download from '@/pages/Download'
 
 import { navHandler } from './handlers'
+import ColumnMatching from '@/pages/ColumnMatching'
 
 const routes = createRoutesFromElements(
   <>
     <Route path="/" element={<App />} handle={navHandler}>
       <Route element={<Layout />}>
         <Route index element={<Home />} />
+        <Route path="column-matching" element={<ColumnMatching />}></Route>
         <Route path="upload" element={<Upload />} />
         <Route path="eda" element={<EDA />} handle={navHandler}>
           <Route path="variable1" element={<Variable key={1} />} />
