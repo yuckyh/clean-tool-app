@@ -6,7 +6,7 @@ import {
 } from '@fluentui/react-components'
 import { useHref } from 'react-router-dom'
 
-const useStyles = makeStyles({
+const useClasses = makeStyles({
   root: {
     display: 'flex',
     flexDirection: 'column',
@@ -19,17 +19,18 @@ const useStyles = makeStyles({
 })
 
 const Home = () => {
-  const { root, homeCard } = useStyles()
+  const classes = useClasses()
   const edaHref = useHref('/eda')
 
   return (
-    <section className={root}>
+    <section className={classes.root}>
       <Title1>Home</Title1>
-      <Body1>Welcome</Body1>
-      <Card className={homeCard}>
+      <Card className={classes.homeCard}>
+        <Body1>To get started,</Body1>
         <Button as="a" href={edaHref} appearance="primary">
           Upload
         </Button>
+        <Body1>or...</Body1>
         <Button>Continue (WIP)</Button>
       </Card>
     </section>

@@ -5,7 +5,7 @@ const Layout = () => {
   return (
     <>
       <header>
-        <ProgressNav thickness="large" max={1} value={0.5} />
+        <ProgressNav thickness="large" />
       </header>
       <main>
         <Outlet />

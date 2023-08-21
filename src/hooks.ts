@@ -7,7 +7,9 @@ import {
 
 import { routes } from './router'
 import type { Match, Handle } from '@/types/router'
-import { isValidElement } from 'react'
+import { Ref, isValidElement, useEffect, useState } from 'react'
+import { pascalToTitle } from './helpers'
+import { ComponentProps, ComponentState } from '@fluentui/react-components'
 
 const useHandleMatches = <T extends Handle>(handleId: string): Match<T>[] => {
   const matches = useMatches() as Match<T>[]
@@ -41,7 +43,7 @@ export const useChildRoutes = (route: RouteObject): RouteObject[] => {
   return route.children?.filter((childRoute) => childRoute.path !== '*') ?? []
 }
 
-export const useRouteName = (route: RouteObject): string => {
+const useComponentName = (route: RouteObject): string => {
   if (!isValidElement(route?.element)) {
     return 'No Component'
   }
@@ -52,6 +54,12 @@ export const useRouteName = (route: RouteObject): string => {
 
   return route.element.key?.toString() ?? route.element.type.name
 }
+
+export const useRouteName = (route?: RouteObject): string => {
+  const currentRoute = useCurrentRoute()
+  return pascalToTitle(useComponentName(route ?? currentRoute))
+}
+
 export const useThemePreference = () => {
   const themeMedia = window.matchMedia('(prefers-color-scheme: dark)')
   const [preference, setPreference] = useState(themeMedia.matches)
@@ -95,4 +103,18 @@ export const useFluentStyledState = <
   ref = ref ?? { current: null }
   const initialState = instantiator(props, ref)
   return styler(initialState)
+}
+
+export const useFluentComponentStates = <
+  T extends ComponentState<any>,
+  K extends ComponentProps<any>,
+>(
+  props: K,
+  renderer: (state: T) => JSX.Element,
+  styler: (state: T) => T,
+  instantiator: (props: K, ref: Ref<any>) => T,
+  ref?: Ref<any>,
+) => {
+  const styledState = useFluentStyledState(props, styler, instantiator, ref)
+  return renderer(styledState)
 }
