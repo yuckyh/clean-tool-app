@@ -1,12 +1,5 @@
-/* eslint-disable react-refresh/only-export-components */
-import Nav from '@/components/Nav'
-import { Outlet } from 'react-router-dom'
+const Home = () => {
+  return <></>
+}
 
-const EDA = () => (
-  <>
-    <Nav vertical={true} />
-    <Outlet />
-  </>
-)
-
-export default EDA
+export default Home

@@ -9,6 +9,7 @@ import {
   useResolvedPath,
   useNavigate,
   useLocation,
+  resolvePath,
 } from 'react-router-dom'
 
 import { useChildRoutes, useComponentRoute, useRouteName } from '@/hooks'
@@ -19,7 +20,11 @@ const Nav = (props: TabListProps) => {
   const { pathname } = useLocation()
   const handleId = 'navHandle'
   const componentRoute = useComponentRoute<NavHandle>(handleId)
-  const childRoutes = useChildRoutes(componentRoute)
+
+  const childRoutes = useChildRoutes(
+    componentRoute,
+    resolvePath(componentRoute.path!).pathname,
+  )
 
   const handleTabSelect: SelectTabEventHandler = (_event, data) => {
     navigate(data.value ?? '')

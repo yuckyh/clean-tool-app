@@ -8,9 +8,10 @@ import App from '@/App'
 import Layout from '@/Layout'
 import NotFound from '@/404'
 
-import Home from '@/pages/Home'
+import Home from '@/pages'
 import Upload from '@/pages/Upload'
-import EDA from '@/pages/EDA'
+import EDA from '@/pages/EDA/Layout'
+import EDAHome from '@/pages/EDA'
 import Variable from '@/pages/EDA/Variable'
 import Download from '@/pages/Download'
 
@@ -25,6 +26,7 @@ const routes = createRoutesFromElements(
         <Route path="column-matching" element={<ColumnMatching />}></Route>
         <Route path="upload" element={<Upload />} />
         <Route path="eda" element={<EDA />} handle={navHandle}>
+          <Route index element={<EDAHome />}></Route>
           <Route path="variable1" element={<Variable key={1} />} />
           <Route path="variable2" element={<Variable key={2} />} />
         </Route>

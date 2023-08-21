@@ -108,7 +108,7 @@ const ProgressNavLink = ({ route }: LinkLabelProps) => {
   const href = useHref(route.path ?? '')
   const classes = useLinkClasses()
 
-  const fluentLinkState = useFluentComponentStates(
+  const fluentLinkComponent = useFluentComponentStates(
     { appearance: 'subtle' },
     renderLink_unstable,
     useLinkStyles_unstable,
@@ -118,7 +118,10 @@ const ProgressNavLink = ({ route }: LinkLabelProps) => {
   return (
     <div className={classes.root}>
       <NavLink
-        className={mergeClasses(fluentLinkState.props.className, classes.link)}
+        className={mergeClasses(
+          fluentLinkComponent.props.className,
+          classes.link,
+        )}
         to={href}>
         {({ isActive }) => (
           <>

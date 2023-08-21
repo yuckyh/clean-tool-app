@@ -1,6 +1,7 @@
 import {
   RouteObject,
   matchRoutes,
+  resolvePath,
   useLocation,
   useMatches,
 } from 'react-router-dom'
@@ -39,9 +40,15 @@ export const useCurrentRoute = () => {
   return matchRoutes(routes, location.pathname)?.pop()?.route!
 }
 
-export const useChildRoutes = (route: RouteObject): RouteObject[] => {
-  return route.children?.filter((childRoute) => childRoute.path !== '*') ?? []
-}
+export const useChildRoutes = (
+  route: RouteObject,
+  exclusion: string,
+): RouteObject[] =>
+  route.children?.filter(
+    (childRoute) =>
+      childRoute.path !== '*' &&
+      resolvePath(childRoute.path ?? route.path ?? '').pathname !== exclusion,
+  ) ?? []
 
 const useComponentName = (route: RouteObject): string => {
   if (!isValidElement(route?.element)) {
