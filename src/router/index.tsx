@@ -23,8 +23,8 @@ const routes = createRoutesFromElements(
     <Route element={<App />}>
       <Route element={<Layout />} handle={progressNavHandle}>
         <Route index element={<Home />} />
-        <Route path="column-matching" element={<ColumnMatching />}></Route>
         <Route path="upload" element={<Upload />} />
+        <Route path="column-matching" element={<ColumnMatching />}></Route>
         <Route path="eda" element={<EDA />} handle={navHandle}>
           <Route index element={<EDAHome />}></Route>
           <Route path="variable1" element={<Variable key={1} />} />
