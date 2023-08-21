@@ -17,7 +17,8 @@ import { NavHandle } from '@/router/handlers'
 const Nav = (props: TabListProps) => {
   const navigate = useNavigate()
   const { pathname } = useLocation()
-  const componentRoute = useComponentRoute<NavHandle>('navHandle')
+  const handleId = 'navHandle'
+  const componentRoute = useComponentRoute<NavHandle>(handleId)
   const childRoutes = useChildRoutes(componentRoute)
 
   const handleTabSelect: SelectTabEventHandler = (_event, data) => {

@@ -33,11 +33,10 @@ const useStyles = makeStyles({
 
 const ProgressNav = ({ ...props }: ProgressNavProps) => {
   const classes = useStyles()
-  const componentRoute = useComponentRoute<NavHandle>('progressNavHandle')
+  const handleId = 'progressNavHandle'
+  const componentRoute = useComponentRoute<NavHandle>(handleId)
 
   const childRoutes = useChildRoutes(componentRoute)
-
-  console.log(componentRoute)
 
   return (
     <div className={classes.root}>

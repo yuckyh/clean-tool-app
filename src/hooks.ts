@@ -6,25 +6,29 @@ import {
 } from 'react-router-dom'
 
 import { routes } from './router'
-import type { Match } from '@/types/router'
+import type { Match, Handle } from '@/types/router'
 import { isValidElement } from 'react'
 
-const useHandleMatches = <T extends Match>(handleId: string): T[] => {
-  const matches = useMatches()
+const useHandleMatches = <T extends Handle>(handleId: string): Match<T>[] => {
+  const matches = useMatches() as Match<T>[]
 
-  return matches.filter(
-    (match) => (match as T)?.handle?.id === handleId,
-  )! as T[]
+  return matches.filter((match) => {
+    return match.handle?.id === handleId
+  })! as Match<T>[]
 }
 
-export const useComponentRoute = <T extends Match>(
+export const useComponentRoute = <T extends Handle>(
   handleId: string,
 ): RouteObject => {
   const matches = useHandleMatches<T>(handleId)
-
-  console.log(matches)
-
-  return matchRoutes(routes, matches.pop()!.pathname)?.pop()?.route!
+  const { pathname } = matches[0]!
+  const matchingIds = matches.map((match) => match.id)
+  const matchingRoutes = matchRoutes(routes, pathname)?.map(
+    (match) => match.route,
+  )
+  return matchingRoutes?.find((routeMatch) =>
+    matchingIds.includes(routeMatch.id!),
+  )!
 }
 
 export const useCurrentRoute = () => {
