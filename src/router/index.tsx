@@ -6,7 +6,7 @@ import {
 
 import App from '@/App'
 import Layout from '@/Layout'
-import NotFound from '@/pages/404'
+import NotFound from '@/404'
 
 import Home from '@/pages/Home'
 import Upload from '@/pages/Upload'
