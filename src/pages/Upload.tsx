@@ -1,5 +1,15 @@
+import { Field, Input } from '@fluentui/react-components'
+import { Form } from 'react-router-dom'
+
 const Upload = () => {
-  return <span>uploading</span>
+  // const fileInput = <input type="file" />
+  return (
+    <Form>
+      <Field>
+        <Input type="file" appearance="filled-darker-shadow" />
+      </Field>
+    </Form>
+  )
 }
 
 export default Upload
