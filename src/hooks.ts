@@ -52,3 +52,47 @@ export const useRouteName = (route: RouteObject): string => {
 
   return route.element.key?.toString() ?? route.element.type.name
 }
+export const useThemePreference = () => {
+  const themeMedia = window.matchMedia('(prefers-color-scheme: dark)')
+  const [preference, setPreference] = useState(themeMedia.matches)
+
+  useEffect(() => {
+    const handleThemeChange = (e: MediaQueryListEvent) => {
+      setPreference(e.matches)
+    }
+
+    themeMedia.addEventListener('change', handleThemeChange)
+
+    return () => {
+      themeMedia.removeEventListener('change', handleThemeChange)
+    }
+  }, [themeMedia])
+  return preference
+}
+
+export const useBodyClasses = (classes: string) => {
+  useEffect(() => {
+    const classList = classes.split(' ')
+    document.body.classList.add(...classList)
+
+    return () => {
+      document.body.classList.remove(...classList)
+    }
+  }, [classes])
+
+  return classes
+}
+
+export const useFluentStyledState = <
+  T extends ComponentState<any>,
+  K extends ComponentProps<any>,
+>(
+  props: K,
+  styler: (state: T) => T,
+  instantiator: (props: K, ref: Ref<any>) => T,
+  ref?: Ref<any>,
+) => {
+  ref = ref ?? { current: null }
+  const initialState = instantiator(props, ref)
+  return styler(initialState)
+}
