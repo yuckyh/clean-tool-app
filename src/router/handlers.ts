@@ -1,16 +1,16 @@
 import type { Handle } from '@/types/router'
-import { childRoutes } from './helper'
+import { ChildRouteHandler, childRoutes } from './helper'
 
 export interface NavHandle extends Handle {
-  childRoutes: Function
+  childRoutes: ChildRouteHandler
 }
 
 export const navHandle: Handle = {
   id: 'navHandle',
-  childRoutes: childRoutes,
+  childRoutes,
 }
 
 export const progressNavHandle: Handle = {
   id: 'progressNavHandle',
-  childRoutes: childRoutes,
+  childRoutes,
 }

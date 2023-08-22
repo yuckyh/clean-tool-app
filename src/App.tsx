@@ -1,8 +1,6 @@
 import { Outlet } from 'react-router-dom'
 import { Helmet } from 'react-helmet'
-import {
-  makeStaticStyles,
-} from '@fluentui/react-components'
+import { makeStaticStyles } from '@fluentui/react-components'
 
 import styleString from '@/global.css?inline'
 import { author, description, keywords } from '@/../package.json'

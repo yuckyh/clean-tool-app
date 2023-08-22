@@ -1,5 +1,7 @@
 import {
   FluentProviderProps,
+  FluentProviderSlots,
+  FluentProviderState,
   useFluentProviderStyles_unstable,
   useFluentProvider_unstable,
   webDarkTheme,
@@ -20,11 +22,16 @@ const GlobalFluentProvider = ({
   const preference = useThemePreference()
   theme = preference ? webDarkTheme : webLightTheme
 
-  const classes = useFluentStyledState(
+  const classes = useFluentStyledState<
+    FluentProviderSlots,
+    FluentProviderProps,
+    FluentProviderState,
+    HTMLDivElement
+  >(
     { theme, children, ...props },
     useFluentProviderStyles_unstable,
     useFluentProvider_unstable,
-  ).root.className!
+  ).root!.className!
 
   useBodyClasses(classes)
 

@@ -7,9 +7,11 @@ import {
   Subtitle2Stronger,
   ProgressBarProps,
   mergeClasses,
-  useLinkStyles_unstable,
   useLink_unstable,
-  renderLink_unstable,
+  useLinkStyles_unstable,
+  LinkProps,
+  LinkSlots,
+  LinkState,
 } from '@fluentui/react-components'
 
 import { NavHandle } from '@/router/handlers'
@@ -17,7 +19,7 @@ import {
   useChildRoutes,
   useComponentRoute,
   useCurrentRoute,
-  useFluentComponentStates,
+  useFluentStyledState,
   useRouteName,
 } from '@/hooks'
 import { NavLink, RouteObject, useHref } from 'react-router-dom'
@@ -26,7 +28,7 @@ const useClasses = makeStyles({
   root: {
     display: 'flex',
     flexDirection: 'column',
-    ...shorthands.padding(tokens.spacingVerticalXXL),
+    ...shorthands.padding(tokens.spacingVerticalS, 0),
   },
   linkContainer: {
     display: 'flex',
@@ -69,8 +71,8 @@ const ProgressNav = (props: ProgressBarProps) => {
         {...props}
       />
       <div className={classes.linkContainer}>
-        {childRoutes.map((route) => (
-          <ProgressNavLink key={route.id} route={route} />
+        {childRoutes.map((route, i) => (
+          <ProgressNavLink key={route.id} done={index >= i} route={route} />
         ))}
       </div>
     </div>
@@ -78,13 +80,13 @@ const ProgressNav = (props: ProgressBarProps) => {
 }
 
 interface LinkLabelProps {
+  done: boolean
   route: RouteObject
 }
 
 const useLinkClasses = makeStyles({
   root: {
     display: 'flex',
-    paddingTop: '8px',
     justifyContent: 'center',
     ...shorthands.flex(1),
   },
@@ -96,36 +98,46 @@ const useLinkClasses = makeStyles({
   stepThumb: {
     height: '20px',
     width: '20px',
-    backgroundColor: tokens.colorCompoundBrandBackground,
-    top: '16px',
-    position: 'absolute',
+    top: '-12px',
+    position: 'relative',
+    backgroundColor: tokens.colorNeutralBackground6,
     ...shorthands.borderRadius(tokens.borderRadiusCircular),
+    ...shorthands.transition('background-color', '0.2s', '0s', 'ease-in-out'),
+  },
+  activeStepThumb: {
+    backgroundColor: tokens.colorCompoundBrandBackground,
   },
 })
 
-const ProgressNavLink = ({ route }: LinkLabelProps) => {
+const ProgressNavLink = ({ done, route }: LinkLabelProps) => {
   const label = useRouteName(route)
   const href = useHref(route.path ?? '')
   const classes = useLinkClasses()
 
-  const fluentLinkComponent = useFluentComponentStates(
-    { appearance: 'subtle' },
-    renderLink_unstable,
-    useLinkStyles_unstable,
-    useLink_unstable,
-  )
+  const fluentLinkComponent = useFluentStyledState<
+    LinkSlots,
+    LinkProps,
+    LinkState,
+    HTMLAnchorElement | HTMLButtonElement
+  >({ appearance: 'subtle' }, useLinkStyles_unstable, useLink_unstable)
 
   return (
     <div className={classes.root}>
       <NavLink
         className={mergeClasses(
-          fluentLinkComponent.props.className,
+          fluentLinkComponent.root?.className,
           classes.link,
         )}
         to={href}>
         {({ isActive }) => (
           <>
-            <div key={`StepThumb${route.id}`} className={classes.stepThumb} />
+            <div
+              key={`StepThumb${route.id}`}
+              className={mergeClasses(
+                classes.stepThumb,
+                done ? classes.activeStepThumb : '',
+              )}
+            />
             {isActive ? (
               <Subtitle2Stronger>{label}</Subtitle2Stronger>
             ) : (

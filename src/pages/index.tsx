@@ -1,33 +1,41 @@
-import { Body1, Button, Card, Title1 } from '@fluentui/react-components'
 import {
-  makeStyles,
-  webDarkTheme,
-  shorthands,
+  Body1,
+  Button,
+  Card,
+  CardHeader,
+  Title1,
 } from '@fluentui/react-components'
-import { useHref } from 'react-router-dom'
+import { makeStyles, shorthands } from '@fluentui/react-components'
+import { useHref, useLinkClickHandler } from 'react-router-dom'
 
 const useClasses = makeStyles({
   root: {
     display: 'flex',
     flexDirection: 'column',
-    ...shorthands.padding(webDarkTheme.spacingVerticalXXXL),
-  },
-  homeCard: {
-    width: 'fit-content',
+    width: '40%',
     ...shorthands.margin(0, 'auto'),
+  },
+  card: {
+    // width: 'fit-content',
+    // ...shorthands.margin(0, 'auto'),
   },
 })
 
 const Home = () => {
   const classes = useClasses()
-  const edaHref = useHref('/eda')
+  const uploadHref = useHref('/upload')
+  const handleClick = useLinkClickHandler(uploadHref)
 
   return (
     <section className={classes.root}>
-      <Title1>Home</Title1>
-      <Card className={classes.homeCard}>
+      <Card className={classes.card} size="large">
+        <CardHeader header={<Title1>Home</Title1>}></CardHeader>
         <Body1>To get started,</Body1>
-        <Button as="a" href={edaHref} appearance="primary">
+        <Button
+          as="a"
+          appearance="primary"
+          href={uploadHref}
+          onClick={handleClick}>
           Upload
         </Button>
         <Body1>or...</Body1>

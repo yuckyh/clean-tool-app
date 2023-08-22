@@ -14,6 +14,7 @@ import {
 
 import { useChildRoutes, useComponentRoute, useRouteName } from '@/hooks'
 import { NavHandle } from '@/router/handlers'
+import { useCallback } from 'react'
 
 const Nav = (props: TabListProps) => {
   const navigate = useNavigate()
@@ -26,10 +27,13 @@ const Nav = (props: TabListProps) => {
     resolvePath(componentRoute.path!).pathname,
   )
 
-  const handleTabSelect: SelectTabEventHandler = (_event, data) => {
-    navigate(data.value ?? '')
-    return data.value ?? ''
-  }
+  const handleTabSelect: SelectTabEventHandler = useCallback(
+    (_event, data) => {
+      navigate(data.value ?? '')
+      return data.value ?? ''
+    },
+    [navigate],
+  )
 
   return (
     <>

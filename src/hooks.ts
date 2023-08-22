@@ -10,7 +10,11 @@ import { routes } from './router'
 import type { Match, Handle } from '@/types/router'
 import { Ref, isValidElement, useEffect, useState } from 'react'
 import { pascalToTitle } from './helpers'
-import { ComponentProps, ComponentState } from '@fluentui/react-components'
+import {
+  ComponentProps,
+  ComponentState,
+  SlotPropsRecord,
+} from '@fluentui/react-components'
 
 const useHandleMatches = <T extends Handle>(handleId: string): Match<T>[] => {
   const matches = useMatches() as Match<T>[]
@@ -29,7 +33,7 @@ export const useComponentRoute = <T extends Handle>(
   const matchingRoutes = matchRoutes(routes, pathname)?.map(
     (match) => match.route,
   )
-  return matchingRoutes?.find((routeMatch) =>
+  return matchingRoutes!.find((routeMatch) =>
     matchingIds.includes(routeMatch.id!),
   )!
 }
@@ -37,12 +41,12 @@ export const useComponentRoute = <T extends Handle>(
 export const useCurrentRoute = () => {
   const location = useLocation()
 
-  return matchRoutes(routes, location.pathname)?.pop()?.route!
+  return matchRoutes(routes, location.pathname)!.pop()!.route!
 }
 
 export const useChildRoutes = (
   route: RouteObject,
-  exclusion: string,
+  exclusion?: string,
 ): RouteObject[] =>
   route.children?.filter(
     (childRoute) =>
@@ -99,29 +103,17 @@ export const useBodyClasses = (classes: string) => {
 }
 
 export const useFluentStyledState = <
-  T extends ComponentState<any>,
-  K extends ComponentProps<any>,
+  Slots extends SlotPropsRecord,
+  Props extends ComponentProps<Slots>,
+  State extends ComponentState<Slots>,
+  V,
 >(
-  props: K,
-  styler: (state: T) => T,
-  instantiator: (props: K, ref: Ref<any>) => T,
-  ref?: Ref<any>,
-) => {
+  props: Props,
+  styler: (state: State) => State,
+  instantiator: (props: Props, ref: Ref<V>) => State,
+  ref?: Ref<V>,
+): State => {
   ref = ref ?? { current: null }
   const initialState = instantiator(props, ref)
   return styler(initialState)
-}
-
-export const useFluentComponentStates = <
-  T extends ComponentState<any>,
-  K extends ComponentProps<any>,
->(
-  props: K,
-  renderer: (state: T) => JSX.Element,
-  styler: (state: T) => T,
-  instantiator: (props: K, ref: Ref<any>) => T,
-  ref?: Ref<any>,
-) => {
-  const styledState = useFluentStyledState(props, styler, instantiator, ref)
-  return renderer(styledState)
 }
