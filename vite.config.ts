@@ -3,7 +3,6 @@ import react from '@vitejs/plugin-react-swc'
 import { VitePWA } from 'vite-plugin-pwa'
 import lightningcss from 'vite-plugin-lightningcss'
 import { resolve } from 'path'
-
 import { webManifest } from './package.json'
 
 const resolveDir = (dir: TemplateStringsArray) => resolve(__dirname, ...dir)
@@ -22,16 +21,14 @@ export default defineConfig(({ mode }) => {
         registerType: 'autoUpdate',
         injectRegister: 'auto',
         workbox: {
-          globPatterns: ['**/*.{js,css,html,ico,png,svg}'],
+          globPatterns: ['**\/*.{js,css,html,ico,png,svg}'],
         },
         manifest: webManifest,
-        srcDir: 'src',
-        filename: 'sw.ts',
       }),
       lightningcss({
         minify: !isDev,
         sourceMap: isDev,
-        browserslist: "last 2 versions, not dead, >0.2%, ie 11"
+        browserslist: 'last 2 versions, not dead, >0.2%, ie 11',
       }),
     ],
     // prevent vite from obscuring rust errors
