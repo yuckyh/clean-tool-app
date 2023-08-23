@@ -13,7 +13,7 @@ const useClasses = makeStyles({
 
 const NotFound = () => {
   const classes = useClasses()
-  const href = useHref("/")
+  const href = useHref('/')
   return (
     <div className={classes.root}>
       <Title1>404 Not Found</Title1>

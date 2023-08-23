@@ -14,27 +14,22 @@ import EDA from '@/pages/EDA/Layout'
 import EDAHome from '@/pages/EDA'
 import Variable from '@/pages/EDA/Variable'
 import Download from '@/pages/Download'
-
-import { navHandle, progressNavHandle } from './handlers'
 import ColumnMatching from '@/pages/ColumnMatching'
 
 const routes = createRoutesFromElements(
-  <>
-    <Route element={<App />}>
-      <Route element={<Layout />} handle={progressNavHandle}>
-        <Route index element={<Home />} />
-        <Route path="upload" element={<Upload />} />
-        <Route path="column-matching" element={<ColumnMatching />}></Route>
-        <Route path="eda" element={<EDA />} handle={navHandle}>
-          <Route index element={<EDAHome />}></Route>
-          <Route path="variable1" element={<Variable key={1} />} />
-          <Route path="variable2" element={<Variable key={2} />} />
-        </Route>
-        <Route path="download" element={<Download />} />
+  <Route element={<App />}>
+    <Route element={<Layout />}>
+      <Route index element={<Home />} />
+      <Route path="upload" element={<Upload />} />
+      <Route path="column-matching" element={<ColumnMatching />}></Route>
+      <Route path="eda" element={<EDA />}>
+        <Route index element={<EDAHome />}></Route>
+        <Route path=":variable" element={<Variable />} />
       </Route>
-      <Route path="*" element={<NotFound />} />
+      <Route path="download" element={<Download />} />
     </Route>
-  </>,
+    <Route path="*" element={<NotFound />} />
+  </Route>,
 )
 
 const router = createBrowserRouter(routes, {

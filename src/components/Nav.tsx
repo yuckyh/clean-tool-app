@@ -1,63 +1,59 @@
-import {
+import type {
   SelectTabEventHandler,
-  Tab,
-  TabList,
   TabListProps,
 } from '@fluentui/react-components'
+import { Tab, TabList } from '@fluentui/react-components'
 import {
-  RouteObject,
   useResolvedPath,
   useNavigate,
   useLocation,
-  resolvePath,
+  matchRoutes,
 } from 'react-router-dom'
 
-import { useChildRoutes, useComponentRoute, useRouteName } from '@/hooks'
-import { NavHandle } from '@/router/handlers'
+import { useChildPaths, usePathTitle } from '@/hooks'
 import { useCallback } from 'react'
+import { routes } from '@/router'
 
 const Nav = (props: TabListProps) => {
   const navigate = useNavigate()
+  const componentPath = useResolvedPath('')
   const { pathname } = useLocation()
-  const handleId = 'navHandle'
-  const componentRoute = useComponentRoute<NavHandle>(handleId)
 
-  const childRoutes = useChildRoutes(
-    componentRoute,
-    resolvePath(componentRoute.path!).pathname,
+  const childPaths = useChildPaths(
+    componentPath.pathname,
+    componentPath.pathname,
+  )
+
+  console.log(
+    matchRoutes(routes, componentPath.pathname)
+      ?.filter(({ route }) => route.children)
+      .map(({ route }) => route.children),
   )
 
   const handleTabSelect: SelectTabEventHandler = useCallback(
-    (_event, data) => {
-      navigate(data.value ?? '')
-      return data.value ?? ''
+    (_event, { value }) => {
+      navigate(value ?? '')
+      return value ?? ''
     },
     [navigate],
   )
 
   return (
-    <>
-      <TabList
-        selectedValue={pathname}
-        onTabSelect={handleTabSelect}
-        {...props}>
-        {childRoutes.map((childRoute) => {
-          return <NavTab key={childRoute.id} route={childRoute} />
-        })}
-      </TabList>
-    </>
+    <TabList selectedValue={pathname} onTabSelect={handleTabSelect} {...props}>
+      {childPaths?.map((path) => <NavTab key={path} path={path} />)}
+    </TabList>
   )
 }
 
 interface NavTabProps {
-  route: RouteObject
+  path: string
 }
 
-export const NavTab = ({ route }: NavTabProps) => {
-  const { pathname } = useResolvedPath(route.path!)
-  const routeName = useRouteName(route)
+export const NavTab = ({ path }: NavTabProps) => {
+  const { pathname } = useResolvedPath(path)
+  const label = usePathTitle(pathname)
 
-  return <Tab value={pathname}>{routeName}</Tab>
+  return <Tab value={pathname}>{label}</Tab>
 }
 
 export default Nav

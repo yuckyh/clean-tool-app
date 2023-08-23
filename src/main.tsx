@@ -16,7 +16,7 @@ registerSW({
   onRegistered(r) {
     r &&
       setInterval(() => {
-        r.update()
+        void r.update()
       }, intervalMS)
   },
 })

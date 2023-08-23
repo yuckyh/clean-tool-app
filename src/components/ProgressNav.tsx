@@ -1,3 +1,9 @@
+import type {
+  ProgressBarProps,
+  LinkProps,
+  LinkSlots,
+  LinkState,
+} from '@fluentui/react-components'
 import {
   Subtitle2,
   ProgressBar,
@@ -5,24 +11,13 @@ import {
   shorthands,
   tokens,
   Subtitle2Stronger,
-  ProgressBarProps,
   mergeClasses,
   useLink_unstable,
   useLinkStyles_unstable,
-  LinkProps,
-  LinkSlots,
-  LinkState,
 } from '@fluentui/react-components'
 
-import { NavHandle } from '@/router/handlers'
-import {
-  useChildRoutes,
-  useComponentRoute,
-  useCurrentRoute,
-  useFluentStyledState,
-  useRouteName,
-} from '@/hooks'
-import { NavLink, RouteObject, useHref } from 'react-router-dom'
+import { useChildPaths, useFluentStyledState, usePathTitle } from '@/hooks'
+import { NavLink, useHref, useResolvedPath } from 'react-router-dom'
 
 const useClasses = makeStyles({
   root: {
@@ -47,32 +42,40 @@ const useClasses = makeStyles({
 
 const ProgressNav = (props: ProgressBarProps) => {
   const classes = useClasses()
-  const handleId = 'progressNavHandle'
-  const componentRoute = useComponentRoute<NavHandle>(handleId)
-  const currentRoute = useCurrentRoute()
-  const childRoutes = useChildRoutes(componentRoute)
-  const index = childRoutes.findIndex(
-    (route) => currentRoute.id?.includes(route.id!),
-  )
+  const componentPath = useResolvedPath('')
+  console.log(componentPath)
+
+  const childPaths = useChildPaths(componentPath.pathname)
+
+  // console.log(
+  //   matchRoutes(routes, componentPath.pathname)
+  //     ?.filter(({ route }) => route.children)
+  //     .map(({ route }) => route.children),
+  // )
+  // const index = childRoutes.findIndex(
+  //   (route) => currentRoute.id?.includes(route.id ?? '') ?? false,
+  // )
 
   // Ternary expression for animation hack
-  const progress = index == 0 ? 0.011 : index / (childRoutes.length - 1)
+  // const progress = index == 0 ? 0.011 : index / (childRoutes.length - 1)
 
   return (
     <div className={classes.root}>
       <ProgressBar
         className={mergeClasses(
           classes.progressBar,
-          index == 0 && classes.progressBarInitial,
+          // index == 0 && classes.progressBarInitial,
         )}
         title="Progress Bar Navigation"
         max={1}
-        value={progress}
+        // value={progress}
+        value={0}
         {...props}
       />
       <div className={classes.linkContainer}>
-        {childRoutes.map((route, i) => (
-          <ProgressNavLink key={route.id} done={index >= i} route={route} />
+        {childPaths?.map((path) => (
+          // <ProgressNavLink key={route.id} done={index >= i} path={path} />
+          <ProgressNavLink key={path} done={true} path={path} />
         ))}
       </div>
     </div>
@@ -81,7 +84,7 @@ const ProgressNav = (props: ProgressBarProps) => {
 
 interface LinkLabelProps {
   done: boolean
-  route: RouteObject
+  path: string
 }
 
 const useLinkClasses = makeStyles({
@@ -109,30 +112,30 @@ const useLinkClasses = makeStyles({
   },
 })
 
-const ProgressNavLink = ({ done, route }: LinkLabelProps) => {
-  const label = useRouteName(route)
-  const href = useHref(route.path ?? '')
+const ProgressNavLink = ({ done, path }: LinkLabelProps) => {
+  // const label = useRouteName(route)
+  const href = useHref(path)
+  const label = usePathTitle(href)
   const classes = useLinkClasses()
 
   const fluentLinkComponent = useFluentStyledState<
-    LinkSlots,
     LinkProps,
     LinkState,
-    HTMLAnchorElement | HTMLButtonElement
+    LinkSlots,
+    HTMLAnchorElement
   >({ appearance: 'subtle' }, useLinkStyles_unstable, useLink_unstable)
 
   return (
     <div className={classes.root}>
       <NavLink
         className={mergeClasses(
-          fluentLinkComponent.root?.className,
+          fluentLinkComponent.root.className,
           classes.link,
         )}
         to={href}>
         {({ isActive }) => (
           <>
             <div
-              key={`StepThumb${route.id}`}
               className={mergeClasses(
                 classes.stepThumb,
                 done ? classes.activeStepThumb : '',

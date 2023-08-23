@@ -1,74 +1,68 @@
-import {
-  RouteObject,
-  matchRoutes,
-  resolvePath,
-  useLocation,
-  useMatches,
-} from 'react-router-dom'
+import { matchRoutes, resolvePath, useLocation } from 'react-router-dom'
 
 import { routes } from './router'
-import type { Match, Handle } from '@/types/router'
-import { Ref, isValidElement, useEffect, useState } from 'react'
-import { pascalToTitle } from './helpers'
-import {
+import type { Ref } from 'react'
+import { useEffect, useState } from 'react'
+import { getPathTitle } from './helpers'
+import type {
   ComponentProps,
   ComponentState,
   SlotPropsRecord,
 } from '@fluentui/react-components'
 
-const useHandleMatches = <T extends Handle>(handleId: string): Match<T>[] => {
-  const matches = useMatches() as Match<T>[]
+// const useHandleMatches = <T extends Handle>(handleId: string): Match<T>[] => {
+//   const matches = useMatches().filter((match) => match.handle) as Match<T>[]
 
-  return matches.filter((match) => {
-    return match.handle?.id === handleId
-  })! as Match<T>[]
+//   return matches.filter((match) => {
+//     return match.handle.id === handleId
+//   })
+// }
+
+// const useComponentRoute = <T extends Handle>(
+//   handleId: string,
+// ): RouteObject | undefined => {
+//   const matches = useHandleMatches<T>(handleId)
+//   const { pathname } = useResolvedPath('')
+//   const matchingIds = matches.map(({ id }) => id)
+//   const matchingRoutes = matchRoutes(routes, pathname)
+//   return matchingRoutes?.find(({ route }) =>
+//     matchingIds.includes(route.id ?? ''),
+//   )?.route
+// }
+// const useChildRoutes = (
+//   route: RouteObject,
+//   exclusion?: string,
+// ): RouteObject[] =>
+//   route.children?.filter(
+//     (childRoute) =>
+//       childRoute.path !== '*' &&
+//       resolvePath(childRoute.path ?? route.path ?? '').pathname !== exclusion,
+//   ) ?? []
+
+// const useCurrentParentRoute = (parentPath: string) => {
+//   return matchRoutes(routes, parentPath)
+//     ?.filter(({ route }) => route.children)
+//     ?.pop()
+// }
+
+export const useChildPaths = (parentPath: string, exclusion?: string) => {
+  console.log(parentPath, exclusion)
+  return matchRoutes(routes, parentPath)
+    ?.filter(({ route }) => route.children)
+    .map(({ route }) => route.children)
+    .pop()
+    ?.filter(
+      ({ path }) => resolvePath(path ?? parentPath).pathname !== exclusion,
+    )
+    .map(({ path }) => path ?? '')
 }
 
-export const useComponentRoute = <T extends Handle>(
-  handleId: string,
-): RouteObject => {
-  const matches = useHandleMatches<T>(handleId)
-  const { pathname } = matches[0]!
-  const matchingIds = matches.map((match) => match.id)
-  const matchingRoutes = matchRoutes(routes, pathname)?.map(
-    (match) => match.route,
-  )
-  return matchingRoutes!.find((routeMatch) =>
-    matchingIds.includes(routeMatch.id!),
-  )!
-}
-
-export const useCurrentRoute = () => {
-  const location = useLocation()
-
-  return matchRoutes(routes, location.pathname)!.pop()!.route!
-}
-
-export const useChildRoutes = (
-  route: RouteObject,
-  exclusion?: string,
-): RouteObject[] =>
-  route.children?.filter(
-    (childRoute) =>
-      childRoute.path !== '*' &&
-      resolvePath(childRoute.path ?? route.path ?? '').pathname !== exclusion,
-  ) ?? []
-
-const useComponentName = (route: RouteObject): string => {
-  if (!isValidElement(route?.element)) {
-    return 'No Component'
+export const usePathTitle = (path?: string) => {
+  const { pathname } = useLocation()
+  if (path) {
+    return getPathTitle(path)
   }
-
-  if (typeof route.element.type === 'string') {
-    return route.element.type
-  }
-
-  return route.element.key?.toString() ?? route.element.type.name
-}
-
-export const useRouteName = (route?: RouteObject): string => {
-  const currentRoute = useCurrentRoute()
-  return pascalToTitle(useComponentName(route ?? currentRoute))
+  return getPathTitle(pathname)
 }
 
 export const useThemePreference = () => {
@@ -103,10 +97,10 @@ export const useBodyClasses = (classes: string) => {
 }
 
 export const useFluentStyledState = <
-  Slots extends SlotPropsRecord,
   Props extends ComponentProps<Slots>,
   State extends ComponentState<Slots>,
-  V,
+  Slots extends SlotPropsRecord = SlotPropsRecord,
+  V = HTMLElement,
 >(
   props: Props,
   styler: (state: State) => State,

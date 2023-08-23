@@ -1,9 +1,9 @@
 import { defineConfig, loadEnv } from 'vite'
 import react from '@vitejs/plugin-react-swc'
+import basicSsl from '@vitejs/plugin-basic-ssl'
 import { VitePWA } from 'vite-plugin-pwa'
 import lightningcss from 'vite-plugin-lightningcss'
 import { resolve } from 'path'
-import { webManifest } from './package.json'
 
 const resolveDir = (dir: TemplateStringsArray) => resolve(__dirname, ...dir)
 
@@ -20,16 +20,27 @@ export default defineConfig(({ mode }) => {
       VitePWA({
         registerType: 'autoUpdate',
         injectRegister: 'auto',
-        workbox: {
-          globPatterns: ['**\/*.{js,css,html,ico,png,svg}'],
+        devOptions: {
+          enabled: isDev,
         },
-        manifest: webManifest,
+        workbox: {
+          globPatterns: ['**/*.{js,css,html,ico,png,svg}'],
+        },
+        manifest: {
+          id: '/',
+          name: 'CLEaN Tool App',
+          short_name: 'CleanToolApp',
+          description: 'A clean tool app for Essilor',
+          theme_color: '#0F6CBD',
+          orientation: 'landscape',
+        },
       }),
       lightningcss({
         minify: !isDev,
         sourceMap: isDev,
         browserslist: 'last 2 versions, not dead, >0.2%, ie 11',
       }),
+      basicSsl(),
     ],
     // prevent vite from obscuring rust errors
     clearScreen: false,
@@ -37,14 +48,16 @@ export default defineConfig(({ mode }) => {
     server: {
       strictPort: true,
       cors: false,
+      https: true,
     },
     preview: {
       strictPort: true,
       cors: false,
+      https: true,
     },
-    esbuild: {
+    // esbuild: {
       jsxInject: `import React from 'react'`,
-    },
+    // },
     // to make use of `TAURI_PLATFORM`, `TAURI_ARCH`, `TAURI_FAMILY`,
     // `TAURI_PLATFORM_VERSION`, `TAURI_PLATFORM_TYPE` and `TAURI_DEBUG`
     // env variables
@@ -57,6 +70,20 @@ export default defineConfig(({ mode }) => {
       // produce sourcemaps for debug builds
       sourcemap: isDev,
       cssMinify: isDev ? false : 'lightningcss',
+      rollupOptions: {
+        output: {
+          manualChunks: {
+            // tauri: ['tauri'],
+            react: ['react', 'react-dom'],
+            reactHelpers: [
+              'react-helmet',
+              'react-router-dom',
+              'react-dropzone',
+            ],
+            // fluentui: ['@fluentui/react-components'],
+          },
+        },
+      },
     },
     resolve: {
       alias: {

@@ -1,5 +1,7 @@
-import { Input, InputProps, makeStyles } from '@fluentui/react-components'
-import { DropEvent, FileRejection, useDropzone } from 'react-dropzone'
+import type { InputProps } from '@fluentui/react-components'
+import { Input, makeStyles } from '@fluentui/react-components'
+import type { DropEvent, FileRejection } from 'react-dropzone'
+import { useDropzone } from 'react-dropzone'
 
 interface FileInputProps extends InputProps {
   onDropZoneDrop: (

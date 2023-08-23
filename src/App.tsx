@@ -4,13 +4,13 @@ import { makeStaticStyles } from '@fluentui/react-components'
 
 import styleString from '@/global.css?inline'
 import { author, description, keywords } from '@/../package.json'
-import { useRouteName } from '@/hooks'
+import { usePathTitle } from '@/hooks'
 import GlobalFluentProvider from './components/GlobalFluentProvider'
 
 const useGlobalStyles = makeStaticStyles(styleString)
 
 const App = () => {
-  const title = useRouteName()
+  const title = usePathTitle()
 
   useGlobalStyles()
 

@@ -9,6 +9,7 @@
     "moduleResolution": "Node",
     "resolveJsonModule": true,
     "allowSyntheticDefaultImports": true,
+    "noEmit": true,
     "outDir": "dist",
 
     /* Linting */
@@ -20,6 +21,5 @@
     "noFallthroughCasesInSwitch": true,
     "noUncheckedIndexedAccess": true
   },
-  "include": ["package.json"],
-  "exclude": ["*.config.ts"]
+  "include": ["*.config.ts"],
 }

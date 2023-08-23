@@ -1,7 +1,9 @@
-import {
+import type {
   FluentProviderProps,
   FluentProviderSlots,
   FluentProviderState,
+} from '@fluentui/react-components'
+import {
   useFluentProviderStyles_unstable,
   useFluentProvider_unstable,
   webDarkTheme,
@@ -14,26 +16,20 @@ import {
   useThemePreference,
 } from '@/hooks'
 
-const GlobalFluentProvider = ({
-  children,
-  theme,
-  ...props
-}: FluentProviderProps) => {
-  const preference = useThemePreference()
-  theme = preference ? webDarkTheme : webLightTheme
+const GlobalFluentProvider = ({ children, ...props }: FluentProviderProps) => {
+  const theme = useThemePreference() ? webDarkTheme : webLightTheme
 
   const classes = useFluentStyledState<
-    FluentProviderSlots,
     FluentProviderProps,
     FluentProviderState,
-    HTMLDivElement
+    FluentProviderSlots
   >(
     { theme, children, ...props },
     useFluentProviderStyles_unstable,
     useFluentProvider_unstable,
-  ).root!.className!
+  ).root.className
 
-  useBodyClasses(classes)
+  useBodyClasses(classes ?? '')
 
   return children
 }
