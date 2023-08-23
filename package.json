@@ -13,12 +13,6 @@
     "data"
   ],
   "license": "AGPL-3.0-or-later",
-  "webManifest": {
-    "name": "CLEaN Tool App",
-    "short_name": "CleanToolApp",
-    "description": "A clean tool app for Essilor",
-    "theme_color": "#0F6CBD"
-  },
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -26,7 +20,8 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "preview:clean": "tsc && vite build && vite preview"
   },
   "dependencies": {
     "@fluentui/react-components": "^9.29.4",
@@ -89,8 +84,10 @@
     },
     "extends": [
       "eslint:recommended",
-      "plugin:@typescript-eslint/recommended",
+      "plugin:@typescript-eslint/eslint-recommended",
+      "plugin:@typescript-eslint/strict-type-checked",
       "plugin:@typescript-eslint/stylistic-type-checked",
+      "plugin:react/recommended",
       "plugin:react/jsx-runtime",
       "plugin:react-hooks/recommended",
       "plugin:prettier/recommended"
@@ -122,6 +119,8 @@
       "prettier"
     ],
     "rules": {
+      "@typescript-eslint/consistent-type-exports": "error",
+      "@typescript-eslint/consistent-type-imports": "error",
       "react-refresh/only-export-components": [
         "warn",
         {
