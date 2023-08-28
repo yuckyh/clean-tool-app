@@ -24,7 +24,7 @@ export const useChildPaths = (parentPath: string, exclusion?: string) => {
     ?.filter(
       ({ path }) => resolvePath(path ?? parentPath).pathname !== exclusion,
     )
-    .map(({ path }) => resolvePath(path ?? ''))
+    .map(({ path }) => resolvePath(path ?? '').pathname)
 }
 
 export const usePathTitle = (path?: string) => {
