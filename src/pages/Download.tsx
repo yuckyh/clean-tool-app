@@ -1,5 +1,5 @@
-const Download = () => {
+export const Component = () => {
   return <span>downloading...</span>
 }
 
-export default Download
+Component.displayName = 'Download'

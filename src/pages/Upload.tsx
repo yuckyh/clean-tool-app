@@ -3,12 +3,14 @@ import FileWorker from '@/workers/file?worker'
 import FileInput from '@/components/FileInput'
 import { useCallback, useMemo } from 'react'
 import {
+  Button,
   Card,
   CardHeader,
   Field,
   Title1,
   makeStyles,
   shorthands,
+  tokens,
 } from '@fluentui/react-components'
 
 const useClasses = makeStyles({
@@ -19,33 +21,35 @@ const useClasses = makeStyles({
     ...shorthands.margin(0, 'auto'),
   },
   card: {
-    // width: 'fit-content',
-    // ...shorthands.margin(0, 'auto'),
+    ...shorthands.padding(tokens.spacingHorizontalXXXL, '20%'),
+  },
+  form: {
+    display: 'grid',
+    gridAutoRows: 'min-content',
+    ...shorthands.gap(0, '8px'),
   },
 })
 
-const Upload = () => {
-  const fileWorker = useMemo(() => {
-    const fileWorker = new FileWorker()
-    fileWorker.addEventListener(
-      'message',
-      (event) => {
-        console.log(
-          'This log is sent by main thread after receiving message from worker thread.',
-        )
-        console.log(event.data)
-      },
-      false,
-    )
-    return fileWorker
-  }, [])
+export const Component = () => {
+  // const fileWorker = useMemo(() => {
+  //   const fileWorker = new FileWorker()
+  //   fileWorker.addEventListener(
+  //     'message',
+  //     (event) => {
+  //       console.log(
+  //         'This log is sent by main thread after receiving message from worker thread.',
+  //       )
+  //       console.log(event.data)
+  //     },
+  //     false,
+  //   )
+  //   return fileWorker
+  // }, [])
 
-  const onDrop = useCallback(
-    (acceptedFiles: File[]): void => {
-      fileWorker.postMessage(acceptedFiles)
-    },
-    [fileWorker],
-  )
+  const onDrop = useCallback((acceptedFiles: File[]): void => {
+    // fileWorker.postMessage(acceptedFiles)
+    console.log(acceptedFiles)
+  }, [])
 
   const classes = useClasses()
 
@@ -53,14 +57,17 @@ const Upload = () => {
     <section className={classes.root}>
       <Card className={classes.card}>
         <CardHeader header={<Title1>Upload</Title1>} />
-        <Form>
+        <Form className={classes.form}>
           <Field label="Upload Data" required={true}>
             <FileInput onDropZoneDrop={onDrop} appearance="filled-darker" />
           </Field>
+          <Button appearance="primary" type="submit">
+            Proceed
+          </Button>
         </Form>
       </Card>
     </section>
   )
 }
 
-export default Upload
+Component.displayName = 'Upload'
