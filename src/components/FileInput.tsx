@@ -16,6 +16,9 @@ const useClasses = makeStyles({
   root: {
     cursor: 'pointer',
   },
+  input: {
+    width: '100%',
+  },
 })
 
 const FileInput = ({ onDropZoneDrop, ...props }: FileInputProps) => {
@@ -33,6 +36,7 @@ const FileInput = ({ onDropZoneDrop, ...props }: FileInputProps) => {
         {...props}
         placeholder={'Drag and drop or click'}
         value={fileNames}
+        className={classes.input}
       />
     </div>
   )
