@@ -4,14 +4,11 @@ export const pascalToTitle = (pascalString: string) => {
 }
 
 export const getPathTitle = (path: string) => {
-  if (path === '/') {
-    return 'Home'
-  }
-  const lastPart = path.split('/').pop() ?? ''
-
-  return lastPart
-    .replace(/-/g, ' ')
-    .split(' ')
-    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-    .join(' ')
+  return path === '/'
+    ? 'Home'
+    : (path.split('/').pop() ?? '')
+        .replace(/-/g, ' ')
+        .split(' ')
+        .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(' ')
 }

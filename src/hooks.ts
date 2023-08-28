@@ -32,8 +32,24 @@ export const usePathTitle = (path?: string) => {
   return getPathTitle(useHref(path ?? pathname))
 }
 
+export const useFluentStyledState = <
+  Props extends ComponentProps<Slots>,
+  State extends ComponentState<Slots>,
+  Slots extends SlotPropsRecord = SlotPropsRecord,
+  V = HTMLElement,
+>(
+  props: Props,
+  styler: (state: State) => State,
+  instantiator: (props: Props, ref: Ref<V>) => State,
+  ref?: Ref<V>,
+): State => {
+  ref = ref ?? { current: null }
+  const initialState = instantiator(props, ref)
+  return styler(initialState)
+}
+
 export const useThemePreference = () => {
-  const themeMedia = window.matchMedia('(prefers-color-scheme: dark)')
+  const themeMedia = matchMedia('(prefers-color-scheme: dark)')
   const [preference, setPreference] = useState(themeMedia.matches)
 
   useEffect(() => {
@@ -63,18 +79,7 @@ export const useBodyClasses = (classes: string) => {
   return classes
 }
 
-export const useFluentStyledState = <
-  Props extends ComponentProps<Slots>,
-  State extends ComponentState<Slots>,
-  Slots extends SlotPropsRecord = SlotPropsRecord,
-  V = HTMLElement,
->(
-  props: Props,
-  styler: (state: State) => State,
-  instantiator: (props: Props, ref: Ref<V>) => State,
-  ref?: Ref<V>,
-): State => {
-  ref = ref ?? { current: null }
-  const initialState = instantiator(props, ref)
-  return styler(initialState)
+export const useLocalStorage = () => {
+  const [storage] = useState(localStorage)
+  return storage
 }

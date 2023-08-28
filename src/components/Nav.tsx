@@ -44,7 +44,7 @@ interface NavTabProps {
 
 export const NavTab = ({ path }: NavTabProps) => {
   const href = useHref(path)
-  const label = usePathTitle(path)
+  const label: string = usePathTitle(path)
 
   return <Tab value={href}>{label}</Tab>
 }

@@ -1,7 +1,6 @@
 import { Form } from 'react-router-dom'
-import FileWorker from '@/workers/file?worker'
 import FileInput from '@/components/FileInput'
-import { useCallback, useMemo } from 'react'
+import { useCallback } from 'react'
 import {
   Button,
   Card,

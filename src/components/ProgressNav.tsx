@@ -109,7 +109,7 @@ const useLinkClasses = makeStyles({
 
 const ProgressNavLink = ({ done, path }: LinkLabelProps) => {
   const href = useHref(path)
-  const label = usePathTitle(path)
+  const label: string = usePathTitle(path)
   const classes = useLinkClasses()
 
   const fluentLinkComponent = useFluentStyledState<
