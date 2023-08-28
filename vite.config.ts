@@ -73,14 +73,15 @@ export default defineConfig(({ mode }) => {
       rollupOptions: {
         output: {
           manualChunks: {
-            // tauri: ['tauri'],
             react: ['react', 'react-dom'],
             reactHelpers: [
               'react-helmet',
               'react-router-dom',
               'react-dropzone',
             ],
-            // fluentui: ['@fluentui/react-components'],
+            fluentui: ['@fluentui/react-components'],
+            tauri: ['@tauri-apps/api'],
+            plotly: ['react-plotly.js', 'plotly.js'],
           },
         },
       },
