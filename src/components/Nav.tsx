@@ -7,12 +7,11 @@ import {
   useResolvedPath,
   useNavigate,
   useLocation,
-  matchRoutes,
+  useHref,
 } from 'react-router-dom'
 
 import { useChildPaths, usePathTitle } from '@/hooks'
 import { useCallback } from 'react'
-import { routes } from '@/router'
 
 const Nav = (props: TabListProps) => {
   const navigate = useNavigate()
@@ -22,12 +21,6 @@ const Nav = (props: TabListProps) => {
   const childPaths = useChildPaths(
     componentPath.pathname,
     componentPath.pathname,
-  )
-
-  console.log(
-    matchRoutes(routes, componentPath.pathname)
-      ?.filter(({ route }) => route.children)
-      .map(({ route }) => route.children),
   )
 
   const handleTabSelect: SelectTabEventHandler = useCallback(
@@ -50,10 +43,10 @@ interface NavTabProps {
 }
 
 export const NavTab = ({ path }: NavTabProps) => {
-  const { pathname } = useResolvedPath(path)
-  const label = usePathTitle(pathname)
+  const href = useHref(path)
+  const label = usePathTitle(path)
 
-  return <Tab value={pathname}>{label}</Tab>
+  return <Tab value={href}>{label}</Tab>
 }
 
 export default Nav

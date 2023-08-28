@@ -4,6 +4,7 @@ import {
   Card,
   CardHeader,
   Title1,
+  tokens,
 } from '@fluentui/react-components'
 import { makeStyles, shorthands } from '@fluentui/react-components'
 import { useHref, useLinkClickHandler } from 'react-router-dom'
@@ -16,8 +17,7 @@ const useClasses = makeStyles({
     ...shorthands.margin(0, 'auto'),
   },
   card: {
-    // width: 'fit-content',
-    // ...shorthands.margin(0, 'auto'),
+    ...shorthands.padding(tokens.spacingHorizontalXXXL, '20%'),
   },
 })
 

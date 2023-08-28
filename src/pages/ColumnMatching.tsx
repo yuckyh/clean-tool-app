@@ -1,5 +1,5 @@
-const ColumnMatching = () => {
+export const Component = () => {
   return <span>matching columns</span>
 }
 
-export default ColumnMatching
+Component.displayName = 'ColumnMatching'
