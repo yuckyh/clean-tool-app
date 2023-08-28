@@ -1,4 +1,9 @@
-import { matchRoutes, resolvePath, useLocation } from 'react-router-dom'
+import {
+  matchRoutes,
+  resolvePath,
+  useHref,
+  useLocation,
+} from 'react-router-dom'
 
 import { routes } from './router'
 import type { Ref } from 'react'
@@ -10,41 +15,6 @@ import type {
   SlotPropsRecord,
 } from '@fluentui/react-components'
 
-// const useHandleMatches = <T extends Handle>(handleId: string): Match<T>[] => {
-//   const matches = useMatches().filter((match) => match.handle) as Match<T>[]
-
-//   return matches.filter((match) => {
-//     return match.handle.id === handleId
-//   })
-// }
-
-// const useComponentRoute = <T extends Handle>(
-//   handleId: string,
-// ): RouteObject | undefined => {
-//   const matches = useHandleMatches<T>(handleId)
-//   const { pathname } = useResolvedPath('')
-//   const matchingIds = matches.map(({ id }) => id)
-//   const matchingRoutes = matchRoutes(routes, pathname)
-//   return matchingRoutes?.find(({ route }) =>
-//     matchingIds.includes(route.id ?? ''),
-//   )?.route
-// }
-// const useChildRoutes = (
-//   route: RouteObject,
-//   exclusion?: string,
-// ): RouteObject[] =>
-//   route.children?.filter(
-//     (childRoute) =>
-//       childRoute.path !== '*' &&
-//       resolvePath(childRoute.path ?? route.path ?? '').pathname !== exclusion,
-//   ) ?? []
-
-// const useCurrentParentRoute = (parentPath: string) => {
-//   return matchRoutes(routes, parentPath)
-//     ?.filter(({ route }) => route.children)
-//     ?.pop()
-// }
-
 export const useChildPaths = (parentPath: string, exclusion?: string) => {
   console.log(parentPath, exclusion)
   return matchRoutes(routes, parentPath)
@@ -54,15 +24,12 @@ export const useChildPaths = (parentPath: string, exclusion?: string) => {
     ?.filter(
       ({ path }) => resolvePath(path ?? parentPath).pathname !== exclusion,
     )
-    .map(({ path }) => path ?? '')
+    .map(({ path }) => resolvePath(path ?? ''))
 }
 
 export const usePathTitle = (path?: string) => {
   const { pathname } = useLocation()
-  if (path) {
-    return getPathTitle(path)
-  }
-  return getPathTitle(pathname)
+  return getPathTitle(useHref(path ?? pathname))
 }
 
 export const useThemePreference = () => {
