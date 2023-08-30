@@ -9,8 +9,6 @@ import Layout from '@/Layout'
 import NotFound from '@/404'
 
 import Home from '@/pages'
-import EDA from '@/pages/EDA/Layout'
-import EDAHome from '@/pages/EDA'
 import Variable from '@/pages/EDA/Variable'
 
 const routes = createRoutesFromElements(
@@ -22,8 +20,7 @@ const routes = createRoutesFromElements(
         path="column-matching"
         lazy={() => import('@/pages/ColumnMatching')}
       />
-      <Route path="EDA" element={<EDA />}>
-        <Route index element={<EDAHome />}></Route>
+      <Route path="EDA" lazy={() => import('@/pages/EDA')}>
         <Route path=":variable" element={<Variable />} />
       </Route>
       <Route path="download" lazy={() => import('@/pages/Download')} />
