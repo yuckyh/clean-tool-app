@@ -1,23 +1,25 @@
+import type { Ref } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import {
   matchRoutes,
   resolvePath,
   useHref,
   useLocation,
 } from 'react-router-dom'
-
-import { routes } from './router'
-import type { Ref } from 'react'
-import { useEffect, useState } from 'react'
-import { getPathTitle } from './helpers'
 import type {
   ComponentProps,
   ComponentState,
   SlotPropsRecord,
 } from '@fluentui/react-components'
 
-export const useChildPaths = (parentPath: string, exclusion?: string) => {
-  console.log(parentPath, exclusion)
-  return matchRoutes(routes, parentPath)
+import { routes } from '@/Router'
+import { getPathTitle } from '@/helpers'
+import FileWorker from '@/workers/file?worker'
+import type { FileRequest, FileResponse } from '@/workers/file'
+import { fileManager } from '@/lib/FileManager'
+
+export const useChildPaths = (parentPath: string, exclusion?: string) =>
+  matchRoutes(routes, parentPath)
     ?.filter(({ route }) => route.children)
     .map(({ route }) => route.children)
     .pop()
@@ -25,7 +27,6 @@ export const useChildPaths = (parentPath: string, exclusion?: string) => {
       ({ path }) => resolvePath(path ?? parentPath).pathname !== exclusion,
     )
     .map(({ path }) => resolvePath(path ?? '').pathname)
-}
 
 export const usePathTitle = (path?: string) => {
   const { pathname } = useLocation()
@@ -46,6 +47,14 @@ export const useFluentStyledState = <
   ref = ref ?? { current: null }
   const initialState = instantiator(props, ref)
   return styler(initialState)
+}
+
+export const useOPFS = () => {
+  useEffect(() => {
+    void (async () =>
+      (await navigator.storage.persisted()) &&
+      (await navigator.storage.persist()))()
+  }, [])
 }
 
 export const useThemePreference = () => {
@@ -79,7 +88,53 @@ export const useBodyClasses = (classes: string) => {
   return classes
 }
 
-export const useLocalStorage = () => {
-  const [storage] = useState(localStorage)
-  return storage
+export const useFileWorker = () => {
+  const fileWorker = useMemo(() => {
+    const fileWorker = new FileWorker()
+
+    // Response handler
+    fileWorker.addEventListener(
+      'message',
+      ({ data }: MessageEvent<FileResponse>) => {
+        const { action, fileName } = data
+        console.log(data)
+        fileManager.state = action === 'delete' ? '' : fileName
+      },
+      false,
+    )
+
+    // Init request
+    const request: FileRequest = {
+      method: 'index',
+      fileName: fileManager.state,
+    }
+    fileWorker.postMessage(request)
+
+    return fileWorker
+  }, [])
+
+  useEffect(() => {
+    return () => {
+      fileWorker.terminate()
+    }
+  }, [fileWorker])
+
+  return fileWorker
+}
+
+export const useFileName = () => {
+  const [fileName, setFileName] = useState(fileManager.state)
+
+  useEffect(() => {
+    const listener = fileManager.addStateListener((state) => {
+      console.log(state)
+      setFileName(state)
+    })
+
+    return () => {
+      fileManager.removeStateListener(listener)
+    }
+  }, [])
+
+  return fileName
 }

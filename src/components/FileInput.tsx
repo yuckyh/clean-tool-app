@@ -1,15 +1,10 @@
 import type { InputProps } from '@fluentui/react-components'
 import { Input, makeStyles } from '@fluentui/react-components'
-import type { DropEvent, FileRejection } from 'react-dropzone'
+import type { DropzoneOptions } from 'react-dropzone'
 import { useDropzone } from 'react-dropzone'
 
 interface FileInputProps extends InputProps {
-  onDropZoneDrop: (
-    acceptedFiles: File[],
-    // inputRef: Ref<HTMLInputElement>,
-    fileRejections: FileRejection[],
-    event: DropEvent,
-  ) => void
+  zoneOptions?: DropzoneOptions
 }
 
 const useClasses = makeStyles({
@@ -21,11 +16,9 @@ const useClasses = makeStyles({
   },
 })
 
-const FileInput = ({ onDropZoneDrop, ...props }: FileInputProps) => {
-  const { getRootProps, getInputProps, acceptedFiles } = useDropzone({
-    onDrop: onDropZoneDrop,
-    noDragEventsBubbling: true,
-  })
+const FileInput = ({ zoneOptions, value, ...props }: FileInputProps) => {
+  const { getRootProps, getInputProps, acceptedFiles } =
+    useDropzone(zoneOptions)
   const fileNames = acceptedFiles.map((file) => file.name).join(', ')
   const classes = useClasses()
 
@@ -34,9 +27,10 @@ const FileInput = ({ onDropZoneDrop, ...props }: FileInputProps) => {
       <input {...getInputProps()} />
       <Input
         {...props}
-        placeholder={'Drag and drop or click'}
-        value={fileNames}
+        placeholder={'Drag and drop or click to upload'}
+        value={value ?? fileNames}
         className={classes.input}
+        disabled={zoneOptions?.disabled}
       />
     </div>
   )

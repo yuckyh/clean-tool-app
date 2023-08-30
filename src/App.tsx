@@ -4,8 +4,8 @@ import { makeStaticStyles } from '@fluentui/react-components'
 
 import styleString from '@/global.css?inline'
 import { author, description, keywords } from '@/../package.json'
-import { usePathTitle } from '@/hooks'
-import GlobalFluentProvider from './components/GlobalFluentProvider'
+import { useOPFS, usePathTitle } from '@/hooks'
+import Providers from './Providers'
 
 const useGlobalStyles = makeStaticStyles(styleString)
 
@@ -13,9 +13,10 @@ const App = () => {
   const title = usePathTitle()
 
   useGlobalStyles()
+  useOPFS()
 
   return (
-    <GlobalFluentProvider>
+    <Providers>
       <Helmet titleTemplate="%s - CLEaN Tool" defaultTitle="CLEaN Tool">
         <meta name="author" content={author.name} />
         <meta name="description" content={description} />
@@ -23,7 +24,7 @@ const App = () => {
         <title>{title}</title>
       </Helmet>
       <Outlet />
-    </GlobalFluentProvider>
+    </Providers>
   )
 }
 

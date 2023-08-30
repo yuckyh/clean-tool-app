@@ -23,6 +23,8 @@ import {
   useLocation,
   useResolvedPath,
 } from 'react-router-dom'
+import { useEffect } from 'react'
+import { progressManager } from '@/lib/ProgressManager'
 
 const useClasses = makeStyles({
   root: {
@@ -53,8 +55,17 @@ const ProgressNav = (props: ProgressBarProps) => {
 
   const index = childPaths?.findIndex((path) => path === pathname) ?? -1
 
+  const allowedChildPaths = childPaths?.map((pathname) => ({
+    pathname,
+    disabled: !progressManager.allowedPath.includes(pathname),
+  }))
+
   // Ternary expression for animation hack
   const progress = index == 0 ? 0.011 : index / ((childPaths?.length ?? -1) - 1)
+
+  useEffect(() => {
+    // console.log(ProgressStateManager.instance.allowedPath)
+  }, [])
 
   return (
     <div className={classes.root}>
@@ -69,8 +80,13 @@ const ProgressNav = (props: ProgressBarProps) => {
         {...props}
       />
       <div className={classes.linkContainer}>
-        {childPaths?.map((path, i) => (
-          <ProgressNavLink key={path} done={index >= i} path={path} />
+        {allowedChildPaths?.map(({ pathname, disabled }, i) => (
+          <ProgressNavLink
+            key={i}
+            done={index >= i}
+            path={pathname}
+            disabled={disabled}
+          />
         ))}
       </div>
     </div>
@@ -80,6 +96,7 @@ const ProgressNav = (props: ProgressBarProps) => {
 interface LinkLabelProps {
   done: boolean
   path: string
+  disabled?: boolean
 }
 
 const useLinkClasses = makeStyles({
@@ -107,7 +124,7 @@ const useLinkClasses = makeStyles({
   },
 })
 
-const ProgressNavLink = ({ done, path }: LinkLabelProps) => {
+const ProgressNavLink = ({ done, path, disabled }: LinkLabelProps) => {
   const href = useHref(path)
   const label: string = usePathTitle(path)
   const classes = useLinkClasses()
@@ -117,7 +134,11 @@ const ProgressNavLink = ({ done, path }: LinkLabelProps) => {
     LinkState,
     LinkSlots,
     HTMLAnchorElement
-  >({ appearance: 'subtle' }, useLinkStyles_unstable, useLink_unstable)
+  >(
+    { appearance: 'subtle', disabled },
+    useLinkStyles_unstable,
+    useLink_unstable,
+  )
 
   return (
     <div className={classes.root}>
@@ -126,7 +147,7 @@ const ProgressNavLink = ({ done, path }: LinkLabelProps) => {
           fluentLinkComponent.root.className,
           classes.link,
         )}
-        to={href}>
+        to={disabled ? '#' : href}>
         {({ isActive }) => (
           <>
             <div

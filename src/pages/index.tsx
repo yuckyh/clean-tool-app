@@ -1,7 +1,7 @@
 import {
-  Body1,
   Button,
   Card,
+  CardFooter,
   CardHeader,
   Title1,
   tokens,
@@ -29,17 +29,17 @@ const Home = () => {
   return (
     <section className={classes.root}>
       <Card className={classes.card} size="large">
-        <CardHeader header={<Title1>Home</Title1>}></CardHeader>
-        <Body1>To get started,</Body1>
-        <Button
-          as="a"
-          appearance="primary"
-          href={uploadHref}
-          onClick={handleClick}>
-          Upload
-        </Button>
-        <Body1>or...</Body1>
-        <Button>Continue (WIP)</Button>
+        <CardHeader header={<Title1>CLEaN Tool</Title1>}></CardHeader>
+        <CardFooter
+          action={
+            <Button
+              as="a"
+              appearance="primary"
+              href={uploadHref}
+              onClick={handleClick}>
+              Upload
+            </Button>
+          }></CardFooter>
       </Card>
     </section>
   )
