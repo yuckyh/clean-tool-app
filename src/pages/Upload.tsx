@@ -1,4 +1,4 @@
-import { useCallback, useContext } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { Form } from 'react-router-dom'
 import FileInput from '@/components/FileInput'
 import {
@@ -8,14 +8,20 @@ import {
   CardHeader,
   Field,
   Title1,
+  Toast,
+  ToastBody,
+  ToastTitle,
+  Toaster,
   makeStyles,
   shorthands,
   tokens,
+  useId,
+  useToastController,
 } from '@fluentui/react-components'
 import type { DropzoneOptions } from 'react-dropzone'
 import { fileManager } from '@/lib/FileManager'
-import { type FileRequest } from '@/workers/file'
-import { FileNameContext, FileWorkerContext } from '@/contexts'
+import type { FileResponse, FileRequest } from '@/workers/file'
+import { useFileName, useFileWorker } from '@/hooks'
 
 const useClasses = makeStyles({
   root: {
@@ -40,33 +46,69 @@ const useClasses = makeStyles({
 })
 
 export const Component = () => {
-  const fileWorker = useContext(FileWorkerContext)
-  const fileName = useContext(FileNameContext)
+  const fileName = useFileName()
+  const [taskType, setTaskType] = useState<'uploaded' | 'deleted' | false>(
+    false,
+  )
+
+  const toasterId = useId('toaster')
+
+  const { dispatchToast } = useToastController(toasterId)
+  const toastNotify = useCallback(() => {
+    dispatchToast(
+      <Toast>
+        <ToastTitle>File {taskType}!</ToastTitle>
+        <ToastBody>
+          {fileName} has been {taskType}.
+        </ToastBody>
+      </Toast>,
+      { intent: 'success' },
+    )
+  }, [dispatchToast, fileName, taskType])
+
+  const handleWorkerLoad = useCallback(
+    ({ data }: MessageEvent<FileResponse>) => {
+      const loadingActions = ['create', 'overwrite', 'delete']
+      const hasMatch = !!loadingActions.find((action) => action === data.action)
+      if (!hasMatch) {
+        return
+      }
+      setTaskType(!hasMatch)
+      toastNotify()
+    },
+    [toastNotify],
+  )
+
+  const fileWorker = useFileWorker()
+
+  useEffect(() => {
+    fileWorker.addEventListener('message', handleWorkerLoad)
+    return () => {
+      fileWorker.removeEventListener('message', handleWorkerLoad)
+    }
+  }, [fileWorker, handleWorkerLoad])
 
   const handleFileDrop = useCallback(
     (acceptedFiles: File[]): void => {
-      const file = acceptedFiles[0]
+      const [file] = acceptedFiles
+      if (!file) {
+        return
+      }
 
-      void (async () => {
-        const fileBuffer = await file.arrayBuffer()
-        console.log(fileBuffer)
+      setTaskType('uploaded')
+      const request: FileRequest = {
+        method: 'post',
+        file,
+        fileName: file.name,
+      }
 
-        const request: FileRequest = {
-          method: 'post',
-          fileBuffer,
-          fileOptions: {
-            type: file.type,
-          },
-          fileName: file.name,
-        }
-
-        fileWorker.postMessage(request, [fileBuffer])
-      })()
+      fileWorker.postMessage(request)
     },
     [fileWorker],
   )
 
   const handleResetClick = useCallback(() => {
+    setTaskType('deleted')
     const request: FileRequest = {
       method: 'delete',
       fileName: fileManager.state,
@@ -119,6 +161,7 @@ export const Component = () => {
           }
         />
       </Card>
+      <Toaster toasterId={toasterId} />
     </Form>
   )
 }
