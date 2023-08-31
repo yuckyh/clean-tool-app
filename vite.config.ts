@@ -1,7 +1,7 @@
 import { defineConfig, loadEnv } from 'vite'
 import react from '@vitejs/plugin-react-swc'
-import basicSsl from '@vitejs/plugin-basic-ssl'
 import { VitePWA } from 'vite-plugin-pwa'
+import mkcert from 'vite-plugin-mkcert'
 import lightningcss from 'vite-plugin-lightningcss'
 import { resolve } from 'path'
 
@@ -40,7 +40,7 @@ export default defineConfig(({ mode }) => {
         sourceMap: isDev,
         browserslist: 'last 2 versions, not dead, >0.2%, ie 11',
       }),
-      basicSsl(),
+      mkcert(),
     ],
     // prevent vite from obscuring rust errors
     clearScreen: false,
@@ -56,12 +56,15 @@ export default defineConfig(({ mode }) => {
       https: true,
     },
     // esbuild: {
-      jsxInject: `import React from 'react'`,
+    jsxInject: `import React from 'react'`,
     // },
     // to make use of `TAURI_PLATFORM`, `TAURI_ARCH`, `TAURI_FAMILY`,
     // `TAURI_PLATFORM_VERSION`, `TAURI_PLATFORM_TYPE` and `TAURI_DEBUG`
     // env variables
     envPrefix: ['VITE_', 'TAURI_'],
+    commonjsOptions: {
+      esmExternals: true,
+    },
     build: {
       // Tauri uses Chromium on Windows and WebKit on macOS and Linux
       target: env.TAURI_PLATFORM == 'windows' ? 'chrome105' : 'safari13',

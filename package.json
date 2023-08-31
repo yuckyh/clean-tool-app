@@ -62,6 +62,7 @@
     "typescript": "^5.2.2",
     "vite": "^4.4.9",
     "vite-plugin-lightningcss": "^0.0.5",
+    "vite-plugin-mkcert": "^1.16.0",
     "vite-plugin-pwa": "^0.16.4",
     "workbox-window": "^7.0.0"
   },
