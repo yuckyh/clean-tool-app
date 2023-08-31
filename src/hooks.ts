@@ -1,5 +1,5 @@
 import type { Ref } from 'react'
-import { useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import {
   matchRoutes,
   resolvePath,
@@ -92,32 +92,32 @@ export const useFileWorker = () => {
   const fileWorker = useMemo(() => {
     const fileWorker = new FileWorker()
 
-    // Response handler
-    fileWorker.addEventListener(
-      'message',
-      ({ data }: MessageEvent<FileResponse>) => {
-        const { action, fileName } = data
-        console.log(data)
-        fileManager.state = action === 'delete' ? '' : fileName
-      },
-      false,
-    )
-
     // Init request
     const request: FileRequest = {
       method: 'index',
       fileName: fileManager.state,
     }
+
     fileWorker.postMessage(request)
 
     return fileWorker
   }, [])
 
+  const handleWorkerResponse = useCallback(
+    ({ data }: MessageEvent<FileResponse>) => {
+      const { action, fileName } = data
+      fileManager.state = action === 'delete' ? '' : fileName
+    },
+    [],
+  )
+
   useEffect(() => {
+    fileWorker.addEventListener('message', handleWorkerResponse)
+
     return () => {
-      fileWorker.terminate()
+      fileWorker.removeEventListener('message', handleWorkerResponse)
     }
-  }, [fileWorker])
+  }, [fileWorker, handleWorkerResponse])
 
   return fileWorker
 }
@@ -127,7 +127,6 @@ export const useFileName = () => {
 
   useEffect(() => {
     const listener = fileManager.addStateListener((state) => {
-      console.log(state)
       setFileName(state)
     })
 
