@@ -3,8 +3,7 @@ import { writeFile } from './storage'
 import type { Controller, RequestHandler, WorkerRequest } from '@/workers'
 
 export interface FileRequest extends WorkerRequest {
-  fileBuffer?: ArrayBuffer
-  fileOptions?: FilePropertyBag
+  file?: File
   fileName: string
 }
 
@@ -24,8 +23,8 @@ const index: RequestHandler = async ({ fileName }) => {
   }
 }
 
-const post: RequestHandler = async ({ fileBuffer, fileOptions, fileName }) => {
-  if (!fileBuffer) {
+const post: RequestHandler = async ({ file, fileName }) => {
+  if (!file) {
     return {
       action: 'fail',
       fileName,
@@ -36,8 +35,7 @@ const post: RequestHandler = async ({ fileBuffer, fileOptions, fileName }) => {
 
   const fileHandle = await getWorkFileHandle(fileName, !exists)
 
-  fileHandle &&
-    (await writeFile(new File([fileBuffer], fileName, fileOptions), fileHandle))
+  fileHandle && (await writeFile(file, fileHandle))
 
   return {
     action: exists ? 'overwrite' : 'create',
@@ -74,11 +72,7 @@ const main = async ({ data }: MessageEvent<FileRequest>) => {
   postMessage(await controller[method](data))
 }
 
-addEventListener(
-  'message',
-  (event) => {
-    console.log('This worker was created at ' + Date.now())
-    void main(event as MessageEvent<FileRequest>)
-  },
-  false,
-)
+addEventListener('message', (event) => {
+  console.log('This worker was created at ' + Date.now())
+  void main(event as MessageEvent<FileRequest>)
+})
