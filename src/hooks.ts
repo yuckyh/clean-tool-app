@@ -11,10 +11,13 @@ import type {
   ComponentState,
   SlotPropsRecord,
 } from '@fluentui/react-components'
+import type { WorkBook } from 'xlsx'
 
 import { routes } from '@/Router'
 import { getPathTitle } from '@/helpers'
 import FileWorker from '@/workers/file?worker'
+import WorkbookWorker from '@/workers/workbook?worker'
+import type { WorkbookRequest } from '@/workers/workbook'
 import type { FileRequest, FileResponse } from '@/workers/file'
 import { fileManager } from '@/lib/FileManager'
 
@@ -90,7 +93,7 @@ export const useBodyClasses = (classes: string) => {
 
 export const useFileWorker = () => {
   const fileWorker = useMemo(() => {
-    const fileWorker = new FileWorker()
+    const worker = new FileWorker()
 
     // Init request
     const request: FileRequest = {
@@ -98,9 +101,9 @@ export const useFileWorker = () => {
       fileName: fileManager.state,
     }
 
-    fileWorker.postMessage(request)
+    worker.postMessage(request)
 
-    return fileWorker
+    return worker
   }, [])
 
   const handleWorkerResponse = useCallback(
@@ -136,4 +139,68 @@ export const useFileName = () => {
   }, [])
 
   return fileName
+}
+
+const useFile = () => {
+  const fileWorker = useFileWorker()
+  const fileName = useFileName()
+  const [file, setFile] = useState<File>()
+
+  useEffect(() => {
+    const handleGetFile = ({ data }: MessageEvent<FileResponse>) => {
+      // console.log()
+      setFile(data.file ?? new File([], ''))
+    }
+
+    fileWorker.addEventListener('message', handleGetFile)
+
+    const request: FileRequest = {
+      method: 'get',
+      fileName,
+    }
+
+    fileWorker.postMessage(request)
+    return () => {
+      fileWorker.removeEventListener('message', handleGetFile)
+    }
+  }, [fileName, fileWorker])
+
+  return file
+}
+
+export const useWorkbookWorker = () => {
+  const file = useFile()
+  const workbookWorker = useMemo(() => {
+    const worker = new WorkbookWorker()
+
+    // Init request
+    const request: WorkbookRequest = {
+      method: 'index',
+      file,
+    }
+
+    worker.postMessage(request)
+
+    return worker
+  }, [file])
+
+  useEffect(() => {
+    const handleWorkerResponse = ({ data }: MessageEvent<WorkbookRequest>) => {
+      console.log(data)
+    }
+
+    workbookWorker.addEventListener('message', handleWorkerResponse)
+
+    return () => {
+      workbookWorker.removeEventListener('message', handleWorkerResponse)
+    }
+  }, [workbookWorker])
+
+  return workbookWorker
+}
+
+export const useWorkbook = () => {
+  const workbook = useState<WorkBook>()
+
+  return workbook
 }
