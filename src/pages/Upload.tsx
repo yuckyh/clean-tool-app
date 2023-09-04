@@ -118,17 +118,12 @@ export const Component = () => {
 
   const zoneOptions: DropzoneOptions = {
     accept: {
-      'text/plain': ['.csv'],
       'text/csv': ['.csv'],
-      'text/x-csv': ['.csv'],
-      'text/comma-separated-values': ['.csv'],
-      'text/x-comma-separated-values': ['.csv'],
-      'application/csv': ['.csv'],
-      'application/vnd.ms-excel': ['.xls', '.xlsx'],
+      'application/vnd.ms-excel': ['.xls'],
       'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': [
         '.xlsx',
       ],
-      'application/vnd.google-apps.spreadsheet': ['.gsheet'],
+      'application/vnd.oasis.opendocument.spreadsheet': ['.ods'],
     },
     maxFiles: 1,
     onDrop: handleFileDrop,
