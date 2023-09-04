@@ -6,6 +6,7 @@ import {
   Card,
   CardFooter,
   CardHeader,
+  Dropdown,
   Field,
   Title1,
   Toast,
@@ -21,7 +22,7 @@ import {
 import type { DropzoneOptions } from 'react-dropzone'
 import { fileManager } from '@/lib/FileManager'
 import type { FileResponse, FileRequest } from '@/workers/file'
-import { useFileName, useFileWorker } from '@/hooks'
+import { useFile, useFileName, useFileWorker, useWorkbook } from '@/hooks'
 
 const useClasses = makeStyles({
   root: {
@@ -42,6 +43,11 @@ const useClasses = makeStyles({
     display: 'grid',
     gridAutoFlow: 'column',
     ...shorthands.gap('8px', 0),
+  },
+
+  input: {
+    width: '100%',
+    minWidth: 'initial',
   },
 })
 
@@ -131,6 +137,11 @@ export const Component = () => {
   }
 
   const classes = useClasses()
+  const file = useFile()
+  const isCSV = !file.size && file.type === 'text/csv'
+  // const workbook = useWorkbook()
+
+  console.log(file)
 
   return (
     <Form className={classes.root} action="/column-matching" method="POST">
@@ -143,6 +154,13 @@ export const Component = () => {
             value={fileName}
           />
         </Field>
+        {!isCSV && (
+          <Field label="Select sheet" required={true}>
+            <Dropdown
+              appearance="filled-darker"
+              className={classes.input}></Dropdown>
+          </Field>
+        )}
         <CardFooter
           action={
             <div className={classes.actions}>
