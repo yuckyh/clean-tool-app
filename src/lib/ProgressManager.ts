@@ -34,7 +34,6 @@ class ProgressManager extends StateManager<ProgressState> {
 
   constructor() {
     super(ProgressState.NONE, 'progressState')
-    this.state = ProgressState.NONE
   }
 }
 
