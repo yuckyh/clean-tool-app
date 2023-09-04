@@ -73,6 +73,5 @@ const main = async ({ data }: MessageEvent<FileRequest>) => {
 }
 
 addEventListener('message', (event) => {
-  console.log('This worker was created at ' + Date.now())
   void main(event as MessageEvent<FileRequest>)
 })
