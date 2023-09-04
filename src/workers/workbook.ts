@@ -17,7 +17,7 @@ export interface WorkbookResponse extends WorkerResponse {
 
 type WorkbookRequestHandler = RequestHandler<WorkbookRequest, WorkbookResponse>
 
-const index: WorkbookRequestHandler = async ({ file }) => {
+const get: WorkbookRequestHandler = async ({ file }) => {
   if (!file) {
     return {
       action: 'fail',
@@ -31,15 +31,15 @@ const index: WorkbookRequestHandler = async ({ file }) => {
 }
 
 const controller: Controller<WorkbookRequest, WorkbookRequestHandler> = {
-  index,
-  get: async () => {
+  index: async () => {
     await new Promise((res) => {
       res('convert')
     })
     return {
-      action: 'get',
+      action: 'sync',
     }
   },
+  get,
   post: async () => {
     await new Promise((res) => {
       res('convert')

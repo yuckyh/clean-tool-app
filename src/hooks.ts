@@ -148,7 +148,6 @@ export const useFile = () => {
 
   useEffect(() => {
     const handleGetFile = ({ data }: MessageEvent<FileResponse>) => {
-      // console.log()
       setFile(data.file ?? new File([], ''))
     }
 
@@ -169,38 +168,32 @@ export const useFile = () => {
 }
 
 export const useWorkbookWorker = () => {
-  const file = useFile()
-  const workbookWorker = useMemo(() => {
-    const worker = new WorkbookWorker()
+  return useMemo(() => new WorkbookWorker(), [])
+}
 
-    // Init request
+export const useWorkbook = () => {
+  const worker = useWorkbookWorker()
+  const [workbook, setWorkbook] = useState<WorkBook | undefined>()
+  const file = useFile()
+
+  useEffect(() => {
+    const handleGetWorkbook = ({ data }: MessageEvent<WorkbookRequest>) => {
+      setWorkbook(data.workbook)
+    }
+
+    // Get request
     const request: WorkbookRequest = {
-      method: 'index',
+      method: 'get',
       file,
     }
 
     worker.postMessage(request)
 
-    return worker
-  }, [file])
-
-  useEffect(() => {
-    const handleWorkerResponse = ({ data }: MessageEvent<WorkbookRequest>) => {
-      console.log(data)
-    }
-
-    workbookWorker.addEventListener('message', handleWorkerResponse)
-
+    worker.addEventListener('message', handleGetWorkbook)
     return () => {
-      workbookWorker.removeEventListener('message', handleWorkerResponse)
+      worker.removeEventListener('message', handleGetWorkbook)
     }
-  }, [workbookWorker])
-
-  return workbookWorker
-}
-
-export const useWorkbook = () => {
-  const workbook = useState<WorkBook>()
+  }, [file, worker])
 
   return workbook
 }

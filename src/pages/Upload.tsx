@@ -13,6 +13,7 @@ import {
   ToastBody,
   ToastTitle,
   Toaster,
+  Option,
   makeStyles,
   shorthands,
   tokens,
@@ -23,6 +24,8 @@ import type { DropzoneOptions } from 'react-dropzone'
 import { fileManager } from '@/lib/FileManager'
 import type { FileResponse, FileRequest } from '@/workers/file'
 import { useFile, useFileName, useFileWorker, useWorkbook } from '@/hooks'
+
+type TaskType = 'uploaded' | 'deleted' | false
 
 const useClasses = makeStyles({
   root: {
@@ -53,24 +56,14 @@ const useClasses = makeStyles({
 
 export const Component = () => {
   const fileName = useFileName()
-  const [taskType, setTaskType] = useState<'uploaded' | 'deleted' | false>(
-    false,
-  )
+  const [taskType, setTaskType] = useState<TaskType>(false)
 
   const toasterId = useId('toaster')
 
   const { dispatchToast } = useToastController(toasterId)
   const toastNotify = useCallback(() => {
-    dispatchToast(
-      <Toast>
-        <ToastTitle>File {taskType}!</ToastTitle>
-        <ToastBody>
-          {fileName} has been {taskType}.
-        </ToastBody>
-      </Toast>,
-      { intent: 'success' },
-    )
-  }, [dispatchToast, fileName, taskType])
+    dispatchToast(<FileToast type={taskType} />, { intent: 'success' })
+  }, [dispatchToast, taskType])
 
   const handleWorkerLoad = useCallback(
     ({ data }: MessageEvent<FileResponse>) => {
@@ -122,6 +115,12 @@ export const Component = () => {
     fileWorker.postMessage(request)
   }, [fileWorker])
 
+  const classes = useClasses()
+  const file = useFile()
+  const hasFile = !!file.size
+  const isCSV = file.type === 'text/csv'
+  const workbook = useWorkbook()
+
   const zoneOptions: DropzoneOptions = {
     accept: {
       'text/csv': ['.csv'],
@@ -133,15 +132,10 @@ export const Component = () => {
     },
     maxFiles: 1,
     onDrop: handleFileDrop,
-    disabled: !!fileName,
+    disabled: hasFile,
   }
 
-  const classes = useClasses()
-  const file = useFile()
-  const isCSV = !file.size && file.type === 'text/csv'
-  // const workbook = useWorkbook()
-
-  console.log(file)
+  console.log(file, workbook)
 
   return (
     <Form className={classes.root} action="/column-matching" method="POST">
@@ -154,20 +148,22 @@ export const Component = () => {
             value={fileName}
           />
         </Field>
-        {!isCSV && (
+        {hasFile && !isCSV && (
           <Field label="Select sheet" required={true}>
-            <Dropdown
-              appearance="filled-darker"
-              className={classes.input}></Dropdown>
+            <Dropdown appearance="filled-darker" className={classes.input}>
+              {workbook?.SheetNames.map((sheetName) => (
+                <Option key={sheetName} value={sheetName}>{sheetName}</Option>
+              ))}
+            </Dropdown>
           </Field>
         )}
         <CardFooter
           action={
             <div className={classes.actions}>
-              <Button disabled={!fileName} onClick={handleResetClick}>
+              <Button disabled={!hasFile} onClick={handleResetClick}>
                 Reset
               </Button>
-              <Button appearance="primary" disabled={!fileName} type="submit">
+              <Button appearance="primary" disabled={!hasFile} type="submit">
                 Proceed
               </Button>
             </div>
@@ -176,6 +172,22 @@ export const Component = () => {
       </Card>
       <Toaster toasterId={toasterId} />
     </Form>
+  )
+}
+
+interface FileToastProps {
+  type: TaskType
+}
+
+const FileToast = ({ type }: FileToastProps) => {
+  const fileName = useFileName()
+  return (
+    <Toast>
+      <ToastTitle>File {type}!</ToastTitle>
+      <ToastBody>
+        {fileName || 'File'} has been {type}.
+      </ToastBody>
+    </Toast>
   )
 }
 
