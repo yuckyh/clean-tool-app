@@ -141,10 +141,10 @@ export const useFileName = () => {
   return fileName
 }
 
-const useFile = () => {
+export const useFile = () => {
   const fileWorker = useFileWorker()
   const fileName = useFileName()
-  const [file, setFile] = useState<File>()
+  const [file, setFile] = useState<File>(new File([], ''))
 
   useEffect(() => {
     const handleGetFile = ({ data }: MessageEvent<FileResponse>) => {
