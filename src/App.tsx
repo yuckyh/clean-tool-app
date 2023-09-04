@@ -6,6 +6,7 @@ import styleString from '@/global.css?inline'
 import { author, description, keywords } from '@/../package.json'
 import { useOPFS, usePathTitle } from '@/hooks'
 import GlobalFluentProvider from './components/GlobalFluentProvider'
+import { useRegisterSW } from 'virtual:pwa-register/react'
 
 const useGlobalStyles = makeStaticStyles(styleString)
 
@@ -14,6 +15,13 @@ const App = () => {
 
   useGlobalStyles()
   useOPFS()
+
+  useRegisterSW({
+    immediate: true,
+    onOfflineReady: () => {
+      console.log('offline ready')
+    },
+  })
 
   return (
     <GlobalFluentProvider>
