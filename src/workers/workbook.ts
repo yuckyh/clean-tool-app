@@ -4,7 +4,7 @@ import type {
   RequestHandler,
   WorkerRequest,
   WorkerResponse,
-} from '..'
+} from '.'
 
 export interface WorkbookRequest extends WorkerRequest {
   workbook?: WorkBook
