@@ -21,6 +21,7 @@ import {
   NavLink,
   useHref,
   useLocation,
+  useNavigate,
   useResolvedPath,
 } from 'react-router-dom'
 import { useEffect } from 'react'
@@ -51,21 +52,22 @@ const ProgressNav = (props: ProgressBarProps) => {
   const classes = useClasses()
   const componentPath = useResolvedPath('')
   const { pathname } = useLocation()
+  const navigate = useNavigate()
   const childPaths = useChildPaths(componentPath.pathname)
 
   const index = childPaths?.findIndex((path) => path === pathname) ?? -1
 
   const allowedChildPaths = childPaths?.map((pathname) => ({
     pathname,
-    disabled: !progressManager.allowedPath.includes(pathname),
   }))
 
   // Ternary expression for animation hack
   const progress = index == 0 ? 0.011 : index / ((childPaths?.length ?? -1) - 1)
 
   useEffect(() => {
-    // console.log(ProgressStateManager.instance.allowedPath)
-  }, [])
+    const { allowedPath } = progressManager
+    !allowedPath.includes(pathname) && navigate(allowedPath.pop() ?? '/')
+  }, [navigate, pathname])
 
   return (
     <div className={classes.root}>
@@ -80,13 +82,8 @@ const ProgressNav = (props: ProgressBarProps) => {
         {...props}
       />
       <div className={classes.linkContainer}>
-        {allowedChildPaths?.map(({ pathname, disabled }, i) => (
-          <ProgressNavLink
-            key={i}
-            done={index >= i}
-            path={pathname}
-            disabled={disabled}
-          />
+        {allowedChildPaths?.map(({ pathname }, i) => (
+          <ProgressNavLink key={i} done={index >= i} path={pathname} />
         ))}
       </div>
     </div>
@@ -96,7 +93,6 @@ const ProgressNav = (props: ProgressBarProps) => {
 interface LinkLabelProps {
   done: boolean
   path: string
-  disabled?: boolean
 }
 
 const useLinkClasses = makeStyles({
@@ -124,10 +120,12 @@ const useLinkClasses = makeStyles({
   },
 })
 
-const ProgressNavLink = ({ done, path, disabled }: LinkLabelProps) => {
+const ProgressNavLink = ({ done, path }: LinkLabelProps) => {
   const href = useHref(path)
   const label: string = usePathTitle(path)
   const classes = useLinkClasses()
+
+  const disabled = !progressManager.allowedPath.includes(path)
 
   const fluentLinkComponent = useFluentStyledState<
     LinkProps,
