@@ -1,19 +1,25 @@
-import { getRootHandle, getWorkFileHandle } from './storage'
-import { writeFile } from './storage'
-import type { Controller, RequestHandler, WorkerRequest } from '@/workers'
+import { getRootHandle, getRootFileHandle, writeFile } from '@/lib/storage'
+import type {
+  Controller,
+  RequestHandler,
+  WorkerRequest,
+  WorkerResponse,
+} from '.'
 
 export interface FileRequest extends WorkerRequest {
   file?: File
   fileName: string
 }
 
-export interface FileResponse {
-  action: 'init' | 'create' | 'sync' | 'overwrite' | 'delete' | 'fail'
+export interface FileResponse extends WorkerResponse {
   fileName: string
+  file?: File
 }
 
-const index: RequestHandler = async ({ fileName }) => {
-  const existingFileHandle = await getWorkFileHandle(fileName)
+type FileRequestHandler = RequestHandler<FileRequest, FileResponse>
+
+const index: FileRequestHandler = async ({ fileName }) => {
+  const existingFileHandle = await getRootFileHandle(fileName)
 
   const action = existingFileHandle ? 'sync' : 'init'
 
@@ -23,7 +29,7 @@ const index: RequestHandler = async ({ fileName }) => {
   }
 }
 
-const post: RequestHandler = async ({ file, fileName }) => {
+const post: FileRequestHandler = async ({ file, fileName }) => {
   if (!file) {
     return {
       action: 'fail',
@@ -33,7 +39,7 @@ const post: RequestHandler = async ({ file, fileName }) => {
 
   const exists = (await index({ method: 'index', fileName })).action === 'sync'
 
-  const fileHandle = await getWorkFileHandle(fileName, !exists)
+  const fileHandle = await getRootFileHandle(fileName, !exists)
 
   fileHandle && (await writeFile(file, fileHandle))
 
@@ -43,7 +49,7 @@ const post: RequestHandler = async ({ file, fileName }) => {
   }
 }
 
-const del: RequestHandler = async ({ fileName }) => {
+const del: FileRequestHandler = async ({ fileName }) => {
   const exists = (await index({ method: 'index', fileName })).action === 'sync'
 
   const rootHandle = await getRootHandle()
@@ -55,15 +61,24 @@ const del: RequestHandler = async ({ fileName }) => {
   }
 }
 
-const controller: Controller<FileRequest['method']> = {
+const get: FileRequestHandler = async ({ fileName }) => {
+  const exists = (await index({ method: 'index', fileName })).action === 'sync'
+  const fileHandle = await getRootFileHandle(fileName)
+
+  const file = await fileHandle?.getFile()
+
+  return {
+    action: exists ? 'get' : 'fail',
+    fileName,
+    file,
+  }
+}
+
+const controller: Controller<FileRequest, FileRequestHandler> = {
   index,
+  get,
   post,
   delete: del,
-  get: async (data) => {
-    return await new Promise(() => {
-      console.log(data)
-    })
-  },
 }
 
 const main = async ({ data }: MessageEvent<FileRequest>) => {

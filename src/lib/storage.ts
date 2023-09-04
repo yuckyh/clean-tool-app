@@ -1,6 +1,6 @@
 export const getRootHandle = () => navigator.storage.getDirectory()
 
-export const getWorkFileHandle = async (fileName: string, create?: boolean) => {
+export const getRootFileHandle = async (fileName: string, create?: boolean) => {
   try {
     const rootHandle = await getRootHandle()
     return await rootHandle.getFileHandle(fileName, {

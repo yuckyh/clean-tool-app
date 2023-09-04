@@ -1,13 +1,19 @@
 /// <reference lib="webworker" />
 
-import type { FileRequest, FileResponse } from './file'
+export type RequestHandler<
+  Request extends WorkerRequest,
+  Response extends WorkerResponse,
+> = (request: Request) => Promise<Response>
 
-export type RequestHandler = (request: FileRequest) => Promise<FileResponse>
-export type Controller<T extends string | number | symbol> = Record<
-  T,
-  RequestHandler
->
+export type Controller<
+  Request extends RequestHandler,
+  Handler extends RequestHandler<Request>,
+> = Record<Request['method'], Handler>
 
 export interface WorkerRequest {
   method: 'index' | 'post' | 'delete' | 'get'
+}
+
+export interface WorkerResponse {
+  action: 'init' | 'create' | 'sync' | 'overwrite' | 'delete' | 'fail' | 'get'
 }
