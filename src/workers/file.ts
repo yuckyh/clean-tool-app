@@ -1,4 +1,4 @@
-import { getRootHandle, getRootFileHandle, writeFile } from '@/lib/storage'
+import { getRootHandle, getRootFileHandle, writeFile } from '@/lib/file'
 import type {
   Controller,
   RequestHandler,

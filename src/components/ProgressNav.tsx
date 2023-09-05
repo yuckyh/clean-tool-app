@@ -25,7 +25,7 @@ import {
   useResolvedPath,
 } from 'react-router-dom'
 import { useEffect } from 'react'
-import { progressManager } from '@/lib/ProgressManager'
+import { progressStorage } from '@/lib/ProgressStorage'
 
 const useClasses = makeStyles({
   root: {
@@ -65,7 +65,7 @@ const ProgressNav = (props: ProgressBarProps) => {
   const progress = index == 0 ? 0.011 : index / ((childPaths?.length ?? -1) - 1)
 
   useEffect(() => {
-    const { allowedPath } = progressManager
+    const { allowedPath } = progressStorage
     !allowedPath.includes(pathname) && navigate(allowedPath.pop() ?? '/')
   }, [navigate, pathname])
 
@@ -125,7 +125,7 @@ const ProgressNavLink = ({ done, path }: LinkLabelProps) => {
   const label: string = usePathTitle(path)
   const classes = useLinkClasses()
 
-  const disabled = !progressManager.allowedPath.includes(path)
+  const disabled = !progressStorage.allowedPath.includes(path)
 
   const fluentLinkComponent = useFluentStyledState<
     LinkProps,

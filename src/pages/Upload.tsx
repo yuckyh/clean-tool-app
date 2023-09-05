@@ -22,7 +22,7 @@ import {
 } from '@fluentui/react-components'
 import type { DropdownProps } from '@fluentui/react-components'
 import type { DropzoneOptions } from 'react-dropzone'
-import { fileManager } from '@/lib/FileManager'
+import { fileNameStorage } from '@/lib/FileNameStorage'
 import type { FileResponse, FileRequest } from '@/workers/file'
 import {
   useFile,
@@ -31,7 +31,7 @@ import {
   useSheetName,
   useWorkbook,
 } from '@/hooks'
-import { sheetManager } from '@/lib/SheetManager'
+import { sheetNameStorage } from '@/lib/SheetNameStorage'
 
 type TaskType = 'uploaded' | 'deleted' | false
 
@@ -118,7 +118,7 @@ export const Component = () => {
     setTaskType('deleted')
     const request: FileRequest = {
       method: 'delete',
-      fileName: fileManager.state,
+      fileName: fileNameStorage.state,
     }
     fileWorker.postMessage(request)
   }, [fileWorker])
@@ -150,7 +150,7 @@ export const Component = () => {
     _event,
     { selectedOptions },
   ) => {
-    sheetManager.state = selectedOptions[0] ?? ''
+    sheetNameStorage.state = selectedOptions[0] ?? ''
   }
 
   return (

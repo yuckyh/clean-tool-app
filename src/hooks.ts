@@ -19,8 +19,8 @@ import FileWorker from '@/workers/file?worker'
 import WorkbookWorker from '@/workers/workbook?worker'
 import type { WorkbookRequest } from '@/workers/workbook'
 import type { FileRequest, FileResponse } from '@/workers/file'
-import { fileManager } from '@/lib/FileManager'
-import { sheetManager } from '@/lib/SheetManager'
+import { fileNameStorage } from '@/lib/FileNameStorage'
+import { sheetNameStorage } from '@/lib/SheetNameStorage'
 
 export const useChildPaths = (parentPath: string, exclusion?: string) =>
   matchRoutes(routes, parentPath)
@@ -99,7 +99,7 @@ export const useFileWorker = () => {
     // Init request
     const request: FileRequest = {
       method: 'index',
-      fileName: fileManager.state,
+      fileName: fileNameStorage.state,
     }
 
     worker.postMessage(request)
@@ -110,7 +110,7 @@ export const useFileWorker = () => {
   const handleWorkerResponse = useCallback(
     ({ data }: MessageEvent<FileResponse>) => {
       const { action, fileName } = data
-      fileManager.state = action === 'delete' ? '' : fileName
+      fileNameStorage.state = action === 'delete' ? '' : fileName
     },
     [],
   )
@@ -127,15 +127,15 @@ export const useFileWorker = () => {
 }
 
 export const useFileName = () => {
-  const [fileName, setFileName] = useState(fileManager.state)
+  const [fileName, setFileName] = useState(fileNameStorage.state)
 
   useEffect(() => {
-    const listener = fileManager.addStateListener((state) => {
+    const listener = fileNameStorage.addStateListener((state) => {
       setFileName(state)
     })
 
     return () => {
-      fileManager.removeStateListener(listener)
+      fileNameStorage.removeStateListener(listener)
     }
   }, [])
 
@@ -197,21 +197,21 @@ export const useWorkbook = () => {
 
 export const useSheetName = () => {
   const workbook = useWorkbook()
-  const [sheetName, setSheetName] = useState(sheetManager.state)
+  const [sheetName, setSheetName] = useState(sheetNameStorage.state)
 
   useEffect(() => {
     if (workbook) {
       const { SheetNames } = workbook
-      sheetManager.state = SheetNames[0] ?? ''
-      setSheetName(sheetManager.state)
+      sheetNameStorage.state = SheetNames[0] ?? ''
+      setSheetName(sheetNameStorage.state)
     }
 
-    const listener = sheetManager.addStateListener((sheetName) => {
+    const listener = sheetNameStorage.addStateListener((sheetName) => {
       setSheetName(sheetName)
     })
 
     return () => {
-      sheetManager.removeStateListener(listener)
+      sheetNameStorage.removeStateListener(listener)
     }
   }, [workbook])
 
