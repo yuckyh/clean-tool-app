@@ -1,5 +1,5 @@
 import type { Ref } from 'react'
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import {
   matchRoutes,
   resolvePath,
@@ -12,6 +12,7 @@ import type {
   SlotPropsRecord,
 } from '@fluentui/react-components'
 import type { WorkBook } from 'xlsx'
+import Fuse from 'fuse.js'
 
 import { routes } from '@/Router'
 import { getPathTitle } from '@/helpers'
@@ -19,7 +20,7 @@ import FileWorker from '@/workers/file?worker'
 import WorkbookWorker from '@/workers/workbook?worker'
 import type { WorkbookRequest } from '@/workers/workbook'
 import type { FileRequest, FileResponse } from '@/workers/file'
-import { fileNameStorage } from '@/lib/FileNameStorage'
+import { fileStorage } from '@/lib/FileStorage'
 import { sheetNameStorage } from '@/lib/SheetNameStorage'
 
 export const useChildPaths = (parentPath: string, exclusion?: string) =>
@@ -98,8 +99,8 @@ export const useFileWorker = () => {
 
     // Init request
     const request: FileRequest = {
-      method: 'index',
-      fileName: fileNameStorage.state,
+      method: 'get',
+      fileName: fileStorage.state,
     }
 
     worker.postMessage(request)
@@ -107,71 +108,32 @@ export const useFileWorker = () => {
     return worker
   }, [])
 
-  const handleWorkerResponse = useCallback(
-    ({ data }: MessageEvent<FileResponse>) => {
-      const { action, fileName } = data
-      fileNameStorage.state = action === 'delete' ? '' : fileName
-    },
-    [],
-  )
-
   useEffect(() => {
+    const handleWorkerResponse = ({ data }: MessageEvent<FileResponse>) => {
+      const { action, fileName, file } = data
+      fileStorage.state = action === 'delete' ? '' : fileName
+      fileStorage.file =
+        action === 'delete'
+          ? new File([], '')
+          : file?.size
+          ? file
+          : fileStorage.file
+    }
+
     fileWorker.addEventListener('message', handleWorkerResponse)
 
     return () => {
       fileWorker.removeEventListener('message', handleWorkerResponse)
     }
-  }, [fileWorker, handleWorkerResponse])
+  }, [fileWorker])
 
   return fileWorker
-}
-
-export const useFileName = () => {
-  const [fileName, setFileName] = useState(fileNameStorage.state)
-
-  useEffect(() => {
-    const listener = fileNameStorage.addStateListener((state) => {
-      setFileName(state)
-    })
-
-    return () => {
-      fileNameStorage.removeStateListener(listener)
-    }
-  }, [])
-
-  return fileName
-}
-
-export const useFile = () => {
-  const fileWorker = useFileWorker()
-  const fileName = useFileName()
-  const [file, setFile] = useState<File>(new File([], ''))
-
-  useEffect(() => {
-    const handleGetFile = ({ data }: MessageEvent<FileResponse>) => {
-      setFile(data.file ?? new File([], ''))
-    }
-
-    fileWorker.addEventListener('message', handleGetFile)
-
-    const request: FileRequest = {
-      method: 'get',
-      fileName,
-    }
-
-    fileWorker.postMessage(request)
-    return () => {
-      fileWorker.removeEventListener('message', handleGetFile)
-    }
-  }, [fileName, fileWorker])
-
-  return file
 }
 
 export const useWorkbook = () => {
   const worker = useMemo(() => new WorkbookWorker(), [])
   const [workbook, setWorkbook] = useState<WorkBook | undefined>()
-  const file = useFile()
+  const { file } = fileStorage
 
   useEffect(() => {
     const handleGetWorkbook = ({ data }: MessageEvent<WorkbookRequest>) => {
@@ -195,31 +157,17 @@ export const useWorkbook = () => {
   return workbook
 }
 
-export const useSheetName = () => {
-  const workbook = useWorkbook()
-  const [sheetName, setSheetName] = useState(sheetNameStorage.state)
-
-  useEffect(() => {
-    if (workbook) {
-      const { SheetNames } = workbook
-      sheetNameStorage.state = SheetNames[0] ?? ''
-      setSheetName(sheetNameStorage.state)
-    }
-
-    const listener = sheetNameStorage.addStateListener((sheetName) => {
-      setSheetName(sheetName)
-    })
-
-    return () => {
-      sheetNameStorage.removeStateListener(listener)
-    }
-  }, [workbook])
-
-  return sheetName
-}
-
 export const useSheet = () => {
   const workbook = useWorkbook()
-  const sheetName = useSheetName()
+  const sheetName = sheetNameStorage.state
   return workbook?.Sheets[sheetName]
+}
+
+export const useFuseSearch = <T>(
+  list: readonly T[],
+  options?: Fuse.IFuseOptions<T>,
+): Fuse<T>['search'] => {
+  const fuse = new Fuse(list, options)
+
+  return (...args) => fuse.search(...args)
 }
