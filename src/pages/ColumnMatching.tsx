@@ -1,62 +1,194 @@
-import { useSheet } from '@/hooks'
-import { progressStorage } from '@/lib/ProgressStorage'
-import type { TableColumnDefinition } from '@fluentui/react-components'
+import type {
+  DataGridProps,
+  TableColumnDefinition,
+} from '@fluentui/react-components'
 import {
+  Button,
   DataGrid,
   DataGridBody,
   DataGridCell,
   DataGridHeader,
   DataGridHeaderCell,
   DataGridRow,
+  Dropdown,
+  Option,
+  Spinner,
+  Subtitle2,
+  Title1,
   createTableColumn,
+  makeStyles,
+  shorthands,
 } from '@fluentui/react-components'
-import type { NavigateFunction } from 'react-router-dom'
-import { Form, useNavigate } from 'react-router-dom'
+import { Form } from 'react-router-dom'
 import type { WorkSheet } from 'xlsx'
 import { utils } from 'xlsx'
+import type Fuse from 'fuse.js'
 
-type Item = string | number
+import codebook from '@/../data/codebook.json'
+import { useFuseSearch, useSheet } from '@/hooks'
+import { useState } from 'react'
+
+type CellItem = string | number | boolean
+type CodebookColumn = (typeof codebook)[0]
+
+interface Item {
+  original: string
+  matches: Fuse.FuseResult<CodebookColumn>[]
+  index: number
+  readonly position: number
+}
+
+const useClasses = makeStyles({
+  root: {
+    display: 'grid',
+    width: '80%',
+    ...shorthands.margin(0, 'auto'),
+    ...shorthands.gap(0, '8px'),
+  },
+})
 
 export const Component = () => {
   const sheet = useSheet()
+  const classes = useClasses()
+
   return (
-    <Form>
-      <h1>Column Matching</h1>
-      <ColumnsDataGrid sheet={sheet} />
+    <Form className={classes.root}>
+      <Title1>Column Matching</Title1>
+      {!sheet ? (
+        <Spinner
+          size="huge"
+          labelPosition="below"
+          label={<Subtitle2>Matching columns</Subtitle2>}
+        />
+      ) : (
+        <>
+          <ColumnsDataGrid sheet={sheet} />
+          <div>
+            <Button appearance="primary" type="submit">
+              Done
+            </Button>
+          </div>
+        </>
+      )}
     </Form>
   )
 }
 
 interface ColumnsDataGridProps {
-  sheet?: WorkSheet
+  sheet: WorkSheet
 }
 
 const ColumnsDataGrid = ({ sheet }: ColumnsDataGridProps) => {
-  const navigate = useNavigate()
-
-  if (!sheet) {
-    middlewareNavigate(navigate)
-    return null
+  const keys: (keyof CodebookColumn)[] = ['name']
+  const searchOpts: Fuse.IFuseOptions<CodebookColumn> = {
+    keys,
+    threshold: 0.7,
+    includeScore: true,
   }
-  const items: Item[][] = utils.sheet_to_json(sheet, { header: 1 })
+  const search = useFuseSearch(codebook, searchOpts)
 
-  if (!items[0]) {
-    middlewareNavigate(navigate)
-    return null
+  const [sortState, setSortState] = useState<
+    Parameters<NonNullable<DataGridProps['onSortChange']>>[1]
+  >({
+    sortColumn: 'matches',
+    sortDirection: 'ascending',
+  })
+
+  const handleSortChange: DataGridProps['onSortChange'] = (
+    _event,
+    nextSortState,
+  ) => {
+    setSortState(nextSortState)
   }
 
-  console.log(items)
+  const cells: CellItem[][] = utils.sheet_to_json(sheet, { header: 1 })
+
+  const originalColumns: string[] = cells[0] as string[]
+
+  const items = originalColumns.map((original, i) => {
+    const matches = search(original)
+      .flatMap((match) =>
+        keys.map((key) => ({
+          ...match,
+          item: {
+            [key]: match.item[key],
+          },
+        })),
+      )
+      .slice(0, 20)
+    return {
+      original,
+      matches,
+      index: 0,
+      position: i,
+    }
+  })
+
+  const [selectedIndices, setSelectedIndices] = useState(
+    items.map(({ index }) => index),
+  )
 
   const columns: TableColumnDefinition<Item>[] = [
     createTableColumn({
-      columnId: 'column',
-      renderHeaderCell: () => <>Column name</>,
-      renderCell: (item) => <>{item}</>,
+      columnId: 'original',
+      compare: (a, b) => a.original.localeCompare(b.original),
+      renderHeaderCell: () => <>Original</>,
+      renderCell: ({ original }) => <>{original}</>,
+    }),
+    ...keys.map((key) =>
+      createTableColumn<Item>({
+        columnId: 'matches',
+        renderHeaderCell: () => <>Search Match</>,
+        renderCell: (item) => {
+          const { matches, position } = item
+          const defaultOption = matches[0]?.item[key]
+          return (
+            <Dropdown
+              defaultValue={defaultOption}
+              defaultSelectedOptions={defaultOption ? [defaultOption] : []}
+              onOptionSelect={(_e, data) => {
+                setSelectedIndices((prev) => {
+                  const next = [...prev]
+                  next[position] = matches.findIndex(
+                    (match) => match.item[key] === data.optionValue,
+                  )
+                  return next
+                })
+              }}
+              appearance="filled-darker">
+              {matches.map(({ item, refIndex }) => (
+                <Option key={refIndex} value={item[key]} text={item[key]}>
+                  {item[key]}
+                </Option>
+              ))}
+            </Dropdown>
+          )
+        },
+      }),
+    ),
+    createTableColumn({
+      columnId: 'score',
+      compare: (a, b) => {
+        const aIndex = selectedIndices[a.position] ?? 0
+        const bIndex = selectedIndices[b.position] ?? 0
+        return (a.matches[aIndex]?.score ?? 1) - (b.matches[bIndex]?.score ?? 1)
+      },
+      renderHeaderCell: () => <>Score</>,
+      renderCell: ({ matches, position }) => {
+        const index = selectedIndices[position] ?? 0
+        const score = matches[index]?.score ?? 1
+        return <>{(1 - score).toFixed(2)}</>
+      },
     }),
   ]
 
   return (
-    <DataGrid columns={columns} items={items[0]}>
+    <DataGrid
+      columns={columns}
+      items={items}
+      sortable
+      sortState={sortState}
+      onSortChange={handleSortChange}>
       <DataGridHeader>
         <DataGridRow selectionCell={{ 'aria-label': 'Select all rows' }}>
           {({ renderHeaderCell }) => (
@@ -80,8 +212,3 @@ const ColumnsDataGrid = ({ sheet }: ColumnsDataGridProps) => {
 }
 
 Component.displayName = 'ColumnMatching'
-
-const middlewareNavigate = (navigate: NavigateFunction) => {
-  const { allowedPath } = progressStorage
-  navigate(allowedPath.pop() ?? '/')
-}

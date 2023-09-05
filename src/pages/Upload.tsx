@@ -22,16 +22,11 @@ import {
 } from '@fluentui/react-components'
 import type { DropdownProps } from '@fluentui/react-components'
 import type { DropzoneOptions } from 'react-dropzone'
-import { fileNameStorage } from '@/lib/FileNameStorage'
+import { fileStorage } from '@/lib/FileStorage'
 import type { FileResponse, FileRequest } from '@/workers/file'
-import {
-  useFile,
-  useFileName,
-  useFileWorker,
-  useSheetName,
-  useWorkbook,
-} from '@/hooks'
+import { useFileWorker, useWorkbook } from '@/hooks'
 import { sheetNameStorage } from '@/lib/SheetNameStorage'
+import { ProgressState, progressStorage } from '@/lib/ProgressStorage'
 
 type TaskType = 'uploaded' | 'deleted' | false
 
@@ -63,7 +58,7 @@ const useClasses = makeStyles({
 })
 
 export const Component = () => {
-  const fileName = useFileName()
+  const fileName = fileStorage.state
   const [taskType, setTaskType] = useState<TaskType>(false)
 
   const toasterId = useId('toaster')
@@ -73,27 +68,25 @@ export const Component = () => {
     dispatchToast(<FileToast type={taskType} />, { intent: 'success' })
   }, [dispatchToast, taskType])
 
-  const handleWorkerLoad = useCallback(
-    ({ data }: MessageEvent<FileResponse>) => {
-      const loadingActions = ['create', 'overwrite', 'delete']
+  const fileWorker = useFileWorker()
+
+  useEffect(() => {
+    const handleWorkerLoad = ({ data }: MessageEvent<FileResponse>) => {
+      const loadingActions = ['create', 'sync', 'overwrite', 'delete']
       const hasMatch = !!loadingActions.find((action) => action === data.action)
       if (!hasMatch) {
         return
       }
       setTaskType(!hasMatch)
       toastNotify()
-    },
-    [toastNotify],
-  )
+    }
 
-  const fileWorker = useFileWorker()
-
-  useEffect(() => {
     fileWorker.addEventListener('message', handleWorkerLoad)
+
     return () => {
       fileWorker.removeEventListener('message', handleWorkerLoad)
     }
-  }, [fileWorker, handleWorkerLoad])
+  }, [fileWorker, toastNotify])
 
   const handleFileDrop = useCallback(
     (acceptedFiles: File[]): void => {
@@ -118,14 +111,17 @@ export const Component = () => {
     setTaskType('deleted')
     const request: FileRequest = {
       method: 'delete',
-      fileName: fileNameStorage.state,
+      fileName: fileStorage.state,
     }
     fileWorker.postMessage(request)
+    progressStorage.state = ProgressState.NONE
   }, [fileWorker])
 
   const classes = useClasses()
-  const file = useFile()
+  const file = fileStorage.file
   const hasFile = !!file.size
+  const isCSV = file.type === 'text/csv'
+  console.log(file, hasFile, isCSV)
 
   const zoneOptions: DropzoneOptions = {
     accept: {
@@ -141,10 +137,9 @@ export const Component = () => {
     disabled: hasFile,
   }
 
-  const isCSV = file.type === 'text/csv'
   const workbook = useWorkbook()
 
-  const selectedSheetName = useSheetName()
+  const selectedSheetName = sheetNameStorage.state
 
   const handleSheetSelect: DropdownProps['onOptionSelect'] = (
     _event,
@@ -175,7 +170,7 @@ export const Component = () => {
               defaultSelectedOptions={[selectedSheetName]}
               selectedOptions={[selectedSheetName]}>
               {workbook?.SheetNames.map((sheetName) => (
-                <Option key={sheetName} value={sheetName}>
+                <Option key={sheetName} value={sheetName} text={sheetName}>
                   {sheetName}
                 </Option>
               ))}
@@ -205,7 +200,7 @@ interface FileToastProps {
 }
 
 const FileToast = ({ type }: FileToastProps) => {
-  const fileName = useFileName()
+  const fileName = fileStorage.state
   return (
     <Toast>
       <ToastTitle>File {type}!</ToastTitle>
