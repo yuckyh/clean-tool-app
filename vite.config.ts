@@ -21,10 +21,13 @@ export default defineConfig(({ mode }) => {
         registerType: 'autoUpdate',
         injectRegister: 'auto',
         devOptions: {
-          enabled: isDev,
+          // enabled: isDev,
         },
         workbox: {
-          globPatterns: ['**/*.{js,html,webmanifest}', '**/*.{svg,png,jpg,gif}'],
+          globPatterns: [
+            '**/*.{js,html,webmanifest}',
+            '**/*.{svg,png,jpg,gif}',
+          ],
         },
         manifest: {
           id: '/',
