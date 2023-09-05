@@ -24,7 +24,7 @@ import {
   useNavigate,
   useResolvedPath,
 } from 'react-router-dom'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { progressStorage } from '@/lib/ProgressStorage'
 
 const useClasses = makeStyles({
@@ -125,7 +125,19 @@ const ProgressNavLink = ({ done, path }: LinkLabelProps) => {
   const label: string = usePathTitle(path)
   const classes = useLinkClasses()
 
-  const disabled = !progressStorage.allowedPath.includes(path)
+  const [disabled, setDisabled] = useState(
+    !progressStorage.allowedPath.includes(path),
+  )
+
+  useEffect(() => {
+    const listener = progressStorage.addEventListener((storage) => {
+      setDisabled(!storage.allowedPath.includes(path))
+    })
+
+    return () => {
+      progressStorage.removeStateListener(listener)
+    }
+  }, [path])
 
   const fluentLinkComponent = useFluentStyledState<
     LinkProps,
