@@ -3,14 +3,14 @@ type Listener<T> = (data: T) => void
 interface Stateful<T> {
   get state(): T
   set state(value: T)
-  addStateListener(listener: Listener<T>): Listener<T>
-  removeStateListener(listener: Listener<T>): void
+  addEventListener(listener: Listener<this>): Listener<this>
+  removeStateListener(listener: Listener<this>): void
 }
 
 export abstract class StateStorage<T extends string> implements Stateful<T> {
   protected readonly _storageKey: string
   private _state: T
-  private _listeners: Listener<T>[] = []
+  private _listeners: Listener<this>[] = []
 
   get state() {
     this._syncState()
@@ -21,7 +21,7 @@ export abstract class StateStorage<T extends string> implements Stateful<T> {
     localStorage.setItem(this._storageKey, value)
     this._syncState()
     this._listeners.forEach((listener) => {
-      listener(value)
+      listener(this)
     })
   }
 
@@ -35,13 +35,13 @@ export abstract class StateStorage<T extends string> implements Stateful<T> {
     this._state = (localStorage.getItem(this._storageKey) ?? '') as T
   }
 
-  readonly addStateListener = (listener: (state: T) => void) => {
+  readonly addEventListener = (listener: (storage: this) => void) => {
     this._listeners.push(listener)
 
     return listener
   }
 
-  readonly removeStateListener = (listener: (state: T) => void) => {
+  readonly removeStateListener = (listener: (storage: this) => void) => {
     this._listeners = this._listeners.filter((l) => l !== listener)
   }
 }
