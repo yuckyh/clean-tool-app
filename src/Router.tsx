@@ -19,8 +19,7 @@ const routes = createRoutesFromElements(
       <Route path="upload" lazy={() => import('@/pages/Upload')} />
       <Route
         path="column-matching"
-        action={(args) => {
-          console.log(args)
+        action={() => {
           progressStorage.state = ProgressState.UPLOADED
           return { status: 200 }
         }}
