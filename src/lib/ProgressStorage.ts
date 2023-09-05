@@ -33,7 +33,7 @@ class ProgressStorage extends StateStorage<ProgressState> {
   }
 
   constructor() {
-    super(ProgressState.NONE, 'progressState')
+    super(ProgressState.NONE, 'progress')
   }
 }
 
