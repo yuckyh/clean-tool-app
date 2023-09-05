@@ -46,6 +46,7 @@ const post: FileRequestHandler = async ({ file, fileName }) => {
   return {
     action: exists ? 'overwrite' : 'create',
     fileName: fileName,
+    file,
   }
 }
 
