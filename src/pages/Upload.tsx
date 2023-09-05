@@ -20,10 +20,18 @@ import {
   useId,
   useToastController,
 } from '@fluentui/react-components'
+import type { DropdownProps } from '@fluentui/react-components'
 import type { DropzoneOptions } from 'react-dropzone'
 import { fileManager } from '@/lib/FileManager'
 import type { FileResponse, FileRequest } from '@/workers/file'
-import { useFile, useFileName, useFileWorker, useWorkbook } from '@/hooks'
+import {
+  useFile,
+  useFileName,
+  useFileWorker,
+  useSheetName,
+  useWorkbook,
+} from '@/hooks'
+import { sheetManager } from '@/lib/SheetManager'
 
 type TaskType = 'uploaded' | 'deleted' | false
 
@@ -118,8 +126,6 @@ export const Component = () => {
   const classes = useClasses()
   const file = useFile()
   const hasFile = !!file.size
-  const isCSV = file.type === 'text/csv'
-  const workbook = useWorkbook()
 
   const zoneOptions: DropzoneOptions = {
     accept: {
@@ -135,7 +141,17 @@ export const Component = () => {
     disabled: hasFile,
   }
 
-  console.log(file, workbook)
+  const isCSV = file.type === 'text/csv'
+  const workbook = useWorkbook()
+
+  const selectedSheetName = useSheetName()
+
+  const handleSheetSelect: DropdownProps['onOptionSelect'] = (
+    _event,
+    { selectedOptions },
+  ) => {
+    sheetManager.state = selectedOptions[0] ?? ''
+  }
 
   return (
     <Form className={classes.root} action="/column-matching" method="POST">
@@ -150,9 +166,18 @@ export const Component = () => {
         </Field>
         {hasFile && !isCSV && (
           <Field label="Select sheet" required={true}>
-            <Dropdown appearance="filled-darker" className={classes.input}>
+            <Dropdown
+              appearance="filled-darker"
+              className={classes.input}
+              onOptionSelect={handleSheetSelect}
+              value={selectedSheetName}
+              defaultValue={selectedSheetName}
+              defaultSelectedOptions={[selectedSheetName]}
+              selectedOptions={[selectedSheetName]}>
               {workbook?.SheetNames.map((sheetName) => (
-                <Option key={sheetName} value={sheetName}>{sheetName}</Option>
+                <Option key={sheetName} value={sheetName}>
+                  {sheetName}
+                </Option>
               ))}
             </Dropdown>
           </Field>
