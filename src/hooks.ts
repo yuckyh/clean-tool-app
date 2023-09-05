@@ -20,6 +20,7 @@ import WorkbookWorker from '@/workers/workbook?worker'
 import type { WorkbookRequest } from '@/workers/workbook'
 import type { FileRequest, FileResponse } from '@/workers/file'
 import { fileManager } from '@/lib/FileManager'
+import { sheetManager } from '@/lib/SheetManager'
 
 export const useChildPaths = (parentPath: string, exclusion?: string) =>
   matchRoutes(routes, parentPath)
@@ -167,12 +168,8 @@ export const useFile = () => {
   return file
 }
 
-export const useWorkbookWorker = () => {
-  return useMemo(() => new WorkbookWorker(), [])
-}
-
 export const useWorkbook = () => {
-  const worker = useWorkbookWorker()
+  const worker = useMemo(() => new WorkbookWorker(), [])
   const [workbook, setWorkbook] = useState<WorkBook | undefined>()
   const file = useFile()
 
@@ -196,4 +193,33 @@ export const useWorkbook = () => {
   }, [file, worker])
 
   return workbook
+}
+
+export const useSheetName = () => {
+  const workbook = useWorkbook()
+  const [sheetName, setSheetName] = useState(sheetManager.state)
+
+  useEffect(() => {
+    if (workbook) {
+      const { SheetNames } = workbook
+      sheetManager.state = SheetNames[0] ?? ''
+      setSheetName(sheetManager.state)
+    }
+
+    const listener = sheetManager.addStateListener((sheetName) => {
+      setSheetName(sheetName)
+    })
+
+    return () => {
+      sheetManager.removeStateListener(listener)
+    }
+  }, [workbook])
+
+  return sheetName
+}
+
+export const useSheet = () => {
+  const workbook = useWorkbook()
+  const sheetName = useSheetName()
+  return workbook?.Sheets[sheetName]
 }
