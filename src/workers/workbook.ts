@@ -8,7 +8,7 @@ import type {
 
 export interface WorkbookRequest extends WorkerRequest {
   workbook?: WorkBook
-  file?: File
+  file: File
 }
 
 export interface WorkbookResponse extends WorkerResponse {
@@ -18,7 +18,7 @@ export interface WorkbookResponse extends WorkerResponse {
 type WorkbookRequestHandler = RequestHandler<WorkbookRequest, WorkbookResponse>
 
 const get: WorkbookRequestHandler = async ({ file }) => {
-  if (!file) {
+  if (!file.size) {
     return {
       action: 'fail',
     }
@@ -62,7 +62,6 @@ const main = async ({ data }: MessageEvent<WorkbookRequest>) => {
   const { method } = data
 
   postMessage(await controller[method](data))
-  postMessage('This is from the workbook worker')
 }
 
 addEventListener(
