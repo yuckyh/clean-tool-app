@@ -1,4 +1,4 @@
-import { StateManager } from './StateManager'
+import { StateStorage } from './StateStorage'
 
 export enum ProgressState {
   NONE = 'none',
@@ -9,7 +9,7 @@ export enum ProgressState {
 }
 type AllowedProgressPath = Record<ProgressState, string[]>
 
-class ProgressManager extends StateManager<ProgressState> {
+class ProgressStorage extends StateStorage<ProgressState> {
   private readonly _allowedPaths: AllowedProgressPath = {
     [ProgressState.NONE]: ['/upload'],
     [ProgressState.UPLOADED]: ['/upload', '/column-matching'],
@@ -37,4 +37,4 @@ class ProgressManager extends StateManager<ProgressState> {
   }
 }
 
-export const progressManager = new ProgressManager()
+export const progressStorage = new ProgressStorage()

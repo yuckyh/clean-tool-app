@@ -7,7 +7,7 @@ interface Stateful<T> {
   removeStateListener(listener: Listener<T>): void
 }
 
-export abstract class StateManager<T extends string> implements Stateful<T> {
+export abstract class StateStorage<T extends string> implements Stateful<T> {
   protected readonly _storageKey: string
   private _state: T
   private _listeners: Listener<T>[] = []
