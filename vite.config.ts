@@ -20,9 +20,6 @@ export default defineConfig(({ mode }) => {
       VitePWA({
         registerType: 'autoUpdate',
         injectRegister: 'auto',
-        devOptions: {
-          // enabled: isDev,
-        },
         workbox: {
           globPatterns: [
             '**/*.{js,html,webmanifest}',
