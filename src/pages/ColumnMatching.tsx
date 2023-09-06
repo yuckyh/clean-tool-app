@@ -13,15 +13,16 @@ import {
   Dropdown,
   Option,
   Spinner,
-  Subtitle2,
+  Subtitle1,
+  Caption1,
   Title1,
   createTableColumn,
   makeStyles,
   shorthands,
+  tokens,
 } from '@fluentui/react-components'
-import { Form } from 'react-router-dom'
-import type { WorkSheet } from 'xlsx'
-import { utils } from 'xlsx'
+import Plot from 'react-plotly.js'
+import { type WorkSheet, utils } from 'xlsx'
 import type Fuse from 'fuse.js'
 
 import codebook from '@/../data/codebook.json'
@@ -41,12 +42,16 @@ interface Item {
 const useClasses = makeStyles({
   root: {
     display: 'grid',
-    width: '80%',
+    width: '70%',
     ...shorthands.margin(0, 'auto'),
     ...shorthands.gap(0, '8px'),
   },
   dropdown: {
     minWidth: '200px',
+  },
+  headerCell: {
+    display: 'flex',
+    flexDirection: 'column',
   },
 })
 
@@ -56,32 +61,30 @@ export const Component = () => {
   const sheet = useSheet()
 
   return (
-    <Form className={classes.root}>
+    <section className={classes.root}>
       <Title1>Column Matching</Title1>
       {sheet ? (
         <>
           <ColumnsDataGrid sheet={sheet} />
           <div>
-            <Button appearance="primary" type="submit">
-              Done
-            </Button>
+            <Button appearance="primary">Done</Button>
           </div>
         </>
       ) : (
         <Spinner
           size="huge"
           labelPosition="below"
-          label={<Subtitle2>Matching columns</Subtitle2>}
+          label={<Subtitle1>Matching columns</Subtitle1>}
         />
       )}
-    </Form>
+    </section>
   )
 }
 
 interface ColumnsDataGridProps {
   sheet: WorkSheet
 }
-// TODO: checkbox, subtitle, bold headers, score viz
+// TODO: score viz
 
 const ColumnsDataGrid = ({ sheet }: ColumnsDataGridProps) => {
   const classes = useClasses()
@@ -138,7 +141,12 @@ const ColumnsDataGrid = ({ sheet }: ColumnsDataGridProps) => {
     createTableColumn({
       columnId: 'original',
       compare: (a, b) => a.original.localeCompare(b.original),
-      renderHeaderCell: () => <>Original</>,
+      renderHeaderCell: () => (
+        <>
+          <Subtitle1>Original</Subtitle1>
+          <Caption1>The loaded column names (raw)</Caption1>
+        </>
+      ),
       renderCell: ({ original }) => <>{original}</>,
     }),
     ...keys.map((key) =>
@@ -151,7 +159,12 @@ const ColumnsDataGrid = ({ sheet }: ColumnsDataGridProps) => {
             b.matches[bIndex]?.item[key] ?? '',
           )
         },
-        renderHeaderCell: () => <>Search Match</>,
+        renderHeaderCell: () => (
+          <>
+            <Subtitle1>Replacement</Subtitle1>
+            <Caption1>List of possible replacements (sorted by score)</Caption1>
+          </>
+        ),
         renderCell: (item) => {
           const { matches, position } = item
           const defaultOption = matches[0]?.item[key]
@@ -187,11 +200,49 @@ const ColumnsDataGrid = ({ sheet }: ColumnsDataGridProps) => {
         const bIndex = selectedIndices[b.position] ?? 0
         return (a.matches[aIndex]?.score ?? 1) - (b.matches[bIndex]?.score ?? 1)
       },
-      renderHeaderCell: () => <>Score</>,
+      renderHeaderCell: () => (
+        <>
+          <Subtitle1>Score</Subtitle1>
+          <Caption1>
+            The fuzzy search score (1 indicates a perfect match)
+          </Caption1>
+        </>
+      ),
       renderCell: ({ matches, position }) => {
         const index = selectedIndices[position] ?? 0
         const score = matches[index]?.score ?? 1
-        return <>{(1 - score).toFixed(2)}</>
+        return (
+          <>
+            <Plot
+              data={[
+                {
+                  x: [(1 - score).toFixed(2)],
+                  type: 'bar',
+                  hovertemplate: 'score: %{x}',
+                  marker: {
+                    cmin: 0,
+                    cmax: 1,
+                  },
+                },
+              ]}
+              layout={{
+                // width: 200,
+                // height: 50,
+                margin: {
+                  t: 0,
+                  l: 0,
+                  b: 0,
+                  r: 0,
+                },
+                xaxis: {
+                  range: [0, 1],
+                },
+                plot_bgcolor: tokens.colorNeutralBackground1,
+                paper_bgcolor: tokens.colorNeutralBackground1,
+              }}
+              config={{ displayModeBar: false, responsive: true }} />
+          </>
+        )
       },
     }),
   ]
@@ -206,7 +257,9 @@ const ColumnsDataGrid = ({ sheet }: ColumnsDataGridProps) => {
       <DataGridHeader>
         <DataGridRow>
           {({ renderHeaderCell }) => (
-            <DataGridHeaderCell>{renderHeaderCell()}</DataGridHeaderCell>
+            <DataGridHeaderCell>
+              <div className={classes.headerCell}>{renderHeaderCell()}</div>
+            </DataGridHeaderCell>
           )}
         </DataGridRow>
       </DataGridHeader>
