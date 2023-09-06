@@ -24,7 +24,7 @@ import type { DropdownProps } from '@fluentui/react-components'
 import type { DropzoneOptions } from 'react-dropzone'
 import { fileStorage } from '@/lib/FileStorage'
 import type { FileResponse, FileRequest } from '@/workers/file'
-import { useFileWorker, useWorkbook } from '@/hooks'
+import { useFile, useFileWorker, useWorkbook } from '@/hooks'
 import { sheetNameStorage } from '@/lib/SheetNameStorage'
 import { ProgressState, progressStorage } from '@/lib/ProgressStorage'
 
@@ -69,6 +69,7 @@ export const Component = () => {
   }, [dispatchToast, taskType])
 
   const fileWorker = useFileWorker()
+  const file = useFile()
 
   useEffect(() => {
     const handleWorkerLoad = ({ data }: MessageEvent<FileResponse>) => {
@@ -86,7 +87,7 @@ export const Component = () => {
     return () => {
       fileWorker.removeEventListener('message', handleWorkerLoad)
     }
-  }, [fileWorker, toastNotify])
+  }, [file, fileWorker, toastNotify])
 
   const handleFileDrop = useCallback(
     (acceptedFiles: File[]): void => {
@@ -118,10 +119,8 @@ export const Component = () => {
   }, [fileWorker])
 
   const classes = useClasses()
-  const file = fileStorage.file
   const hasFile = !!file.size
   const isCSV = file.type === 'text/csv'
-  console.log(file, hasFile, isCSV)
 
   const zoneOptions: DropzoneOptions = {
     accept: {
