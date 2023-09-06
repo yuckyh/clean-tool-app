@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react'
-import { Form } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import FileInput from '@/components/FileInput'
 import {
   Button,
@@ -74,6 +74,7 @@ export const Component = () => {
   const fileWorker = useFileWorker()
   const workbookWorker = useWorkbookWorker()
   const file = useFile()
+  const navigate = useNavigate()
 
   useEffect(() => {
     const handleWorkerLoad = ({ data }: MessageEvent<FileResponse>) => {
@@ -123,6 +124,11 @@ export const Component = () => {
     sheetStateStorage.state = ''
   }, [fileWorker])
 
+  const handleSubmit = useCallback(() => {
+    progressStateStorage.state = ProgressState.UPLOADED
+    navigate('/column-matching')
+  }, [navigate])
+
   const classes = useClasses()
   const hasFile = !!file.size
   const isCSV = file.type === 'text/csv'
@@ -163,7 +169,7 @@ export const Component = () => {
   }
 
   return (
-    <Form className={classes.root} action="/column-matching" method="POST">
+    <section className={classes.root}>
       <Card className={classes.card}>
         <CardHeader header={<Title1>Upload</Title1>} />
         <Field label="Upload Data" required={true}>
@@ -197,7 +203,10 @@ export const Component = () => {
               <Button disabled={!hasFile} onClick={handleResetClick}>
                 Reset
               </Button>
-              <Button appearance="primary" disabled={!hasFile} type="submit">
+              <Button
+                appearance="primary"
+                onClick={handleSubmit}
+                disabled={!hasFile}>
                 Proceed
               </Button>
             </div>
@@ -205,7 +214,7 @@ export const Component = () => {
         />
       </Card>
       <Toaster toasterId={toasterId} />
-    </Form>
+    </section>
   )
 }
 
