@@ -1,5 +1,5 @@
 import type { Ref } from 'react'
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useState } from 'react'
 import {
   matchRoutes,
   resolvePath,
@@ -11,7 +11,6 @@ import type {
   ComponentState,
   SlotPropsRecord,
 } from '@fluentui/react-components'
-import type { WorkBook } from 'xlsx'
 import Fuse from 'fuse.js'
 
 import { routes } from '@/Router'
@@ -20,8 +19,8 @@ import FileWorker from '@/workers/file?worker'
 import WorkbookWorker from '@/workers/workbook?worker'
 import type { WorkbookRequest } from '@/workers/workbook'
 import type { FileRequest, FileResponse } from '@/workers/file'
-import { fileStorage } from '@/lib/FileStorage'
-import { sheetNameStorage } from '@/lib/SheetNameStorage'
+import { fileStateStorage } from '@/lib/StateStorage/file'
+import { sheetStateStorage } from '@/lib/StateStorage/sheet'
 
 export const useChildPaths = (parentPath: string, exclusion?: string) =>
   matchRoutes(routes, parentPath)
@@ -93,94 +92,102 @@ export const useBodyClasses = (classes: string) => {
   return classes
 }
 
-export const useFileWorker = () => {
-  const fileWorker = useMemo(() => {
-    const worker = new FileWorker()
+const fileWorker = new FileWorker()
 
+export const useFileWorker = () => {
+  const handleWorkerResponse = ({ data }: MessageEvent<FileResponse>) => {
+    const { action, fileName, file } = data
+    fileStateStorage.state = action === 'delete' ? '' : fileName
+    fileStateStorage.file =
+      action === 'delete'
+        ? new File([], '')
+        : file?.size
+        ? file
+        : fileStateStorage.file
+  }
+
+  useEffect(() => {
     // Init request
     const request: FileRequest = {
       method: 'get',
-      fileName: fileStorage.state,
+      fileName: fileStateStorage.state,
     }
 
-    worker.postMessage(request)
-
-    return worker
-  }, [])
-
-  useEffect(() => {
-    const handleWorkerResponse = ({ data }: MessageEvent<FileResponse>) => {
-      const { action, fileName, file } = data
-      fileStorage.state = action === 'delete' ? '' : fileName
-      fileStorage.file =
-        action === 'delete'
-          ? new File([], '')
-          : file?.size
-          ? file
-          : fileStorage.file
-    }
+    fileWorker.postMessage(request)
 
     fileWorker.addEventListener('message', handleWorkerResponse)
 
     return () => {
       fileWorker.removeEventListener('message', handleWorkerResponse)
     }
-  }, [fileWorker])
+  }, [])
 
   return fileWorker
 }
 
 export const useFile = () => {
-  const fileWorker = useFileWorker()
-  const [file, setFile] = useState<File>(new File([], ''))
+  const [file, setFile] = useState(fileStateStorage.file)
 
   useEffect(() => {
-    const handleGetFile = ({ data }: MessageEvent<FileResponse>) => {
-      const { file } = data
-      setFile(file ?? new File([], ''))
+    const listener = () => {
+      setFile(fileStateStorage.file)
     }
 
-    fileWorker.addEventListener('message', handleGetFile)
+    fileWorker.addEventListener('message', listener)
 
     return () => {
-      fileWorker.removeEventListener('message', handleGetFile)
+      fileWorker.removeEventListener('message', listener)
     }
-  }, [fileWorker])
-
+  }, [])
   return file
 }
 
-export const useWorkbook = () => {
-  const worker = useMemo(() => new WorkbookWorker(), [])
-  const [workbook, setWorkbook] = useState<WorkBook | undefined>()
+const workbookWorker = new WorkbookWorker()
+
+export const useWorkbookWorker = () => {
+  useFileWorker()
+
+  const handleGetWorkbook = ({ data }: MessageEvent<WorkbookRequest>) => {
+    sheetStateStorage.workbook = data.workbook
+    sheetStateStorage.state =
+      data.workbook?.SheetNames[0] ?? sheetStateStorage.state
+  }
+
   const file = useFile()
 
   useEffect(() => {
-    const handleGetWorkbook = ({ data }: MessageEvent<WorkbookRequest>) => {
-      setWorkbook(data.workbook)
-    }
-
-    // Get request
     const request: WorkbookRequest = {
       method: 'get',
       file,
     }
 
-    worker.postMessage(request)
+    workbookWorker.postMessage(request)
+  }, [file])
 
-    worker.addEventListener('message', handleGetWorkbook)
+  useEffect(() => {
+    workbookWorker.addEventListener('message', handleGetWorkbook)
+
     return () => {
-      worker.removeEventListener('message', handleGetWorkbook)
+      workbookWorker.removeEventListener('message', handleGetWorkbook)
     }
-  }, [file, worker])
+  }, [])
 
-  return workbook
+  return workbookWorker
 }
 
 export const useSheet = () => {
-  const workbook = useWorkbook()
-  const sheetName = sheetNameStorage.state
-  return workbook?.Sheets[sheetName]
+  const [sheet, setSheet] = useState(sheetStateStorage.sheet)
+
+  useEffect(() => {
+    const listener = sheetStateStorage.addEventListener((storage) => {
+      setSheet(storage.sheet)
+    })
+
+    return () => {
+      sheetStateStorage.removeEventListener(listener)
+    }
+  }, [])
+  return sheet
 }
 
 export const useFuseSearch = <T>(
