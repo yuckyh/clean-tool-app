@@ -130,10 +130,30 @@ export const useFileWorker = () => {
   return fileWorker
 }
 
+export const useFile = () => {
+  const fileWorker = useFileWorker()
+  const [file, setFile] = useState<File>(new File([], ''))
+
+  useEffect(() => {
+    const handleGetFile = ({ data }: MessageEvent<FileResponse>) => {
+      const { file } = data
+      setFile(file ?? new File([], ''))
+    }
+
+    fileWorker.addEventListener('message', handleGetFile)
+
+    return () => {
+      fileWorker.removeEventListener('message', handleGetFile)
+    }
+  }, [fileWorker])
+
+  return file
+}
+
 export const useWorkbook = () => {
   const worker = useMemo(() => new WorkbookWorker(), [])
   const [workbook, setWorkbook] = useState<WorkBook | undefined>()
-  const { file } = fileStorage
+  const file = useFile()
 
   useEffect(() => {
     const handleGetWorkbook = ({ data }: MessageEvent<WorkbookRequest>) => {
