@@ -138,6 +138,15 @@ const ColumnsDataGrid = ({ sheet }: ColumnsDataGridProps) => {
     ...keys.map((key) =>
       createTableColumn<Item>({
         columnId: 'matches',
+        compare: (a, b) => {
+          const aIndex = selectedIndices[a.position] ?? 0
+          const bIndex = selectedIndices[b.position] ?? 0
+          return (
+            (a.matches[aIndex]?.item[key] ?? '').localeCompare(
+              b.matches[bIndex]?.item[key] ?? '',
+            )
+          ) 
+        },
         renderHeaderCell: () => <>Search Match</>,
         renderCell: (item) => {
           const { matches, position } = item
