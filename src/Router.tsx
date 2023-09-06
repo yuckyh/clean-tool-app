@@ -10,11 +10,6 @@ import NotFound from '@/404'
 import Home from '@/pages'
 import Variable from '@/pages/EDA/Variable'
 
-import {
-  progressStateStorage,
-  ProgressState,
-} from '@/lib/StateStorage/progress'
-
 const routes = createRoutesFromElements(
   <Route element={<App />}>
     <Route element={<Layout />}>
@@ -22,10 +17,6 @@ const routes = createRoutesFromElements(
       <Route path="upload" lazy={() => import('@/pages/Upload')} />
       <Route
         path="column-matching"
-        action={() => {
-          progressStateStorage.state = ProgressState.UPLOADED
-          return { status: 200 }
-        }}
         lazy={() => import('@/pages/ColumnMatching')}
       />
       <Route path="EDA" lazy={() => import('@/pages/EDA')}>
