@@ -10,7 +10,10 @@ import NotFound from '@/404'
 import Home from '@/pages'
 import Variable from '@/pages/EDA/Variable'
 
-import { progressStorage, ProgressState } from '@/lib/ProgressStorage'
+import {
+  progressStateStorage,
+  ProgressState,
+} from '@/lib/StateStorage/progress'
 
 const routes = createRoutesFromElements(
   <Route element={<App />}>
@@ -20,7 +23,7 @@ const routes = createRoutesFromElements(
       <Route
         path="column-matching"
         action={() => {
-          progressStorage.state = ProgressState.UPLOADED
+          progressStateStorage.state = ProgressState.UPLOADED
           return { status: 200 }
         }}
         lazy={() => import('@/pages/ColumnMatching')}
