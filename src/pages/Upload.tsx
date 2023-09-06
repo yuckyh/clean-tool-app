@@ -22,11 +22,14 @@ import {
 } from '@fluentui/react-components'
 import type { DropdownProps } from '@fluentui/react-components'
 import type { DropzoneOptions } from 'react-dropzone'
-import { fileStorage } from '@/lib/FileStorage'
+import { fileStateStorage } from '@/lib/StateStorage/file'
 import type { FileResponse, FileRequest } from '@/workers/file'
-import { useFile, useFileWorker, useWorkbook } from '@/hooks'
-import { sheetNameStorage } from '@/lib/SheetNameStorage'
-import { ProgressState, progressStorage } from '@/lib/ProgressStorage'
+import { useFile, useFileWorker, useWorkbookWorker } from '@/hooks'
+import { sheetStateStorage } from '@/lib/StateStorage/sheet'
+import {
+  ProgressState,
+  progressStateStorage,
+} from '@/lib/StateStorage/progress'
 
 type TaskType = 'uploaded' | 'deleted' | false
 
@@ -58,7 +61,7 @@ const useClasses = makeStyles({
 })
 
 export const Component = () => {
-  const fileName = fileStorage.state
+  const fileName = fileStateStorage.state
   const [taskType, setTaskType] = useState<TaskType>(false)
 
   const toasterId = useId('toaster')
@@ -69,6 +72,7 @@ export const Component = () => {
   }, [dispatchToast, taskType])
 
   const fileWorker = useFileWorker()
+  const workbookWorker = useWorkbookWorker()
   const file = useFile()
 
   useEffect(() => {
@@ -87,7 +91,7 @@ export const Component = () => {
     return () => {
       fileWorker.removeEventListener('message', handleWorkerLoad)
     }
-  }, [file, fileWorker, toastNotify])
+  }, [fileWorker, toastNotify, workbookWorker])
 
   const handleFileDrop = useCallback(
     (acceptedFiles: File[]): void => {
@@ -112,10 +116,11 @@ export const Component = () => {
     setTaskType('deleted')
     const request: FileRequest = {
       method: 'delete',
-      fileName: fileStorage.state,
+      fileName: fileStateStorage.state,
     }
     fileWorker.postMessage(request)
-    progressStorage.state = ProgressState.NONE
+    progressStateStorage.state = ProgressState.NONE
+    sheetStateStorage.state = ''
   }, [fileWorker])
 
   const classes = useClasses()
@@ -136,15 +141,25 @@ export const Component = () => {
     disabled: hasFile,
   }
 
-  const workbook = useWorkbook()
+  const [selectedSheetName, setSelectedSheetName] = useState(
+    sheetStateStorage.state,
+  )
 
-  const selectedSheetName = sheetNameStorage.state
+  useEffect(() => {
+    const listener = sheetStateStorage.addEventListener((storage) => {
+      setSelectedSheetName(storage.state)
+    })
+
+    return () => {
+      sheetStateStorage.removeEventListener(listener)
+    }
+  }, [])
 
   const handleSheetSelect: DropdownProps['onOptionSelect'] = (
     _event,
     { selectedOptions },
   ) => {
-    sheetNameStorage.state = selectedOptions[0] ?? ''
+    sheetStateStorage.state = selectedOptions[0] ?? ''
   }
 
   return (
@@ -168,7 +183,7 @@ export const Component = () => {
               defaultValue={selectedSheetName}
               defaultSelectedOptions={[selectedSheetName]}
               selectedOptions={[selectedSheetName]}>
-              {workbook?.SheetNames.map((sheetName) => (
+              {sheetStateStorage.sheetNames.map((sheetName) => (
                 <Option key={sheetName} value={sheetName} text={sheetName}>
                   {sheetName}
                 </Option>
@@ -199,7 +214,7 @@ interface FileToastProps {
 }
 
 const FileToast = ({ type }: FileToastProps) => {
-  const fileName = fileStorage.state
+  const fileName = fileStateStorage.state
   return (
     <Toast>
       <ToastTitle>File {type}!</ToastTitle>

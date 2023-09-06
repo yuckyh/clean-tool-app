@@ -25,7 +25,7 @@ import { utils } from 'xlsx'
 import type Fuse from 'fuse.js'
 
 import codebook from '@/../data/codebook.json'
-import { useFuseSearch, useSheet } from '@/hooks'
+import { useFuseSearch, useSheet, useWorkbookWorker } from '@/hooks'
 import { useState } from 'react'
 
 type CellItem = string | number | boolean
@@ -45,22 +45,20 @@ const useClasses = makeStyles({
     ...shorthands.margin(0, 'auto'),
     ...shorthands.gap(0, '8px'),
   },
+  dropdown: {
+    minWidth: '200px',
+  },
 })
 
 export const Component = () => {
-  const sheet = useSheet()
+  useWorkbookWorker()
   const classes = useClasses()
+  const sheet = useSheet()
 
   return (
     <Form className={classes.root}>
       <Title1>Column Matching</Title1>
-      {!sheet ? (
-        <Spinner
-          size="huge"
-          labelPosition="below"
-          label={<Subtitle2>Matching columns</Subtitle2>}
-        />
-      ) : (
+      {sheet ? (
         <>
           <ColumnsDataGrid sheet={sheet} />
           <div>
@@ -69,6 +67,12 @@ export const Component = () => {
             </Button>
           </div>
         </>
+      ) : (
+        <Spinner
+          size="huge"
+          labelPosition="below"
+          label={<Subtitle2>Matching columns</Subtitle2>}
+        />
       )}
     </Form>
   )
@@ -77,8 +81,10 @@ export const Component = () => {
 interface ColumnsDataGridProps {
   sheet: WorkSheet
 }
+// TODO: checkbox, subtitle, bold headers, score viz
 
 const ColumnsDataGrid = ({ sheet }: ColumnsDataGridProps) => {
+  const classes = useClasses()
   const keys: (keyof CodebookColumn)[] = ['name']
   const searchOpts: Fuse.IFuseOptions<CodebookColumn> = {
     keys,
@@ -141,11 +147,9 @@ const ColumnsDataGrid = ({ sheet }: ColumnsDataGridProps) => {
         compare: (a, b) => {
           const aIndex = selectedIndices[a.position] ?? 0
           const bIndex = selectedIndices[b.position] ?? 0
-          return (
-            (a.matches[aIndex]?.item[key] ?? '').localeCompare(
-              b.matches[bIndex]?.item[key] ?? '',
-            )
-          ) 
+          return (a.matches[aIndex]?.item[key] ?? '').localeCompare(
+            b.matches[bIndex]?.item[key] ?? '',
+          )
         },
         renderHeaderCell: () => <>Search Match</>,
         renderCell: (item) => {
@@ -153,6 +157,7 @@ const ColumnsDataGrid = ({ sheet }: ColumnsDataGridProps) => {
           const defaultOption = matches[0]?.item[key]
           return (
             <Dropdown
+              className={classes.dropdown}
               defaultValue={defaultOption}
               defaultSelectedOptions={defaultOption ? [defaultOption] : []}
               onOptionSelect={(_e, data) => {
@@ -165,9 +170,9 @@ const ColumnsDataGrid = ({ sheet }: ColumnsDataGridProps) => {
                 })
               }}
               appearance="filled-darker">
-              {matches.map(({ item, refIndex }) => (
+              {matches.map(({ item, score, refIndex }) => (
                 <Option key={refIndex} value={item[key]} text={item[key]}>
-                  {item[key]}
+                  {item[key]}, {(1 - (score ?? 1)).toFixed(2)}
                 </Option>
               ))}
             </Dropdown>
@@ -199,7 +204,7 @@ const ColumnsDataGrid = ({ sheet }: ColumnsDataGridProps) => {
       sortState={sortState}
       onSortChange={handleSortChange}>
       <DataGridHeader>
-        <DataGridRow selectionCell={{ 'aria-label': 'Select all rows' }}>
+        <DataGridRow>
           {({ renderHeaderCell }) => (
             <DataGridHeaderCell>{renderHeaderCell()}</DataGridHeaderCell>
           )}
@@ -207,9 +212,7 @@ const ColumnsDataGrid = ({ sheet }: ColumnsDataGridProps) => {
       </DataGridHeader>
       <DataGridBody<Item>>
         {({ item, rowId }) => (
-          <DataGridRow<Item>
-            key={rowId}
-            selectionCell={{ 'aria-label': 'Select row' }}>
+          <DataGridRow<Item> key={rowId}>
             {({ renderCell }) => (
               <DataGridCell>{renderCell(item)}</DataGridCell>
             )}
