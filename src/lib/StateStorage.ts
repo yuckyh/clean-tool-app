@@ -4,7 +4,7 @@ interface Stateful<T> {
   get state(): T
   set state(value: T)
   addEventListener(listener: Listener<this>): Listener<this>
-  removeStateListener(listener: Listener<this>): void
+  removeEventListener(listener: Listener<this>): void
 }
 
 export abstract class StateStorage<T extends string> implements Stateful<T> {
@@ -41,7 +41,7 @@ export abstract class StateStorage<T extends string> implements Stateful<T> {
     return listener
   }
 
-  readonly removeStateListener = (listener: (storage: this) => void) => {
+  readonly removeEventListener = (listener: (storage: this) => void) => {
     this._listeners = this._listeners.filter((l) => l !== listener)
   }
 }
