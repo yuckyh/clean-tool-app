@@ -135,7 +135,7 @@ const ProgressNavLink = ({ done, path }: LinkLabelProps) => {
     })
 
     return () => {
-      progressStorage.removeStateListener(listener)
+      progressStorage.removeEventListener(listener)
     }
   }, [path])
 
