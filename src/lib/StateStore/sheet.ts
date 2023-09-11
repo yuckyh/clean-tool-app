@@ -5,7 +5,6 @@ class SheetStateStore extends StateStore<string> {
   private _workbook?: WorkBook | undefined
   private _sheetNames: string[] = []
   private _sheet = this._workbook?.Sheets[this.state]
-  private _columns: string[] = []
 
   get workbook(): WorkBook | undefined {
     return this._workbook
@@ -23,14 +22,6 @@ class SheetStateStore extends StateStore<string> {
 
   get sheetNames(): string[] {
     return this._sheetNames
-  }
-
-  get columns(): string[] {
-    return this._columns
-  }
-
-  set columns(value: string[]) {
-    this._columns = value
   }
 
   constructor() {
