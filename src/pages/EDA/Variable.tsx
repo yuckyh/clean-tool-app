@@ -1,3 +1,9 @@
-const Variable = () => <section></section>
+import { Plot, defaultConfig, defaultLayout } from '@/lib/plotly'
 
-export default Variable
+export const Component = () => (
+  <section>
+    <Plot data={[]} layout={defaultLayout} config={defaultConfig} />
+  </section>
+)
+
+Component.displayName = 'Variable'

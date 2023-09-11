@@ -6,25 +6,22 @@ import {
 
 import App from '@/App'
 import Layout from '@/Layout'
-import NotFound from '@/404'
-import Home from '@/pages'
-import Variable from '@/pages/EDA/Variable'
 
 const routes = createRoutesFromElements(
   <Route element={<App />}>
     <Route element={<Layout />}>
-      <Route index element={<Home />} />
+      <Route index lazy={() => import('@/pages')} />
       <Route path="upload" lazy={() => import('@/pages/Upload')} />
       <Route
         path="column-matching"
         lazy={() => import('@/pages/ColumnMatching')}
       />
       <Route path="EDA" lazy={() => import('@/pages/EDA')}>
-        <Route path=":variable" element={<Variable />} />
+        <Route path=":variable" lazy={() => import('@/pages/EDA/Variable')} />
       </Route>
       <Route path="download" lazy={() => import('@/pages/Download')} />
     </Route>
-    <Route path="*" element={<NotFound />} />
+    <Route path="*" lazy={() => import('@/404')} />
   </Route>,
 )
 

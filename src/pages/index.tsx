@@ -21,7 +21,7 @@ const useClasses = makeStyles({
   },
 })
 
-const Home = () => {
+export const Component = () => {
   const classes = useClasses()
   const uploadHref = useHref('/upload')
   const handleClick = useLinkClickHandler(uploadHref)
@@ -45,4 +45,4 @@ const Home = () => {
   )
 }
 
-export default Home
+Component.displayName = 'Home'

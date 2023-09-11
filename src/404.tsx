@@ -11,7 +11,7 @@ const useClasses = makeStyles({
   },
 })
 
-const NotFound = () => {
+export const Component = () => {
   const classes = useClasses()
   const href = useHref('/')
   return (
@@ -23,4 +23,4 @@ const NotFound = () => {
   )
 }
 
-export default NotFound
+Component.displayName = '404'
