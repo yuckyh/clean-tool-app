@@ -10,21 +10,25 @@ import {
   Caption1,
   tokens,
   makeStyles,
+  Button,
+  Spinner,
 } from '@fluentui/react-components'
 import {
   useState,
-  useEffect,
   useSyncExternalStore,
   useMemo,
   useCallback,
+  useEffect,
+  startTransition,
 } from 'react'
-import Plot from '@/lib/plotly'
+import Plot from '@/components/Plot'
 import { utils } from 'xlsx'
 import Fuse from 'fuse.js'
 
 import { fluentColorScale } from '@/lib/plotly'
 import codebook from '@/../data/codebook.json'
 import { sheetStateStore } from '@/lib/StateStore/sheet'
+import { columnStateStore } from '@/lib/StateStore/column'
 import SimpleDataGrid from './SimpleDataGrid'
 
 type CodebookEntry = (typeof codebook)[0]
@@ -70,7 +74,6 @@ const useFuseSearch: <T>(
 
 const useColumnNames = (n = 20, keys: CodebookEntryKey[] = ['name']) => {
   const [columnNames, setColumnNames] = useState<ColumnNameData[]>([])
-
   const searchOpts: Fuse.IFuseOptions<CodebookMatch> = useMemo(
     () => ({
       keys,
@@ -116,103 +119,60 @@ const useColumnNames = (n = 20, keys: CodebookEntryKey[] = ['name']) => {
     [originalColumns, keys, n, search],
   )
 
+  const checkIsPending = useCallback(
+    (
+      callback: (...args: unknown[]) => void,
+      state: boolean,
+      interval = 100,
+    ) => {
+      setTimeout(() => {
+        if (state) {
+          checkIsPending(callback, state, interval)
+        } else {
+          callback()
+        }
+      }, interval)
+    },
+    [],
+  )
+
   useEffect(() => {
-    setColumnNames(
-      originalColumns.map((original, i) => ({
-        original: original,
-        matches: columnMatches[i] ?? [],
-        index: 0,
-        position: i,
-      })),
+    const result = originalColumns.map((original, i) => ({
+      original,
+      matches: columnMatches[i] ?? [],
+      index: 0,
+      position: i,
+    }))
+
+    columnStateStore.matches = result.map(({ matches }) =>
+      matches.flatMap(({ item }) => keys.flatMap((key) => item[key] ?? '')),
     )
-  }, [columnMatches, originalColumns])
+
+      startTransition(() => {
+        setColumnNames(result)
+      })
+  }, [checkIsPending, columnMatches, keys, originalColumns])
 
   return columnNames
 }
 
 const ColumnsDataGrid = () => {
+  const classes = useClasses()
   const keys: CodebookEntryKey[] = useMemo(() => ['name'], [])
   const n = useMemo(() => 20, [])
   const columnNames = useColumnNames(n, keys)
 
-  const [selectedIndices, setSelectedIndices] = useState(
-    columnNames.map(({ index }) => index),
+  const selectedIndices = useSyncExternalStore(
+    columnStateStore.subscribe,
+    () => columnStateStore.indices,
   )
 
-  const columns: TableColumnDefinition<ColumnNameData>[] = [
-    createTableColumn({
-      columnId: 'original',
-      compare: (a, b) => a.original.localeCompare(b.original),
-      renderHeaderCell: () => (
-        <HeaderCell
-          header="Original"
-          subtitle="The loaded column names (raw)"
-        />
-      ),
-      renderCell: ({ original }) => <>{original}</>,
-    }),
-    ...keys.map((key) =>
-      createTableColumn<ColumnNameData>({
-        columnId: 'matches',
-        compare: (a, b) => {
-          const aIndex = selectedIndices[a.position] ?? 0
-          const bIndex = selectedIndices[b.position] ?? 0
-          return (a.matches[aIndex]?.item[key] ?? '').localeCompare(
-            b.matches[bIndex]?.item[key] ?? '',
-          )
-        },
-        renderHeaderCell: () => (
-          <HeaderCell
-            header="Replacement"
-            subtitle="List of possible replacements (sorted by score)"
-          />
-        ),
-        renderCell: (item) => {
-          const { matches: matches, position } = item
-          const defaultOption = matches[0]?.item[key]
-          return (
-            <Dropdown
-              className={classes.dropdown}
-              defaultValue={defaultOption}
-              defaultSelectedOptions={defaultOption ? [defaultOption] : []}
-              onOptionSelect={(_e, data) => {
-                setSelectedIndices((prev) => {
-                  const next = [...prev]
-                  next[position] = matches.findIndex(
-                    (match) => match.item[key] === data.optionValue,
-                  )
-                  return next
-                })
-              }}
-              appearance="filled-darker">
-              {matches.map(({ item, score, refIndex }) => (
-                <Option key={refIndex} value={item[key]} text={item[key] ?? ''}>
-                  {item[key]}, {(1 - (score ?? 1)).toFixed(2)}
-                </Option>
-              ))}
-            </Dropdown>
-          )
-        },
-      }),
+  const selectedColumns = Array.from(
+    useSyncExternalStore(
+      columnStateStore.subscribe,
+      () => columnStateStore.columns,
     ),
-    createTableColumn({
-      columnId: 'score',
-      compare: (a, b) => {
-        const aIndex = selectedIndices[a.position] ?? 0
-        const bIndex = selectedIndices[b.position] ?? 0
-        return (a.matches[aIndex]?.score ?? 1) - (b.matches[bIndex]?.score ?? 1)
-      },
-      renderHeaderCell: () => (
-        <HeaderCell
-          header="Score"
-          subtitle="The fuzzy search score (1 indicates a perfect match)"
-        />
-      ),
-      renderCell: (item) => (
-        <ScoreCell item={item} selectedIndices={selectedIndices} />
-      ),
-    }),
-  ]
+  )
 
   const [sortState, setSortState] = useState<
     Parameters<NonNullable<DataGridProps['onSortChange']>>[1]
@@ -228,18 +188,196 @@ const ColumnsDataGrid = () => {
     setSortState(nextSortState)
   }
 
-  const classes = useClasses()
+  const columns: TableColumnDefinition<ColumnNameData>[] = useMemo(
+    () => [
+      createTableColumn({
+        columnId: 'original',
+        compare: (a, b) => a.original.localeCompare(b.original),
+        renderHeaderCell: () => (
+          <HeaderCell
+            header="Original"
+            subtitle="The loaded column names (raw)"
+          />
+        ),
+        renderCell: ({ original }) => <>{original}</>,
+      }),
+      ...keys.map((key) =>
+        createTableColumn<ColumnNameData>({
+          columnId: 'matches',
+          compare: (a, b) => {
+            const aIndex = selectedIndices[a.position] ?? 0
+            const bIndex = selectedIndices[b.position] ?? 0
+            return (a.matches[aIndex]?.item[key] ?? '').localeCompare(
+              b.matches[bIndex]?.item[key] ?? '',
+            )
+          },
+          renderHeaderCell: () => (
+            <HeaderCell
+              header="Replacement"
+              subtitle="List of possible replacements (sorted by score)"
+            />
+          ),
+          renderCell: (item) => {
+            const { matches, position } = item
+            const value = matches[selectedIndices[position] ?? 0]?.item[key]
+            return (
+              <Dropdown
+                className={classes.dropdown}
+                value={value}
+                selectedOptions={value ? [value] : []}
+                onOptionSelect={(_e, data) => {
+                  const newIndex = matches.findIndex(
+                    (match) => match.item[key] === data.optionValue,
+                  )
+                  const newIndices = [...selectedIndices]
+                  newIndices[position] = newIndex
 
-  return (
-    <SimpleDataGrid<ColumnNameData>
-      items={columnNames}
-      dataGridProps={{
-        items: columnNames,
-        columns,
-        sortable: true,
-        sortState,
-        onSortChange: handleSortChange,
-      }}
+                  const newColumn = matches[newIndex]?.item[key]
+
+                  const newColumns = [...selectedColumns]
+                  newColumns[position] =
+                    newColumn ?? selectedColumns[position] ?? ''
+
+                  const uSelectedColumns = Array.from(new Set(selectedColumns))
+                  const uNewColumns = Array.from(new Set(newColumns))
+
+                  if (uSelectedColumns.length !== uNewColumns.length) {
+                    console.log('not unique')
+                    return
+                  }
+
+                  selectedIndices[position] = newIndex
+
+                  columnStateStore.indices = selectedIndices
+                }}
+                appearance="filled-darker">
+                {matches.map(({ item, score, refIndex }) => (
+                  <Option
+                    key={refIndex}
+                    value={item[key]}
+                    text={item[key] ?? ''}>
+                    {item[key]}, {(1 - (score ?? 1)).toFixed(2)}
+                  </Option>
+                ))}
+              </Dropdown>
+            )
+          },
+        }),
+      ),
+      createTableColumn({
+        columnId: 'score',
+        compare: (a, b) => {
+          const aIndex = selectedIndices[a.position] ?? 0
+          const bIndex = selectedIndices[b.position] ?? 0
+          return (
+            (a.matches[aIndex]?.score ?? 1) - (b.matches[bIndex]?.score ?? 1)
+          )
+        },
+        renderHeaderCell: () => (
+          <HeaderCell
+            header="Score"
+            subtitle="The fuzzy search score (1 indicates a perfect match)"
+          />
+        ),
+        renderCell: ({ matches, position }) => {
+          const index = selectedIndices[position] ?? 0
+          const score = 1 - (matches[index]?.score ?? 1)
+          const formattedScore = score.toFixed(2)
+          const data: Plotly.Data[] = [
+            {
+              name: '',
+              x: [formattedScore],
+              type: 'bar',
+              hovertemplate: 'score: %{x}',
+              marker: {
+                cmin: 0,
+                cmax: 1,
+                color: [score],
+                colorscale: fluentColorScale(
+                  tokens.colorPaletteRedForeground1,
+                  tokens.colorPaletteGreenForeground1,
+                  64,
+                ),
+              },
+            },
+          ]
+
+          const layout: Partial<Plotly.Layout> = {
+            autosize: true,
+
+            margin: {
+              t: 0,
+              l: 0,
+              b: 0,
+              r: 0,
+            },
+            xaxis: {
+              range: [0, 1],
+              zeroline: false,
+              showgrid: false,
+              showticklabels: false,
+              fixedrange: true,
+              nticks: 0,
+              ticks: '',
+            },
+            yaxis: {
+              fixedrange: true,
+              nticks: 0,
+              ticks: '',
+              showticklabels: false,
+            },
+            dragmode: false,
+            clickmode: 'none',
+          }
+
+          const config: Partial<Plotly.Config> = {
+            scrollZoom: false,
+          }
+          return (
+            <>
+              <Plot
+                className={classes.plot}
+                data={data}
+                layout={layout}
+                config={config}
+              />
+              {formattedScore}
+            </>
+          )
+        },
+      }),
+    ],
+    [classes.dropdown, classes.plot, keys, selectedColumns, selectedIndices],
+  )
+
+  useEffect(() => {
+    columnStateStore.matches = columnNames.map(({ matches }) =>
+      matches.map(({ item }) => item.name ?? ''),
+    )
+    columnStateStore.indices = columnNames.map(({ index }) => index)
+  }, [columnNames, keys])
+
+  return columnNames.length > 0 ? (
+    <>
+      <SimpleDataGrid<ColumnNameData>
+        items={columnNames}
+        dataGridProps={{
+          items: columnNames,
+          columns,
+          sortable: true,
+          sortState,
+          onSortChange: handleSortChange,
+        }}
+      />
+      <div>
+        <Button appearance="primary">Done</Button>
+      </div>
+    </>
+  ) : (
+    <Spinner
+      size="huge"
+      labelPosition="below"
+      label={<Subtitle1>Matching columns...</Subtitle1>}
     />
   )
 }
@@ -257,80 +395,6 @@ const HeaderCell = ({
       <Subtitle1>{header}</Subtitle1>
       <Caption1>{subtitle}</Caption1>
     </div>
-  )
-}
-
-interface ScoreCellProp {
-  item: ColumnNameData
-  selectedIndices: number[]
-}
-
-const ScoreCell = ({ item, selectedIndices }: ScoreCellProp) => {
-  const { matches: matches, position } = item
-  const index = selectedIndices[position] ?? 0
-  const score = 1 - (matches[index]?.score ?? 1)
-  const formattedScore = score.toFixed(2)
-  const classes = useClasses()
-  const data: Plotly.Data[] = [
-    {
-      name: '',
-      x: [formattedScore],
-      type: 'bar',
-      hovertemplate: 'score: %{x}',
-      marker: {
-        cmin: 0,
-        cmax: 1,
-        color: [score],
-        colorscale: fluentColorScale(
-          tokens.colorPaletteRedForeground1,
-          tokens.colorPaletteGreenForeground1,
-          64,
-        ),
-      },
-    },
-  ]
-
-  const layout: Partial<Plotly.Layout> = {
-    autosize: true,
-
-    margin: {
-      t: 0,
-      l: 0,
-      b: 0,
-      r: 0,
-    },
-    xaxis: {
-      range: [0, 1],
-      zeroline: false,
-      showgrid: false,
-      showticklabels: false,
-      fixedrange: true,
-      nticks: 0,
-      ticks: '',
-    },
-    yaxis: {
-      fixedrange: true,
-      nticks: 0,
-      ticks: '',
-      showticklabels: false,
-    },
-    dragmode: false,
-    clickmode: 'none',
-  }
-
-  const config: Partial<Plotly.Config> = {
-    scrollZoom: false,
-  }
-  return (
-    <>
-      <Plot
-        className={classes.plot}
-        data={data}
-        layout={layout}
-        config={config}
-      />
-      {formattedScore}
-    </>
   )
 }
 
