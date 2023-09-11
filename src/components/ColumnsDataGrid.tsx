@@ -148,9 +148,9 @@ const useColumnNames = (n = 20, keys: CodebookEntryKey[] = ['name']) => {
       matches.flatMap(({ item }) => keys.flatMap((key) => item[key] ?? '')),
     )
 
-      startTransition(() => {
-        setColumnNames(result)
-      })
+    startTransition(() => {
+      setColumnNames(result)
+    })
   }, [checkIsPending, columnMatches, keys, originalColumns])
 
   return columnNames
