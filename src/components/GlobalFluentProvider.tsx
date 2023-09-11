@@ -10,11 +10,39 @@ import {
   webLightTheme,
 } from '@fluentui/react-components'
 
-import {
-  useBodyClasses,
-  useFluentStyledState,
-  useThemePreference,
-} from '@/hooks'
+import { useFluentStyledState } from '@/hooks'
+import { useEffect, useState } from 'react'
+
+const useThemePreference = () => {
+  const themeMedia = matchMedia('(prefers-color-scheme: dark)')
+  const [preference, setPreference] = useState(themeMedia.matches)
+
+  useEffect(() => {
+    const handleThemeChange = (e: MediaQueryListEvent) => {
+      setPreference(e.matches)
+    }
+
+    themeMedia.addEventListener('change', handleThemeChange)
+
+    return () => {
+      themeMedia.removeEventListener('change', handleThemeChange)
+    }
+  }, [themeMedia])
+  return preference
+}
+
+const useBodyClasses = (classes: string) => {
+  useEffect(() => {
+    const classList = classes.split(' ')
+    document.body.classList.add(...classList)
+
+    return () => {
+      document.body.classList.remove(...classList)
+    }
+  }, [classes])
+
+  return classes
+}
 
 const GlobalFluentProvider = ({ children, ...props }: FluentProviderProps) => {
   const theme = useThemePreference() ? webDarkTheme : webLightTheme

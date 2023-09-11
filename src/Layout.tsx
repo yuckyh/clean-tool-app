@@ -1,6 +1,13 @@
-import { Outlet } from 'react-router-dom'
+import { Outlet, useNavigation } from 'react-router-dom'
 import ProgressNav from '@/components/ProgressNav'
-import { makeStyles, shorthands, tokens } from '@fluentui/react-components'
+import {
+  Spinner,
+  Subtitle1,
+  makeStyles,
+  shorthands,
+  tokens,
+} from '@fluentui/react-components'
+import { useEffect, useState } from 'react'
 
 const useClasses = makeStyles({
   header: {
@@ -15,6 +22,17 @@ const useClasses = makeStyles({
 
 const Layout = () => {
   const classes = useClasses()
+  const navigation = useNavigation()
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    if (navigation.state === 'loading') {
+      setLoading(true)
+      return
+    }
+    setLoading(false)
+  }, [navigation.state])
+  console.log(navigation.state)
 
   return (
     <>
@@ -22,7 +40,15 @@ const Layout = () => {
         <ProgressNav thickness="large" />
       </header>
       <main className={classes.main}>
-        <Outlet />
+        {loading ? (
+          <Spinner
+            size="huge"
+            labelPosition="below"
+            label={<Subtitle1>Loading...</Subtitle1>}
+          />
+        ) : (
+          <Outlet />
+        )}
       </main>
     </>
   )

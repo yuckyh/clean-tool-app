@@ -4,11 +4,20 @@ import { makeStaticStyles } from '@fluentui/react-components'
 
 import styleString from '@/global.css?inline'
 import { author, description, keywords } from '@/../package.json'
-import { useOPFS, usePathTitle } from '@/hooks'
+import { usePathTitle } from '@/hooks'
 import GlobalFluentProvider from './components/GlobalFluentProvider'
 import { useRegisterSW } from 'virtual:pwa-register/react'
+import { useEffect } from 'react'
 
 const useGlobalStyles = makeStaticStyles(styleString)
+
+const useOPFS = () => {
+  useEffect(() => {
+    void (async () =>
+      (await navigator.storage.persisted()) &&
+      (await navigator.storage.persist()))()
+  }, [])
+}
 
 const App = () => {
   const title = usePathTitle()

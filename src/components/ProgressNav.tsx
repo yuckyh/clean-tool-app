@@ -16,16 +16,19 @@ import {
   useLinkStyles_unstable,
 } from '@fluentui/react-components'
 
-import { useChildPaths, useFluentStyledState, usePathTitle } from '@/hooks'
+import { useFluentStyledState, usePathTitle } from '@/hooks'
 import {
   NavLink,
+  matchRoutes,
+  resolvePath,
   useHref,
   useLocation,
   useNavigate,
   useResolvedPath,
 } from 'react-router-dom'
-import { useEffect, useState } from 'react'
-import { progressStateStorage } from '@/lib/StateStorage/progress'
+import { useEffect, useSyncExternalStore } from 'react'
+import { progressStateStore } from '@/lib/StateStore/progress'
+import { routes } from '@/Router'
 
 const useClasses = makeStyles({
   root: {
@@ -48,6 +51,16 @@ const useClasses = makeStyles({
   },
 })
 
+const useChildPaths = (parentPath: string, exclusion?: string) =>
+  matchRoutes(routes, parentPath)
+    ?.filter(({ route }) => route.children)
+    .map(({ route }) => route.children)
+    .pop()
+    ?.filter(
+      ({ path }) => resolvePath(path ?? parentPath).pathname !== exclusion,
+    )
+    .map(({ path }) => resolvePath(path ?? '').pathname)
+
 const ProgressNav = (props: ProgressBarProps) => {
   const classes = useClasses()
   const componentPath = useResolvedPath('')
@@ -61,13 +74,18 @@ const ProgressNav = (props: ProgressBarProps) => {
     pathname,
   }))
 
+  const allowedPath = useSyncExternalStore(
+    progressStateStore.subscribe,
+    () => progressStateStore.allowedPath,
+  )
+
   // Ternary expression for animation hack
   const progress = index == 0 ? 0.011 : index / ((childPaths?.length ?? -1) - 1)
 
   useEffect(() => {
-    const { allowedPath } = progressStateStorage
-    !allowedPath.includes(pathname) && navigate(allowedPath.pop() ?? '/')
-  }, [navigate, pathname])
+    !allowedPath.includes(pathname) &&
+      navigate(allowedPath[allowedPath.length - 1] ?? '/')
+  }, [allowedPath, navigate, pathname])
 
   return (
     <div className={classes.root}>
@@ -125,19 +143,12 @@ const ProgressNavLink = ({ done, path }: LinkLabelProps) => {
   const label: string = usePathTitle(path)
   const classes = useLinkClasses()
 
-  const [disabled, setDisabled] = useState(
-    !progressStateStorage.allowedPath.includes(path),
+  const allowedPath = useSyncExternalStore(
+    progressStateStore.subscribe,
+    () => progressStateStore.allowedPath,
   )
 
-  useEffect(() => {
-    const listener = progressStateStorage.addEventListener((storage) => {
-      setDisabled(!storage.allowedPath.includes(path))
-    })
-
-    return () => {
-      progressStateStorage.removeEventListener(listener)
-    }
-  }, [path])
+  const disabled = !allowedPath.includes(path)
 
   const fluentLinkComponent = useFluentStyledState<
     LinkProps,
