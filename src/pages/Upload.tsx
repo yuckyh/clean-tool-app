@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useState, useSyncExternalStore } from 'react'
 import { useNavigate } from 'react-router-dom'
 import FileInput from '@/components/FileInput'
 import {
@@ -22,14 +22,11 @@ import {
 } from '@fluentui/react-components'
 import type { DropdownProps } from '@fluentui/react-components'
 import type { DropzoneOptions } from 'react-dropzone'
-import { fileStateStorage } from '@/lib/StateStorage/file'
+import { fileStateStore } from '@/lib/StateStore/file'
 import type { FileResponse, FileRequest } from '@/workers/file'
-import { useFile, useFileWorker, useWorkbookWorker } from '@/hooks'
-import { sheetStateStorage } from '@/lib/StateStorage/sheet'
-import {
-  ProgressState,
-  progressStateStorage,
-} from '@/lib/StateStorage/progress'
+import { useFileWorker, useWorkbookWorker } from '@/hooks'
+import { sheetStateStore } from '@/lib/StateStore/sheet'
+import { ProgressState, progressStateStore } from '@/lib/StateStore/progress'
 
 type TaskType = 'uploaded' | 'deleted' | false
 
@@ -60,8 +57,10 @@ const useClasses = makeStyles({
   },
 })
 
+// TODO: Add sheet preview
+
 export const Component = () => {
-  const fileName = fileStateStorage.state
+  const fileName = fileStateStore.state
   const [taskType, setTaskType] = useState<TaskType>(false)
 
   const toasterId = useId('toaster')
@@ -73,7 +72,10 @@ export const Component = () => {
 
   const fileWorker = useFileWorker()
   const workbookWorker = useWorkbookWorker()
-  const file = useFile()
+  const file = useSyncExternalStore(
+    fileStateStore.subscribe,
+    () => fileStateStore.file,
+  )
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -117,15 +119,15 @@ export const Component = () => {
     setTaskType('deleted')
     const request: FileRequest = {
       method: 'delete',
-      fileName: fileStateStorage.state,
+      fileName: fileStateStore.state,
     }
     fileWorker.postMessage(request)
-    progressStateStorage.state = ProgressState.NONE
-    sheetStateStorage.state = ''
+    progressStateStore.state = ProgressState.NONE
+    sheetStateStore.state = ''
   }, [fileWorker])
 
   const handleSubmit = useCallback(() => {
-    progressStateStorage.state = ProgressState.UPLOADED
+    progressStateStore.state = ProgressState.UPLOADED
     navigate('/column-matching')
   }, [navigate])
 
@@ -147,25 +149,21 @@ export const Component = () => {
     disabled: hasFile,
   }
 
-  const [selectedSheetName, setSelectedSheetName] = useState(
-    sheetStateStorage.state,
+  const selectedSheetName = useSyncExternalStore(
+    sheetStateStore.subscribe,
+    () => sheetStateStore.state,
   )
 
-  useEffect(() => {
-    const listener = sheetStateStorage.addEventListener((storage) => {
-      setSelectedSheetName(storage.state)
-    })
-
-    return () => {
-      sheetStateStorage.removeEventListener(listener)
-    }
-  }, [])
+  const sheetNames = useSyncExternalStore(
+    sheetStateStore.subscribe,
+    () => sheetStateStore.sheetNames,
+  )
 
   const handleSheetSelect: DropdownProps['onOptionSelect'] = (
     _event,
     { selectedOptions },
   ) => {
-    sheetStateStorage.state = selectedOptions[0] ?? ''
+    sheetStateStore.state = selectedOptions[0] ?? ''
   }
 
   return (
@@ -189,7 +187,7 @@ export const Component = () => {
               defaultValue={selectedSheetName}
               defaultSelectedOptions={[selectedSheetName]}
               selectedOptions={[selectedSheetName]}>
-              {sheetStateStorage.sheetNames.map((sheetName) => (
+              {sheetNames.map((sheetName) => (
                 <Option key={sheetName} value={sheetName} text={sheetName}>
                   {sheetName}
                 </Option>
@@ -223,7 +221,7 @@ interface FileToastProps {
 }
 
 const FileToast = ({ type }: FileToastProps) => {
-  const fileName = fileStateStorage.state
+  const fileName = fileStateStore.state
   return (
     <Toast>
       <ToastTitle>File {type}!</ToastTitle>
