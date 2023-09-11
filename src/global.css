@@ -67,3 +67,8 @@ object {
   display: block;
   vertical-align: middle;
 }
+
+.plot-container.plotly {
+  width: 100%;
+  height: 100%;
+}
