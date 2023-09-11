@@ -12,19 +12,16 @@ import {
   Toast,
   ToastBody,
   ToastTitle,
-  Toaster,
   Option,
   makeStyles,
   shorthands,
   tokens,
-  useId,
-  useToastController,
 } from '@fluentui/react-components'
 import type { DropdownProps } from '@fluentui/react-components'
 import type { DropzoneOptions } from 'react-dropzone'
 import { fileStateStore } from '@/lib/StateStore/file'
 import type { FileResponse, FileRequest } from '@/workers/file'
-import { useFileWorker, useWorkbookWorker } from '@/hooks'
+import { useFileWorker, useWorkbookWorker, useToaster } from '@/hooks'
 import { sheetStateStore } from '@/lib/StateStore/sheet'
 import { ProgressState, progressStateStore } from '@/lib/StateStore/progress'
 
@@ -63,9 +60,7 @@ export const Component = () => {
   const classes = useClasses()
   const [taskType, setTaskType] = useState<TaskType>(false)
 
-  const toasterId = useId('toaster')
-
-  const { dispatchToast } = useToastController(toasterId)
+  const [{ dispatchToast }, FileToaster] = useToaster("fileToast")
   const toastNotify = useCallback(() => {
     dispatchToast(<FileToast type={taskType} />, { intent: 'success' })
   }, [dispatchToast, taskType])
@@ -212,7 +207,7 @@ export const Component = () => {
           }
         />
       </Card>
-      <Toaster toasterId={toasterId} />
+      <FileToaster />
     </section>
   )
 }
@@ -222,7 +217,11 @@ interface FileToastProps {
 }
 
 const FileToast = ({ type }: FileToastProps) => {
-  const fileName = fileStateStore.state
+  const fileName = useSyncExternalStore(
+    fileStateStore.subscribe,
+    () => fileStateStore.state,
+  )
+
   return (
     <Toast>
       <ToastTitle>File {type}!</ToastTitle>
