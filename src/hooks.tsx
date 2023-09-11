@@ -6,6 +6,7 @@ import type {
   ComponentState,
   SlotPropsRecord,
 } from '@fluentui/react-components'
+import { Toaster, useId, useToastController } from '@fluentui/react-components'
 
 import { getPathTitle } from '@/helpers'
 import FileWorker from '@/workers/file?worker'
@@ -103,4 +104,14 @@ export const useWorkbookWorker = () => {
   }, [])
 
   return workbookWorker
+}
+
+export const useToaster = (
+  id = 'toaster',
+): [ReturnType<typeof useToastController>, () => JSX.Element] => {
+  const toasterId = useId(id)
+  const controller = useToastController(toasterId)
+  const render = () => <Toaster toasterId={toasterId} />
+
+  return [controller, render]
 }
