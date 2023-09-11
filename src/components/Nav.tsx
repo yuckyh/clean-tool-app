@@ -3,25 +3,18 @@ import type {
   TabListProps,
 } from '@fluentui/react-components'
 import { Tab, TabList } from '@fluentui/react-components'
-import {
-  useResolvedPath,
-  useNavigate,
-  useLocation,
-  useHref,
-} from 'react-router-dom'
+import { useNavigate, useLocation, useHref } from 'react-router-dom'
 
-import { useChildPaths, usePathTitle } from '@/hooks'
+import { usePathTitle } from '@/hooks'
 import { useCallback } from 'react'
 
-const Nav = (props: TabListProps) => {
-  const navigate = useNavigate()
-  const componentPath = useResolvedPath('')
-  const { pathname } = useLocation()
+interface NavProps extends TabListProps {
+  paths: string[]
+}
 
-  const childPaths = useChildPaths(
-    componentPath.pathname,
-    componentPath.pathname,
-  )
+const Nav = ({ paths, ...props }: NavProps) => {
+  const navigate = useNavigate()
+  const { pathname } = useLocation()
 
   const handleTabSelect: SelectTabEventHandler = useCallback(
     (_event, { value }) => {
@@ -33,7 +26,9 @@ const Nav = (props: TabListProps) => {
 
   return (
     <TabList selectedValue={pathname} onTabSelect={handleTabSelect} {...props}>
-      {childPaths?.map((path) => <NavTab key={path} path={path} />)}
+      {paths.map((path) => (
+        <NavTab key={path} path={path} />
+      ))}
     </TabList>
   )
 }
@@ -44,7 +39,7 @@ interface NavTabProps {
 
 export const NavTab = ({ path }: NavTabProps) => {
   const href = useHref(path)
-  const label: string = usePathTitle(path)
+  const label = usePathTitle(path)
 
   return <Tab value={href}>{label}</Tab>
 }
