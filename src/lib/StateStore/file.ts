@@ -1,6 +1,6 @@
-import { StateStorage } from '.'
+import { StateStore } from '.'
 
-class FileStateStorage extends StateStorage<string> {
+class FileStateStore extends StateStore<string> {
   private _file: File = new File([], '')
   get file() {
     return this._file
@@ -15,4 +15,4 @@ class FileStateStorage extends StateStorage<string> {
   }
 }
 
-export const fileStateStorage = new FileStateStorage()
+export const fileStateStore = new FileStateStore()

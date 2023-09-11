@@ -1,4 +1,4 @@
-import { StateStorage } from '.'
+import { StateStore } from '.'
 
 export enum ProgressState {
   NONE = 'none',
@@ -9,7 +9,7 @@ export enum ProgressState {
 }
 type AllowedProgressPath = Record<ProgressState, string[]>
 
-class ProgressStateStorage extends StateStorage<ProgressState> {
+class ProgressStateStore extends StateStore<ProgressState> {
   private readonly _allowedPaths: AllowedProgressPath = {
     [ProgressState.NONE]: ['/upload'],
     [ProgressState.UPLOADED]: ['/upload', '/column-matching'],
@@ -28,13 +28,18 @@ class ProgressStateStorage extends StateStorage<ProgressState> {
     ],
   }
 
+  private _allowedPath = ['/', ...this._allowedPaths[this.state]]
+
   get allowedPath() {
-    return ['/', ...this._allowedPaths[this.state]]
+    return this._allowedPath
   }
 
   constructor() {
     super(ProgressState.NONE, 'progress')
+    this.addEventListener((store) => {
+      store._allowedPath = ['/', ...store._allowedPaths[store.state]]
+    })
   }
 }
 
-export const progressStateStorage = new ProgressStateStorage()
+export const progressStateStore = new ProgressStateStore()

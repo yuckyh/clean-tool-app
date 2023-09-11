@@ -1,14 +1,11 @@
 import type { WorkBook } from 'xlsx'
-import { StateStorage } from '.'
+import { StateStore } from '.'
 
-class SheetStateStorage extends StateStorage<string> {
+class SheetStateStore extends StateStore<string> {
   private _workbook?: WorkBook | undefined
   private _sheetNames: string[] = []
   private _sheet = this._workbook?.Sheets[this.state]
-
-  get sheet() {
-    return this._sheet
-  }
+  private _columns: string[] = []
 
   get workbook(): WorkBook | undefined {
     return this._workbook
@@ -20,8 +17,20 @@ class SheetStateStorage extends StateStorage<string> {
     this._sheet = this._workbook?.Sheets[this.state]
   }
 
+  get sheet() {
+    return this._sheet
+  }
+
   get sheetNames(): string[] {
     return this._sheetNames
+  }
+
+  get columns(): string[] {
+    return this._columns
+  }
+
+  set columns(value: string[]) {
+    this._columns = value
   }
 
   constructor() {
@@ -29,4 +38,4 @@ class SheetStateStorage extends StateStorage<string> {
   }
 }
 
-export const sheetStateStorage = new SheetStateStorage()
+export const sheetStateStore = new SheetStateStore()
