@@ -32,7 +32,6 @@ const Layout = () => {
     }
     setLoading(false)
   }, [navigation.state])
-  console.log(navigation.state)
 
   return (
     <>
