@@ -26,7 +26,13 @@ import {
   useNavigate,
   useResolvedPath,
 } from 'react-router-dom'
-import { useEffect, useSyncExternalStore } from 'react'
+import {
+  useEffect,
+  useRef,
+  useState,
+  useSyncExternalStore,
+  useTransition,
+} from 'react'
 import { progressStateStore } from '@/lib/StateStore/progress'
 import { routes } from '@/Router'
 
@@ -51,56 +57,70 @@ const useClasses = makeStyles({
   },
 })
 
-const useChildPaths = (parentPath: string, exclusion?: string) =>
-  matchRoutes(routes, parentPath)
-    ?.filter(({ route }) => route.children)
-    .map(({ route }) => route.children)
-    .pop()
-    ?.filter(
-      ({ path }) => resolvePath(path ?? parentPath).pathname !== exclusion,
+const useChildPaths = (parentPath: string, exclusion?: string) => {
+  const [childPaths, setChildPaths] = useState<string[]>([])
+
+  useEffect(() => {
+    setChildPaths(
+      matchRoutes(routes, parentPath)
+        ?.filter(({ route }) => route.children)
+        .map(({ route }) => route.children)
+        .pop()
+        ?.filter(
+          ({ path }) => resolvePath(path ?? parentPath).pathname !== exclusion,
+        )
+        .map(({ path }) => resolvePath(path ?? '').pathname) ?? [],
     )
-    .map(({ path }) => resolvePath(path ?? '').pathname)
+  }, [parentPath, exclusion])
+
+  return childPaths
+}
 
 const ProgressNav = (props: ProgressBarProps) => {
   const classes = useClasses()
   const componentPath = useResolvedPath('')
   const { pathname } = useLocation()
   const navigate = useNavigate()
-  const childPaths = useChildPaths(componentPath.pathname)
-
-  const index = childPaths?.findIndex((path) => path === pathname) ?? -1
-
-  const allowedChildPaths = childPaths?.map((pathname) => ({
-    pathname,
-  }))
-
   const allowedPath = useSyncExternalStore(
     progressStateStore.subscribe,
     () => progressStateStore.allowedPath,
   )
+  const childPaths = useChildPaths(componentPath.pathname)
+  const ref = useRef<HTMLDivElement | null>(null)
+
+  const index = childPaths.findIndex((path) => path === pathname)
+
+  const allowedChildPaths = childPaths.map((pathname) => ({
+    pathname,
+  }))
 
   // Ternary expression for animation hack
-  const progress = index == 0 ? 0.011 : index / ((childPaths?.length ?? -1) - 1)
+  const progress = index == 0 ? 0.011 : index / (childPaths.length - 1)
 
   useEffect(() => {
-    !allowedPath.includes(pathname) &&
-      navigate(allowedPath[allowedPath.length - 1] ?? '/')
-  }, [allowedPath, navigate, pathname])
+    !allowedPath.includes(pathname) ||
+      (index < 0 && navigate(allowedPath[allowedPath.length - 1] ?? '/'))
+  }, [allowedPath, index, navigate, pathname])
+
+  const progressBar = (
+    <ProgressBar
+      className={mergeClasses(
+        classes.progressBar,
+        index == 0 && classes.progressBarInitial,
+      )}
+      title="Progress Bar Navigation"
+      max={1}
+      value={progress}
+      ref={ref}
+      {...props}
+    />
+  )
 
   return (
     <div className={classes.root}>
-      <ProgressBar
-        className={mergeClasses(
-          classes.progressBar,
-          index == 0 && classes.progressBarInitial,
-        )}
-        title="Progress Bar Navigation"
-        max={1}
-        value={progress}
-        {...props}
-      />
+      {progressBar}
       <div className={classes.linkContainer}>
-        {allowedChildPaths?.map(({ pathname }, i) => (
+        {allowedChildPaths.map(({ pathname }, i) => (
           <ProgressNavLink key={i} done={index >= i} path={pathname} />
         ))}
       </div>
