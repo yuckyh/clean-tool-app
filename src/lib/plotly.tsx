@@ -2,6 +2,7 @@ import Plotly from 'plotly.js-cartesian-dist'
 import createPlotlyComponent from 'react-plotly.js/factory'
 import { tokens, type ColorTokens } from '@fluentui/react-components'
 import type { PlotParams } from 'react-plotly.js'
+import Plot from 'react-plotly.js'
 
 type ColorToken = ColorTokens[keyof ColorTokens]
 
@@ -37,7 +38,11 @@ export const fluentColorScale = (
   })
 }
 
-const Plot = ({ config, layout, ...props }: PlotParams) => {
+interface PlotProps extends Partial<PlotParams> {
+  data: Plotly.Data[]
+}
+
+const Plot = ({ config, layout, ...props }: PlotProps) => {
   const Plot = createPlotlyComponent(Plotly)
   const plotFgColor = tokenToColor(tokens.colorNeutralForeground1)
 

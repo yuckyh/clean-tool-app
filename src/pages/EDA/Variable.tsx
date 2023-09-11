@@ -1,8 +1,8 @@
-import { Plot, defaultConfig, defaultLayout } from '@/lib/plotly'
+import Plot from '@/lib/plotly'
 
 export const Component = () => (
   <section>
-    <Plot data={[]} layout={defaultLayout} config={defaultConfig} />
+    <Plot data={[]} />
   </section>
 )
 
