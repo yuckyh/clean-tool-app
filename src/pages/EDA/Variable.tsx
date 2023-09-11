@@ -1,4 +1,4 @@
-import Plot from '@/lib/plotly'
+import Plot from '@/components/Plot'
 
 export const Component = () => (
   <section>
