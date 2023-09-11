@@ -1,7 +1,7 @@
 import Plotly from 'plotly.js-cartesian-dist'
 import createPlotlyComponent from 'react-plotly.js/factory'
-import type { ColorTokens } from '@fluentui/react-components'
-import { tokens } from '@fluentui/react-components'
+import { tokens, type ColorTokens } from '@fluentui/react-components'
+import type { PlotParams } from 'react-plotly.js'
 
 type ColorToken = ColorTokens[keyof ColorTokens]
 
@@ -37,20 +37,30 @@ export const fluentColorScale = (
   })
 }
 
-const plotFgColor = tokenToColor(tokens.colorNeutralForeground1)
+const Plot = ({ config, layout, ...props }: PlotParams) => {
+  const Plot = createPlotlyComponent(Plotly)
+  const plotFgColor = tokenToColor(tokens.colorNeutralForeground1)
 
-export const defaultConfig: Partial<Plotly.Config> = {
-  displayModeBar: false,
-  responsive: true,
+  const defaultConfig: Partial<Plotly.Config> = {
+    displayModeBar: false,
+    responsive: true,
+  }
+
+  const defaultLayout: Partial<Plotly.Layout> = {
+    paper_bgcolor: 'rgba(0, 0, 0, 0)',
+    plot_bgcolor: 'rgba(0, 0, 0, 0)',
+    font: {
+      family: 'Droid Sans',
+      color: plotFgColor,
+    },
+  }
+  return (
+    <Plot
+      layout={{ ...defaultLayout, ...layout }}
+      config={{ ...defaultConfig, ...config }}
+      {...props}
+    />
+  )
 }
 
-export const defaultLayout: Partial<Plotly.Layout> = {
-  paper_bgcolor: 'rgba(0, 0, 0, 0)',
-  plot_bgcolor: 'rgba(0, 0, 0, 0)',
-  font: {
-    family: 'Droid Sans',
-    color: plotFgColor,
-  },
-}
-
-export const Plot = createPlotlyComponent(Plotly)
+export default Plot
