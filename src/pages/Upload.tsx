@@ -60,7 +60,7 @@ const useClasses = makeStyles({
 // TODO: Add sheet preview
 
 export const Component = () => {
-  const fileName = fileStateStore.state
+  const classes = useClasses()
   const [taskType, setTaskType] = useState<TaskType>(false)
 
   const toasterId = useId('toaster')
@@ -72,29 +72,23 @@ export const Component = () => {
 
   const fileWorker = useFileWorker()
   const workbookWorker = useWorkbookWorker()
+  const fileName = useSyncExternalStore(
+    fileStateStore.subscribe,
+    () => fileStateStore.state,
+  )
   const file = useSyncExternalStore(
     fileStateStore.subscribe,
     () => fileStateStore.file,
   )
+  const selectedSheetName = useSyncExternalStore(
+    sheetStateStore.subscribe,
+    () => sheetStateStore.state,
+  )
+  const sheetNames = useSyncExternalStore(
+    sheetStateStore.subscribe,
+    () => sheetStateStore.sheetNames,
+  )
   const navigate = useNavigate()
-
-  useEffect(() => {
-    const handleWorkerLoad = ({ data }: MessageEvent<FileResponse>) => {
-      const loadingActions = ['create', 'sync', 'overwrite', 'delete']
-      const hasMatch = !!loadingActions.find((action) => action === data.action)
-      if (!hasMatch) {
-        return
-      }
-      setTaskType(!hasMatch)
-      toastNotify()
-    }
-
-    fileWorker.addEventListener('message', handleWorkerLoad)
-
-    return () => {
-      fileWorker.removeEventListener('message', handleWorkerLoad)
-    }
-  }, [fileWorker, toastNotify, workbookWorker])
 
   const handleFileDrop = useCallback(
     (acceptedFiles: File[]): void => {
@@ -131,7 +125,6 @@ export const Component = () => {
     navigate('/column-matching')
   }, [navigate])
 
-  const classes = useClasses()
   const hasFile = !!file.size
   const isCSV = file.type === 'text/csv'
 
@@ -149,22 +142,30 @@ export const Component = () => {
     disabled: hasFile,
   }
 
-  const selectedSheetName = useSyncExternalStore(
-    sheetStateStore.subscribe,
-    () => sheetStateStore.state,
-  )
-
-  const sheetNames = useSyncExternalStore(
-    sheetStateStore.subscribe,
-    () => sheetStateStore.sheetNames,
-  )
-
   const handleSheetSelect: DropdownProps['onOptionSelect'] = (
     _event,
     { selectedOptions },
   ) => {
     sheetStateStore.state = selectedOptions[0] ?? ''
   }
+
+  useEffect(() => {
+    const handleWorkerLoad = ({ data }: MessageEvent<FileResponse>) => {
+      const loadingActions = ['create', 'sync', 'overwrite', 'delete']
+      const hasMatch = !!loadingActions.find((action) => action === data.action)
+      if (!hasMatch) {
+        return
+      }
+      setTaskType(!hasMatch)
+      toastNotify()
+    }
+
+    fileWorker.addEventListener('message', handleWorkerLoad)
+
+    return () => {
+      fileWorker.removeEventListener('message', handleWorkerLoad)
+    }
+  }, [fileWorker, toastNotify, workbookWorker])
 
   return (
     <section className={classes.root}>
