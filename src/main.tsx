@@ -12,7 +12,7 @@ root.render(
   <StrictMode>
     <RouterProvider
       router={router}
-      fallbackElement={<Spinner appearance="primary" size="huge" />}
+      fallbackElement={<Spinner size="huge" />}
       future={{ v7_startTransition: true }}
     />
   </StrictMode>,
