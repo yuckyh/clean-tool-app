@@ -5,6 +5,7 @@ import {
   useMemo,
   useState,
   useSyncExternalStore,
+  useTransition,
 } from 'react'
 import { useHref, useLocation } from 'react-router-dom'
 import type {
@@ -15,15 +16,20 @@ import type {
 
 import FileWorker from '@/workers/file?worker'
 import WorkbookWorker from '@/workers/workbook?worker'
+import ColumnWorker from '@/workers/column?worker'
 import type { WorkbookRequest } from '@/workers/workbook'
 import type { FileRequest, FileResponse } from '@/workers/file'
 import { fileStateStore } from '@/lib/StateStore/file'
 import { sheetStateStore } from '@/lib/StateStore/sheet'
-import Fuse from 'fuse.js'
+import {
+  columnStateStore,
+  originalColumnStateStore,
+} from '@/lib/StateStore/column'
+import type Fuse from 'fuse.js'
 
 import codebook from '@/../data/codebook.json'
 import { utils } from 'xlsx'
-import { originalColumnStateStore } from './lib/StateStore/column'
+import type { ColumnResponse } from './workers/column'
 
 export const usePathTitle = (path?: string) => {
   const { pathname } = useLocation()
@@ -61,9 +67,9 @@ export const useFluentStyledState = <
   return styler(initialState)
 }
 
-const fileWorker = new FileWorker()
+export const fileWorker = new FileWorker()
 
-export const useFileWorker = () => {
+export const useGetFile = () => {
   const fileName = useSyncExternalStore(
     fileStateStore.subscribe,
     () => fileStateStore.state,
@@ -75,6 +81,10 @@ export const useFileWorker = () => {
   )
 
   useEffect(() => {
+    if (file.size) {
+      return
+    }
+
     // Init request
     const request: FileRequest = {
       method: 'get',
@@ -82,47 +92,55 @@ export const useFileWorker = () => {
     }
 
     fileWorker.postMessage(request)
-  }, [fileName])
+  }, [file.size, fileName])
 
   useEffect(() => {
     const handleWorkerResponse = ({ data }: MessageEvent<FileResponse>) => {
       const { action, fileName } = data
-      fileStateStore.state = action === 'delete' ? '' : fileName
-      fileStateStore.file =
-        action === 'delete'
-          ? new File([], '')
-          : data.file?.size
-          ? data.file
-          : file
+      const isDelete = action === 'delete'
+      fileStateStore.state = isDelete ? '' : fileName
+      fileStateStore.file = isDelete
+        ? new File([], '')
+        : data.file?.size
+        ? data.file
+        : file
     }
+
     fileWorker.addEventListener('message', handleWorkerResponse)
 
     return () => {
       fileWorker.removeEventListener('message', handleWorkerResponse)
     }
   }, [file])
-
-  return fileWorker
 }
 
-const workbookWorker = new WorkbookWorker()
+export const workbookWorker = new WorkbookWorker()
 
-export const useWorkbookWorker = () => {
-  useFileWorker()
-
+export const useGetWorkbook = () => {
+  useGetFile()
   const file = useSyncExternalStore(
     fileStateStore.subscribe,
     () => fileStateStore.file,
   )
 
+  const sheet = useSyncExternalStore(
+    sheetStateStore.subscribe,
+    () => sheetStateStore.sheet,
+  )
+
   useEffect(() => {
+    if (sheet) {
+      return
+    }
+
+    // Init request
     const request: WorkbookRequest = {
       method: 'get',
       file,
     }
 
     workbookWorker.postMessage(request)
-  }, [file])
+  }, [file, sheet])
 
   useEffect(() => {
     const handleGetWorkbook = ({ data }: MessageEvent<WorkbookRequest>) => {
@@ -135,7 +153,7 @@ export const useWorkbookWorker = () => {
 
       sheetStateStore.subscribe(({ sheet }) => {
         originalColumnStateStore.state = Object.keys(
-          utils.sheet_to_json(sheet)[0] ?? {},
+          (sheet && utils.sheet_to_json(sheet)[0]) ?? {},
         ).join(',')
       })
     }
@@ -146,21 +164,44 @@ export const useWorkbookWorker = () => {
       workbookWorker.removeEventListener('message', handleGetWorkbook)
     }
   }, [])
-
-  return workbookWorker
 }
 
-const useFuseSearch: <T>(
-  list: readonly T[],
-  options?: Fuse.IFuseOptions<T>,
-) => Fuse<T>['search'] = (list, options) => {
-  return useCallback(
-    (...args) => {
-      const fuse = new Fuse(list, options)
-      return fuse.search(...args)
-    },
-    [list, options],
+const columnWorker = new ColumnWorker()
+
+const useGetColumnMatches = <T>(options: Fuse.IFuseOptions<T>) => {
+  useGetWorkbook()
+  const sheet = useSyncExternalStore(
+    sheetStateStore.subscribe,
+    () => sheetStateStore.sheet,
   )
+
+  useEffect(() => {
+    // Init request
+    const request = {
+      method: 'get',
+      list: codebook.map(({ name }) => name),
+      columns: originalColumnStateStore.state.split(','),
+      options,
+    }
+
+    columnWorker.postMessage(request)
+  }, [options, sheet])
+
+  useEffect(() => {
+    const handleGetColumns = ({ data }: MessageEvent<ColumnResponse>) => {
+      columnStateStore.state = Array.from(columnStateStore.columns)[0]
+        ? columnStateStore.state
+        : data.columns.map((matches) => matches[0]?.item).join(',')
+    }
+
+    columnWorker.addEventListener('message', handleGetColumns)
+
+    return () => {
+      columnWorker.removeEventListener('message', handleGetColumns)
+    }
+  }, [])
+
+  return columnWorker
 }
 
 type CodebookEntry = (typeof codebook)[0]
@@ -173,8 +214,10 @@ export interface ColumnNameData {
   readonly position: number
 }
 
-export const useColumnNameMatches: () => ColumnNameData[] = () => {
+export const useColumnNameMatches: () => [boolean, ColumnNameData[]] = () => {
+  useGetWorkbook()
   const [columnNames, setColumnNames] = useState<ColumnNameData[]>([])
+  const [isPending, startTransition] = useTransition()
   const searchOpts: Fuse.IFuseOptions<CodebookMatch> = useMemo(
     () => ({
       keys: ['name'],
@@ -183,7 +226,7 @@ export const useColumnNameMatches: () => ColumnNameData[] = () => {
     }),
     [],
   )
-  const search = useFuseSearch<CodebookMatch>(codebook, searchOpts)
+  useGetColumnMatches(searchOpts)
 
   const originalColumns = useSyncExternalStore(
     originalColumnStateStore.subscribe,
@@ -191,19 +234,32 @@ export const useColumnNameMatches: () => ColumnNameData[] = () => {
   )
 
   useEffect(() => {
-    setColumnNames(
-      originalColumns.split(',').map((original, i) => ({
-        original,
-        matches: search(original).map(({ item, ...match }) => ({
-          ...match,
-          item: {
-            name: item.name,
-          },
-        })),
-        position: i,
-      })),
-    )
-  }, [originalColumns, search])
+    const handleWorkerMatch = ({ data }: MessageEvent<ColumnResponse>) => {
+      const { action, columns } = data
+      if (action === 'get') {
+        startTransition(() => {
+          setColumnNames(
+            columns.map((column, i) => ({
+              original: originalColumns.split(',')[i] ?? '',
+              matches: column.map(({ item, ...match }) => ({
+                ...match,
+                item: {
+                  name: item,
+                },
+              })),
+              position: i,
+            })),
+          )
+        })
+      }
+    }
 
-  return columnNames
+    columnWorker.addEventListener('message', handleWorkerMatch)
+
+    return () => {
+      columnWorker.removeEventListener('message', handleWorkerMatch)
+    }
+  }, [originalColumns])
+
+  return [isPending, columnNames]
 }

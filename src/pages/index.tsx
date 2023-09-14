@@ -21,6 +21,12 @@ const useClasses = makeStyles({
   },
 })
 
+// TODO: add another column for visit
+// TODO: add dropdown in upload(?) for number of visits
+// TODO: write in workbook
+// TODO: add download button
+// TODO: make download work
+
 export const Component = () => {
   const classes = useClasses()
   const uploadHref = useHref('/upload')

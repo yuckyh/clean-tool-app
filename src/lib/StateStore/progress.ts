@@ -36,8 +36,8 @@ class ProgressStateStore extends StateStore<ProgressState> {
 
   constructor() {
     super(ProgressState.NONE, 'progress')
-    this.addEventListener((store) => {
-      store._allowedPath = ['/', ...store._allowedPaths[store.state]]
+    this.addEventListener(({ state }) => {
+      this._allowedPath = ['/', ...this._allowedPaths[state]]
     })
   }
 }

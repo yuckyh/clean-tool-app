@@ -26,12 +26,7 @@ import {
   useNavigate,
   useResolvedPath,
 } from 'react-router-dom'
-import {
-  useEffect,
-  useRef,
-  useState,
-  useSyncExternalStore,
-} from 'react'
+import { useEffect, useRef, useSyncExternalStore } from 'react'
 import { progressStateStore } from '@/lib/StateStore/progress'
 import { routes } from '@/Router'
 
@@ -56,24 +51,15 @@ const useClasses = makeStyles({
   },
 })
 
-const useChildPaths = (parentPath: string, exclusion?: string) => {
-  const [childPaths, setChildPaths] = useState<string[]>([])
-
-  useEffect(() => {
-    setChildPaths(
-      matchRoutes(routes, parentPath)
-        ?.filter(({ route }) => route.children)
-        .map(({ route }) => route.children)
-        .pop()
-        ?.filter(
-          ({ path }) => resolvePath(path ?? parentPath).pathname !== exclusion,
-        )
-        .map(({ path }) => resolvePath(path ?? '').pathname) ?? [],
+const useChildPaths = (parentPath: string, exclusion?: string) =>
+  matchRoutes(routes, parentPath)
+    ?.filter(({ route }) => route.children)
+    .map(({ route }) => route.children)
+    .pop()
+    ?.filter(
+      ({ path }) => resolvePath(path ?? parentPath).pathname !== exclusion,
     )
-  }, [parentPath, exclusion])
-
-  return childPaths
-}
+    .map(({ path }) => resolvePath(path ?? '').pathname) ?? []
 
 const ProgressNav = (props: ProgressBarProps) => {
   const classes = useClasses()
@@ -87,7 +73,9 @@ const ProgressNav = (props: ProgressBarProps) => {
   const childPaths = useChildPaths(componentPath.pathname)
   const ref = useRef<HTMLDivElement | null>(null)
 
-  const index = childPaths.findIndex((path) => path === pathname)
+  const index = childPaths.findIndex(
+    (path) => path.replace('/', '') === pathname.split('/')[1],
+  )
 
   const allowedChildPaths = childPaths.map((pathname) => ({
     pathname,
@@ -97,8 +85,9 @@ const ProgressNav = (props: ProgressBarProps) => {
   const progress = index == 0 ? 0.011 : index / (childPaths.length - 1)
 
   useEffect(() => {
-    !allowedPath.includes(pathname) ||
-      (index < 0 && navigate(allowedPath[allowedPath.length - 1] ?? '/'))
+    if (!allowedPath.map((path) => pathname.includes(path)).includes(true)) {
+      navigate(allowedPath[allowedPath.length - 1] ?? '/')
+    }
   }, [allowedPath, index, navigate, pathname])
 
   const progressBar = (
@@ -159,7 +148,7 @@ const useLinkClasses = makeStyles({
 
 const ProgressNavLink = ({ done, path }: LinkLabelProps) => {
   const href = useHref(path)
-  const label: string = usePathTitle(path)
+  const label = usePathTitle(path)
   const classes = useLinkClasses()
 
   const allowedPath = useSyncExternalStore(

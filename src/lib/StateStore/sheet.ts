@@ -2,7 +2,7 @@ import type { WorkBook } from 'xlsx'
 import { StateStore } from '.'
 
 class SheetStateStore extends StateStore<string> {
-  private _workbook?: WorkBook | undefined
+  private _workbook?: WorkBook
   private _sheetNames: string[] = []
   private _sheet = this._workbook?.Sheets[this.state]
 
@@ -12,7 +12,7 @@ class SheetStateStore extends StateStore<string> {
 
   set workbook(value: WorkBook | undefined) {
     this._workbook = value
-    this._sheetNames = value ? value.SheetNames : []
+    this._sheetNames = value ? value.SheetNames : this._sheetNames
     this._sheet = this._workbook?.Sheets[this.state]
   }
 
@@ -26,6 +26,9 @@ class SheetStateStore extends StateStore<string> {
 
   constructor() {
     super('', 'sheetName')
+    this.addEventListener(({ state }) => {
+      this._sheet = this._workbook?.Sheets[state]
+    })
   }
 }
 

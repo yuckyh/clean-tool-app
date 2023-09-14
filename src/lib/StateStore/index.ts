@@ -1,19 +1,23 @@
 type Listener<T> = (data: T) => void
 
-interface Stateful<T> {
+interface HasState<T> {
   get state(): T
   set state(value: T)
 }
 
-interface Subscriptable {
+interface CanSubscribe {
   subscribe(listener: Listener<this>): () => void
 }
 
+interface CanReset<T> {
+  reset(defaultValue: T): void
+}
+
 export abstract class StateStore<T extends string>
-  implements Stateful<T>, Subscriptable
+  implements HasState<T>, CanReset<T>, CanSubscribe
 {
-  private readonly _storageKey: string
-  private _state: T
+  private readonly _storageKey
+  private _state
   private _listeners: Listener<this>[] = []
 
   get state() {
@@ -32,10 +36,15 @@ export abstract class StateStore<T extends string>
   constructor(defaultState: T, storageKey: string) {
     this._state = defaultState
     this._storageKey = storageKey
-    this.state = this.state || defaultState
+    this.reset(defaultState)
+    window.addEventListener('storage', ({ key }) => {
+      if (key === null) {
+        this.reset(defaultState)
+      }
+    })
   }
 
-  private _syncState = (): void => {
+  private _syncState = () => {
     this._state = (localStorage.getItem(this._storageKey) ?? '') as T
   }
 
@@ -47,6 +56,11 @@ export abstract class StateStore<T extends string>
 
   protected removeEventListener = (listener: Listener<this>) => {
     this._listeners = this._listeners.filter((l) => l !== listener)
+  }
+
+  reset = (defaultState: T) => {
+    this.state = this.state || defaultState
+    this._listeners = []
   }
 
   readonly subscribe = (listener: Listener<this>) => {

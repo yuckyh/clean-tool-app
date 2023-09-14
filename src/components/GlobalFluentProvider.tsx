@@ -11,24 +11,23 @@ import {
 } from '@fluentui/react-components'
 
 import { useFluentStyledState } from '@/hooks'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useSyncExternalStore } from 'react'
 
 const useThemePreference = () => {
-  const themeMedia = matchMedia('(prefers-color-scheme: dark)')
-  const [preference, setPreference] = useState(themeMedia.matches)
+  const themeMedia = useMemo(
+    () => matchMedia('(prefers-color-scheme: dark)'),
+    [],
+  )
 
-  useEffect(() => {
-    const handleThemeChange = (e: MediaQueryListEvent) => {
-      setPreference(e.matches)
-    }
-
-    themeMedia.addEventListener('change', handleThemeChange)
-
-    return () => {
-      themeMedia.removeEventListener('change', handleThemeChange)
-    }
-  }, [themeMedia])
-  return preference
+  return useSyncExternalStore(
+    (cb) => {
+      themeMedia.addEventListener('change', cb)
+      return () => {
+        themeMedia.removeEventListener('change', cb)
+      }
+    },
+    () => themeMedia.matches,
+  )
 }
 
 const useBodyClasses = (classes: string) => {

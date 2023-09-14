@@ -4,9 +4,9 @@ import type {
 } from '@fluentui/react-components'
 import { Tab, TabList } from '@fluentui/react-components'
 import { useNavigate, useLocation, useHref } from 'react-router-dom'
+import { useCallback } from 'react'
 
 import { usePathTitle } from '@/hooks'
-import { useCallback } from 'react'
 
 interface NavProps extends TabListProps {
   paths: string[]
