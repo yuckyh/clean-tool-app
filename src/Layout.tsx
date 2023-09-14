@@ -7,7 +7,8 @@ import {
   shorthands,
   tokens,
 } from '@fluentui/react-components'
-import { useEffect, useState } from 'react'
+import { useMemo } from 'react'
+import Loader from '@/components/Loader'
 
 const useClasses = makeStyles({
   header: {
@@ -23,15 +24,10 @@ const useClasses = makeStyles({
 const Layout = () => {
   const classes = useClasses()
   const navigation = useNavigation()
-  const [loading, setLoading] = useState(true)
-
-  useEffect(() => {
-    if (navigation.state === 'loading') {
-      setLoading(true)
-      return
-    }
-    setLoading(false)
-  }, [navigation.state])
+  const loading = useMemo(
+    () => navigation.state === 'loading',
+    [navigation.state],
+  )
 
   return (
     <>
@@ -39,15 +35,20 @@ const Layout = () => {
         <ProgressNav thickness="large" />
       </header>
       <main className={classes.main}>
-        {loading ? (
-          <Spinner
-            size="huge"
-            labelPosition="below"
-            label={<Subtitle1>Loading...</Subtitle1>}
-          />
-        ) : (
-          <Outlet />
-        )}
+        <Loader
+          size="huge"
+          labelPosition="below"
+          label={<Subtitle1>Loading...</Subtitle1>}>
+          {loading ? (
+            <Spinner
+              labelPosition="below"
+              size="huge"
+              label={<Subtitle1>Loading...</Subtitle1>}
+            />
+          ) : (
+            <Outlet />
+          )}
+        </Loader>
       </main>
     </>
   )
