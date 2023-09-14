@@ -85,7 +85,13 @@ const ProgressNav = (props: ProgressBarProps) => {
   const progress = index == 0 ? 0.011 : index / (childPaths.length - 1)
 
   useEffect(() => {
-    if (!allowedPath.map((path) => pathname.includes(path)).includes(true)) {
+    if (
+      pathname !== '/' &&
+      !allowedPath
+        .map((path) => pathname.includes(path.substring(1)))
+        .slice(1)
+        .includes(true)
+    ) {
       navigate(allowedPath[allowedPath.length - 1] ?? '/')
     }
   }, [allowedPath, index, navigate, pathname])
