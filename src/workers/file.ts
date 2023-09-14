@@ -7,6 +7,7 @@ import type {
 } from '.'
 
 export interface FileRequest extends WorkerRequest {
+  method: 'index' | 'post' | 'delete' | 'get'
   file?: File
   fileName: string
 }

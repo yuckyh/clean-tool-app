@@ -7,6 +7,7 @@ import type {
 } from '.'
 
 export interface WorkbookRequest extends WorkerRequest {
+  method: 'get'
   workbook?: WorkBook
   file: File
 }
@@ -31,31 +32,7 @@ const get: WorkbookRequestHandler = async ({ file }) => {
 }
 
 const controller: Controller<WorkbookRequest, WorkbookRequestHandler> = {
-  index: async () => {
-    await new Promise((res) => {
-      res('convert')
-    })
-    return {
-      action: 'sync',
-    }
-  },
   get,
-  post: async () => {
-    await new Promise((res) => {
-      res('convert')
-    })
-    return {
-      action: 'create',
-    }
-  },
-  delete: async () => {
-    await new Promise((res) => {
-      res('convert')
-    })
-    return {
-      action: 'delete',
-    }
-  },
 }
 
 const main = async ({ data }: MessageEvent<WorkbookRequest>) => {

@@ -11,7 +11,7 @@ export type Controller<
 > = Record<Request['method'], Handler>
 
 export interface WorkerRequest {
-  method: 'index' | 'post' | 'delete' | 'get'
+  method: string
 }
 
 export interface WorkerResponse {
