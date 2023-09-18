@@ -10,14 +10,14 @@ import { makeStyles, shorthands } from '@fluentui/react-components'
 import { useHref, useLinkClickHandler } from 'react-router-dom'
 
 const useClasses = makeStyles({
+  card: {
+    ...shorthands.padding(tokens.spacingHorizontalXXXL, '20%'),
+  },
   root: {
     display: 'flex',
     flexDirection: 'column',
     width: '40%',
     ...shorthands.margin(0, 'auto'),
-  },
-  card: {
-    ...shorthands.padding(tokens.spacingHorizontalXXXL, '20%'),
   },
 })
 
@@ -39,8 +39,8 @@ export const Component = () => {
         <CardFooter
           action={
             <Button
-              as="a"
               appearance="primary"
+              as="a"
               href={uploadHref}
               onClick={handleClick}>
               Upload

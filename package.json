@@ -24,8 +24,9 @@
     "preview:clean": "tsc && vite build && vite preview"
   },
   "dependencies": {
-    "@fluentui/react-components": "^9.31.0",
-    "@fluentui/react-icons": "^2.0.215",
+    "@fluentui/react-components": "^9.31.1",
+    "@fluentui/react-icons": "^2.0.216",
+    "@reduxjs/toolkit": "^1.9.5",
     "@tauri-apps/api": "^1.4.0",
     "fuse.js": "^6.6.2",
     "plotly.js-cartesian-dist": "^2.26.0",
@@ -34,8 +35,9 @@
     "react-dropzone": "^14.2.3",
     "react-helmet-async": "^1.3.0",
     "react-plotly.js": "^2.6.0",
+    "react-redux": "^8.1.2",
     "react-router-dom": "^6.16.0",
-    "scheduler": "^0.20.2",
+    "scheduler": "0.20.2",
     "xlsx": "https://cdn.sheetjs.com/xlsx-0.20.0/xlsx-0.20.0.tgz"
   },
   "devDependencies": {
@@ -53,9 +55,14 @@
     "@vitejs/plugin-react-swc": "^3.3.2",
     "eslint": "^8.49.0",
     "eslint-config-prettier": "^9.0.0",
+    "eslint-plugin-json": "^3.1.0",
+    "eslint-plugin-json-format": "^2.0.1",
+    "eslint-plugin-optimize-regex": "^1.2.1",
+    "eslint-plugin-perfectionist": "^2.1.0",
     "eslint-plugin-prettier": "^5.0.0",
     "eslint-plugin-react": "^7.33.2",
     "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-react-redux": "^4.0.0",
     "eslint-plugin-react-refresh": "^0.4.3",
     "lightningcss": "^1.21.8",
     "modern-normalize": "^2.0.0",
@@ -73,7 +80,8 @@
   },
   "engines": {
     "node": ">=18",
-    "pnpm": ">=8"
+    "pnpm": ">=8",
+    "yarn": ">=3"
   },
   "repository": {
     "type": "git",
@@ -92,8 +100,12 @@
       "plugin:@typescript-eslint/stylistic-type-checked",
       "plugin:react/recommended",
       "plugin:react/jsx-runtime",
+      "plugin:react-redux/recommended",
       "plugin:react-hooks/recommended",
-      "plugin:prettier/recommended"
+      "plugin:prettier/recommended",
+      "plugin:json/recommended",
+      "plugin:perfectionist/recommended-natural",
+      "plugin:optimize-regex/all"
     ],
     "ignorePatterns": [
       "dist",
@@ -119,7 +131,11 @@
     },
     "plugins": [
       "react-refresh",
-      "prettier"
+      "prettier",
+      "react-redux",
+      "json-format",
+      "perfectionist",
+      "optimize-regex"
     ],
     "rules": {
       "@typescript-eslint/consistent-type-exports": "error",

@@ -1,32 +1,19 @@
-import {
-  useCallback,
-  useEffect,
-  useId,
-  useMemo,
-  useState,
-  useSyncExternalStore,
-} from 'react'
-import { useNavigate } from 'react-router-dom'
+import type { FileResponse } from '@/workers/file'
+import type { DialogProps, DropdownProps } from '@fluentui/react-components'
+import type { DropzoneOptions } from 'react-dropzone'
+
 import FileInput from '@/components/FileInput'
+import SimpleDataGrid from '@/components/SimpleDataGrid'
+import { useAppDispatch, useAppSelector, useFetchWorkbook } from '@/hooks'
+import { deleteFile, postFile } from '@/store/fileSlice'
+import { deleteProgress, setProgress } from '@/store/progressSlice'
+import { deleteWorkbook, setSheetName } from '@/store/sheetSlice'
+import { fileWorker } from '@/workers/static'
 import {
   Button,
   Card,
   CardFooter,
   CardHeader,
-  Dropdown,
-  Field,
-  Title1,
-  Toast,
-  ToastBody,
-  ToastTitle,
-  Option,
-  makeStyles,
-  shorthands,
-  tokens,
-  createTableColumn,
-  Title2,
-  useToastController,
-  Toaster,
   Dialog,
   DialogActions,
   DialogBody,
@@ -34,25 +21,50 @@ import {
   DialogSurface,
   DialogTitle,
   DialogTrigger,
+  Dropdown,
+  Field,
+  Option,
+  Title1,
+  Title2,
+  Toast,
+  ToastBody,
+  ToastTitle,
+  Toaster,
+  createTableColumn,
+  makeStyles,
+  shorthands,
+  tokens,
+  useToastController,
 } from '@fluentui/react-components'
-import type { DialogProps, DropdownProps } from '@fluentui/react-components'
-import type { DropzoneOptions } from 'react-dropzone'
-import { fileStateStore } from '@/lib/StateStore/file'
-import type { FileResponse, FileRequest } from '@/workers/file'
-import { fileWorker, useGetWorkbook, workbookWorker } from '@/hooks'
-import { sheetStateStore } from '@/lib/StateStore/sheet'
-import { ProgressState } from '@/lib/StateStore/progress'
-import { progressStateStore } from '@/lib/StateStore/progress'
+import { useCallback, useEffect, useId, useMemo, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { utils } from 'xlsx'
-import type { WorkbookRequest } from '@/workers/workbook'
-import SimpleDataGrid from '@/components/SimpleDataGrid'
 
-type TaskType = 'uploaded' | 'deleted' | false
+type TaskType = 'deleted' | 'uploaded' | true
 
-type CellItem = Record<Column, string | number | boolean>
-type Column = string | number
+type CellItem = Record<Column, boolean | number | string>
+type Column = number | string
 
 const useClasses = makeStyles({
+  actions: {
+    display: 'grid',
+    gridAutoFlow: 'column',
+    width: '100%',
+    ...shorthands.gap(tokens.spacingVerticalS, 0),
+  },
+  body: {
+    display: 'grid',
+    ...shorthands.gap(0, tokens.spacingVerticalS),
+  },
+  card: {
+    width: '50%',
+    ...shorthands.margin(0, 'auto'),
+    ...shorthands.padding(tokens.spacingHorizontalXXXL, '5%'),
+  },
+  input: {
+    minWidth: 'initial',
+    width: '100%',
+  },
   root: {
     display: 'grid',
     gridAutoFlow: 'row',
@@ -60,75 +72,45 @@ const useClasses = makeStyles({
     ...shorthands.margin(0, 'auto'),
     ...shorthands.gap(0, tokens.spacingVerticalXL),
   },
-  card: {
-    width: '50%',
-    ...shorthands.margin(0, 'auto'),
-    ...shorthands.padding(tokens.spacingHorizontalXXXL, '5%'),
-  },
-  body: {
-    display: 'grid',
-    ...shorthands.gap(0, tokens.spacingVerticalS),
-  },
-  actions: {
-    width: '100%',
-    display: 'grid',
-    gridAutoFlow: 'column',
-    ...shorthands.gap(tokens.spacingVerticalS, 0),
-  },
-  input: {
-    width: '100%',
-    minWidth: 'initial',
-  },
 })
 
 export const Component = () => {
-  useGetWorkbook()
+  const { file, fileName } = useAppSelector(({ file }) => file)
   const classes = useClasses()
   const toasterId = useId()
   const navigate = useNavigate()
+  const dispatch = useAppDispatch()
+  const fetchWorkbook = useFetchWorkbook()
 
-  const [taskType, setTaskType] = useState<TaskType>(false)
+  const [taskType, setTaskType] = useState<TaskType>(true)
   const [alertOpen, setAlertOpen] = useState(false)
 
   const { dispatchToast } = useToastController(toasterId)
 
-  const toastNotify = useCallback(() => {
-    dispatchToast(<FileToast type={taskType} />, { intent: 'success' })
-  }, [dispatchToast, taskType])
+  const { sheet, sheetName } = useAppSelector(({ sheet }) => sheet)
+  const sheetNames = useAppSelector(({ sheet }) => sheet.workbook?.SheetNames)
 
-  const fileName = useSyncExternalStore(
-    fileStateStore.subscribe,
-    () => fileStateStore.state,
-  )
-  const file = useSyncExternalStore(
-    fileStateStore.subscribe,
-    () => fileStateStore.file,
-  )
-  const selectedSheetName = useSyncExternalStore(
-    sheetStateStore.subscribe,
-    () => sheetStateStore.state,
-  )
-  const sheetNames = useSyncExternalStore(
-    sheetStateStore.subscribe,
-    () => sheetStateStore.sheetNames,
-  )
-  const sheet = useSyncExternalStore(
-    sheetStateStore.subscribe,
-    () => sheetStateStore.sheet,
-  )
+  const hasFile = useMemo(() => !!file, [file])
+  const isCSV = useMemo(() => file?.type === 'text/csv', [file])
 
   const data = useMemo(
     () => (sheet ? utils.sheet_to_json(sheet) : [[]]),
     [sheet],
   )
 
-  const columnValues = useMemo(
-    () => Object.keys(data[0] ?? {}) as Column[],
-    [data],
-  )
+  const columns = useMemo(() => Object.keys(data[0] ?? {}) as Column[], [data])
 
-  const hasFile = useMemo(() => !!file.size, [file.size])
-  const isCSV = useMemo(() => file.type === 'text/csv', [file])
+  const columnItems = useMemo(
+    () =>
+      columns.map((column) =>
+        createTableColumn<CellItem>({
+          columnId: column,
+          renderCell: (item) => <>{item[column]}</>,
+          renderHeaderCell: () => <>{column}</>,
+        }),
+      ),
+    [columns],
+  )
 
   const handleFileDrop: DropzoneOptions['onDrop'] = useCallback(
     (acceptedFiles: File[]): void => {
@@ -138,22 +120,12 @@ export const Component = () => {
       }
 
       setTaskType('uploaded')
-      const fileRequest: FileRequest = {
-        method: 'post',
-        file,
-        fileName: file.name,
-      }
 
-      fileWorker.postMessage(fileRequest)
-
-      const workbookRequest: WorkbookRequest = {
-        method: 'get',
-        file,
-      }
-
-      workbookWorker.postMessage(workbookRequest)
+      void (async (file: File) => {
+        await dispatch(postFile({ file }))
+      })(file)
     },
-    [],
+    [dispatch],
   )
 
   const handleResetClick = useCallback(() => {
@@ -162,58 +134,56 @@ export const Component = () => {
 
   const handleResetConfirm = useCallback(() => {
     setTaskType('deleted')
-    const request: FileRequest = {
-      method: 'delete',
-      fileName: fileStateStore.state,
-    }
-    fileWorker.postMessage(request)
-    localStorage.clear()
-    window.dispatchEvent(new StorageEvent('storage', { key: null }))
-  }, [])
+    dispatch(deleteProgress())
+    dispatch(deleteWorkbook())
+    void (async () => {
+      await dispatch(deleteFile())
+    })()
+  }, [dispatch])
 
   const handleSubmit = useCallback(() => {
-    progressStateStore.state = ProgressState.UPLOADED
+    dispatch(setProgress('uploaded'))
+
     navigate('/column-matching')
-  }, [navigate])
+  }, [dispatch, navigate])
 
   const handleSheetSelect: Required<DropdownProps>['onOptionSelect'] =
-    useCallback((_event, { selectedOptions }) => {
-      sheetStateStore.state = selectedOptions[0] ?? ''
-    }, [])
+    useCallback(
+      (_event, { optionValue }) => {
+        dispatch(setSheetName(optionValue ?? ''))
+      },
+      [dispatch],
+    )
+
+  const toastNotify = useCallback(() => {
+    dispatchToast(<FileToast type={taskType} />, { intent: 'success' })
+  }, [dispatchToast, taskType])
 
   const zoneOptions: DropzoneOptions = useMemo(
     () => ({
       accept: {
-        'text/csv': ['.csv'],
         'application/vnd.ms-excel': ['.xls'],
+        'application/vnd.oasis.opendocument.spreadsheet': ['.ods'],
         'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': [
           '.xlsx',
         ],
-        'application/vnd.oasis.opendocument.spreadsheet': ['.ods'],
+        'text/csv': ['.csv'],
       },
+      disabled: hasFile,
       maxFiles: 1,
       onDrop: handleFileDrop,
-      disabled: hasFile,
     }),
     [handleFileDrop, hasFile],
   )
 
   useEffect(() => {
     const handleWorkerLoad = ({ data }: MessageEvent<FileResponse>) => {
-      const loadingActions: FileResponse['action'][] = [
-        'create',
-        'sync',
-        'overwrite',
-        'delete',
-      ]
+      const isTask = data.fileName && !data.file
 
-      const hasMatch = !!loadingActions.find((action) => action === data.action)
-
-      if (!hasMatch) {
+      if (!isTask) {
         return
       }
-
-      setTaskType(!hasMatch)
+      setTaskType(isTask)
       toastNotify()
     }
 
@@ -222,19 +192,11 @@ export const Component = () => {
     return () => {
       fileWorker.removeEventListener('message', handleWorkerLoad)
     }
-  }, [toastNotify])
+  }, [taskType, toastNotify])
 
-  const columns = useMemo(
-    () =>
-      columnValues.map((column) =>
-        createTableColumn<CellItem>({
-          columnId: column,
-          renderHeaderCell: () => <>{column}</>,
-          renderCell: (item) => <>{item[column]}</>,
-        }),
-      ),
-    [columnValues],
-  )
+  useEffect(() => {
+    void fetchWorkbook()
+  }, [fetchWorkbook])
 
   return (
     <section className={classes.root}>
@@ -243,9 +205,9 @@ export const Component = () => {
         <CardHeader header={<Title2>Options</Title2>} />
         <Field label="File" required={true}>
           <FileInput
-            zoneOptions={zoneOptions}
             appearance="filled-darker"
             value={fileName}
+            zoneOptions={zoneOptions}
           />
         </Field>
         {hasFile && <Field />}
@@ -255,11 +217,11 @@ export const Component = () => {
               appearance="filled-darker"
               className={classes.input}
               onOptionSelect={handleSheetSelect}
-              value={selectedSheetName}
-              selectedOptions={[selectedSheetName]}>
-              {sheetNames.map((sheetName) => (
-                <Option key={sheetName} value={sheetName} text={sheetName}>
-                  {sheetName}
+              selectedOptions={[sheetName]}
+              value={sheetName}>
+              {sheetNames?.map((name) => (
+                <Option key={name} text={name} value={name}>
+                  {name}
                 </Option>
               ))}
             </Dropdown>
@@ -273,8 +235,8 @@ export const Component = () => {
               </Button>
               <Button
                 appearance="primary"
-                onClick={handleSubmit}
-                disabled={!hasFile}>
+                disabled={!hasFile}
+                onClick={handleSubmit}>
                 Proceed
               </Button>
             </div>
@@ -282,17 +244,17 @@ export const Component = () => {
         />
       </Card>
       <UniqueColumnsAlert
+        onConfirm={handleResetConfirm}
         open={alertOpen}
         setOpen={setAlertOpen}
-        onConfirm={handleResetConfirm}
       />
-      {columns.length > 0 && (
+      {columnItems.length > 0 && (
         <>
           <Title2>Data Preview</Title2>
           <SimpleDataGrid
-            items={data.slice(1, 6)}
-            columns={columns}
             cellFocusMode={() => 'cell'}
+            columns={columnItems}
+            items={data.slice(1, 6)}
           />
         </>
       )}
@@ -306,10 +268,7 @@ interface FileToastProps {
 }
 
 const FileToast = ({ type }: FileToastProps) => {
-  const fileName = useSyncExternalStore(
-    fileStateStore.subscribe,
-    () => fileStateStore.state,
-  )
+  const { fileName } = useAppSelector(({ file }) => file)
 
   return (
     <Toast>
@@ -322,12 +281,12 @@ const FileToast = ({ type }: FileToastProps) => {
 }
 
 interface AlertProps {
+  onConfirm: () => void
   open: boolean
   setOpen: React.Dispatch<React.SetStateAction<boolean>>
-  onConfirm: () => void
 }
 
-const UniqueColumnsAlert = ({ open, setOpen, onConfirm }: AlertProps) => {
+const UniqueColumnsAlert = ({ onConfirm, open, setOpen }: AlertProps) => {
   const handleOpen: Required<DialogProps>['onOpenChange'] = useCallback(
     (_event, data) => {
       setOpen(data.open)
@@ -335,7 +294,7 @@ const UniqueColumnsAlert = ({ open, setOpen, onConfirm }: AlertProps) => {
     [setOpen],
   )
   return (
-    <Dialog modalType="alert" open={open} onOpenChange={handleOpen}>
+    <Dialog modalType="alert" onOpenChange={handleOpen} open={open}>
       <DialogSurface>
         <DialogBody>
           <DialogTitle>Confirm Reset</DialogTitle>
@@ -348,7 +307,7 @@ const UniqueColumnsAlert = ({ open, setOpen, onConfirm }: AlertProps) => {
               <Button>Cancel</Button>
             </DialogTrigger>
             <DialogTrigger disableButtonEnhancement>
-              <Button onClick={onConfirm} appearance="primary">
+              <Button appearance="primary" onClick={onConfirm}>
                 Okay
               </Button>
             </DialogTrigger>

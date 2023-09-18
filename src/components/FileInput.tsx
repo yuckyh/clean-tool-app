@@ -1,6 +1,7 @@
 import type { InputProps } from '@fluentui/react-components'
-import { Input, makeStyles } from '@fluentui/react-components'
 import type { DropzoneOptions } from 'react-dropzone'
+
+import { Input, makeStyles } from '@fluentui/react-components'
 import { useDropzone } from 'react-dropzone'
 
 interface FileInputProps extends InputProps {
@@ -8,29 +9,31 @@ interface FileInputProps extends InputProps {
 }
 
 const useClasses = makeStyles({
-  root: {
-    cursor: 'pointer',
-  },
   input: {
     width: '100%',
   },
+  root: {
+    cursor: 'pointer',
+  },
 })
 
-const FileInput = ({ zoneOptions, value, ...props }: FileInputProps) => {
-  const { getRootProps, getInputProps, acceptedFiles } =
+const FileInput = ({ value, zoneOptions, ...props }: FileInputProps) => {
+  const { acceptedFiles, getInputProps, getRootProps } =
     useDropzone(zoneOptions)
   const fileNames = acceptedFiles.map((file) => file.name).join(', ')
   const classes = useClasses()
+
+  value ??= fileNames
 
   return (
     <div {...getRootProps({ className: classes.root })}>
       <input {...getInputProps()} />
       <Input
         {...props}
-        placeholder={'Drag and drop or click to upload'}
-        value={value ?? fileNames}
         className={classes.input}
         disabled={zoneOptions?.disabled}
+        placeholder={'Drag and drop or click to upload'}
+        value={value}
       />
     </div>
   )

@@ -1,17 +1,16 @@
-import type { ColumnNameData } from '@/hooks'
-import { columnStateStore } from '@/lib/StateStore/column'
+import codebook from '@/../data/codebook.json'
+import { type ColumnNameData, useAppSelector } from '@/hooks'
 import { fluentColorScale } from '@/lib/plotly'
 import { makeStyles, tokens } from '@fluentui/react-components'
-import { useSyncExternalStore } from 'react'
-import Plot from '../Plot'
 import Fuse from 'fuse.js'
-import codebook from '@/../data/codebook.json'
+
+import Plot from '../Plot'
 
 const useClasses = makeStyles({
   plot: {
+    height: '44px',
     maxHeight: '44px',
     width: '80%',
-    height: '44px',
   },
 })
 
@@ -23,35 +22,27 @@ const ScoreCell = ({ item }: Props) => {
   const { matches, position } = item
   const classes = useClasses()
 
-  const selectedColumns = Array.from(
-    useSyncExternalStore(
-      columnStateStore.subscribe,
-      () => columnStateStore.columns,
-    ),
-  )
+  const { columns } = useAppSelector(({ columns }) => columns)
 
   const index = matches.findIndex(
-    (match) => match.item.name === selectedColumns[position],
+    (match) => match.item.name === columns[position],
   )
   const score =
     1 -
     ((index < 0
       ? new Fuse(codebook, {
-          threshold: 1,
           includeScore: true,
           keys: ['name'],
-        }).search(selectedColumns[position] ?? '')[0]?.score
+          threshold: 1,
+        }).search(columns[position] ?? '')[0]?.score
       : matches[index]?.score) ?? 1)
   const formattedScore = score.toFixed(2)
   const data: Plotly.Data[] = [
     {
-      name: '',
-      x: [formattedScore],
-      type: 'bar',
       hovertemplate: 'score: %{x}',
       marker: {
-        cmin: 0,
         cmax: 1,
+        cmin: 0,
         color: [score],
         colorscale: fluentColorScale(
           tokens.colorStatusDangerForegroundInverted,
@@ -59,35 +50,38 @@ const ScoreCell = ({ item }: Props) => {
           64,
         ),
       },
+      name: '',
+      type: 'bar',
+      x: [formattedScore],
     },
   ]
 
   const layout: Partial<Plotly.Layout> = {
     autosize: true,
 
+    clickmode: 'none',
+    dragmode: false,
     margin: {
-      t: 0,
-      l: 0,
       b: 0,
+      l: 0,
       r: 0,
+      t: 0,
     },
     xaxis: {
-      range: [0, 1],
-      zeroline: false,
-      showgrid: false,
-      showticklabels: false,
       fixedrange: true,
       nticks: 0,
+      range: [0, 1],
+      showgrid: false,
+      showticklabels: false,
       ticks: '',
+      zeroline: false,
     },
     yaxis: {
       fixedrange: true,
       nticks: 0,
-      ticks: '',
       showticklabels: false,
+      ticks: '',
     },
-    dragmode: false,
-    clickmode: 'none',
   }
 
   const config: Partial<Plotly.Config> = {
@@ -97,9 +91,9 @@ const ScoreCell = ({ item }: Props) => {
     <>
       <Plot
         className={classes.plot}
+        config={config}
         data={data}
         layout={layout}
-        config={config}
       />
       {formattedScore}
     </>

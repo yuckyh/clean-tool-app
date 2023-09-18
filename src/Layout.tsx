@@ -1,4 +1,4 @@
-import { Outlet, useNavigation } from 'react-router-dom'
+import Loader from '@/components/Loader'
 import ProgressNav from '@/components/ProgressNav'
 import {
   Spinner,
@@ -8,7 +8,7 @@ import {
   tokens,
 } from '@fluentui/react-components'
 import { useMemo } from 'react'
-import Loader from '@/components/Loader'
+import { Outlet, useNavigation } from 'react-router-dom'
 
 const useClasses = makeStyles({
   header: {
@@ -36,14 +36,14 @@ const Layout = () => {
       </header>
       <main className={classes.main}>
         <Loader
-          size="huge"
+          label={<Subtitle1>Loading...</Subtitle1>}
           labelPosition="below"
-          label={<Subtitle1>Loading...</Subtitle1>}>
+          size="huge">
           {loading ? (
             <Spinner
+              label={<Subtitle1>Loading...</Subtitle1>}
               labelPosition="below"
               size="huge"
-              label={<Subtitle1>Loading...</Subtitle1>}
             />
           ) : (
             <Outlet />

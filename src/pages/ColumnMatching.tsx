@@ -1,10 +1,10 @@
+import ColumnsDataGrid from '@/components/ColumnsDataGrid'
 import {
   Title1,
   makeStyles,
   shorthands,
   tokens,
 } from '@fluentui/react-components'
-import ColumnsDataGrid from '@/components/ColumnsDataGrid'
 
 const useClasses = makeStyles({
   root: {

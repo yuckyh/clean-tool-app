@@ -1,7 +1,8 @@
+import type { PlotParams } from 'react-plotly.js'
+
 import { tokenToColor } from '@/lib/plotly'
 import { tokens } from '@fluentui/react-components'
 import Plotly from 'plotly.js-cartesian-dist'
-import type { PlotParams } from 'react-plotly.js'
 import createPlotlyComponent from 'react-plotly.js/factory'
 
 interface PlotProps extends Partial<PlotParams> {
@@ -10,7 +11,7 @@ interface PlotProps extends Partial<PlotParams> {
 
 const Plot = ({ config, layout, ...props }: PlotProps) => {
   const Plot = createPlotlyComponent(Plotly)
-  const plotFgColor = tokenToColor(tokens.colorNeutralForeground1)
+  const plotFgColor = tokenToColor(tokens.colorNeutralStroke1)
 
   const defaultConfig: Partial<Plotly.Config> = {
     displayModeBar: false,
@@ -18,17 +19,17 @@ const Plot = ({ config, layout, ...props }: PlotProps) => {
   }
 
   const defaultLayout: Partial<Plotly.Layout> = {
+    font: {
+      color: plotFgColor,
+      family: 'Droid Sans',
+    },
     paper_bgcolor: 'rgba(0, 0, 0, 0)',
     plot_bgcolor: 'rgba(0, 0, 0, 0)',
-    font: {
-      family: 'Droid Sans',
-      color: plotFgColor,
-    },
   }
   return (
     <Plot
-      layout={{ ...defaultLayout, ...layout }}
       config={{ ...defaultConfig, ...config }}
+      layout={{ ...defaultLayout, ...layout }}
       {...props}
     />
   )

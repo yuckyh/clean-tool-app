@@ -3,11 +3,11 @@ import { useHref } from 'react-router-dom'
 
 const useClasses = makeStyles({
   root: {
-    display: 'flex',
-    minHeight: '100vh',
-    flexDirection: 'column',
     alignItems: 'center',
+    display: 'flex',
+    flexDirection: 'column',
     justifyContent: 'center',
+    minHeight: '100vh',
   },
 })
 

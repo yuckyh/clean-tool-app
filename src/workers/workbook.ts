@@ -1,4 +1,5 @@
 import XLSX, { type WorkBook } from 'xlsx'
+
 import type {
   Controller,
   RequestHandler,
@@ -7,9 +8,9 @@ import type {
 } from '.'
 
 export interface WorkbookRequest extends WorkerRequest {
+  file: File
   method: 'get'
   workbook?: WorkBook
-  file: File
 }
 
 export interface WorkbookResponse extends WorkerResponse {
@@ -20,25 +21,28 @@ type WorkbookRequestHandler = RequestHandler<WorkbookRequest, WorkbookResponse>
 
 const get: WorkbookRequestHandler = async ({ file }) => {
   if (!file.size) {
-    return {
-      action: 'fail',
-    }
+    throw new Error('File is empty')
   }
   const workbook = XLSX.read(await file.arrayBuffer())
   return {
-    action: 'get',
+    status: 'ok',
     workbook,
   }
 }
 
-const controller: Controller<WorkbookRequest, WorkbookRequestHandler> = {
+const controller: Controller<WorkbookRequest, WorkbookResponse> = {
   get,
 }
 
 const main = async ({ data }: MessageEvent<WorkbookRequest>) => {
   const { method } = data
 
-  postMessage(await controller[method](data))
+  try {
+    postMessage(await controller[method](data))
+  } catch (error) {
+    console.error(error)
+    postMessage({ status: 'fail', ...data, error } as WorkbookResponse)
+  }
 }
 
 addEventListener(

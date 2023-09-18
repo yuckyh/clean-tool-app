@@ -1,22 +1,30 @@
 import type {
-  ProgressBarProps,
   LinkProps,
   LinkSlots,
   LinkState,
+  ProgressBarProps,
 } from '@fluentui/react-components'
+
+import { routes } from '@/Router'
 import {
-  Subtitle2,
+  useAppDispatch,
+  useAppSelector,
+  useFluentStyledState,
+  usePathTitle,
+} from '@/hooks'
+import { setPosition } from '@/store/progressSlice'
+import {
   ProgressBar,
+  Subtitle2,
+  Subtitle2Stronger,
   makeStyles,
+  mergeClasses,
   shorthands,
   tokens,
-  Subtitle2Stronger,
-  mergeClasses,
   useLink_unstable,
   useLinkStyles_unstable,
 } from '@fluentui/react-components'
-
-import { useFluentStyledState, usePathTitle } from '@/hooks'
+import { useEffect, useRef } from 'react'
 import {
   NavLink,
   matchRoutes,
@@ -26,28 +34,25 @@ import {
   useNavigate,
   useResolvedPath,
 } from 'react-router-dom'
-import { useEffect, useRef, useSyncExternalStore } from 'react'
-import { progressStateStore } from '@/lib/StateStore/progress'
-import { routes } from '@/Router'
 
 const useClasses = makeStyles({
-  root: {
-    display: 'flex',
-    flexDirection: 'column',
-    ...shorthands.padding(tokens.spacingVerticalS, 0),
-  },
   linkContainer: {
     display: 'flex',
-    width: '100%',
     justifyContent: 'space-between',
+    width: '100%',
+  },
+  progressBar: {
+    width: '80%',
+    ...shorthands.margin(0, 'auto'),
   },
   // Animation hack for initial progress bar
   progressBarInitial: {
     width: '81%',
   },
-  progressBar: {
-    width: '80%',
-    ...shorthands.margin(0, 'auto'),
+  root: {
+    display: 'flex',
+    flexDirection: 'column',
+    ...shorthands.padding(tokens.spacingVerticalS, 0),
   },
 })
 
@@ -66,10 +71,7 @@ const ProgressNav = (props: ProgressBarProps) => {
   const componentPath = useResolvedPath('')
   const { pathname } = useLocation()
   const navigate = useNavigate()
-  const allowedPath = useSyncExternalStore(
-    progressStateStore.subscribe,
-    () => progressStateStore.allowedPath,
-  )
+  const dispatch = useAppDispatch()
   const childPaths = useChildPaths(componentPath.pathname)
   const ref = useRef<HTMLDivElement | null>(null)
 
@@ -81,20 +83,32 @@ const ProgressNav = (props: ProgressBarProps) => {
     pathname,
   }))
 
+  const { allowedPaths, position } = useAppSelector(({ progress }) => progress)
+
   // Ternary expression for animation hack
-  const progress = index == 0 ? 0.011 : index / (childPaths.length - 1)
+  const progress = position == 0 ? 0.011 : position / (childPaths.length - 1)
+
+  useEffect(() => {
+    dispatch(
+      setPosition(
+        childPaths.findIndex(
+          (path) => path.replace('/', '') === pathname.split('/')[1],
+        ),
+      ),
+    )
+  }, [childPaths, dispatch, pathname])
 
   useEffect(() => {
     if (
       pathname !== '/' &&
-      !allowedPath
+      !allowedPaths
         .map((path) => pathname.includes(path.substring(1)))
         .slice(1)
         .includes(true)
     ) {
-      navigate(allowedPath[allowedPath.length - 1] ?? '/')
+      navigate(allowedPaths[allowedPaths.length - 1] ?? '/')
     }
-  }, [allowedPath, index, navigate, pathname])
+  }, [allowedPaths, index, navigate, pathname])
 
   const progressBar = (
     <ProgressBar
@@ -102,10 +116,10 @@ const ProgressNav = (props: ProgressBarProps) => {
         classes.progressBar,
         index == 0 && classes.progressBarInitial,
       )}
-      title="Progress Bar Navigation"
       max={1}
-      value={progress}
       ref={ref}
+      title="Progress Bar Navigation"
+      value={progress}
       {...props}
     />
   )
@@ -115,7 +129,7 @@ const ProgressNav = (props: ProgressBarProps) => {
       {progressBar}
       <div className={classes.linkContainer}>
         {allowedChildPaths.map(({ pathname }, i) => (
-          <ProgressNavLink key={i} done={index >= i} path={pathname} />
+          <ProgressNavLink done={index >= i} key={i} path={pathname} />
         ))}
       </div>
     </div>
@@ -128,27 +142,27 @@ interface LinkLabelProps {
 }
 
 const useLinkClasses = makeStyles({
+  activeStepThumb: {
+    backgroundColor: tokens.colorCompoundBrandBackground,
+  },
+  link: {
+    alignItems: 'center',
+    display: 'flex',
+    flexDirection: 'column',
+  },
   root: {
     display: 'flex',
     justifyContent: 'center',
     ...shorthands.flex(1),
   },
-  link: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-  },
   stepThumb: {
-    height: '20px',
-    width: '20px',
-    top: '-12px',
-    position: 'relative',
     backgroundColor: tokens.colorNeutralBackground6,
+    height: '20px',
+    position: 'relative',
+    top: '-12px',
+    width: '20px',
     ...shorthands.borderRadius(tokens.borderRadiusCircular),
     ...shorthands.transition('background-color', '0.2s', '0s', 'ease-in-out'),
-  },
-  activeStepThumb: {
-    backgroundColor: tokens.colorCompoundBrandBackground,
   },
 })
 
@@ -157,12 +171,9 @@ const ProgressNavLink = ({ done, path }: LinkLabelProps) => {
   const label = usePathTitle(path)
   const classes = useLinkClasses()
 
-  const allowedPath = useSyncExternalStore(
-    progressStateStore.subscribe,
-    () => progressStateStore.allowedPath,
-  )
+  const { allowedPaths } = useAppSelector(({ progress }) => progress)
 
-  const disabled = !allowedPath.includes(path)
+  const disabled = !allowedPaths.includes(path)
 
   const fluentLinkComponent = useFluentStyledState<
     LinkProps,

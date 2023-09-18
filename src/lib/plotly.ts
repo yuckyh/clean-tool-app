@@ -1,4 +1,5 @@
 import type Plotly from 'plotly.js-cartesian-dist'
+
 import { type ColorTokens } from '@fluentui/react-components'
 
 type ColorToken = ColorTokens[keyof ColorTokens]

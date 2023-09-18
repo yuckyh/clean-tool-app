@@ -1,27 +1,26 @@
-import {
-  createBrowserRouter,
-  createRoutesFromElements,
-  Route,
-} from 'react-router-dom'
-
 import App from '@/App'
 import Layout from '@/Layout'
+import {
+  Route,
+  createBrowserRouter,
+  createRoutesFromElements,
+} from 'react-router-dom'
 
 const routes = createRoutesFromElements(
   <Route element={<App />}>
     <Route element={<Layout />}>
       <Route index lazy={() => import('@/pages')} />
-      <Route path="upload" lazy={() => import('@/pages/Upload')} />
+      <Route lazy={() => import('@/pages/Upload')} path="upload" />
       <Route
-        path="column-matching"
         lazy={() => import('@/pages/ColumnMatching')}
+        path="column-matching"
       />
-      <Route path="EDA" lazy={() => import('@/pages/EDA')}>
-        <Route path=":variable" lazy={() => import('@/pages/EDA/Variable')} />
+      <Route lazy={() => import('@/pages/EDA')} path="EDA">
+        <Route lazy={() => import('@/pages/EDA/Variable')} path=":variable" />
       </Route>
-      <Route path="download" lazy={() => import('@/pages/Download')} />
+      <Route lazy={() => import('@/pages/Download')} path="download" />
     </Route>
-    <Route path="*" lazy={() => import('@/404')} />
+    <Route lazy={() => import('@/404')} path="*" />
   </Route>,
 )
 

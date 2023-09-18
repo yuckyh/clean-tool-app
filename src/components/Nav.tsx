@@ -2,11 +2,11 @@ import type {
   SelectTabEventHandler,
   TabListProps,
 } from '@fluentui/react-components'
-import { Tab, TabList } from '@fluentui/react-components'
-import { useNavigate, useLocation, useHref } from 'react-router-dom'
-import { useCallback } from 'react'
 
 import { usePathTitle } from '@/hooks'
+import { Tab, TabList } from '@fluentui/react-components'
+import { useCallback } from 'react'
+import { useHref, useLocation, useNavigate } from 'react-router-dom'
 
 interface NavProps extends TabListProps {
   paths: string[]
@@ -25,7 +25,7 @@ const Nav = ({ paths, ...props }: NavProps) => {
   )
 
   return (
-    <TabList selectedValue={pathname} onTabSelect={handleTabSelect} {...props}>
+    <TabList onTabSelect={handleTabSelect} selectedValue={pathname} {...props}>
       {paths.map((path) => (
         <NavTab key={path} path={path} />
       ))}

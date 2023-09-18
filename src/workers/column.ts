@@ -1,37 +1,43 @@
+import codebook from '@/../data/codebook.json'
+import Fuse from 'fuse.js'
+
 import type {
   Controller,
   RequestHandler,
   WorkerRequest,
   WorkerResponse,
 } from '.'
-import Fuse from 'fuse.js'
+
+export type CodebookMatch = Partial<(typeof codebook)[0]>
 
 export interface ColumnRequest extends WorkerRequest {
-  method: 'get'
-  list: string[]
   columns: string[]
-  options?: Fuse.IFuseOptions<string>
+  method: 'get'
 }
 
 export interface ColumnResponse extends WorkerResponse {
-  columns: Fuse.FuseResult<string>[][]
+  matches: Omit<Fuse.FuseResult<CodebookMatch>, 'matches'>[][]
 }
 
 type ColumnRequestHandler = RequestHandler<ColumnRequest, ColumnResponse>
 
-const get: ColumnRequestHandler = async ({ list, columns, options }) => {
-  const fuse = new Fuse(list, options)
-  const search: Fuse<string>['search'] = (...args) => fuse.search(...args)
+const get: ColumnRequestHandler = async ({ columns }) => {
+  const fuse = new Fuse(codebook, {
+    includeScore: true,
+    keys: ['name'],
+    threshold: 1,
+  })
 
-  const columnMatches = columns.map((column) => search(column))
+  const search: Fuse<CodebookMatch>['search'] = (...args) =>
+    fuse.search(...args)
 
-  return Promise.resolve({
-    action: 'get',
-    columns: columnMatches,
+  return await Promise.resolve({
+    matches: columns.map((column) => search(column)),
+    status: 'ok',
   })
 }
 
-const controller: Controller<ColumnRequest, ColumnRequestHandler> = {
+const controller: Controller<ColumnRequest, ColumnResponse> = {
   get,
 }
 

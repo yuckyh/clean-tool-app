@@ -1,53 +1,35 @@
-import type { Ref } from 'react'
-import {
-  useCallback,
-  useEffect,
-  useMemo,
-  useState,
-  useSyncExternalStore,
-  useTransition,
-} from 'react'
-import { useHref, useLocation } from 'react-router-dom'
+import type { AppDispatch, RootState } from '@/store'
+import type { CodebookMatch } from '@/workers/column'
 import type {
   ComponentProps,
   ComponentState,
   SlotPropsRecord,
 } from '@fluentui/react-components'
-
-import FileWorker from '@/workers/file?worker'
-import WorkbookWorker from '@/workers/workbook?worker'
-import ColumnWorker from '@/workers/column?worker'
-import type { WorkbookRequest } from '@/workers/workbook'
-import type { FileRequest, FileResponse } from '@/workers/file'
-import { fileStateStore } from '@/lib/StateStore/file'
-import { sheetStateStore } from '@/lib/StateStore/sheet'
-import {
-  columnStateStore,
-  originalColumnStateStore,
-} from '@/lib/StateStore/column'
 import type Fuse from 'fuse.js'
+import type { Ref } from 'react'
+import type { TypedUseSelectorHook } from 'react-redux'
 
-import codebook from '@/../data/codebook.json'
-import { utils } from 'xlsx'
-import type { ColumnResponse } from './workers/column'
+import { getMatches, setOriginalColumns } from '@/store/columnsSlice'
+import { getFile } from '@/store/fileSlice'
+import { getWorkbook } from '@/store/sheetSlice'
+import { useCallback, useEffect, useState, useTransition } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { useHref, useLocation } from 'react-router-dom'
 
 export const usePathTitle = (path?: string) => {
   const { pathname } = useLocation()
-  const slugToTitle = useCallback(
-    (str: string) =>
-      str
-        .replace(/^\//, '')
-        .match(/[^/]*$/)?.[0]
-        .split('-')
-        .map((word) =>
-          word.length <= 3
-            ? word.toUpperCase()
-            : word.replace(/^\w/, (c) => c.toUpperCase()),
-        )
-        // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
-        .join(' ') || 'Home',
-    [],
-  )
+  const slugToTitle = useCallback((str: string) => {
+    const result = str
+      .match(/[^/]*$/)?.[0]
+      .split('-')
+      .map((word) =>
+        word.length <= 3
+          ? word.toUpperCase()
+          : word.replace(/^\w/, (c) => c.toUpperCase()),
+      )
+      .join(' ')
+    return result?.length ? result : 'Home'
+  }, [])
   return slugToTitle(useHref(path ?? pathname))
 }
 
@@ -62,204 +44,92 @@ export const useFluentStyledState = <
   instantiator: (props: Props, ref: Ref<V>) => State,
   ref?: Ref<V>,
 ): State => {
-  ref = ref ?? { current: null }
+  ref ??= { current: null }
   const initialState = instantiator(props, ref)
   return styler(initialState)
 }
 
-export const fileWorker = new FileWorker()
+export const useFetchFile = () => {
+  const { fileName } = useAppSelector(({ file }) => file)
+  const dispatch = useAppDispatch()
 
-export const useGetFile = () => {
-  const fileName = useSyncExternalStore(
-    fileStateStore.subscribe,
-    () => fileStateStore.state,
-  )
+  return useCallback(async () => {
+    await dispatch(getFile(fileName))
+  }, [dispatch, fileName])
+}
 
-  const file = useSyncExternalStore(
-    fileStateStore.subscribe,
-    () => fileStateStore.file,
-  )
+export const useFetchWorkbook = () => {
+  const { file } = useAppSelector(({ file }) => file)
+  const dispatch = useAppDispatch()
+  const fetchFile = useFetchFile()
 
-  useEffect(() => {
-    if (file.size) {
+  return useCallback(async () => {
+    if (!file) {
+      await fetchFile()
       return
     }
 
-    // Init request
-    const request: FileRequest = {
-      method: 'get',
-      fileName,
-    }
-
-    fileWorker.postMessage(request)
-  }, [file.size, fileName])
-
-  useEffect(() => {
-    const handleWorkerResponse = ({ data }: MessageEvent<FileResponse>) => {
-      const { action, fileName } = data
-      const isDelete = action === 'delete'
-      fileStateStore.state = isDelete ? '' : fileName
-      fileStateStore.file = isDelete
-        ? new File([], '')
-        : data.file?.size
-        ? data.file
-        : file
-    }
-
-    fileWorker.addEventListener('message', handleWorkerResponse)
-
-    return () => {
-      fileWorker.removeEventListener('message', handleWorkerResponse)
-    }
-  }, [file])
+    await dispatch(getWorkbook({ file }))
+  }, [dispatch, fetchFile, file])
 }
 
-export const workbookWorker = new WorkbookWorker()
+const useFetchMatches = () => {
+  const dispatch = useAppDispatch()
+  const { sheet } = useAppSelector(({ sheet }) => sheet)
+  const { originalColumns } = useAppSelector(({ columns: column }) => column)
+  const fetchWorkbook = useFetchWorkbook()
 
-export const useGetWorkbook = () => {
-  useGetFile()
-  const file = useSyncExternalStore(
-    fileStateStore.subscribe,
-    () => fileStateStore.file,
-  )
-
-  const sheet = useSyncExternalStore(
-    sheetStateStore.subscribe,
-    () => sheetStateStore.sheet,
-  )
-
-  useEffect(() => {
-    if (sheet) {
+  return useCallback(async () => {
+    if (!sheet) {
+      await fetchWorkbook()
       return
     }
 
-    // Init request
-    const request: WorkbookRequest = {
-      method: 'get',
-      file,
+    if (!originalColumns.length) {
+      dispatch(setOriginalColumns(sheet))
+      return
     }
 
-    workbookWorker.postMessage(request)
-  }, [file, sheet])
-
-  useEffect(() => {
-    const handleGetWorkbook = ({ data }: MessageEvent<WorkbookRequest>) => {
-      sheetStateStore.workbook = data.workbook
-      sheetStateStore.state = data.workbook?.SheetNames.includes(
-        sheetStateStore.state,
-      )
-        ? sheetStateStore.state
-        : data.workbook?.SheetNames[0] ?? ''
-
-      sheetStateStore.subscribe(({ sheet }) => {
-        originalColumnStateStore.state = Object.keys(
-          (sheet && utils.sheet_to_json(sheet)[0]) ?? {},
-        ).join(',')
-      })
-    }
-
-    workbookWorker.addEventListener('message', handleGetWorkbook)
-
-    return () => {
-      workbookWorker.removeEventListener('message', handleGetWorkbook)
-    }
-  }, [])
+    await dispatch(getMatches(originalColumns))
+  }, [dispatch, fetchWorkbook, originalColumns, sheet])
 }
-
-const columnWorker = new ColumnWorker()
-
-const useGetColumnMatches = <T>(options: Fuse.IFuseOptions<T>) => {
-  useGetWorkbook()
-  const sheet = useSyncExternalStore(
-    sheetStateStore.subscribe,
-    () => sheetStateStore.sheet,
-  )
-
-  useEffect(() => {
-    // Init request
-    const request = {
-      method: 'get',
-      list: codebook.map(({ name }) => name),
-      columns: originalColumnStateStore.state.split(','),
-      options,
-    }
-
-    columnWorker.postMessage(request)
-  }, [options, sheet])
-
-  useEffect(() => {
-    const handleGetColumns = ({ data }: MessageEvent<ColumnResponse>) => {
-      columnStateStore.state = Array.from(columnStateStore.columns)[0]
-        ? columnStateStore.state
-        : data.columns.map((matches) => matches[0]?.item).join(',')
-    }
-
-    columnWorker.addEventListener('message', handleGetColumns)
-
-    return () => {
-      columnWorker.removeEventListener('message', handleGetColumns)
-    }
-  }, [])
-
-  return columnWorker
-}
-
-type CodebookEntry = (typeof codebook)[0]
-export type CodebookEntryKey = keyof CodebookEntry
-export type CodebookMatch = Partial<CodebookEntry>
 
 export interface ColumnNameData {
+  matches: Fuse.FuseResult<Pick<Required<CodebookMatch>, 'name'>>[]
   original: string
-  matches: Fuse.FuseResult<CodebookMatch>[]
   readonly position: number
 }
 
 export const useColumnNameMatches: () => [boolean, ColumnNameData[]] = () => {
-  useGetWorkbook()
   const [columnNames, setColumnNames] = useState<ColumnNameData[]>([])
   const [isPending, startTransition] = useTransition()
-  const searchOpts: Fuse.IFuseOptions<CodebookMatch> = useMemo(
-    () => ({
-      keys: ['name'],
-      threshold: 1,
-      includeScore: true,
-    }),
-    [],
-  )
-  useGetColumnMatches(searchOpts)
+  const fetchMatches = useFetchMatches()
 
-  const originalColumns = useSyncExternalStore(
-    originalColumnStateStore.subscribe,
-    () => originalColumnStateStore.state,
-  )
+  const { matches, originalColumns } = useAppSelector(({ columns }) => columns)
 
   useEffect(() => {
-    const handleWorkerMatch = ({ data }: MessageEvent<ColumnResponse>) => {
-      const { action, columns } = data
-      if (action === 'get') {
-        startTransition(() => {
-          setColumnNames(
-            columns.map((column, i) => ({
-              original: originalColumns.split(',')[i] ?? '',
-              matches: column.map(({ item, ...match }) => ({
-                ...match,
-                item: {
-                  name: item,
-                },
-              })),
-              position: i,
-            })),
-          )
-        })
-      }
-    }
+    startTransition(() => {
+      setColumnNames(
+        matches.map((column, i) => ({
+          matches: column.map(({ item, ...match }) => ({
+            ...match,
+            item: {
+              name: item.name ?? '',
+            },
+          })),
+          original: originalColumns[i] ?? '',
+          position: i,
+        })),
+      )
+    })
+  }, [matches, originalColumns])
 
-    columnWorker.addEventListener('message', handleWorkerMatch)
-
-    return () => {
-      columnWorker.removeEventListener('message', handleWorkerMatch)
-    }
-  }, [originalColumns])
+  useEffect(() => {
+    void fetchMatches()
+  }, [fetchMatches])
 
   return [isPending, columnNames]
 }
+
+export const useAppDispatch: () => AppDispatch = useDispatch
+export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector

@@ -1,14 +1,16 @@
+// import { useNavigate } from 'react-router-dom'
+import type { ColumnNameData } from '@/hooks'
 import type {
   DataGridCellFocusMode,
   DataGridProps,
   DialogProps,
   TableColumnDefinition,
 } from '@fluentui/react-components'
+
+import { useAppDispatch, useAppSelector, useColumnNameMatches } from '@/hooks'
+import { setProgress } from '@/store/progressSlice'
 import {
-  createTableColumn,
-  Subtitle1,
   Button,
-  Spinner,
   Dialog,
   DialogActions,
   DialogBody,
@@ -16,45 +18,24 @@ import {
   DialogSurface,
   DialogTitle,
   DialogTrigger,
+  Spinner,
+  Subtitle1,
+  createTableColumn,
 } from '@fluentui/react-components'
-import {
-  useState,
-  useSyncExternalStore,
-  useMemo,
-  useCallback,
-  startTransition,
-} from 'react'
-import { columnStateStore } from '@/lib/StateStore/column'
-import SimpleDataGrid from './SimpleDataGrid'
-import { ProgressState } from '@/lib/StateStore/progress'
-import { progressStateStore } from '@/lib/StateStore/progress'
+import { startTransition, useCallback, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import type { ColumnNameData } from '@/hooks'
-import { useColumnNameMatches } from '@/hooks'
+
+import HeaderCell from './Cells/HeaderCell'
 import MatchCell from './Cells/MatchCell'
 import ScoreCell from './Cells/ScoreCell'
-import HeaderCell from './Cells/HeaderCell'
+import SimpleDataGrid from './SimpleDataGrid'
 
 const ColumnsDataGrid = () => {
   const navigate = useNavigate()
+  const { matchIndices } = useAppSelector(({ columns }) => columns)
+  const dispatch = useAppDispatch()
+
   const [isPending, columnNames] = useColumnNameMatches()
-
-  const selectedColumns = Array.from(
-    useSyncExternalStore(
-      columnStateStore.subscribe,
-      () => columnStateStore.columns,
-    ),
-  )
-
-  const selectedIndices = useMemo(
-    () =>
-      columnNames.map(({ matches, position }) =>
-        matches.findIndex(
-          (match) => match.item.name === selectedColumns[position],
-        ),
-      ),
-    [selectedColumns, columnNames],
-  )
 
   const [sortState, setSortState] = useState<
     Parameters<NonNullable<DataGridProps['onSortChange']>>[1]
@@ -90,13 +71,13 @@ const ColumnsDataGrid = () => {
       createTableColumn<ColumnNameData>({
         columnId: 'original',
         compare: (a, b) => a.original.localeCompare(b.original),
+        renderCell: ({ original }) => <>{original}</>,
         renderHeaderCell: () => (
           <HeaderCell
             header="Original"
             subtitle="The loaded column names (raw)"
           />
         ),
-        renderCell: ({ original }) => <>{original}</>,
       }),
     [],
   )
@@ -107,21 +88,21 @@ const ColumnsDataGrid = () => {
         columnId: 'matches',
         compare: (a, b) =>
           (
-            a.matches[selectedIndices[a.position] ?? 0]?.item.name ?? ''
+            a.matches[matchIndices[a.position] ?? 0]?.item.name ?? ''
           ).localeCompare(
-            b.matches[selectedIndices[b.position] ?? 0]?.item.name ?? '',
+            b.matches[matchIndices[b.position] ?? 0]?.item.name ?? '',
           ),
+        renderCell: (item) => (
+          <MatchCell item={item} setAlertOpen={setAlertOpen} />
+        ),
         renderHeaderCell: () => (
           <HeaderCell
             header="Replacement"
             subtitle="List of possible replacements (sorted by score)"
           />
         ),
-        renderCell: (item) => (
-          <MatchCell item={item} setAlertOpen={setAlertOpen} />
-        ),
       }),
-    [selectedIndices],
+    [matchIndices],
   )
 
   const scoreColumn = useMemo(
@@ -130,38 +111,43 @@ const ColumnsDataGrid = () => {
         columnId: 'score',
         compare: (a, b) => {
           return (
-            (a.matches[selectedIndices[a.position] ?? 0]?.score ?? 1) -
-            (b.matches[selectedIndices[b.position] ?? 0]?.score ?? 1)
+            (a.matches[matchIndices[a.position] ?? 0]?.score ?? 1) -
+            (b.matches[matchIndices[b.position] ?? 0]?.score ?? 1)
           )
         },
+        renderCell: (item) => <ScoreCell item={item} />,
         renderHeaderCell: () => (
           <HeaderCell
             header="Score"
             subtitle="The fuzzy search score (1 indicates a perfect match)"
           />
         ),
-        renderCell: (item) => <ScoreCell item={item} />,
       }),
-    [selectedIndices],
+    [matchIndices],
   )
 
-  const columns: TableColumnDefinition<ColumnNameData>[] = useMemo(
+  const columnDefinitions: TableColumnDefinition<ColumnNameData>[] = useMemo(
     () => [originalColumn, matchColumn, scoreColumn],
     [matchColumn, originalColumn, scoreColumn],
   )
 
+  const handleCommitChanges = useCallback(() => {
+    dispatch(setProgress('matched'))
+    navigate('/EDA')
+  }, [dispatch, navigate])
+
   return columnNames.length > 0 && !isPending ? (
     <>
       <SimpleDataGrid<ColumnNameData, ColumnNameData>
-        items={columnNames}
-        columns={columns}
-        sortState={sortState}
-        onSortChange={handleSortChange}
-        sortable
-        focusMode="composite"
         cellFocusMode={getCellFocusMode}
+        columns={columnDefinitions}
+        focusMode="composite"
+        items={columnNames}
+        onSortChange={handleSortChange}
+        sortState={sortState}
+        sortable
       />
-      <Dialog modalType="alert" open={alertOpen} onOpenChange={handleAlertOpen}>
+      <Dialog modalType="alert" onOpenChange={handleAlertOpen} open={alertOpen}>
         <DialogSurface>
           <DialogBody>
             <DialogTitle>Column Matching Error</DialogTitle>
@@ -178,21 +164,16 @@ const ColumnsDataGrid = () => {
         </DialogSurface>
       </Dialog>
       <div>
-        <Button
-          appearance="primary"
-          onClick={() => {
-            progressStateStore.state = ProgressState.MATCHED
-            navigate('/EDA')
-          }}>
+        <Button appearance="primary" onClick={handleCommitChanges}>
           Done
         </Button>
       </div>
     </>
   ) : (
     <Spinner
-      size="huge"
-      labelPosition="below"
       label={<Subtitle1>Matching columns...</Subtitle1>}
+      labelPosition="below"
+      size="huge"
     />
   )
 }

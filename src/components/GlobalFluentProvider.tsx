@@ -3,14 +3,14 @@ import type {
   FluentProviderSlots,
   FluentProviderState,
 } from '@fluentui/react-components'
+
+import { useFluentStyledState } from '@/hooks'
 import {
-  useFluentProviderStyles_unstable,
   useFluentProvider_unstable,
+  useFluentProviderStyles_unstable,
   webDarkTheme,
   webLightTheme,
 } from '@fluentui/react-components'
-
-import { useFluentStyledState } from '@/hooks'
 import { useEffect, useMemo, useSyncExternalStore } from 'react'
 
 const useThemePreference = () => {
@@ -51,7 +51,7 @@ const GlobalFluentProvider = ({ children, ...props }: FluentProviderProps) => {
     FluentProviderState,
     FluentProviderSlots
   >(
-    { theme, children, ...props },
+    { children, theme, ...props },
     useFluentProviderStyles_unstable,
     useFluentProvider_unstable,
   ).root.className

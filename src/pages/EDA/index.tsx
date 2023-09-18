@@ -1,23 +1,17 @@
 import Nav from '@/components/Nav'
-import { columnStateStore } from '@/lib/StateStore/column'
-import { useSyncExternalStore } from 'react'
+import { useAppSelector } from '@/hooks'
 import { Outlet } from 'react-router-dom'
 
 const snakeToSlug = (str: string) => str.replace(/_/g, '-')
 
 export const Component = () => {
-  const selectedColumns = Array.from(
-    useSyncExternalStore(
-      columnStateStore.subscribe,
-      () => columnStateStore.columns,
-    ),
-  )
+  const { columns } = useAppSelector(({ columns }) => columns)
 
-  const paths = selectedColumns.map(snakeToSlug).map((slug) => `/EDA/${slug}`)
+  const paths = columns.map(snakeToSlug).map((slug) => `/EDA/${slug}`)
 
   return (
     <>
-      <Nav vertical={true} paths={paths} />
+      <Nav paths={paths} vertical={true} />
       <Outlet />
     </>
   )

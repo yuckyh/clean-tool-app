@@ -1,4 +1,10 @@
+import type { ColumnNameData } from '@/hooks'
+import type { CodebookMatch } from '@/workers/column'
 import type { ComboboxProps } from '@fluentui/react-components'
+
+import codebook from '@/../data/codebook.json'
+import { useAppSelector } from '@/hooks'
+import { columnStateStore } from '@/lib/StateStore/column'
 import {
   Combobox,
   Option,
@@ -6,17 +12,7 @@ import {
   makeStyles,
 } from '@fluentui/react-components'
 import Fuse from 'fuse.js'
-import {
-  useSyncExternalStore,
-  useMemo,
-  useState,
-  useCallback,
-  useTransition,
-} from 'react'
-
-import type { CodebookMatch, ColumnNameData } from '@/hooks'
-import { columnStateStore } from '@/lib/StateStore/column'
-import codebook from '@/../data/codebook.json'
+import { useCallback, useMemo, useState, useTransition } from 'react'
 
 interface MatchCellProps {
   item: ColumnNameData
@@ -35,31 +31,26 @@ const MatchCell = ({ item, setAlertOpen }: MatchCellProps) => {
   const [isPending, startTransition] = useTransition()
   const [open, setOpen] = useState(false)
 
-  const selectedColumns = Array.from(
-    useSyncExternalStore(
-      columnStateStore.subscribe,
-      () => columnStateStore.columns,
-    ),
-  )
+  const { columns } = useAppSelector(({ columns }) => columns)
 
-  const [value, setValue] = useState(selectedColumns[position] ?? '')
+  const [value, setValue] = useState(columns[position] ?? '')
 
   const customScore = useMemo(
     () =>
       (
         1 -
         (new Fuse(codebook, {
-          threshold: 1,
           includeScore: true,
           keys: ['name'],
+          threshold: 1,
         }).search(value)[0]?.score ?? 1)
       ).toFixed(2),
     [value],
   )
 
   const selectedOption = useMemo(
-    () => selectedColumns[position] ?? '',
-    [position, selectedColumns],
+    () => columns[position] ?? '',
+    [position, columns],
   )
 
   const selectedIndex = useMemo(
@@ -68,7 +59,7 @@ const MatchCell = ({ item, setAlertOpen }: MatchCellProps) => {
   )
 
   const filteredMatches = useMemo(
-    () => matches.filter(({ item }) => item.name?.includes(value)),
+    () => matches.filter(({ item }) => item.name.includes(value)),
     [matches, value],
   )
 
@@ -93,10 +84,10 @@ const MatchCell = ({ item, setAlertOpen }: MatchCellProps) => {
           return
         }
 
-        const checkColumns = [...selectedColumns]
+        const checkColumns = [...columns]
         checkColumns[position] = optionValue
 
-        const uSelectedColumns = Array.from(new Set(selectedColumns))
+        const uSelectedColumns = Array.from(new Set(columns))
         const uCheckColumns = Array.from(new Set(checkColumns))
 
         if (uSelectedColumns.length !== uCheckColumns.length) {
@@ -111,7 +102,7 @@ const MatchCell = ({ item, setAlertOpen }: MatchCellProps) => {
 
         columnStateStore.state = checkColumns.join(',')
       },
-      [matches, position, selectedColumns, selectedIndex, setAlertOpen],
+      [matches, position, columns, selectedIndex, setAlertOpen],
     )
 
   const handleComboboxChange: Required<ComboboxProps>['onChange'] = useCallback(
@@ -133,24 +124,24 @@ const MatchCell = ({ item, setAlertOpen }: MatchCellProps) => {
 
   return (
     <Combobox
+      appearance="filled-darker"
       className={classes.combobox}
-      value={value}
-      selectedOptions={[selectedOption]}
       onChange={handleComboboxChange}
+      onOpenChange={handleOpenChange}
       onOptionSelect={handleOptionSelect}
       open={open}
-      onOpenChange={handleOpenChange}
-      appearance="filled-darker">
+      selectedOptions={[selectedOption]}
+      value={value}>
       {isPending ? (
         <Option text="loading">
           <Spinner label={'Loading options...'} />
         </Option>
       ) : filteredMatches.length ? (
         filteredMatches.map(({ item, score }) => (
-          <MatchOption key={item.name} item={item} score={score ?? 1} />
+          <MatchOption item={item} key={item.name} score={score ?? 1} />
         ))
       ) : (
-        <Option value={value} text={value}>
+        <Option text={value} value={value}>
           Create column? {value}, {customScore}
         </Option>
       )}
@@ -164,7 +155,7 @@ interface MatchOptionProps {
 }
 
 const MatchOption = ({ item, score }: MatchOptionProps) => (
-  <Option value={item.name} text={item.name ?? ''}>
+  <Option text={item.name ?? ''} value={item.name}>
     {item.name}, {(1 - score).toFixed(2)}
   </Option>
 )

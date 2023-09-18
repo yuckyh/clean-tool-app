@@ -16,33 +16,9 @@ interface CanReset<T> {
 export abstract class StateStore<T extends string>
   implements HasState<T>, CanReset<T>, CanSubscribe
 {
-  private readonly _storageKey
-  private _state
   private _listeners: Listener<this>[] = []
-
-  get state() {
-    this._syncState()
-    return this._state
-  }
-
-  set state(value: T) {
-    localStorage.setItem(this._storageKey, value)
-    this._syncState()
-    this._listeners.forEach((listener) => {
-      listener(this)
-    })
-  }
-
-  constructor(defaultState: T, storageKey: string) {
-    this._state = defaultState
-    this._storageKey = storageKey
-    this.reset(defaultState)
-    window.addEventListener('storage', ({ key }) => {
-      if (key === null) {
-        this.reset(defaultState)
-      }
-    })
-  }
+  private _state
+  private readonly _storageKey
 
   private _syncState = () => {
     this._state = (localStorage.getItem(this._storageKey) ?? '') as T
@@ -59,7 +35,7 @@ export abstract class StateStore<T extends string>
   }
 
   reset = (defaultState: T) => {
-    this.state = this.state || defaultState
+    this.state = defaultState
     this._listeners = []
   }
 
@@ -69,5 +45,28 @@ export abstract class StateStore<T extends string>
     return () => {
       this.removeEventListener(listener)
     }
+  }
+
+  constructor(defaultState: T, storageKey: string) {
+    this._storageKey = storageKey
+    this._state = this.state || defaultState
+    window.addEventListener('storage', ({ key }) => {
+      if (key === null) {
+        this.reset(defaultState)
+      }
+    })
+  }
+
+  get state() {
+    this._syncState()
+    return this._state
+  }
+
+  set state(value: T) {
+    localStorage.setItem(this._storageKey, value)
+    this._syncState()
+    this._listeners.forEach((listener) => {
+      listener(this)
+    })
   }
 }

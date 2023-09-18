@@ -1,4 +1,4 @@
-import { makeStyles, Subtitle1, Caption1 } from '@fluentui/react-components'
+import { Caption1, Subtitle1, makeStyles } from '@fluentui/react-components'
 
 const useClasses = makeStyles({
   headerCell: {
