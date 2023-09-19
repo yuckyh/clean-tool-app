@@ -72,3 +72,7 @@ object {
   width: 100%;
   height: 100%;
 }
+
+.fui-Combobox > input {
+  width: 100%
+}
