@@ -1,5 +1,5 @@
 import Nav from '@/components/Nav'
-import { useAppSelector } from '@/hooks'
+import { useAppSelector } from '@/lib/hooks'
 import { Outlet } from 'react-router-dom'
 
 const snakeToSlug = (str: string) => str.replace(/_/g, '-')

@@ -1,7 +1,7 @@
 import { author, description, keywords } from '@/../package.json'
 import GlobalFluentProvider from '@/components/GlobalFluentProvider'
 import styleString from '@/global.css?inline'
-import { usePathTitle } from '@/hooks'
+import { usePathTitle } from '@/lib/hooks'
 import store from '@/store'
 import { makeStaticStyles } from '@fluentui/react-components'
 import { useEffect } from 'react'

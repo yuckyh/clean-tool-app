@@ -4,7 +4,7 @@ import type {
   FluentProviderState,
 } from '@fluentui/react-components'
 
-import { useFluentStyledState } from '@/hooks'
+import { useFluentStyledState } from '@/lib/hooks'
 import {
   useFluentProvider_unstable,
   useFluentProviderStyles_unstable,
