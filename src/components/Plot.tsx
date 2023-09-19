@@ -5,11 +5,11 @@ import { tokens } from '@fluentui/react-components'
 import Plotly from 'plotly.js-cartesian-dist'
 import createPlotlyComponent from 'react-plotly.js/factory'
 
-interface PlotProps extends Partial<PlotParams> {
+interface Props extends Partial<PlotParams> {
   data: Plotly.Data[]
 }
 
-const Plot = ({ config, layout, ...props }: PlotProps) => {
+const Plot = ({ config, layout, ...props }: Props) => {
   const Plot = createPlotlyComponent(Plotly)
   const plotFgColor = tokenToColor(tokens.colorNeutralStroke1)
 

@@ -11,7 +11,7 @@ import {
   useAppSelector,
   useFluentStyledState,
   usePathTitle,
-} from '@/hooks'
+} from '@/lib/hooks'
 import { setPosition } from '@/store/progressSlice'
 import {
   ProgressBar,

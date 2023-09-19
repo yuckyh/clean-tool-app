@@ -3,16 +3,16 @@ import type {
   TabListProps,
 } from '@fluentui/react-components'
 
-import { usePathTitle } from '@/hooks'
+import { usePathTitle } from '@/lib/hooks'
 import { Tab, TabList } from '@fluentui/react-components'
 import { useCallback } from 'react'
 import { useHref, useLocation, useNavigate } from 'react-router-dom'
 
-interface NavProps extends TabListProps {
+interface Props extends TabListProps {
   paths: string[]
 }
 
-const Nav = ({ paths, ...props }: NavProps) => {
+const Nav = ({ paths, ...props }: Props) => {
   const navigate = useNavigate()
   const { pathname } = useLocation()
 
