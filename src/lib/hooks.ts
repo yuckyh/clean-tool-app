@@ -96,7 +96,6 @@ const useFetchMatches = () => {
 
 export interface ColumnNameData {
   matches: Fuse.FuseResult<Pick<Required<CodebookMatch>, 'name'>>[]
-  original: string
   readonly position: number
 }
 
@@ -117,7 +116,6 @@ export const useColumnNameMatches: () => [boolean, ColumnNameData[]] = () => {
               name: item.name ?? '',
             },
           })),
-          original: originalColumns[i] ?? '',
           position: i,
         })),
       )
