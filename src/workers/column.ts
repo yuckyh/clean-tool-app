@@ -1,5 +1,7 @@
-import codebook from '@/../data/codebook.json'
-import Fuse from 'fuse.js'
+import type codebook from '@/../data/codebook.json'
+import type Fuse from 'fuse.js'
+
+import fuse from '@/lib/fuse'
 
 import type {
   Controller,
@@ -21,21 +23,11 @@ export interface ColumnResponse extends WorkerResponse {
 
 type ColumnRequestHandler = RequestHandler<ColumnRequest, ColumnResponse>
 
-const get: ColumnRequestHandler = async ({ columns }) => {
-  const fuse = new Fuse(codebook, {
-    includeScore: true,
-    keys: ['name'],
-    threshold: 1,
-  })
-
-  const search: Fuse<CodebookMatch>['search'] = (...args) =>
-    fuse.search(...args)
-
-  return await Promise.resolve({
-    matches: columns.map((column) => search(column)),
+const get: ColumnRequestHandler = async ({ columns }) =>
+  await Promise.resolve({
+    matches: columns.map((column) => fuse.search(column)),
     status: 'ok',
   })
-}
 
 const controller: Controller<ColumnRequest, ColumnResponse> = {
   get,
