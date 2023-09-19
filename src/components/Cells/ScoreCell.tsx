@@ -1,8 +1,7 @@
-import codebook from '@/../data/codebook.json'
-import { type ColumnNameData, useAppSelector } from '@/hooks'
+import fuse from '@/lib/fuse'
+import { type ColumnNameData, useAppSelector } from '@/lib/hooks'
 import { fluentColorScale } from '@/lib/plotly'
 import { makeStyles, tokens } from '@fluentui/react-components'
-import Fuse from 'fuse.js'
 
 import Plot from '../Plot'
 
@@ -18,24 +17,19 @@ interface Props {
   item: ColumnNameData
 }
 
-const ScoreCell = ({ item }: Props) => {
-  const { matches, position } = item
+const ScoreCell = ({ item: { matches, position } }: Props) => {
   const classes = useClasses()
 
   const { columns } = useAppSelector(({ columns }) => columns)
 
-  const index = matches.findIndex(
+  const matchIndex = matches.findIndex(
     (match) => match.item.name === columns[position],
   )
   const score =
     1 -
-    ((index < 0
-      ? new Fuse(codebook, {
-          includeScore: true,
-          keys: ['name'],
-          threshold: 1,
-        }).search(columns[position] ?? '')[0]?.score
-      : matches[index]?.score) ?? 1)
+    ((matchIndex < 0
+      ? fuse.search(columns[position] ?? '')[0]?.score
+      : matches[matchIndex]?.score) ?? 1)
   const formattedScore = score.toFixed(2)
   const data: Plotly.Data[] = [
     {
