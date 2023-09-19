@@ -1,61 +1,44 @@
-import type { ColumnNameData } from '@/hooks'
+import type { ColumnNameData } from '@/lib/hooks'
 import type { CodebookMatch } from '@/workers/column'
 import type { ComboboxProps } from '@fluentui/react-components'
 
-import codebook from '@/../data/codebook.json'
-import { useAppSelector } from '@/hooks'
-import { columnStateStore } from '@/lib/StateStore/column'
+import fuse from '@/lib/fuse'
+import { useAppDispatch, useAppSelector } from '@/lib/hooks'
+import { setColumns, setMatchRefs, setMatchVisits } from '@/store/columnsSlice'
 import {
   Combobox,
   Option,
   Spinner,
   makeStyles,
 } from '@fluentui/react-components'
-import Fuse from 'fuse.js'
 import { useCallback, useMemo, useState, useTransition } from 'react'
 
-interface MatchCellProps {
+interface Props {
   item: ColumnNameData
   setAlertOpen: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 const useClasses = makeStyles({
-  combobox: {
-    minWidth: '200px',
+  root: {
+    minWidth: '150px',
   },
 })
 
-const MatchCell = ({ item, setAlertOpen }: MatchCellProps) => {
+const MatchCell = ({ item: { matches, position }, setAlertOpen }: Props) => {
   const classes = useClasses()
-  const { matches, position } = item
+  const { visits } = useAppSelector(({ sheet }) => sheet)
+  const { columns, formattedColumns, matchRefs, matchVisits } = useAppSelector(
+    ({ columns }) => columns,
+  )
+  const dispatch = useAppDispatch()
   const [isPending, startTransition] = useTransition()
   const [open, setOpen] = useState(false)
-
-  const { columns } = useAppSelector(({ columns }) => columns)
 
   const [value, setValue] = useState(columns[position] ?? '')
 
   const customScore = useMemo(
-    () =>
-      (
-        1 -
-        (new Fuse(codebook, {
-          includeScore: true,
-          keys: ['name'],
-          threshold: 1,
-        }).search(value)[0]?.score ?? 1)
-      ).toFixed(2),
+    () => (1 - (fuse.search(value)[0]?.score ?? 1)).toFixed(2),
     [value],
-  )
-
-  const selectedOption = useMemo(
-    () => columns[position] ?? '',
-    [position, columns],
-  )
-
-  const selectedIndex = useMemo(
-    () => matches.findIndex((match) => match.item.name === selectedOption),
-    [matches, selectedOption],
   )
 
   const filteredMatches = useMemo(
@@ -70,39 +53,50 @@ const MatchCell = ({ item, setAlertOpen }: MatchCellProps) => {
           return
         }
 
-        const matchIndex = matches.findIndex(
-          ({ item }) => item.name === optionValue,
-        )
+        const matchIndex =
+          matches.find(({ item }) => item.name === optionValue)?.refIndex ?? -1
 
-        if (matchIndex < 0) {
-          console.log('no match creating new column generating score')
-          // create column
+        if (
+          formattedColumns.includes(optionValue + '_' + matchVisits[position])
+        ) {
+          console.log('duplicate visit incrementing visit count')
+          if ((matchVisits[position] ?? 0) >= visits) {
+            console.log('too many of the same columns')
+
+            setAlertOpen(true)
+            setValue(columns[position] ?? '')
+            return
+          }
+          const newVisits = [...matchVisits]
+          newVisits[position] += 1
+
+          dispatch(setMatchVisits(newVisits))
         }
+        const newColumns = [...columns]
+        newColumns[position] = optionValue
 
-        if (matchIndex === selectedIndex) {
-          console.log('same column that exists can ignore')
-          return
-        }
-
-        const checkColumns = [...columns]
-        checkColumns[position] = optionValue
-
-        const uSelectedColumns = Array.from(new Set(columns))
-        const uCheckColumns = Array.from(new Set(checkColumns))
-
-        if (uSelectedColumns.length !== uCheckColumns.length) {
-          setAlertOpen(true)
-          return
-        }
+        const newRefs = [...matchRefs]
+        newRefs[position] = matchIndex
 
         startTransition(() => {
           setValue(optionValue)
           setOpen(false)
         })
 
-        columnStateStore.state = checkColumns.join(',')
+        dispatch(setColumns(newColumns))
+        dispatch(setMatchRefs(newRefs))
       },
-      [matches, position, columns, selectedIndex, setAlertOpen],
+      [
+        matches,
+        formattedColumns,
+        matchVisits,
+        position,
+        columns,
+        matchRefs,
+        dispatch,
+        visits,
+        setAlertOpen,
+      ],
     )
 
   const handleComboboxChange: Required<ComboboxProps>['onChange'] = useCallback(
@@ -125,12 +119,12 @@ const MatchCell = ({ item, setAlertOpen }: MatchCellProps) => {
   return (
     <Combobox
       appearance="filled-darker"
-      className={classes.combobox}
+      className={classes.root}
       onChange={handleComboboxChange}
       onOpenChange={handleOpenChange}
       onOptionSelect={handleOptionSelect}
       open={open}
-      selectedOptions={[selectedOption]}
+      selectedOptions={[columns[position] ?? '']}
       value={value}>
       {isPending ? (
         <Option text="loading">
