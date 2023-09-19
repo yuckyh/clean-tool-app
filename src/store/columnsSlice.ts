@@ -10,38 +10,58 @@ import { utils } from 'xlsx'
 import { getPersisted, setPersisted } from './utils'
 
 interface State {
-  columnStr: string
   columns: string[]
-  matchIndices: number[]
-  matches: Fuse.FuseResult<CodebookMatch>[][]
-  originalColumnStr: string
+  counts: number[]
+  formattedColumns: string[]
+  matchRefs: number[]
+  matchVisits: number[]
+  matches: Omit<Fuse.FuseResult<CodebookMatch>, 'matches'>[][]
   originalColumns: string[]
 }
 
 const name = 'columns'
-const originalName = 'originalColumns'
+const keys: (keyof State)[] = [
+  name,
+  'matchRefs',
+  'matchVisits',
+  'originalColumns',
+]
 const defaultValue = ''
-const defaultOriginal = ''
 const initialState: State = {
-  columnStr: getPersisted(name, defaultValue),
-  columns: getPersisted(name, defaultValue).split(','),
-  matchIndices: [],
+  columns: getPersisted(name, defaultValue).split(',').filter(Boolean),
+  counts: [],
+  formattedColumns: [],
+  matchRefs: getPersisted(keys[1] ?? '', defaultValue)
+    .split(',')
+    .filter(Boolean)
+    .map((ref) => parseInt(ref)),
+  matchVisits: getPersisted(keys[2] ?? '', defaultValue)
+    .split(',')
+    .filter(Boolean)
+    .map((visit) => parseInt(visit)),
   matches: [],
-  originalColumnStr: getPersisted(originalName, defaultOriginal),
-  originalColumns: getPersisted(originalName, defaultOriginal).split(','),
+  originalColumns: getPersisted(keys[3] ?? '', defaultValue)
+    .split(',')
+    .filter(Boolean),
 }
 
 const update = (state: State) => {
-  const { columnStr, columns, matches, originalColumnStr, originalColumns } =
-    state
-  state.columnStr = columns.join(',')
-  setPersisted(name, columnStr)
-  state.originalColumnStr = originalColumns.join(',')
-  setPersisted(originalName, originalColumnStr)
-  state.matchIndices = columns.map(
-    (column, i) =>
-      matches[i]?.findIndex((match) => match.item.name === column) ?? 0,
+  const { columns, counts, matchRefs, matchVisits, originalColumns } = state
+
+  state.counts = columns.map(
+    (column) => columns.filter((check) => check === column).length,
   )
+
+  state.formattedColumns = columns.map((column, i) =>
+    (counts[i] ?? 1) > 1 || matchVisits[i] !== 0
+      ? `${column}_${matchVisits[i]}`
+      : column,
+  )
+
+  setPersisted(name, columns.join(','))
+  setPersisted(keys[1] ?? '', matchRefs.join(','))
+  setPersisted(keys[2] ?? '', matchVisits.join(','))
+  setPersisted(keys[3] ?? '', originalColumns.join(','))
   return state
 }
 
@@ -65,9 +85,17 @@ const columnsSlice = createSlice({
   extraReducers: (builder) => {
     builder.addCase(getMatches.fulfilled, (state, { payload }) => {
       state.matches = payload
-      const { columnStr, matches } = state
-      if (!columnStr) {
-        state.columns = matches.map((column) => column[0]?.item.name ?? '')
+      const { columns, matchRefs, matchVisits, matches } = state
+      if (!columns.length) {
+        state.columns = matches.map(([column]) => column?.item.name ?? '')
+      }
+
+      if (!matchRefs.length) {
+        state.matchRefs = matches.map(([match]) => match?.refIndex ?? 0)
+      }
+
+      if (!matchVisits.length) {
+        state.matchVisits = matches.map(() => 0)
       }
       update(state)
     })
@@ -75,6 +103,27 @@ const columnsSlice = createSlice({
   initialState: update(initialState),
   name,
   reducers: {
+    deleteColumns: (state) => {
+      state = { ...initialState }
+      state.columns = []
+      state.matchRefs = []
+      state.matchVisits = []
+      state.matches = []
+      state.originalColumns = []
+      return update(state)
+    },
+    setColumns: (state, { payload }: PayloadAction<string[]>) => {
+      state.columns = payload
+      update(state)
+    },
+    setMatchRefs: (state, { payload }: PayloadAction<number[]>) => {
+      state.matchRefs = payload
+      update(state)
+    },
+    setMatchVisits: (state, { payload }: PayloadAction<number[]>) => {
+      state.matchVisits = payload
+      update(state)
+    },
     setOriginalColumns: (
       state,
       { payload }: PayloadAction<WorkSheet | undefined>,
@@ -87,5 +136,11 @@ const columnsSlice = createSlice({
   },
 })
 
-export const { setOriginalColumns } = columnsSlice.actions
+export const {
+  deleteColumns,
+  setColumns,
+  setMatchRefs,
+  setMatchVisits,
+  setOriginalColumns,
+} = columnsSlice.actions
 export default columnsSlice.reducer
