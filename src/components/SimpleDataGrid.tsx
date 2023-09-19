@@ -17,7 +17,7 @@ import {
 } from '@fluentui/react-components'
 import { useCallback } from 'react'
 
-interface SimpleDataGridProps<T, K>
+interface Props<T, K>
   extends Partial<Omit<DataGridProps, 'columns' | 'items'>> {
   cellFocusMode: (columnId: TableColumnId) => DataGridCellFocusMode
   columns: TableColumnDefinition<K>[]
@@ -38,9 +38,7 @@ const useClasses = makeStyles({
   },
 })
 
-const SimpleDataGrid: <T, K>(
-  props: SimpleDataGridProps<T, K>,
-) => JSX.Element = (props) => {
+const SimpleDataGrid: <T, K>(props: Props<T, K>) => JSX.Element = (props) => {
   const { cellFocusMode, items } = props
   const classes = useClasses()
 
