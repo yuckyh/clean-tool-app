@@ -1,13 +1,18 @@
 import type { FileResponse } from '@/workers/file'
-import type { DialogProps, DropdownProps } from '@fluentui/react-components'
+import type {
+  DialogProps,
+  DropdownProps,
+  InputProps,
+} from '@fluentui/react-components'
 import type { DropzoneOptions } from 'react-dropzone'
 
 import FileInput from '@/components/FileInput'
 import SimpleDataGrid from '@/components/SimpleDataGrid'
-import { useAppDispatch, useAppSelector, useFetchWorkbook } from '@/hooks'
+import { useAppDispatch, useAppSelector, useFetchWorkbook } from '@/lib/hooks'
+import { deleteColumns } from '@/store/columnsSlice'
 import { deleteFile, postFile } from '@/store/fileSlice'
 import { deleteProgress, setProgress } from '@/store/progressSlice'
-import { deleteWorkbook, setSheetName } from '@/store/sheetSlice'
+import { deleteWorkbook, setSheetName, setVisits } from '@/store/sheetSlice'
 import { fileWorker } from '@/workers/static'
 import {
   Button,
@@ -23,6 +28,7 @@ import {
   DialogTrigger,
   Dropdown,
   Field,
+  Input,
   Option,
   Title1,
   Title2,
@@ -87,7 +93,7 @@ export const Component = () => {
 
   const { dispatchToast } = useToastController(toasterId)
 
-  const { sheet, sheetName } = useAppSelector(({ sheet }) => sheet)
+  const { sheet, sheetName, visits } = useAppSelector(({ sheet }) => sheet)
   const sheetNames = useAppSelector(({ sheet }) => sheet.workbook?.SheetNames)
 
   const hasFile = useMemo(() => !!file, [file])
@@ -135,6 +141,7 @@ export const Component = () => {
   const handleResetConfirm = useCallback(() => {
     setTaskType('deleted')
     dispatch(deleteProgress())
+    dispatch(deleteColumns())
     dispatch(deleteWorkbook())
     void (async () => {
       await dispatch(deleteFile())
@@ -154,6 +161,13 @@ export const Component = () => {
       },
       [dispatch],
     )
+
+  const handleVisitChange: Required<InputProps>['onChange'] = (
+    _event,
+    { value },
+  ) => {
+    dispatch(setVisits(parseInt(value)))
+  }
 
   const toastNotify = useCallback(() => {
     dispatchToast(<FileToast type={taskType} />, { intent: 'success' })
@@ -203,16 +217,15 @@ export const Component = () => {
       <Title1>Upload</Title1>
       <Card className={classes.card}>
         <CardHeader header={<Title2>Options</Title2>} />
-        <Field label="File" required={true}>
+        <Field label="File" required>
           <FileInput
             appearance="filled-darker"
             value={fileName}
             zoneOptions={zoneOptions}
           />
         </Field>
-        {hasFile && <Field />}
         {hasFile && !isCSV && (
-          <Field label="Sheet" required={true}>
+          <Field label="Sheet" required>
             <Dropdown
               appearance="filled-darker"
               className={classes.input}
@@ -225,6 +238,17 @@ export const Component = () => {
                 </Option>
               ))}
             </Dropdown>
+          </Field>
+        )}
+        {hasFile && (
+          <Field label="Number of visits" required>
+            <Input
+              appearance="filled-darker"
+              className={classes.input}
+              onChange={handleVisitChange}
+              type="number"
+              value={visits.toString()}
+            />
           </Field>
         )}
         <CardFooter
