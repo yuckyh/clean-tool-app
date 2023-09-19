@@ -4,25 +4,30 @@ import type { WorkBook, WorkSheet } from 'xlsx'
 import { promisifyListener, workbookWorker } from '@/workers/static'
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 
-import { setPersisted } from './utils'
+import { getPersisted, setPersisted } from './utils'
 
 interface State {
   sheet?: WorkSheet
   sheetName: string
+  visits: number
   workbook?: WorkBook
 }
 
 const name = 'sheet'
 const defaultValue = ''
+const visitsName = 'sheetVisits'
+const defaultVisits = 1
 
 const update = (state: State) => {
-  const { sheetName } = state
+  const { sheetName, visits } = state
   setPersisted(name, sheetName)
+  setPersisted(visitsName, visits.toString())
   return state
 }
 
 const initialState: State = {
-  sheetName: defaultValue,
+  sheetName: getPersisted(name, defaultValue),
+  visits: parseInt(getPersisted(visitsName, defaultVisits.toString())),
 }
 
 export const getWorkbook = createAsyncThunk(
@@ -53,6 +58,7 @@ const sheetSlice = createSlice({
     deleteWorkbook: (state) => {
       state = { ...initialState }
       state.sheetName = defaultValue
+      state.visits = defaultVisits
       return update(state)
     },
     setSheetName: (state, { payload }: PayloadAction<string>) => {
@@ -60,8 +66,12 @@ const sheetSlice = createSlice({
       state.sheet = state.workbook?.Sheets[payload]
       update(state)
     },
+    setVisits: (state, { payload }: PayloadAction<number>) => {
+      state.visits = payload
+      update(state)
+    },
   },
 })
 
-export const { deleteWorkbook, setSheetName } = sheetSlice.actions
+export const { deleteWorkbook, setSheetName, setVisits } = sheetSlice.actions
 export default sheetSlice.reducer
