@@ -1,5 +1,5 @@
 // import { useNavigate } from 'react-router-dom'
-import type { ColumnNameData } from '@/hooks'
+import type { ColumnNameData } from '@/lib/hooks'
 import type {
   DataGridCellFocusMode,
   DataGridProps,
@@ -7,7 +7,13 @@ import type {
   TableColumnDefinition,
 } from '@fluentui/react-components'
 
-import { useAppDispatch, useAppSelector, useColumnNameMatches } from '@/hooks'
+import codebook from '@/../data/codebook.json'
+import {
+  useAppDispatch,
+  useAppSelector,
+  useColumnNameMatches,
+} from '@/lib/hooks'
+import { setMatchVisits } from '@/store/columnsSlice'
 import { setProgress } from '@/store/progressSlice'
 import {
   Button,
@@ -22,17 +28,27 @@ import {
   Subtitle1,
   createTableColumn,
 } from '@fluentui/react-components'
-import { startTransition, useCallback, useMemo, useState } from 'react'
+import {
+  startTransition,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react'
 import { useNavigate } from 'react-router-dom'
 
 import HeaderCell from './Cells/HeaderCell'
 import MatchCell from './Cells/MatchCell'
 import ScoreCell from './Cells/ScoreCell'
+import VisitsCell from './Cells/VisitsCell'
 import SimpleDataGrid from './SimpleDataGrid'
 
 const ColumnsDataGrid = () => {
   const navigate = useNavigate()
-  const { matchIndices } = useAppSelector(({ columns }) => columns)
+  const { visits } = useAppSelector(({ sheet }) => sheet)
+  const { matchRefs, matchVisits, originalColumns } = useAppSelector(
+    ({ columns }) => columns,
+  )
   const dispatch = useAppDispatch()
 
   const [isPending, columnNames] = useColumnNameMatches()
@@ -70,8 +86,11 @@ const ColumnsDataGrid = () => {
     () =>
       createTableColumn<ColumnNameData>({
         columnId: 'original',
-        compare: (a, b) => a.original.localeCompare(b.original),
-        renderCell: ({ original }) => <>{original}</>,
+        compare: (a, b) =>
+          (originalColumns[a.position] ?? '').localeCompare(
+            originalColumns[b.position] ?? '',
+          ),
+        renderCell: ({ position }) => <>{originalColumns[position] ?? ''}</>,
         renderHeaderCell: () => (
           <HeaderCell
             header="Original"
@@ -79,7 +98,22 @@ const ColumnsDataGrid = () => {
           />
         ),
       }),
-    [],
+    [originalColumns],
+  )
+
+  const getMatchByPos = useCallback(
+    (data: ColumnNameData) => codebook[matchRefs[data.position] ?? 0],
+    [matchRefs],
+  )
+
+  const getMatchByRef = useCallback(
+    (data: ColumnNameData) =>
+      data.matches[
+        data.matches.findIndex(
+          ({ refIndex }) => refIndex === matchRefs[data.position],
+        )
+      ],
+    [matchRefs],
   )
 
   const matchColumn = useMemo(
@@ -87,10 +121,8 @@ const ColumnsDataGrid = () => {
       createTableColumn<ColumnNameData>({
         columnId: 'matches',
         compare: (a, b) =>
-          (
-            a.matches[matchIndices[a.position] ?? 0]?.item.name ?? ''
-          ).localeCompare(
-            b.matches[matchIndices[b.position] ?? 0]?.item.name ?? '',
+          (getMatchByPos(a)?.name ?? '').localeCompare(
+            getMatchByPos(b)?.name ?? '',
           ),
         renderCell: (item) => (
           <MatchCell item={item} setAlertOpen={setAlertOpen} />
@@ -102,19 +134,37 @@ const ColumnsDataGrid = () => {
           />
         ),
       }),
-    [matchIndices],
+    [getMatchByPos],
+  )
+
+  useEffect(() => {
+    if (matchVisits.find((visit) => visit >= visits)) {
+      dispatch(
+        setMatchVisits(matchVisits.map((visit) => Math.min(visit, visits - 1))),
+      )
+    }
+  }, [dispatch, matchVisits, visits])
+
+  const visitColumn = useMemo(
+    () =>
+      createTableColumn<ColumnNameData>({
+        columnId: 'visit',
+        renderCell: (item) => (
+          <VisitsCell item={item} setAlertOpen={setAlertOpen} />
+        ),
+        renderHeaderCell: () => (
+          <HeaderCell header="Visit" subtitle="The matching visit number" />
+        ),
+      }),
+    [],
   )
 
   const scoreColumn = useMemo(
     () =>
       createTableColumn<ColumnNameData>({
         columnId: 'score',
-        compare: (a, b) => {
-          return (
-            (a.matches[matchIndices[a.position] ?? 0]?.score ?? 1) -
-            (b.matches[matchIndices[b.position] ?? 0]?.score ?? 1)
-          )
-        },
+        compare: (a, b) =>
+          (getMatchByRef(a)?.score ?? 1) - (getMatchByRef(b)?.score ?? 1),
         renderCell: (item) => <ScoreCell item={item} />,
         renderHeaderCell: () => (
           <HeaderCell
@@ -123,12 +173,12 @@ const ColumnsDataGrid = () => {
           />
         ),
       }),
-    [matchIndices],
+    [getMatchByRef],
   )
 
   const columnDefinitions: TableColumnDefinition<ColumnNameData>[] = useMemo(
-    () => [originalColumn, matchColumn, scoreColumn],
-    [matchColumn, originalColumn, scoreColumn],
+    () => [originalColumn, matchColumn, visitColumn, scoreColumn],
+    [matchColumn, originalColumn, scoreColumn, visitColumn],
   )
 
   const handleCommitChanges = useCallback(() => {
@@ -138,7 +188,7 @@ const ColumnsDataGrid = () => {
 
   return columnNames.length > 0 && !isPending ? (
     <>
-      <SimpleDataGrid<ColumnNameData, ColumnNameData>
+      <SimpleDataGrid
         cellFocusMode={getCellFocusMode}
         columns={columnDefinitions}
         focusMode="composite"
