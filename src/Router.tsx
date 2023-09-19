@@ -20,7 +20,7 @@ const routes = createRoutesFromElements(
       </Route>
       <Route lazy={() => import('@/pages/Download')} path="download" />
     </Route>
-    <Route lazy={() => import('@/404')} path="*" />
+    <Route lazy={() => import('@/pages/404')} path="*" />
   </Route>,
 )
 
