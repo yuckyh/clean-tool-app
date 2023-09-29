@@ -567,6 +567,7 @@
       "unit": "diopters"
   },
   {
+    
       "name": "cyclo_subjref_axis_r",
       "description": "cycloplegic subjective refraction axis value of right eye",
       "category": "cycloplegic refraction",

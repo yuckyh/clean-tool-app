@@ -4,10 +4,10 @@ import type { PropsWithChildren } from 'react'
 import { Spinner } from '@fluentui/react-components'
 import { Suspense } from 'react'
 
-type Props = PropsWithChildren & SpinnerProps
+type Props = SpinnerProps & PropsWithChildren
 
-const Loader = ({ children, ...props }: Props) => {
-  return <Suspense fallback={<Spinner {...props} />}>{children}</Suspense>
-}
+const Loader = ({ children, ...props }: Props) => (
+  <Suspense fallback={<Spinner {...props} />}>{children}</Suspense>
+)
 
 export default Loader

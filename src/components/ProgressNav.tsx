@@ -1,19 +1,11 @@
-import type {
-  LinkProps,
-  LinkSlots,
-  LinkState,
-  ProgressBarProps,
-} from '@fluentui/react-components'
+import type { ProgressBarProps } from '@fluentui/react-components'
 
-import { routes } from '@/Router'
+import { routes } from '@/app/Router'
+import { toObject } from '@/lib/array'
+import { useAppSelector } from '@/lib/hooks'
+import { usePathTitle } from '@/lib/string'
 import {
-  useAppDispatch,
-  useAppSelector,
-  useFluentStyledState,
-  usePathTitle,
-} from '@/lib/hooks'
-import { setPosition } from '@/store/progressSlice'
-import {
+  Link,
   ProgressBar,
   Subtitle2,
   Subtitle2Stronger,
@@ -21,19 +13,18 @@ import {
   mergeClasses,
   shorthands,
   tokens,
-  useLink_unstable,
-  useLinkStyles_unstable,
 } from '@fluentui/react-components'
-import { useEffect, useRef } from 'react'
 import {
-  NavLink,
   matchRoutes,
   resolvePath,
   useHref,
+  useLinkClickHandler,
   useLocation,
   useNavigate,
   useResolvedPath,
 } from 'react-router-dom'
+
+import type { Progress } from '../features/progressSlice'
 
 const useClasses = makeStyles({
   linkContainer: {
@@ -56,89 +47,68 @@ const useClasses = makeStyles({
   },
 })
 
-const useChildPaths = (parentPath: string, exclusion?: string) =>
-  matchRoutes(routes, parentPath)
-    ?.filter(({ route }) => route.children)
-    .map(({ route }) => route.children)
-    .pop()
-    ?.filter(
-      ({ path }) => resolvePath(path ?? parentPath).pathname !== exclusion,
-    )
-    .map(({ path }) => resolvePath(path ?? '').pathname) ?? []
-
 const ProgressNav = (props: ProgressBarProps) => {
-  const classes = useClasses()
-  const componentPath = useResolvedPath('')
-  const { pathname } = useLocation()
   const navigate = useNavigate()
-  const dispatch = useAppDispatch()
-  const childPaths = useChildPaths(componentPath.pathname)
-  const ref = useRef<HTMLDivElement | null>(null)
 
-  const index = childPaths.findIndex(
-    (path) => path.replace('/', '') === pathname.split('/')[1],
+  const { progress } = useAppSelector(({ progress }) => progress)
+
+  const { pathname: componentPath } = useResolvedPath('')
+  const { pathname: locationPath } = useLocation()
+
+  const classes = useClasses()
+
+  const componentPathDepth = componentPath.split('/').length
+
+  const pathList =
+    matchRoutes(routes, componentPath)
+      ?.find(({ route }) => !route.index)
+      ?.route.children.map(({ path }) => resolvePath(path ?? '').pathname) ?? []
+
+  const allowedPaths =
+    toObject(['none', 'uploaded', 'matched', 'explored'] as Progress[], (i) => [
+      ...pathList.slice(0, i + 2),
+    ])[progress] ?? []
+
+  const position = pathList.findIndex(
+    (path) =>
+      path.replace('/', '') === locationPath.split('/')[componentPathDepth - 1],
   )
-
-  const allowedChildPaths = childPaths.map((pathname) => ({
-    pathname,
-  }))
-
-  const { allowedPaths, position } = useAppSelector(({ progress }) => progress)
-
   // Ternary expression for animation hack
-  const progress = position == 0 ? 0.011 : position / (childPaths.length - 1)
+  const progressValue = position / (pathList.length - 1) || 0.011
 
-  useEffect(() => {
-    dispatch(
-      setPosition(
-        childPaths.findIndex(
-          (path) => path.replace('/', '') === pathname.split('/')[1],
-        ),
-      ),
+  if (
+    locationPath !== '/' &&
+    !allowedPaths.some((path) =>
+      locationPath.split('/').includes(path.replace('/', '')),
     )
-  }, [childPaths, dispatch, pathname])
-
-  useEffect(() => {
-    if (
-      pathname !== '/' &&
-      !allowedPaths
-        .map((path) => pathname.includes(path.substring(1)))
-        .slice(1)
-        .includes(true)
-    ) {
-      navigate(allowedPaths[allowedPaths.length - 1] ?? '/')
-    }
-  }, [allowedPaths, index, navigate, pathname])
-
-  const progressBar = (
-    <ProgressBar
-      className={mergeClasses(
-        classes.progressBar,
-        index == 0 && classes.progressBarInitial,
-      )}
-      max={1}
-      ref={ref}
-      title="Progress Bar Navigation"
-      value={progress}
-      {...props}
-    />
-  )
+  ) {
+    navigate(allowedPaths.at(-1) ?? '/')
+  }
 
   return (
     <div className={classes.root}>
-      {progressBar}
+      <ProgressBar
+        className={mergeClasses(
+          classes.progressBar,
+          position == 0 && classes.progressBarInitial,
+        )}
+        max={1}
+        title="Progress Bar Navigation"
+        value={progressValue}
+        {...props}
+      />
       <div className={classes.linkContainer}>
-        {allowedChildPaths.map(({ pathname }, i) => (
-          <ProgressNavLink done={index >= i} key={i} path={pathname} />
+        {pathList.map((path, i) => (
+          <ProgressNavLink
+            disabled={!allowedPaths.includes(path)}
+            done={position >= i}
+            key={i}
+            path={path}
+          />
         ))}
       </div>
     </div>
   )
-}
-
-interface LinkLabelProps {
-  done: boolean
-  path: string
 }
 
 const useLinkClasses = makeStyles({
@@ -166,50 +136,40 @@ const useLinkClasses = makeStyles({
   },
 })
 
-const ProgressNavLink = ({ done, path }: LinkLabelProps) => {
-  const href = useHref(path)
+interface LinkLabelProps {
+  disabled: boolean
+  done: boolean
+  path: string
+}
+
+const ProgressNavLink = ({ disabled, done, path }: LinkLabelProps) => {
   const label = usePathTitle(path)
   const classes = useLinkClasses()
-
-  const { allowedPaths } = useAppSelector(({ progress }) => progress)
-
-  const disabled = !allowedPaths.includes(path)
-
-  const fluentLinkComponent = useFluentStyledState<
-    LinkProps,
-    LinkState,
-    LinkSlots,
-    HTMLAnchorElement
-  >(
-    { appearance: 'subtle', disabled },
-    useLinkStyles_unstable,
-    useLink_unstable,
-  )
+  const href = useHref(disabled ? '#' : path)
+  const isActive = href === path
+  const handleLinkClick = useLinkClickHandler(href)
 
   return (
     <div className={classes.root}>
-      <NavLink
-        className={mergeClasses(
-          fluentLinkComponent.root.className,
-          classes.link,
-        )}
-        to={disabled ? '#' : href}>
-        {({ isActive }) => (
-          <>
-            <div
-              className={mergeClasses(
-                classes.stepThumb,
-                done ? classes.activeStepThumb : '',
-              )}
-            />
-            {isActive ? (
-              <Subtitle2Stronger>{label}</Subtitle2Stronger>
-            ) : (
-              <Subtitle2>{label}</Subtitle2>
+      <Link
+        appearance="subtle"
+        className={classes.link}
+        disabled={disabled}
+        onClick={handleLinkClick}>
+        <>
+          <div
+            className={mergeClasses(
+              classes.stepThumb,
+              done ? classes.activeStepThumb : '',
             )}
-          </>
-        )}
-      </NavLink>
+          />
+          {isActive ? (
+            <Subtitle2Stronger>{label}</Subtitle2Stronger>
+          ) : (
+            <Subtitle2>{label}</Subtitle2>
+          )}
+        </>
+      </Link>
     </div>
   )
 }

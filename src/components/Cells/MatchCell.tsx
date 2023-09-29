@@ -1,21 +1,35 @@
-import type { ColumnNameData } from '@/lib/hooks'
-import type { CodebookMatch } from '@/workers/column'
+import type { AlertRef } from '@/components/AlertDialog'
 import type { ComboboxProps } from '@fluentui/react-components'
 
+import { codebook } from '@/data'
 import fuse from '@/lib/fuse'
-import { useAppDispatch, useAppSelector } from '@/lib/hooks'
-import { setColumns, setMatchRefs, setMatchVisits } from '@/store/columnsSlice'
+import { useAppDispatch, useAppSelector, useDebounced } from '@/lib/hooks'
+import { just } from '@/lib/utils'
 import {
   Combobox,
   Option,
   Spinner,
   makeStyles,
 } from '@fluentui/react-components'
-import { useCallback, useMemo, useState, useTransition } from 'react'
+import { memo, useCallback, useMemo, useState } from 'react'
+
+import type { ColumnNameData } from '../../features/columnsSlice'
+
+import {
+  getColumns,
+  getFormattedColumns,
+  setMatchRef,
+  setMatchVisit,
+} from '../../features/columnsSlice'
 
 interface Props {
+  alertRef: React.RefObject<AlertRef>
   item: ColumnNameData
-  setAlertOpen: React.Dispatch<React.SetStateAction<boolean>>
+}
+
+interface FilteredMatch {
+  match: string
+  pos: number
 }
 
 const useClasses = makeStyles({
@@ -24,27 +38,29 @@ const useClasses = makeStyles({
   },
 })
 
-const MatchCell = ({ item: { matches, position }, setAlertOpen }: Props) => {
+const MatchCell = ({
+  alertRef,
+  item: { index, matches, pos, refIndices, scores },
+}: Props) => {
   const classes = useClasses()
-  const { visits } = useAppSelector(({ sheet }) => sheet)
-  const { columns, formattedColumns, matchRefs, matchVisits } = useAppSelector(
-    ({ columns }) => columns,
-  )
   const dispatch = useAppDispatch()
-  const [isPending, startTransition] = useTransition()
+  const { visits } = useAppSelector(({ sheet }) => sheet)
+  const matchVisit =
+    useAppSelector(({ columns }) => columns.matchVisits)[pos] ?? 0
+  const column = useAppSelector(getColumns)[pos] ?? ''
+  const formattedColumns = useAppSelector(getFormattedColumns)
+
   const [open, setOpen] = useState(false)
-
-  const [value, setValue] = useState(columns[position] ?? '')
-
-  const customScore = useMemo(
-    () => (1 - (fuse.search(value)[0]?.score ?? 1)).toFixed(2),
-    [value],
+  const [value, setValue] = useState(column)
+  const selectedOption = useMemo(
+    () => refIndices[index]?.toString() ?? '',
+    [refIndices, index],
   )
-
-  const filteredMatches = useMemo(
-    () => matches.filter(({ item }) => item.name.includes(value)),
-    [matches, value],
-  )
+  const deferredValue = useDebounced(value, 750)
+  const isDebouncing = value !== deferredValue
+  const filteredMatches = matches
+    .map((match, i) => ({ match, pos: i }))
+    .filter(({ match }) => match.includes(deferredValue))
 
   const handleOptionSelect: Required<ComboboxProps>['onOptionSelect'] =
     useCallback(
@@ -53,68 +69,50 @@ const MatchCell = ({ item: { matches, position }, setAlertOpen }: Props) => {
           return
         }
 
-        const matchIndex =
-          matches.find(({ item }) => item.name === optionValue)?.refIndex ?? -1
+        const matchRef = parseInt(optionValue)
 
-        if (
-          formattedColumns.includes(optionValue + '_' + matchVisits[position])
-        ) {
-          console.log('duplicate visit incrementing visit count')
-          if ((matchVisits[position] ?? 0) >= visits) {
-            console.log('too many of the same columns')
+        const selectedColumn = codebook[matchRef]?.name ?? ''
 
-            setAlertOpen(true)
-            setValue(columns[position] ?? '')
+        if (formattedColumns.includes(selectedColumn + '_' + matchVisit)) {
+          const usableMatchVisit = formattedColumns
+            .filter((formatted) => formatted.includes(selectedColumn))
+            .map((formatted) => parseInt(formatted.split('_').pop() ?? '-1'))
+            .sort((a, b) => a - b)
+            .findIndex((visit, i) => visit !== i)
+
+          if (matchVisit >= visits) {
+            console.log(
+              formattedColumns.filter((value) =>
+                value.includes(selectedColumn),
+              ),
+            )
+
+            alertRef.current?.openAlert()
+            setValue(column)
             return
           }
-          const newVisits = [...matchVisits]
-          newVisits[position] += 1
 
-          dispatch(setMatchVisits(newVisits))
+          just({ matchVisit: usableMatchVisit, pos })(setMatchVisit)(dispatch)
         }
-        const newColumns = [...columns]
-        newColumns[position] = optionValue
 
-        const newRefs = [...matchRefs]
-        newRefs[position] = matchIndex
+        just({ matchRef, pos })(setMatchRef)(dispatch)
 
-        startTransition(() => {
-          setValue(optionValue)
-          setOpen(false)
-        })
-
-        dispatch(setColumns(newColumns))
-        dispatch(setMatchRefs(newRefs))
+        setValue(selectedColumn)
+        setOpen(false)
       },
-      [
-        matches,
-        formattedColumns,
-        matchVisits,
-        position,
-        columns,
-        matchRefs,
-        dispatch,
-        visits,
-        setAlertOpen,
-      ],
+      [formattedColumns, matchVisit, dispatch, pos, visits, alertRef, column],
     )
 
-  const handleComboboxChange: Required<ComboboxProps>['onChange'] = useCallback(
-    ({ target }) => {
-      setOpen(true)
-      startTransition(() => {
-        setValue(target.value)
-      })
-    },
-    [],
-  )
+  const handleComboboxChange: ComboboxProps['onChange'] = ({ target }) => {
+    setValue(target.value)
+    setOpen(true)
+  }
 
-  const handleOpenChange: Required<ComboboxProps>['onOpenChange'] = useCallback(
-    (_e, { open }) => {
-      setOpen(open)
-    },
-    [],
-  )
+  const handleOpenChange: ComboboxProps['onOpenChange'] = (_e, { open }) => {
+    // startTransition(() => {
+    setOpen(open)
+    // })
+  }
 
   return (
     <Combobox
@@ -124,33 +122,64 @@ const MatchCell = ({ item: { matches, position }, setAlertOpen }: Props) => {
       onOpenChange={handleOpenChange}
       onOptionSelect={handleOptionSelect}
       open={open}
-      selectedOptions={[columns[position] ?? '']}
+      selectedOptions={[selectedOption]}
       value={value}>
-      {isPending ? (
+      {isDebouncing ? (
         <Option text="loading">
           <Spinner label={'Loading options...'} />
         </Option>
       ) : filteredMatches.length ? (
-        filteredMatches.map(({ item, score }) => (
-          <MatchOption item={item} key={item.name} score={score ?? 1} />
-        ))
+        <MemoizedFilteredOptions
+          filteredMatches={filteredMatches}
+          refIndices={refIndices}
+          scores={scores}
+        />
       ) : (
         <Option text={value} value={value}>
-          Create column? {value}, {customScore}
+          Create column? {value},{' '}
+          {just(value)(fuse.search.bind(fuse))(([match]) => match?.score ?? 1)(
+            (score) => 1 - score,
+          )((score) => score.toFixed(2))()}
         </Option>
       )}
     </Combobox>
   )
 }
 
-interface MatchOptionProps {
-  item: CodebookMatch
+interface FilteredOptionsProps {
+  filteredMatches: FilteredMatch[]
+  refIndices: number[]
+  scores: number[]
+}
+
+const FilteredOptions = ({
+  filteredMatches,
+  refIndices,
+  scores,
+}: FilteredOptionsProps) => (
+  <>
+    {filteredMatches.map(({ match, pos }) => (
+      <FilteredOption
+        key={refIndices[pos] ?? -1}
+        match={match}
+        refIndex={refIndices[pos] ?? -1}
+        score={scores[pos] ?? 1}
+      />
+    ))}
+  </>
+)
+
+const MemoizedFilteredOptions = memo(FilteredOptions)
+
+interface FilteredOptionProps {
+  match: string
+  refIndex: number
   score: number
 }
 
-const MatchOption = ({ item, score }: MatchOptionProps) => (
-  <Option text={item.name ?? ''} value={item.name}>
-    {item.name}, {(1 - score).toFixed(2)}
+const FilteredOption = ({ match, refIndex, score }: FilteredOptionProps) => (
+  <Option text={match} value={refIndex.toString()}>
+    {match}, {(1 - score).toFixed(2)}
   </Option>
 )
 

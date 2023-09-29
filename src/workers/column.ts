@@ -1,16 +1,9 @@
-import type codebook from '@/../data/codebook.json'
+import type { codebook } from '@/data'
 import type Fuse from 'fuse.js'
 
 import fuse from '@/lib/fuse'
 
-import type {
-  Controller,
-  RequestHandler,
-  WorkerRequest,
-  WorkerResponse,
-} from '.'
-
-export type CodebookMatch = Partial<(typeof codebook)[0]>
+export type CodebookEntry = (typeof codebook)[0]
 
 export interface ColumnRequest extends WorkerRequest {
   columns: string[]
@@ -18,12 +11,12 @@ export interface ColumnRequest extends WorkerRequest {
 }
 
 export interface ColumnResponse extends WorkerResponse {
-  matches: Omit<Fuse.FuseResult<CodebookMatch>, 'matches'>[][]
+  matches: Omit<Fuse.FuseResult<CodebookEntry>, 'matches'>[][]
 }
 
-type ColumnRequestHandler = RequestHandler<ColumnRequest, ColumnResponse>
+type Handler = RequestHandler<ColumnRequest, ColumnResponse>
 
-const get: ColumnRequestHandler = async ({ columns }) =>
+const get: Handler = async ({ columns }) =>
   await Promise.resolve({
     matches: columns.map((column) => fuse.search(column)),
     status: 'ok',

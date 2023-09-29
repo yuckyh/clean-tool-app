@@ -1,57 +1,73 @@
-// import { useNavigate } from 'react-router-dom'
-import type { ColumnNameData } from '@/lib/hooks'
+import type { AlertRef } from '@/components/AlertDialog'
 import type {
-  DataGridCellFocusMode,
   DataGridProps,
-  DialogProps,
   TableColumnDefinition,
 } from '@fluentui/react-components'
+import type { RefObject } from 'react'
 
-import codebook from '@/../data/codebook.json'
+import HeaderCell from '@/components/Cells/HeaderCell'
+import Loader from '@/components/Loader'
+import SimpleDataGrid from '@/components/SimpleDataGrid'
+import { codebook } from '@/data'
 import {
   useAppDispatch,
   useAppSelector,
-  useColumnNameMatches,
+  useAsyncEffect,
+  useLoadingTransition,
 } from '@/lib/hooks'
-import { setMatchVisits } from '@/store/columnsSlice'
-import { setProgress } from '@/store/progressSlice'
+import { fluentColorScale } from '@/lib/plotly'
+import { just } from '@/lib/utils'
 import {
-  Button,
-  Dialog,
-  DialogActions,
-  DialogBody,
-  DialogContent,
-  DialogSurface,
-  DialogTitle,
-  DialogTrigger,
   Spinner,
   Subtitle1,
   createTableColumn,
+  tokens,
 } from '@fluentui/react-components'
-import {
-  startTransition,
-  useCallback,
-  useEffect,
-  useMemo,
-  useState,
-} from 'react'
-import { useNavigate } from 'react-router-dom'
+import { lazy, memo, useMemo, useState } from 'react'
 
-import HeaderCell from './Cells/HeaderCell'
-import MatchCell from './Cells/MatchCell'
-import ScoreCell from './Cells/ScoreCell'
-import VisitsCell from './Cells/VisitsCell'
-import SimpleDataGrid from './SimpleDataGrid'
+import type { ColumnNameData } from '../features/columnsSlice'
 
-const ColumnsDataGrid = () => {
-  const navigate = useNavigate()
-  const { visits } = useAppSelector(({ sheet }) => sheet)
-  const { matchRefs, matchVisits, originalColumns } = useAppSelector(
-    ({ columns }) => columns,
-  )
+import { fetchMatches } from '../features/columnsSlice'
+import { fetchWorkbook, getOriginalColumns } from '../features/sheetSlice'
+
+interface Props {
+  alertRef: RefObject<AlertRef>
+}
+
+type SimpleDataGridProps = ReturnType<
+  typeof SimpleDataGrid<ColumnNameData, ColumnNameData>
+>['props']
+
+const createLazyMemo = (
+  displayName: string,
+  ...args: [...Parameters<typeof lazy>]
+) => {
+  const component = memo(lazy(...args))
+  component.displayName = displayName
+  return component
+}
+
+const MemoizedMatchCell = createLazyMemo(
+  'MemoizedMatchCell',
+  () => import('./Cells/MatchCell'),
+)
+const MemoizedScoreCell = createLazyMemo(
+  'MemoizedScoreCell',
+  () => import('./Cells/ScoreCell'),
+)
+const MemoizedVisitsCell = createLazyMemo(
+  'MemoizedVisitsCell',
+  () => import('./Cells/VisitsCell'),
+)
+const MemoizedDataGrid = memo<SimpleDataGridProps>(SimpleDataGrid)
+MemoizedDataGrid.displayName = 'MemoizedDataGrid'
+
+const ColumnsDataGrid = ({ alertRef }: Props) => {
   const dispatch = useAppDispatch()
-
-  const [isPending, columnNames] = useColumnNameMatches()
+  const { fileName } = useAppSelector(({ sheet }) => sheet)
+  const { matchLists, matchRefs } = useAppSelector(({ columns }) => columns)
+  const originalColumns = useAppSelector(getOriginalColumns)
+  const [isLoading, setIsLoading] = useLoadingTransition()
 
   const [sortState, setSortState] = useState<
     Parameters<NonNullable<DataGridProps['onSortChange']>>[1]
@@ -60,37 +76,62 @@ const ColumnsDataGrid = () => {
     sortDirection: 'ascending',
   })
 
-  const [alertOpen, setAlertOpen] = useState(false)
-
-  const handleSortChange: Required<DataGridProps>['onSortChange'] = useCallback(
-    (_event, nextSortState) => {
-      startTransition(() => {
-        setSortState(nextSortState)
-      })
-    },
-    [],
+  const [colorscale] = useState<Plotly.ColorScale>(
+    fluentColorScale(
+      tokens.colorStatusSuccessForeground3,
+      tokens.colorStatusDangerForeground3,
+      64,
+    ),
   )
 
-  const handleAlertOpen: Required<DialogProps>['onOpenChange'] = useCallback(
-    (_event, data) => {
-      setAlertOpen(data.open)
+  const [config] = useState<Partial<Plotly.Config>>({
+    displayModeBar: false,
+    scrollZoom: false,
+  })
+
+  const [layout] = useState<Partial<Plotly.Layout>>({
+    autosize: true,
+
+    clickmode: 'none',
+    dragmode: false,
+    margin: {
+      b: 0,
+      l: 0,
+      r: 0,
+      t: 0,
     },
-    [],
-  )
+    xaxis: {
+      fixedrange: true,
+      nticks: 0,
+      range: [0, 1],
+      showgrid: false,
+      showticklabels: false,
+      ticks: '',
+      zeroline: false,
+    },
+    yaxis: {
+      fixedrange: true,
+      nticks: 0,
+      showticklabels: false,
+      ticks: '',
+    },
+  })
 
-  const getCellFocusMode = useCallback((): DataGridCellFocusMode => {
-    return 'none'
-  }, [])
+  const handleSortChange: DataGridProps['onSortChange'] = (
+    _event,
+    nextSortState,
+  ) => {
+    setSortState(nextSortState)
+  }
 
-  const originalColumn = useMemo(
-    () =>
-      createTableColumn<ColumnNameData>({
+  const columnDefinitions: TableColumnDefinition<ColumnNameData>[] = useMemo(
+    () => [
+      createTableColumn({
         columnId: 'original',
         compare: (a, b) =>
-          (originalColumns[a.position] ?? '').localeCompare(
-            originalColumns[b.position] ?? '',
-          ),
-        renderCell: ({ position }) => <>{originalColumns[position] ?? ''}</>,
+          originalColumns[a.pos]?.localeCompare(originalColumns[b.pos] ?? '') ??
+          0,
+        renderCell: ({ pos }) => <>{originalColumns[pos]}</>,
         renderHeaderCell: () => (
           <HeaderCell
             header="Original"
@@ -98,34 +139,16 @@ const ColumnsDataGrid = () => {
           />
         ),
       }),
-    [originalColumns],
-  )
-
-  const getMatchByPos = useCallback(
-    (data: ColumnNameData) => codebook[matchRefs[data.position] ?? 0],
-    [matchRefs],
-  )
-
-  const getMatchByRef = useCallback(
-    (data: ColumnNameData) =>
-      data.matches[
-        data.matches.findIndex(
-          ({ refIndex }) => refIndex === matchRefs[data.position],
-        )
-      ],
-    [matchRefs],
-  )
-
-  const matchColumn = useMemo(
-    () =>
       createTableColumn<ColumnNameData>({
         columnId: 'matches',
-        compare: (a, b) =>
-          (getMatchByPos(a)?.name ?? '').localeCompare(
-            getMatchByPos(b)?.name ?? '',
-          ),
+        compare: (...args) => {
+          const [a, b] = args.map(
+            (arg) => codebook[matchRefs[arg.pos] ?? 0]?.name ?? '',
+          ) as [string, string]
+          return a.localeCompare(b)
+        },
         renderCell: (item) => (
-          <MatchCell item={item} setAlertOpen={setAlertOpen} />
+          <MemoizedMatchCell alertRef={alertRef} item={item} />
         ),
         renderHeaderCell: () => (
           <HeaderCell
@@ -134,38 +157,35 @@ const ColumnsDataGrid = () => {
           />
         ),
       }),
-    [getMatchByPos],
-  )
-
-  useEffect(() => {
-    if (matchVisits.find((visit) => visit >= visits)) {
-      dispatch(
-        setMatchVisits(matchVisits.map((visit) => Math.min(visit, visits - 1))),
-      )
-    }
-  }, [dispatch, matchVisits, visits])
-
-  const visitColumn = useMemo(
-    () =>
-      createTableColumn<ColumnNameData>({
+      createTableColumn({
         columnId: 'visit',
         renderCell: (item) => (
-          <VisitsCell item={item} setAlertOpen={setAlertOpen} />
+          <MemoizedVisitsCell alertRef={alertRef} item={item} />
         ),
         renderHeaderCell: () => (
           <HeaderCell header="Visit" subtitle="The matching visit number" />
         ),
       }),
-    [],
-  )
-
-  const scoreColumn = useMemo(
-    () =>
-      createTableColumn<ColumnNameData>({
+      createTableColumn({
         columnId: 'score',
-        compare: (a, b) =>
-          (getMatchByRef(a)?.score ?? 1) - (getMatchByRef(b)?.score ?? 1),
-        renderCell: (item) => <ScoreCell item={item} />,
+        compare: (...args) =>
+          args
+            .map(({ pos }) => {
+              const { index, scores } = matchLists[pos] ?? {
+                index: -1,
+                scores: [],
+              }
+              return scores[index] ?? 1
+            })
+            .reduce((a, b) => a - b),
+        renderCell: (item) => (
+          <MemoizedScoreCell
+            colorscale={colorscale}
+            config={config}
+            item={item}
+            layout={layout}
+          />
+        ),
         renderHeaderCell: () => (
           <HeaderCell
             header="Score"
@@ -173,52 +193,51 @@ const ColumnsDataGrid = () => {
           />
         ),
       }),
-    [getMatchByRef],
+    ],
+    [
+      alertRef,
+      colorscale,
+      config,
+      layout,
+      matchLists,
+      matchRefs,
+      originalColumns,
+    ],
   )
 
-  const columnDefinitions: TableColumnDefinition<ColumnNameData>[] = useMemo(
-    () => [originalColumn, matchColumn, visitColumn, scoreColumn],
-    [matchColumn, originalColumn, scoreColumn, visitColumn],
-  )
+  useAsyncEffect(async () => {
+    if (!fileName) {
+      return
+    }
 
-  const handleCommitChanges = useCallback(() => {
-    dispatch(setProgress('matched'))
-    navigate('/EDA')
-  }, [dispatch, navigate])
+    await just(fileName)(fetchWorkbook)(dispatch)()
+  }, [dispatch, fileName])
 
-  return columnNames.length > 0 && !isPending ? (
-    <>
-      <SimpleDataGrid
-        cellFocusMode={getCellFocusMode}
+  useAsyncEffect(async () => {
+    if (!originalColumns.length) {
+      return
+    }
+
+    await just(originalColumns)(fetchMatches)(dispatch)()
+
+    setIsLoading(false)
+  }, [dispatch, originalColumns])
+
+  return matchLists.length > 0 || !isLoading ? (
+    <Loader
+      label={<Subtitle1>Matching columns...</Subtitle1>}
+      labelPosition="below"
+      size="huge">
+      <MemoizedDataGrid
+        cellFocusMode={() => 'none'}
         columns={columnDefinitions}
         focusMode="composite"
-        items={columnNames}
+        items={matchLists}
         onSortChange={handleSortChange}
         sortState={sortState}
         sortable
       />
-      <Dialog modalType="alert" onOpenChange={handleAlertOpen} open={alertOpen}>
-        <DialogSurface>
-          <DialogBody>
-            <DialogTitle>Column Matching Error</DialogTitle>
-            <DialogContent>
-              You have selected the same column multiple times. Changes will not
-              be made.
-            </DialogContent>
-            <DialogActions>
-              <DialogTrigger disableButtonEnhancement>
-                <Button appearance="primary">Okay</Button>
-              </DialogTrigger>
-            </DialogActions>
-          </DialogBody>
-        </DialogSurface>
-      </Dialog>
-      <div>
-        <Button appearance="primary" onClick={handleCommitChanges}>
-          Done
-        </Button>
-      </div>
-    </>
+    </Loader>
   ) : (
     <Spinner
       label={<Subtitle1>Matching columns...</Subtitle1>}

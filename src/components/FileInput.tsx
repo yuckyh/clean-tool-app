@@ -23,8 +23,6 @@ const FileInput = ({ value, zoneOptions, ...props }: FileInputProps) => {
   const fileNames = acceptedFiles.map((file) => file.name).join(', ')
   const classes = useClasses()
 
-  value ??= fileNames
-
   return (
     <div {...getRootProps({ className: classes.root })}>
       <input {...getInputProps()} />
@@ -33,7 +31,7 @@ const FileInput = ({ value, zoneOptions, ...props }: FileInputProps) => {
         className={classes.input}
         disabled={zoneOptions?.disabled}
         placeholder={'Drag and drop or click to upload'}
-        value={value}
+        value={value ?? fileNames}
       />
     </div>
   )

@@ -1,20 +1,20 @@
 /// <reference lib="webworker" />
 
-export type RequestHandler<
+type RequestHandler<
   Request extends WorkerRequest,
   Response extends WorkerResponse,
 > = (request: Request) => Promise<Response>
 
-export type Controller<
+type Controller<
   Request extends WorkerRequest,
   Response extends WorkerResponse,
 > = Record<Request['method'], RequestHandler<Request, Response>>
 
-export interface WorkerRequest {
+interface WorkerRequest {
   method: string
 }
 
-export interface WorkerResponse {
+interface WorkerResponse {
   error?: Error
   status: 'fail' | 'ok'
 }
@@ -24,10 +24,8 @@ interface GenericWorkerEventMap<T> extends WorkerEventMap {
   messageerror: MessageEvent<T>
 }
 
-export interface WorkerType<
-  Req extends WorkerRequest,
-  Res extends WorkerResponse,
-> extends Worker {
+interface RequestWorker<Req extends WorkerRequest, Res extends WorkerResponse>
+  extends Worker {
   addEventListener<K extends keyof GenericWorkerEventMap<Res>>(
     type: K,
     listener: (this: Worker, ev: GenericWorkerEventMap<Res>[K]) => void,

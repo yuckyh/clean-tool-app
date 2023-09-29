@@ -1,14 +1,23 @@
-import type { ColumnNameData } from '@/lib/hooks'
+import type { AlertRef } from '@/components/AlertDialog'
 import type { DropdownProps } from '@fluentui/react-components'
+import type { RefObject } from 'react'
 
 import { useAppDispatch, useAppSelector } from '@/lib/hooks'
-import { setMatchVisits } from '@/store/columnsSlice'
 import { Dropdown, Option, makeStyles } from '@fluentui/react-components'
-import { useCallback, useMemo } from 'react'
+import { useCallback } from 'react'
+
+import type { ColumnNameData } from '../../features/columnsSlice'
+
+import {
+  getColumns,
+  getFormattedColumns,
+  setMatchVisit,
+} from '../../features/columnsSlice'
+import { just, list } from '@/lib/utils'
 
 interface Props {
+  alertRef: RefObject<AlertRef>
   item: ColumnNameData
-  setAlertOpen: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 const useClasses = makeStyles({
@@ -17,42 +26,31 @@ const useClasses = makeStyles({
   },
 })
 
-const VisitsCell = ({ item: { position }, setAlertOpen }: Props) => {
+const VisitsCell = ({ alertRef, item: { pos } }: Props) => {
   const classes = useClasses()
   const dispatch = useAppDispatch()
-  const { visits } = useAppSelector(({ sheet }) => sheet)
-  const { columns, formattedColumns, matchVisits } = useAppSelector(
-    ({ columns }) => columns,
-  )
 
-  const selectedOption = useMemo(
-    () => (matchVisits[position] ?? 0).toString(),
-    [matchVisits, position],
-  )
+  const { visits } = useAppSelector(({ sheet }) => sheet)
+  const matchVisit =
+    useAppSelector(({ columns }) => columns.matchVisits)[pos] ?? 0
+  const column = useAppSelector(getColumns)[pos] ?? ''
+  const formattedColumns = useAppSelector(getFormattedColumns)
 
   const handleOptionSelect: Required<DropdownProps>['onOptionSelect'] =
     useCallback(
       (_e, { optionValue }) => {
-        if (formattedColumns.includes(columns[position] + '_' + optionValue)) {
+        if (formattedColumns.includes(column + '_' + optionValue)) {
           console.log('too many of the same columns')
 
-          setAlertOpen(true)
+          alertRef.current?.openAlert()
           return
         }
 
-        const newVisits = [...matchVisits]
-        newVisits[position] = parseInt(optionValue ?? '0')
-
-        dispatch(setMatchVisits(newVisits))
+        dispatch(
+          setMatchVisit({ matchVisit: parseInt(optionValue ?? '0'), pos }),
+        )
       },
-      [
-        columns,
-        dispatch,
-        formattedColumns,
-        matchVisits,
-        position,
-        setAlertOpen,
-      ],
+      [alertRef, column, dispatch, formattedColumns, pos],
     )
 
   return (
@@ -60,13 +58,13 @@ const VisitsCell = ({ item: { position }, setAlertOpen }: Props) => {
       appearance="filled-darker"
       className={classes.root}
       onOptionSelect={handleOptionSelect}
-      selectedOptions={[selectedOption]}
-      value={selectedOption}>
-      {Array.from({ length: visits }).map((_, i) => (
+      selectedOptions={[matchVisit.toString()]}
+      value={matchVisit.toString()}>
+      {just(visits)(Array)(Array.from).convert(list)((_, i) => (
         <Option key={i} text={i.toString()}>
           {i}
         </Option>
-      ))}
+      ))()}
     </Dropdown>
   )
 }

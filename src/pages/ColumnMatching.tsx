@@ -1,15 +1,22 @@
-import ColumnsDataGrid from '@/components/ColumnsDataGrid'
-import SimpleDataGrid from '@/components/SimpleDataGrid'
-import { useAppSelector } from '@/lib/hooks'
+import type { AlertRef } from '@/components/AlertDialog'
+
+import { AlertDialog } from '@/components/AlertDialog'
+import PreviewDataGrid from '@/components/PreviewDataGrid'
+import { getFormattedColumns } from '@/features/columnsSlice'
+import { setProgress } from '@/features/progressSlice'
+import { getFormattedData, postFormattedJSON } from '@/features/sheetSlice'
+import { useAppDispatch, useAppSelector } from '@/lib/hooks'
+import { just } from '@/lib/utils'
 import {
+  Button,
   Title1,
-  createTableColumn,
+  Title2,
   makeStyles,
   shorthands,
   tokens,
 } from '@fluentui/react-components'
-import { useMemo } from 'react'
-import { utils } from 'xlsx'
+import { lazy, useCallback, useRef } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 const useClasses = makeStyles({
   root: {
@@ -20,44 +27,48 @@ const useClasses = makeStyles({
   },
 })
 
-type CellItem = Record<Column, boolean | number | string>
-type Column = number | string
+const ColumnsDataGrid = lazy(() => import('@/components/ColumnsDataGrid'))
 
 export const Component = () => {
   const classes = useClasses()
 
-  const { sheet } = useAppSelector(({ sheet }) => sheet)
-  const { formattedColumns, originalColumns } = useAppSelector(
-    ({ columns }) => columns,
-  )
+  const navigate = useNavigate()
+  const dispatch = useAppDispatch()
 
-  const data = useMemo(
-    () => (sheet ? utils.sheet_to_json(sheet) : [[]]),
-    [sheet],
-  )
+  const { fileName, sheetName } = useAppSelector(({ sheet }) => sheet)
+  const formattedColumns = useAppSelector(getFormattedColumns)
+  const formattedData = useAppSelector(getFormattedData)
 
-  const columnItems = useMemo(
-    () =>
-      formattedColumns.map((column, i) =>
-        createTableColumn<CellItem>({
-          columnId: column,
-          renderCell: (item) => <>{item[originalColumns[i] ?? '']}</>,
-          renderHeaderCell: () => <>{column}</>,
-        }),
-      ),
-    [formattedColumns, originalColumns],
-  )
+  const handleCommitChanges = useCallback(() => {
+    navigate('/EDA')
+    just<Progres>('matched')(setProgress)(dispatch)
+    void just({ fileName, formattedData, sheetName })(postFormattedJSON)(
+      dispatch,
+    )
+  }, [dispatch, fileName, formattedData, navigate, sheetName])
+
+  const alertRef = useRef<AlertRef>(null)
 
   return (
     <section className={classes.root}>
       <Title1>Column Matching</Title1>
 
-      <ColumnsDataGrid />
-      <SimpleDataGrid
-        cellFocusMode={() => 'none'}
-        columns={columnItems}
-        items={data.slice(1, 6)}
+      <ColumnsDataGrid alertRef={alertRef} />
+      <Title2>Changes Preview</Title2>
+      {formattedColumns.length > 0 && (
+        <PreviewDataGrid columns={formattedColumns} />
+      )}
+
+      <AlertDialog
+        content="You have selected the same column multiple times. Changes will not be made."
+        ref={alertRef}
+        title="Column Matching Error"
       />
+      <div>
+        <Button appearance="primary" onClick={handleCommitChanges}>
+          Done
+        </Button>
+      </div>
     </section>
   )
 }

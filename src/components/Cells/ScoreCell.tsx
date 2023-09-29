@@ -1,9 +1,12 @@
+import Plot from '@/components/Plot'
 import fuse from '@/lib/fuse'
-import { type ColumnNameData, useAppSelector } from '@/lib/hooks'
-import { fluentColorScale } from '@/lib/plotly'
-import { makeStyles, tokens } from '@fluentui/react-components'
+import { useAppSelector } from '@/lib/hooks'
+import { just } from '@/lib/utils'
+import { makeStyles } from '@fluentui/react-components'
 
-import Plot from '../Plot'
+import type { ColumnNameData } from '../../features/columnsSlice'
+
+import { getColumns } from '../../features/columnsSlice'
 
 const useClasses = makeStyles({
   plot: {
@@ -14,23 +17,28 @@ const useClasses = makeStyles({
 })
 
 interface Props {
+  colorscale?: Plotly.ColorScale
+  config: Partial<Plotly.Config>
   item: ColumnNameData
+  layout: Partial<Plotly.Layout>
 }
 
-const ScoreCell = ({ item: { matches, position } }: Props) => {
+const ScoreCell = ({
+  colorscale,
+  config,
+  item: { index, pos, scores },
+  layout,
+}: Props) => {
   const classes = useClasses()
 
-  const { columns } = useAppSelector(({ columns }) => columns)
+  const column = useAppSelector(getColumns)[pos] ?? ''
 
-  const matchIndex = matches.findIndex(
-    (match) => match.item.name === columns[position],
-  )
-  const score =
-    1 -
-    ((matchIndex < 0
-      ? fuse.search(columns[position] ?? '')[0]?.score
-      : matches[matchIndex]?.score) ?? 1)
-  const formattedScore = score.toFixed(2)
+  const score = just(column)(fuse.search.bind(fuse))(([match]) => match?.score)(
+    (score) => (index < 0 ? score : scores[index]),
+  )((score) => score ?? 1)()
+
+  const formattedScore = (1 - score).toFixed(2)
+
   const data: Plotly.Data[] = [
     {
       hovertemplate: 'score: %{x}',
@@ -38,49 +46,13 @@ const ScoreCell = ({ item: { matches, position } }: Props) => {
         cmax: 1,
         cmin: 0,
         color: [score],
-        colorscale: fluentColorScale(
-          tokens.colorStatusDangerForegroundInverted,
-          tokens.colorStatusSuccessForegroundInverted,
-          64,
-        ),
+        colorscale: colorscale,
       },
       name: '',
       type: 'bar',
       x: [formattedScore],
     },
   ]
-
-  const layout: Partial<Plotly.Layout> = {
-    autosize: true,
-
-    clickmode: 'none',
-    dragmode: false,
-    margin: {
-      b: 0,
-      l: 0,
-      r: 0,
-      t: 0,
-    },
-    xaxis: {
-      fixedrange: true,
-      nticks: 0,
-      range: [0, 1],
-      showgrid: false,
-      showticklabels: false,
-      ticks: '',
-      zeroline: false,
-    },
-    yaxis: {
-      fixedrange: true,
-      nticks: 0,
-      showticklabels: false,
-      ticks: '',
-    },
-  }
-
-  const config: Partial<Plotly.Config> = {
-    scrollZoom: false,
-  }
   return (
     <>
       <Plot

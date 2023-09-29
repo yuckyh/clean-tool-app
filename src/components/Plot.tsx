@@ -1,8 +1,9 @@
 import type { PlotParams } from 'react-plotly.js'
 
-import { tokenToColor } from '@/lib/plotly'
+import { tokenToHex } from '@/lib/plotly'
 import { tokens } from '@fluentui/react-components'
 import Plotly from 'plotly.js-cartesian-dist'
+import { useMemo } from 'react'
 import createPlotlyComponent from 'react-plotly.js/factory'
 
 interface Props extends Partial<PlotParams> {
@@ -11,10 +12,9 @@ interface Props extends Partial<PlotParams> {
 
 const Plot = ({ config, layout, ...props }: Props) => {
   const Plot = createPlotlyComponent(Plotly)
-  const plotFgColor = tokenToColor(tokens.colorNeutralStroke1)
+  const plotFgColor = useMemo(() => tokenToHex(tokens.colorNeutralStroke1), [])
 
   const defaultConfig: Partial<Plotly.Config> = {
-    displayModeBar: false,
     responsive: true,
   }
 
