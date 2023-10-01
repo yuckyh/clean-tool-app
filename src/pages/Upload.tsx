@@ -105,7 +105,7 @@ export const Component = () => {
 
       setFileTask('uploaded')
 
-      await dispatch(postFile({ file }))
+      await just({ file })(postFile)((x) => dispatch(x))()
 
       setIsLoading(true)
     },
@@ -132,14 +132,14 @@ export const Component = () => {
   const handleSheetSelect: Required<DropdownProps>['onOptionSelect'] =
     useCallback(
       (_event, { optionValue = '' }) => {
-        just(optionValue)(setSheetName)(dispatch)
+        just(optionValue)(setSheetName)(dispatch)()
       },
       [dispatch],
     )
 
   const handleVisitChange: Required<InputProps>['onChange'] = useCallback(
     (_event, { value }) => {
-      just(value)(parseInt)(setVisits)(dispatch)
+      just(value)(parseInt)(setVisits)(dispatch)()
     },
     [dispatch],
   )
