@@ -6,9 +6,17 @@ type Prettify<T> = {
 
 type Primitive = boolean | number | string
 
-type AsArray<T> = [...T[]] | readonly [...T[]]
+type IsArray<T> = T extends unknown[]
+  ? T
+  : T extends readonly unknown[]
+  ? T
+  : never
 
-type AnyArray = AsArray<unknown>
+type AsArray<T> = T extends readonly unknown[] | unknown[]
+  ? T
+  : T[] | readonly T[]
+
+type AnyArray = IsArray<readonly unknown[] | unknown[]>
 
 type ArrayElement<T extends AnyArray> = T extends
   | (infer U)[]
@@ -18,7 +26,7 @@ type ArrayElement<T extends AnyArray> = T extends
 
 type ExcludeFirst<A> = A extends [unknown, ...infer U] ? U : never
 
-type Transpose<T extends AsArray<AnyArray>> = T extends (infer U)[]
+type Transpose<T extends IsArray<AnyArray>> = T extends (infer U)[]
   ? {
       [K in keyof U]: {
         [L in keyof T]: T[L][K]
@@ -43,23 +51,16 @@ type Curried<Args extends AnyArray, Return> = Args[0] extends undefined
   ? Return
   : (arg: Args[0]) => Curried<ExcludeFirst<Args>, Return>
 
-type MonadFactory = <M extends Monad<T>, T>(value: T) => M
-type MonadConverter<M extends Monad<T>, T> = (value: T) => M
+type MonadFactory<M extends Monad<T>, T> = (value: T) => M
 
 interface Monad<T> {
   (): T
-  convert: <M extends Monad<AsArray<T> | T>>(
-    converter: MonadConverter<M, T>,
-  ) => M
+  convert: <M extends Monad<T>>(converter: MonadFactory<M, T>) => M
 }
 
-type JustMonad<T> = Monad<T> & (<U>(fn?: (value: T) => U) => JustMonad<U>)
+type JustMonad<T> = Monad<T> & (<U>(fn: (value: T) => U) => JustMonad<U>)
 
-type ListMonad<A extends AnyArray> = Monad<A> &
-  (<T, U extends AsArray<T>>(
-    fn?: (
-      value: ArrayElement<A>,
-      index: number,
-      array: AsArray<ArrayElement<A>>,
-    ) => T,
-  ) => ListMonad<U>)
+type ListMonad<T extends AnyArray> = Monad<T> &
+  (<V extends IsArray<W[] | readonly W[]>, W>(
+    fn?: (value: ArrayElement<T>, index: number, array: T) => W,
+  ) => ListMonad<V>)
