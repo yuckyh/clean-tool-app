@@ -1,5 +1,5 @@
 import { author, description, keywords } from '@/../package.json'
-import styleString from '@/app/global.css?inline'
+import globalStyles from '@/app/global.css?inline'
 import store from '@/app/store'
 import { useAsyncEffect } from '@/lib/hooks'
 import { usePathTitle } from '@/lib/string'
@@ -16,7 +16,7 @@ import { Provider } from 'react-redux'
 import { Outlet } from 'react-router-dom'
 import { useRegisterSW } from 'virtual:pwa-register/react'
 
-const useGlobalStyles = makeStaticStyles(styleString)
+const useGlobalStyles = makeStaticStyles(globalStyles)
 
 const Layout = just(() => import('@/app/Layout'))(lazy)()
 
