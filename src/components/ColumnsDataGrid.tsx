@@ -8,7 +8,6 @@ import type { RefObject } from 'react'
 import HeaderCell from '@/components/Cells/HeaderCell'
 import Loader from '@/components/Loader'
 import SimpleDataGrid from '@/components/SimpleDataGrid'
-import { codebook } from '@/data'
 import {
   useAppDispatch,
   useAppSelector,
@@ -16,14 +15,14 @@ import {
   useLoadingTransition,
 } from '@/lib/hooks'
 import { fluentColorScale } from '@/lib/plotly'
-import { just } from '@/lib/utils'
+import { createLazyMemo, just } from '@/lib/utils'
 import {
   Spinner,
   Subtitle1,
   createTableColumn,
   tokens,
 } from '@fluentui/react-components'
-import { lazy, memo, useMemo, useState } from 'react'
+import { memo, useMemo, useState } from 'react'
 
 import type { ColumnNameData } from '../features/columnsSlice'
 
@@ -37,15 +36,6 @@ interface Props {
 type SimpleDataGridProps = ReturnType<
   typeof SimpleDataGrid<ColumnNameData, ColumnNameData>
 >['props']
-
-const createLazyMemo = (
-  displayName: string,
-  ...args: [...Parameters<typeof lazy>]
-) => {
-  const component = memo(lazy(...args))
-  component.displayName = displayName
-  return component
-}
 
 const MemoizedMatchCell = createLazyMemo(
   'MemoizedMatchCell',
@@ -65,7 +55,7 @@ MemoizedDataGrid.displayName = 'MemoizedDataGrid'
 const ColumnsDataGrid = ({ alertRef }: Props) => {
   const dispatch = useAppDispatch()
   const { fileName } = useAppSelector(({ sheet }) => sheet)
-  const { matchLists, matchRefs } = useAppSelector(({ columns }) => columns)
+  const { matchLists } = useAppSelector(({ columns }) => columns)
   const originalColumns = useAppSelector(getOriginalColumns)
   const [isLoading, setIsLoading] = useLoadingTransition()
 
@@ -76,12 +66,14 @@ const ColumnsDataGrid = ({ alertRef }: Props) => {
     sortDirection: 'ascending',
   })
 
-  const [colorscale] = useState<Plotly.ColorScale>(
-    fluentColorScale(
-      tokens.colorStatusSuccessForeground3,
-      tokens.colorStatusDangerForeground3,
-      64,
-    ),
+  const colorscale = useMemo(
+    () =>
+      fluentColorScale(
+        tokens.colorStatusSuccessForeground3,
+        tokens.colorStatusDangerForeground3,
+        64,
+      ),
+    [],
   )
 
   const [config] = useState<Partial<Plotly.Config>>({
@@ -143,7 +135,9 @@ const ColumnsDataGrid = ({ alertRef }: Props) => {
         columnId: 'matches',
         compare: (...args) => {
           const [a, b] = args.map(
-            (arg) => codebook[matchRefs[arg.pos] ?? 0]?.name ?? '',
+            (arg) =>
+              matchLists[arg.pos]?.matches[matchLists[arg.pos]?.index ?? 0] ??
+              '',
           ) as [string, string]
           return a.localeCompare(b)
         },
@@ -194,15 +188,7 @@ const ColumnsDataGrid = ({ alertRef }: Props) => {
         ),
       }),
     ],
-    [
-      alertRef,
-      colorscale,
-      config,
-      layout,
-      matchLists,
-      matchRefs,
-      originalColumns,
-    ],
+    [alertRef, colorscale, config, layout, matchLists, originalColumns],
   )
 
   useAsyncEffect(async () => {
@@ -210,7 +196,7 @@ const ColumnsDataGrid = ({ alertRef }: Props) => {
       return
     }
 
-    await just(fileName)(fetchWorkbook)(dispatch)()
+    await just(fileName)(fetchWorkbook)((x) => dispatch(x))()
   }, [dispatch, fileName])
 
   useAsyncEffect(async () => {
