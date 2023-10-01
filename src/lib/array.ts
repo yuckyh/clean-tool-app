@@ -1,6 +1,6 @@
 type Key = number | string | symbol
 
-export const transpose = <T extends AsArray<AnyArray>>(
+export const transpose = <T extends AnyArray[] | readonly AnyArray[]>(
   matrix: T,
 ): Transpose<T> =>
   matrix[0]?.map((_, i) => matrix.map((row) => row[i])) as Transpose<T>
