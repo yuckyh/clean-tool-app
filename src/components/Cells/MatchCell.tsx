@@ -1,10 +1,10 @@
 import type { AlertRef } from '@/components/AlertDialog'
 import type { ComboboxProps } from '@fluentui/react-components'
 
-import { codebook } from '@/data'
+import { transpose } from '@/lib/array'
 import fuse from '@/lib/fuse'
 import { useAppDispatch, useAppSelector, useDebounced } from '@/lib/hooks'
-import { just } from '@/lib/utils'
+import { just, list } from '@/lib/utils'
 import {
   Combobox,
   Option,
@@ -16,9 +16,8 @@ import { memo, useCallback, useMemo, useState } from 'react'
 import type { ColumnNameData } from '../../features/columnsSlice'
 
 import {
-  getColumns,
   getFormattedColumns,
-  setMatchRef,
+  setMatchColumns,
   setMatchVisit,
 } from '../../features/columnsSlice'
 
@@ -40,22 +39,20 @@ const useClasses = makeStyles({
 
 const MatchCell = ({
   alertRef,
-  item: { index, matches, pos, refIndices, scores },
+  item: { index, matches, pos, scores },
 }: Props) => {
   const classes = useClasses()
   const dispatch = useAppDispatch()
   const { visits } = useAppSelector(({ sheet }) => sheet)
   const matchVisit =
     useAppSelector(({ columns }) => columns.matchVisits)[pos] ?? 0
-  const column = useAppSelector(getColumns)[pos] ?? ''
+  const { matchColumns } = useAppSelector(({ columns }) => columns)
+  const column = matchColumns[pos] ?? ''
   const formattedColumns = useAppSelector(getFormattedColumns)
 
   const [open, setOpen] = useState(false)
   const [value, setValue] = useState(column)
-  const selectedOption = useMemo(
-    () => refIndices[index]?.toString() ?? '',
-    [refIndices, index],
-  )
+  const selectedOption = useMemo(() => matches[index] ?? '', [matches, index])
   const deferredValue = useDebounced(value, 750)
   const isDebouncing = value !== deferredValue
   const filteredMatches = matches
@@ -69,38 +66,30 @@ const MatchCell = ({
           return
         }
 
-        const matchRef = parseInt(optionValue)
+        const matchColumn = optionValue
 
-        const selectedColumn = codebook[matchRef]?.name ?? ''
-
-        if (formattedColumns.includes(selectedColumn + '_' + matchVisit)) {
-          const usableMatchVisit = formattedColumns
-            .filter((formatted) => formatted.includes(selectedColumn))
+        if (formattedColumns.includes(matchColumn + '_' + matchVisit)) {
+          const matchVisit = formattedColumns
+            .filter((formatted) => formatted.includes(matchColumn))
             .map((formatted) => parseInt(formatted.split('_').pop() ?? '-1'))
             .sort((a, b) => a - b)
             .findIndex((visit, i) => visit !== i)
 
           if (matchVisit >= visits) {
-            console.log(
-              formattedColumns.filter((value) =>
-                value.includes(selectedColumn),
-              ),
-            )
-
             alertRef.current?.openAlert()
             setValue(column)
             return
           }
 
-          just({ matchVisit: usableMatchVisit, pos })(setMatchVisit)(dispatch)
+          just({ matchVisit, pos })(setMatchVisit)(dispatch)()
         }
 
-        just({ matchRef, pos })(setMatchRef)(dispatch)
+        just({ matchColumn, pos })(setMatchColumns)(dispatch)()
 
-        setValue(selectedColumn)
+        setValue(matchColumn)
         setOpen(false)
       },
-      [formattedColumns, matchVisit, dispatch, pos, visits, alertRef, column],
+      [formattedColumns, matchVisit, pos, dispatch, visits, alertRef, column],
     )
 
   const handleComboboxChange: ComboboxProps['onChange'] = ({ target }) => {
@@ -131,7 +120,6 @@ const MatchCell = ({
       ) : filteredMatches.length ? (
         <MemoizedFilteredOptions
           filteredMatches={filteredMatches}
-          refIndices={refIndices}
           scores={scores}
         />
       ) : (
@@ -148,24 +136,16 @@ const MatchCell = ({
 
 interface FilteredOptionsProps {
   filteredMatches: FilteredMatch[]
-  refIndices: number[]
   scores: number[]
 }
 
-const FilteredOptions = ({
-  filteredMatches,
-  refIndices,
-  scores,
-}: FilteredOptionsProps) => (
+const FilteredOptions = ({ filteredMatches, scores }: FilteredOptionsProps) => (
   <>
-    {filteredMatches.map(({ match, pos }) => (
-      <FilteredOption
-        key={refIndices[pos] ?? -1}
-        match={match}
-        refIndex={refIndices[pos] ?? -1}
-        score={scores[pos] ?? 1}
-      />
-    ))}
+    {just([filteredMatches, scores] as const)(transpose).convert(list)(
+      ([{ match }, score]) => (
+        <FilteredOption key={match} match={match} score={score} />
+      ),
+    )()}
   </>
 )
 
@@ -173,12 +153,11 @@ const MemoizedFilteredOptions = memo(FilteredOptions)
 
 interface FilteredOptionProps {
   match: string
-  refIndex: number
   score: number
 }
 
-const FilteredOption = ({ match, refIndex, score }: FilteredOptionProps) => (
-  <Option text={match} value={refIndex.toString()}>
+const FilteredOption = ({ match, score }: FilteredOptionProps) => (
+  <Option text={match} value={match}>
     {match}, {(1 - score).toFixed(2)}
   </Option>
 )

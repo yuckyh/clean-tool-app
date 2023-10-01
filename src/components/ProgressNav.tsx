@@ -73,6 +73,7 @@ const ProgressNav = (props: ProgressBarProps) => {
     (path) =>
       path.replace('/', '') === locationPath.split('/')[componentPathDepth - 1],
   )
+
   // Ternary expression for animation hack
   const progressValue = position / (pathList.length - 1) || 0.011
 

@@ -6,8 +6,6 @@ import { makeStyles } from '@fluentui/react-components'
 
 import type { ColumnNameData } from '../../features/columnsSlice'
 
-import { getColumns } from '../../features/columnsSlice'
-
 const useClasses = makeStyles({
   plot: {
     height: '44px',
@@ -31,7 +29,8 @@ const ScoreCell = ({
 }: Props) => {
   const classes = useClasses()
 
-  const column = useAppSelector(getColumns)[pos] ?? ''
+  const { matchColumns } = useAppSelector(({ columns }) => columns)
+  const column = matchColumns[pos] ?? ''
 
   const score = just(column)(fuse.search.bind(fuse))(([match]) => match?.score)(
     (score) => (index < 0 ? score : scores[index]),

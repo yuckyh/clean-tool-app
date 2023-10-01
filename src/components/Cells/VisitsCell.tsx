@@ -3,17 +3,13 @@ import type { DropdownProps } from '@fluentui/react-components'
 import type { RefObject } from 'react'
 
 import { useAppDispatch, useAppSelector } from '@/lib/hooks'
+import { just, list } from '@/lib/utils'
 import { Dropdown, Option, makeStyles } from '@fluentui/react-components'
 import { useCallback } from 'react'
 
 import type { ColumnNameData } from '../../features/columnsSlice'
 
-import {
-  getColumns,
-  getFormattedColumns,
-  setMatchVisit,
-} from '../../features/columnsSlice'
-import { just, list } from '@/lib/utils'
+import { getFormattedColumns, setMatchVisit } from '../../features/columnsSlice'
 
 interface Props {
   alertRef: RefObject<AlertRef>
@@ -31,24 +27,24 @@ const VisitsCell = ({ alertRef, item: { pos } }: Props) => {
   const dispatch = useAppDispatch()
 
   const { visits } = useAppSelector(({ sheet }) => sheet)
-  const matchVisit =
-    useAppSelector(({ columns }) => columns.matchVisits)[pos] ?? 0
-  const column = useAppSelector(getColumns)[pos] ?? ''
+  const { matchColumns, matchVisits } = useAppSelector(({ columns }) => columns)
+  const column = matchColumns[pos] ?? ''
+  const matchVisit = matchVisits[pos] ?? 0
   const formattedColumns = useAppSelector(getFormattedColumns)
 
   const handleOptionSelect: Required<DropdownProps>['onOptionSelect'] =
     useCallback(
       (_e, { optionValue }) => {
-        if (formattedColumns.includes(column + '_' + optionValue)) {
+        const matchVisit = parseInt(optionValue ?? '0')
+
+        if (formattedColumns.includes(column + '_' + matchVisit)) {
           console.log('too many of the same columns')
 
           alertRef.current?.openAlert()
           return
         }
 
-        dispatch(
-          setMatchVisit({ matchVisit: parseInt(optionValue ?? '0'), pos }),
-        )
+        dispatch(setMatchVisit({ matchVisit, pos }))
       },
       [alertRef, column, dispatch, formattedColumns, pos],
     )
