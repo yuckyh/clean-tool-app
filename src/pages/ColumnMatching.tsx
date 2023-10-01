@@ -1,4 +1,5 @@
 import type { AlertRef } from '@/components/AlertDialog'
+import type { Progress } from '@/features/progressSlice'
 
 import { AlertDialog } from '@/components/AlertDialog'
 import PreviewDataGrid from '@/components/PreviewDataGrid'
@@ -41,10 +42,11 @@ export const Component = () => {
 
   const handleCommitChanges = useCallback(() => {
     navigate('/EDA')
-    just<Progres>('matched')(setProgress)(dispatch)
-    void just({ fileName, formattedData, sheetName })(postFormattedJSON)(
-      dispatch,
-    )
+    just<Progress>('matched')(setProgress)(dispatch)()
+    void just({ fileName, formattedData, sheetName })(postFormattedJSON)((x) =>
+      dispatch(x),
+    )()
+    void dispatch(postFormattedJSON({ fileName, formattedData, sheetName }))
   }, [dispatch, fileName, formattedData, navigate, sheetName])
 
   const alertRef = useRef<AlertRef>(null)
