@@ -2,7 +2,6 @@ import type { RootState } from '@/app/store'
 import type { PayloadAction } from '@reduxjs/toolkit'
 
 import { columnWorker } from '@/app/workers'
-import { codebook } from '@/data'
 import { transpose } from '@/lib/array'
 import { getPersisted, promisedWorker, setPersisted } from '@/lib/utils'
 import { createAsyncThunk, createSelector, createSlice } from '@reduxjs/toolkit'
@@ -11,25 +10,21 @@ export interface ColumnNameData {
   index: number
   matches: string[]
   readonly pos: number
-  refIndices: number[]
   scores: number[]
 }
 
 interface State {
+  matchColumns: string[]
   matchLists: ColumnNameData[]
-  matchRefs: number[]
   matchVisits: number[]
 }
 
-const name = 'columns'
-const keys = ['matchRefs', 'matchVisits']
+const name = 'columns' as const
+const keys = ['matchColumns', 'matchVisits'] as const
 const defaultValue = ''
 const initialState: State = {
+  matchColumns: getPersisted(keys[0], defaultValue).split(','),
   matchLists: [],
-  matchRefs: getPersisted(keys[0], defaultValue)
-    .split(',')
-    .filter(Boolean)
-    .map((ref) => parseInt(ref)),
   matchVisits: getPersisted(keys[1], defaultValue)
     .split(',')
     .filter(Boolean)
@@ -37,17 +32,15 @@ const initialState: State = {
 }
 
 const update = (state: State) => {
-  const { matchLists, matchRefs, matchVisits } = state
+  const { matchColumns, matchLists, matchVisits } = state
 
   state.matchLists = matchLists.map(({ matches, pos, ...rest }) => ({
     ...rest,
-    index: matches.findIndex(
-      (match) => match === codebook[matchRefs[pos] ?? 0]?.name,
-    ),
+    index: matches.findIndex((match) => match === matchColumns[pos]),
     matches,
     pos,
   }))
-  ;[matchRefs, matchVisits].forEach((val, i) => {
+  ;[matchColumns, matchVisits].forEach((val, i) => {
     setPersisted(keys[i], val.join(','))
   })
   return state
@@ -68,19 +61,12 @@ export const fetchMatches = createAsyncThunk(
 )
 
 // Selectors
-const getMatchRefs = ({ columns }: RootState) => columns.matchRefs
-
 const getMatchVisits = ({ columns }: RootState) => columns.matchVisits
 
-export const getColumns = createSelector([getMatchRefs], (matchRefs) =>
-  matchRefs.map((ref) => codebook[ref]?.name ?? ''),
-)
-
-const columns = ({ columns }: RootState) =>
-  columns.matchRefs.map((ref) => codebook[ref]?.name ?? '')
+const getColumns = ({ columns }: RootState) => columns.matchColumns
 
 export const getFormattedColumns = createSelector(
-  [columns, getMatchVisits],
+  [getColumns, getMatchVisits],
   (columns, matchVisits) =>
     transpose<[string[], number[]]>([columns, matchVisits]).map(
       ([column, matchVisit]) =>
@@ -95,18 +81,17 @@ export const getFormattedColumns = createSelector(
 const columnsSlice = createSlice({
   extraReducers: (builder) => {
     builder.addCase(fetchMatches.fulfilled, (state, { payload }) => {
-      const { matchRefs, matchVisits } = state
+      const { matchColumns, matchVisits } = state
 
       state.matchLists = payload.map((matches, i) => ({
         index: 0,
         matches: matches.map(({ item: { name } }) => name),
         pos: i,
-        refIndices: matches.map(({ refIndex }) => refIndex),
         scores: matches.map(({ score = 1 }) => score),
       }))
 
-      if (!matchRefs.length) {
-        state.matchRefs = payload.map(([match]) => match?.refIndex ?? 0)
+      if (!matchColumns.length) {
+        state.matchColumns = payload.map(([match]) => match?.item.name ?? '')
       }
 
       if (!matchVisits.length) {
@@ -120,17 +105,17 @@ const columnsSlice = createSlice({
   reducers: {
     deleteColumns: (state) => {
       state = { ...initialState }
-      state.matchRefs = []
+      state.matchColumns = []
       state.matchVisits = []
       state.matchLists = []
       return update(state)
     },
-    setMatchRef: (
+    setMatchColumns: (
       state,
-      { payload }: PayloadAction<{ matchRef: number; pos: number }>,
+      { payload }: PayloadAction<{ matchColumn: string; pos: number }>,
     ) => {
-      const { matchRef, pos } = payload
-      state.matchRefs[pos] = matchRef
+      const { matchColumn, pos } = payload
+      state.matchColumns[pos] = matchColumn
 
       update(state)
     },
@@ -145,6 +130,6 @@ const columnsSlice = createSlice({
   },
 })
 
-export const { deleteColumns, setMatchRef, setMatchVisit } =
+export const { deleteColumns, setMatchColumns, setMatchVisit } =
   columnsSlice.actions
 export default columnsSlice.reducer
