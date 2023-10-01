@@ -1,3 +1,5 @@
+import { lazy, memo } from 'react'
+
 export const getPersisted = <T extends string>(
   key: string,
   defaultValue: T,
@@ -39,6 +41,22 @@ export const promisedWorker = <
     )
   })
 
+export const dump = <T>(value: T) => {
+  console.log(value)
+  return value
+}
+
+export const createLazyMemo = (
+  displayName: string,
+  ...args: [...Parameters<typeof lazy>]
+) => {
+  const component = memo(lazy(...args))
+  component.displayName = displayName
+  return component
+}
+
+// Higher-order functions
+
 export const curry = <Args extends AnyArray, Return>(
   fn: (...args: [...Args]) => Return,
 ): Curried<Args, Return> => {
@@ -62,22 +80,20 @@ export const just = <T>(value: T) => {
   const monad = (<U>(fn?: (value: T) => U) =>
     fn ? just(fn(value)) : value) as JustMonad<T>
 
-  monad.convert = (converter) => converter(value)
+  monad.convert = (converter) =>
+    Array.isArray(value) ? converter(value as IsArray<T>) : converter(value)
 
   return monad
 }
 
-export const list = <A extends AnyArray>(value: A) => {
-  const monad = (<T, U extends AsArray<T>>(
-    fn?: (
-      value: ArrayElement<A>,
+export const list = <T extends AnyArray>(value: T) => {
+  const monad = (<V extends IsArray<W>, W>(
+    fn?: <U extends AnyArray>(
+      value: ArrayElement<U>,
       index: number,
-      array: AsArray<ArrayElement<A>>,
-    ) => T,
-  ) =>
-    fn
-      ? list((value as AsArray<ArrayElement<A>>).map<T>(fn) as U)
-      : value) as ListMonad<A>
+      array: U,
+    ) => W,
+  ) => (fn ? list(value.map(fn) as V) : value)) as ListMonad<T>
 
   monad.convert = (converter) => converter(value)
 
