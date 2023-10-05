@@ -1,16 +1,16 @@
 import type { RouteObject } from 'react-router-dom'
 
-import App from '@/app/App'
 import {
-  Route,
-  createBrowserRouter,
   createRoutesFromElements,
+  createBrowserRouter,
+  Route,
 } from 'react-router-dom'
+import App from '@/app/App'
 
 const routes = createRoutesFromElements(
   <>
     <Route element={<App />}>
-      <Route index lazy={() => import('@/pages')} />
+      <Route lazy={() => import('@/pages')} index />
       <Route lazy={() => import('@/pages/Upload')} path="upload" />
       <Route
         lazy={() => import('@/pages/ColumnMatching')}

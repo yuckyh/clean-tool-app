@@ -1,19 +1,20 @@
-import { Caption1, Subtitle1, makeStyles } from '@fluentui/react-components'
+import { makeStyles, Subtitle1, Caption1 } from '@fluentui/react-components'
 
 const useClasses = makeStyles({
   root: {
-    display: 'flex',
     flexDirection: 'column',
+    display: 'flex',
   },
 })
 
 interface Props {
-  header: string
   subtitle: string
+  header: string
 }
 
-const HeaderCell = ({ header, subtitle }: Props) => {
+const HeaderCell = ({ subtitle, header }: Props) => {
   const classes = useClasses()
+
   return (
     <div className={classes.root}>
       <Subtitle1>{header}</Subtitle1>

@@ -1,58 +1,63 @@
-import Plot from '@/components/Plot'
-import { codebook } from '@/data'
-import { fetchWorkbook, getFormattedData } from '@/features/sheetSlice'
 import {
+  CardFooter,
+  CardHeader,
+  makeStyles,
+  shorthands,
+  Button,
+  Title1,
+  tokens,
+  Field,
+  Input,
+  Card,
+} from '@fluentui/react-components'
+import {
+  useLoadingTransition,
   useAppDispatch,
   useAppSelector,
   useAsyncEffect,
-  useLoadingTransition,
+  useEffectLog,
 } from '@/lib/hooks'
-import { slugToSnake } from '@/lib/string'
-import {
-  Button,
-  Card,
-  CardFooter,
-  CardHeader,
-  Field,
-  Input,
-  Title1,
-  makeStyles,
-  shorthands,
-  tokens,
-} from '@fluentui/react-components'
+import { getFormattedFileName, getData } from '@/features/sheet/selectors'
+import { fetchWorkbook } from '@/features/sheet/actions'
 import { useParams } from 'react-router-dom'
+import { slugToSnake } from '@/lib/string'
+import Plot from '@/components/Plot'
+import { range } from '@/lib/array'
+import { codebook } from '@/data'
+import { useMemo } from 'react'
 
 type VariableType = Extract<Property<typeof variableType>, string>
 
 const variableType = ['numerical', 'categorical'] as const
 
-// TODO: data indexing for long data
 // TODO: Hover show index
-// TODO: data type detection
 
 const useClasses = makeStyles({
-  actions: {
-    display: 'grid',
-    gridAutoFlow: 'column',
-    width: '100%',
-    ...shorthands.gap(tokens.spacingVerticalS, 0),
-  },
   card: {
     width: '100%',
     ...shorthands.margin(0, 'auto'),
     ...shorthands.padding(tokens.spacingHorizontalXXXL, '5%'),
   },
-  options: {
-    flexGrow: 1,
-    width: `${100 / 3}%`,
-  },
-  plot: {
-    flexShrink: 1,
-    width: `${(100 / 3) * 2}%`,
-  },
-  root: {
+  actions: {
+    columnGap: tokens.spacingVerticalS,
+    flexDirection: 'row',
     display: 'flex',
     width: '100%',
+  },
+  root: {
+    columnGap: tokens.spacingVerticalXL,
+    display: 'flex',
+    width: '100%',
+  },
+  options: {
+    flexBasis: '0',
+    flexShrink: 1,
+    flexGrow: 1,
+  },
+  plot: {
+    flexBasis: '0',
+    flexShrink: 2,
+    flexGrow: 2,
   },
 })
 
@@ -62,36 +67,91 @@ const plotTypes: Record<VariableType, Plotly.PlotType> = {
 }
 
 export const Component = () => {
-  const params = useParams()
-  const dispatch = useAppDispatch()
-  const { fileName } = useAppSelector(({ sheet }) => sheet)
-  const data = useAppSelector(getFormattedData)
-
   const classes = useClasses()
+
+  const dispatch = useAppDispatch()
+
+  const params = useParams()
+
+  const formattedFileName = useAppSelector(getFormattedFileName)
+  const dataset = useAppSelector((state) => getData(state, false))
+
   const variable = slugToSnake(params.variable ?? '')
+
   const dataType = codebook.find(({ name }) => name === variable)?.type ?? ''
-  const type: VariableType = ['interval', 'whole_number'].includes(dataType)
+
+  useEffectLog(dataType)
+
+  const type: VariableType = ['whole_number', 'interval'].includes(dataType)
     ? 'numerical'
     : 'categorical'
+
+  const isCategorical = type === 'categorical'
+
+  const series = useMemo(
+    () => dataset.map((row) => `${row[variable]}`),
+    [dataset, variable],
+  )
+
+  const count = useMemo(
+    () =>
+      series.reduce<Record<string, number>>((acc, curr) => {
+        acc[curr] = (acc[curr] ?? 0) + 1
+        return acc
+      }, {}),
+    [series],
+  )
+
+  const maxCount = useMemo(() => Math.max(...Object.values(count)), [count])
+
   const [isLoading, setIsLoading] = useLoadingTransition()
 
-  console.log(Object.keys(data[0] ?? {}))
-  console.log(dataType)
-  console.log(variable)
-  console.log(Array.from(new Set(codebook.map(({ type }) => type))))
-
-  const series = data.map((row) => `${row[variable]}`)
-
   useAsyncEffect(async () => {
-    await dispatch(fetchWorkbook(fileName))
+    await dispatch(fetchWorkbook(formattedFileName))
     setIsLoading(false)
-  }, [dispatch, fileName])
+  }, [dispatch, formattedFileName])
+
+  const commonData = { type: plotTypes[type] }
+
+  const commonLayout = {
+    datarevision: series,
+  }
+
+  const numericalData = [
+    {
+      ...commonData,
+      x: series,
+    },
+  ]
+
+  const categoricalData = [
+    {
+      ...commonData,
+      y: Object.values(count),
+      x: Object.keys(count),
+    },
+  ]
+
+  const categoricalLayout = {
+    ...commonLayout,
+    yaxis: {
+      tickvals: range(maxCount + 1, 0),
+      range: [0, maxCount],
+      tickformat: 'd',
+    },
+  }
+
+  const data = isCategorical ? categoricalData : numericalData
+
+  const layout = isCategorical ? categoricalLayout : commonLayout
 
   return (
     !isLoading && (
       <section className={classes.root}>
         <div className={classes.plot}>
-          <Plot data={[{ name: variable, type: plotTypes[type], x: series }]} />
+          <Card>
+            <Plot layout={layout} data={data} />
+          </Card>
         </div>
         <div className={classes.options}>
           <Card className={classes.card} size="large">

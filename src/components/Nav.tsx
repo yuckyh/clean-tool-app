@@ -1,8 +1,8 @@
 import type { TabListProps } from '@fluentui/react-components'
 
-import { usePathTitle } from '@/lib/string'
-import { Tab, TabList } from '@fluentui/react-components'
 import { useLinkClickHandler, useLocation } from 'react-router-dom'
+import { TabList, Tab } from '@fluentui/react-components'
+import { usePathTitle } from '@/lib/string'
 
 interface Props extends TabListProps {
   paths: string[]
@@ -14,7 +14,7 @@ const Nav = ({ paths, ...props }: Props) => {
   return (
     <TabList selectedValue={pathname} {...props}>
       {paths.map((path) => (
-        <NavTab key={path} path={path} />
+        <NavTab path={path} key={path} />
       ))}
     </TabList>
   )

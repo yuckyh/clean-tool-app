@@ -1,32 +1,34 @@
 import type { PropsWithChildren } from 'react'
 
-import Loader from '@/components/Loader'
-import ProgressNav from '@/components/ProgressNav'
 import {
-  Spinner,
-  Subtitle1,
+  useThemeClassName,
   makeStyles,
   shorthands,
+  Subtitle1,
+  Spinner,
   tokens,
-  useThemeClassName,
 } from '@fluentui/react-components'
-import { useEffect, useMemo } from 'react'
+import ProgressNav from '@/features/progress/components/ProgressNav'
 import { useNavigation } from 'react-router-dom'
+import { useEffect, useMemo } from 'react'
+import Loader from '@/components/Loader'
 
 const useClasses = makeStyles({
+  main: {
+    flexDirection: 'column',
+    display: 'flex',
+    ...shorthands.padding(tokens.spacingVerticalXXXL),
+  },
   header: {
     ...shorthands.padding(tokens.spacingVerticalXXL),
-  },
-  main: {
-    display: 'flex',
-    flexDirection: 'column',
-    ...shorthands.padding(tokens.spacingVerticalXXXL),
   },
 })
 
 const Layout = ({ children }: PropsWithChildren) => {
   const classes = useClasses()
+
   const navigation = useNavigation()
+
   const loading = useMemo(
     () => navigation.state === 'loading',
     [navigation.state],

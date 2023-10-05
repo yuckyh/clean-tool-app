@@ -15,13 +15,13 @@ interface WorkerRequest {
 }
 
 interface WorkerResponse {
-  error?: Error
   status: 'fail' | 'ok'
+  error?: Error
 }
 
 interface GenericWorkerEventMap<T> extends WorkerEventMap {
-  message: MessageEvent<T>
   messageerror: MessageEvent<T>
+  message: MessageEvent<T>
 }
 
 interface RequestWorker<Req extends WorkerRequest, Res extends WorkerResponse>
@@ -31,11 +31,11 @@ interface RequestWorker<Req extends WorkerRequest, Res extends WorkerResponse>
     listener: (this: Worker, ev: GenericWorkerEventMap<Res>[K]) => void,
     options?: AddEventListenerOptions | boolean,
   ): void
-  postMessage(request: Req, options?: StructuredSerializeOptions): void
-  postMessage(request: Req, transfer: Transferable[]): void
   removeEventListener<K extends keyof GenericWorkerEventMap<Res>>(
     type: K,
     listener: (this: Worker, ev: GenericWorkerEventMap<Res>[K]) => void,
     options?: EventListenerOptions | boolean,
   ): void
+  postMessage(request: Req, options?: StructuredSerializeOptions): void
+  postMessage(request: Req, transfer: Transferable[]): void
 }

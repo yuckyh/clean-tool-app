@@ -1,13 +1,18 @@
+import type { ComponentType } from 'react'
+
 import { lazy, memo } from 'react'
 
-export const getPersisted = <T extends string>(
-  key: string,
+export const getPersisted = <T extends string, K extends string>(
+  key: K,
   defaultValue: T,
 ): T => {
   return (localStorage.getItem(key) ?? defaultValue) as T
 }
 
-export const setPersisted = <T extends string>(key = '', value: T) => {
+export const setPersisted = <T extends string, K extends string>(
+  key: K,
+  value: T,
+) => {
   localStorage.setItem(key, value)
 }
 
@@ -46,11 +51,11 @@ export const dump = <T>(value: T) => {
   return value
 }
 
-export const createLazyMemo = (
+export const createLazyMemo = <T>(
   displayName: string,
-  ...args: [...Parameters<typeof lazy>]
+  factory: () => Promise<{ default: ComponentType<T> }>,
 ) => {
-  const component = memo(lazy(...args))
+  const component = memo(lazy(factory))
   component.displayName = displayName
   return component
 }

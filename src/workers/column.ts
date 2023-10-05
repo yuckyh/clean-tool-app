@@ -26,7 +26,7 @@ const controller: Controller<ColumnRequest, ColumnResponse> = {
   get,
 }
 
-const main = async ({ data }: MessageEvent<ColumnRequest>) => {
+const main = async (data: ColumnRequest) => {
   const { method } = data
 
   postMessage(await controller[method](data))
@@ -34,8 +34,8 @@ const main = async ({ data }: MessageEvent<ColumnRequest>) => {
 
 addEventListener(
   'message',
-  (event) => {
-    void main(event as MessageEvent<ColumnRequest>)
+  ({ data }: MessageEvent<ColumnRequest>) => {
+    void main(data)
   },
   false,
 )

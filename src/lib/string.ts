@@ -1,10 +1,4 @@
-import { useHref, useLocation } from 'react-router-dom'
-
-export const getFormattedFileName = (fileName: string) => {
-  const fileNameArray = fileName.split('.')
-  const ext = fileNameArray.pop()
-  return `${fileNameArray.join('.')}.formatted.${ext}`
-}
+import { useLocation, useHref } from 'react-router-dom'
 
 export const usePathTitle = (path?: string) => {
   const { pathname } = useLocation()

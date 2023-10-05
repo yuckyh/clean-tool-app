@@ -1,7 +1,7 @@
 import type { AppDispatch, RootState } from '@/app/store'
 import type { TypedUseSelectorHook } from 'react-redux'
 
-import { useCallback, useEffect, useState, useTransition } from 'react'
+import { useTransition, useCallback, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 export const useAppDispatch: () => AppDispatch = useDispatch
@@ -51,21 +51,25 @@ export const useAsyncEffect = (
   effect: () => Promise<ReturnType<React.EffectCallback>>,
   deps: React.DependencyList = [],
 ) => {
-  useEffect(() => {
-    let cleanup: ReturnType<React.EffectCallback> | undefined
+  useEffect(
+    () => {
+      let cleanup: ReturnType<React.EffectCallback> | undefined
 
-    const ref: Ref<typeof cleanup> = {}
+      const ref: Ref<typeof cleanup> = {}
 
-    void (async () => {
-      ref.current = await effect()
-    })()
+      void (async () => {
+        ref.current = await effect()
+      })()
 
-    waitForValue(ref)
+      waitForValue(ref)
 
-    return () => {
-      ref.current?.()
-    }
-  }, deps)
+      return () => {
+        ref.current?.()
+      }
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    deps,
+  )
 }
 
 export const useAsyncCallback = <T, K extends unknown[]>(
@@ -81,11 +85,12 @@ export const useAsyncCallback = <T, K extends unknown[]>(
     waitForValue(ref)
 
     return ref.current
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, deps)
 
-export const useEffectLog = (dep: Property<React.DependencyList>) => {
+export const useEffectLog = (dep: ArrayElement<React.DependencyList>) => {
   useEffect(() => {
-    console.log(dep)
+    console.trace(dep)
   }, [dep])
 }
 

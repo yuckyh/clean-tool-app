@@ -1,20 +1,20 @@
-import { author, description, keywords } from '@/../package.json'
+import {
+  makeStaticStyles,
+  FluentProvider,
+  webLightTheme,
+  webDarkTheme,
+} from '@fluentui/react-components'
+import { description, keywords, author } from '@/../package.json'
+import { useSyncExternalStore, useState, lazy } from 'react'
+import { HelmetProvider, Helmet } from 'react-helmet-async'
+import { useRegisterSW } from 'virtual:pwa-register/react'
 import globalStyles from '@/app/global.css?inline'
-import store from '@/app/store'
 import { useAsyncEffect } from '@/lib/hooks'
 import { usePathTitle } from '@/lib/string'
-import { just } from '@/lib/utils'
-import {
-  FluentProvider,
-  makeStaticStyles,
-  webDarkTheme,
-  webLightTheme,
-} from '@fluentui/react-components'
-import { lazy, useState, useSyncExternalStore } from 'react'
-import { Helmet, HelmetProvider } from 'react-helmet-async'
-import { Provider } from 'react-redux'
 import { Outlet } from 'react-router-dom'
-import { useRegisterSW } from 'virtual:pwa-register/react'
+import { Provider } from 'react-redux'
+import { just } from '@/lib/utils'
+import store from '@/app/store'
 
 const useGlobalStyles = makeStaticStyles(globalStyles)
 
@@ -47,10 +47,10 @@ const App = () => {
   }, [])
 
   useRegisterSW({
-    immediate: true,
     onOfflineReady: () => {
       just('offline ready')(console.log)
     },
+    immediate: true,
   })
 
   return (
@@ -58,9 +58,9 @@ const App = () => {
       <FluentProvider theme={theme}>
         <HelmetProvider>
           <Helmet
+            titleTemplate="%s - CLEaN Tool"
             defaultTitle="CLEaN Tool"
-            prioritizeSeoTags
-            titleTemplate="%s - CLEaN Tool">
+            prioritizeSeoTags>
             <meta content={author.name} name="author" />
             <meta content={description} name="description" />
             <meta content={keywords.join(',')} name="keywords" />

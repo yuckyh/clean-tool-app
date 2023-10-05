@@ -1,35 +1,36 @@
 import type { ProgressBarProps } from '@fluentui/react-components'
 
-import { routes } from '@/app/Router'
-import { toObject } from '@/lib/array'
-import { useAppSelector } from '@/lib/hooks'
-import { usePathTitle } from '@/lib/string'
 import {
-  Link,
-  ProgressBar,
-  Subtitle2,
-  Subtitle2Stronger,
-  makeStyles,
   mergeClasses,
+  ProgressBar,
+  makeStyles,
   shorthands,
   tokens,
 } from '@fluentui/react-components'
 import {
+  useResolvedPath,
   matchRoutes,
   resolvePath,
-  useHref,
-  useLinkClickHandler,
   useLocation,
   useNavigate,
-  useResolvedPath,
 } from 'react-router-dom'
+import { useAppDispatch, useAppSelector } from '@/lib/hooks'
+import { toObject } from '@/lib/array'
+import { routes } from '@/app/Router'
+import { useEffect } from 'react'
 
-import type { Progress } from '../features/progressSlice'
+import { saveProgressState, type Progress } from '../reducers'
+import ProgressNavLink from './ProgressNavLink'
 
 const useClasses = makeStyles({
-  linkContainer: {
+  root: {
+    flexDirection: 'column',
     display: 'flex',
+    ...shorthands.padding(tokens.spacingVerticalS, 0),
+  },
+  linkContainer: {
     justifyContent: 'space-between',
+    display: 'flex',
     width: '100%',
   },
   progressBar: {
@@ -40,15 +41,11 @@ const useClasses = makeStyles({
   progressBarInitial: {
     width: '81%',
   },
-  root: {
-    display: 'flex',
-    flexDirection: 'column',
-    ...shorthands.padding(tokens.spacingVerticalS, 0),
-  },
 })
 
-const ProgressNav = (props: ProgressBarProps) => {
+export const ProgressNav = (props: ProgressBarProps) => {
   const navigate = useNavigate()
+  const dispatch = useAppDispatch()
 
   const { progress } = useAppSelector(({ progress }) => progress)
 
@@ -86,6 +83,18 @@ const ProgressNav = (props: ProgressBarProps) => {
     navigate(allowedPaths.at(-1) ?? '/')
   }
 
+  useEffect(() => {
+    const handleUnload = () => {
+      dispatch(saveProgressState())
+    }
+
+    window.addEventListener('unload', handleUnload)
+
+    return () => {
+      window.removeEventListener('unload', handleUnload)
+    }
+  }, [dispatch])
+
   return (
     <div className={classes.root}>
       <ProgressBar
@@ -93,9 +102,9 @@ const ProgressNav = (props: ProgressBarProps) => {
           classes.progressBar,
           position == 0 && classes.progressBarInitial,
         )}
-        max={1}
         title="Progress Bar Navigation"
         value={progressValue}
+        max={1}
         {...props}
       />
       <div className={classes.linkContainer}>
@@ -103,74 +112,11 @@ const ProgressNav = (props: ProgressBarProps) => {
           <ProgressNavLink
             disabled={!allowedPaths.includes(path)}
             done={position >= i}
-            key={i}
             path={path}
+            key={i}
           />
         ))}
       </div>
-    </div>
-  )
-}
-
-const useLinkClasses = makeStyles({
-  activeStepThumb: {
-    backgroundColor: tokens.colorCompoundBrandBackground,
-  },
-  link: {
-    alignItems: 'center',
-    display: 'flex',
-    flexDirection: 'column',
-  },
-  root: {
-    display: 'flex',
-    justifyContent: 'center',
-    ...shorthands.flex(1),
-  },
-  stepThumb: {
-    backgroundColor: tokens.colorNeutralBackground6,
-    height: '20px',
-    position: 'relative',
-    top: '-12px',
-    width: '20px',
-    ...shorthands.borderRadius(tokens.borderRadiusCircular),
-    ...shorthands.transition('background-color', '0.2s', '0s', 'ease-in-out'),
-  },
-})
-
-interface LinkLabelProps {
-  disabled: boolean
-  done: boolean
-  path: string
-}
-
-const ProgressNavLink = ({ disabled, done, path }: LinkLabelProps) => {
-  const label = usePathTitle(path)
-  const classes = useLinkClasses()
-  const href = useHref(disabled ? '#' : path)
-  const isActive = href === path
-  const handleLinkClick = useLinkClickHandler(href)
-
-  return (
-    <div className={classes.root}>
-      <Link
-        appearance="subtle"
-        className={classes.link}
-        disabled={disabled}
-        onClick={handleLinkClick}>
-        <>
-          <div
-            className={mergeClasses(
-              classes.stepThumb,
-              done ? classes.activeStepThumb : '',
-            )}
-          />
-          {isActive ? (
-            <Subtitle2Stronger>{label}</Subtitle2Stronger>
-          ) : (
-            <Subtitle2>{label}</Subtitle2>
-          )}
-        </>
-      </Link>
     </div>
   )
 }

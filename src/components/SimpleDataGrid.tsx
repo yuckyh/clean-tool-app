@@ -1,38 +1,36 @@
 import type {
   DataGridCellFocusMode,
-  DataGridProps,
   TableColumnDefinition,
+  DataGridBodyProps,
+  DataGridProps,
   TableColumnId,
   TableRowData,
 } from '@fluentui/react-components'
 
 import {
-  DataGrid,
+  DataGridHeaderCell,
+  DataGridHeader,
   DataGridBody,
   DataGridCell,
-  DataGridHeader,
-  DataGridHeaderCell,
-  DataGridRow,
-  Skeleton,
   SkeletonItem,
-  Subtitle1,
+  DataGridRow,
   makeStyles,
+  Subtitle1,
+  DataGrid,
+  Skeleton,
 } from '@fluentui/react-components'
-import { Suspense, useCallback } from 'react'
+import { useCallback, Suspense, useMemo, memo } from 'react'
 
 import Loader from './Loader'
 
-interface Props<T, K>
+export interface Props<T>
   extends Partial<Omit<DataGridProps, 'columns' | 'items'>> {
   cellFocusMode: (columnId: TableColumnId) => DataGridCellFocusMode
-  columns: TableColumnDefinition<K>[]
+  columns: TableColumnDefinition<T>[]
   items: T[]
 }
 
 const useClasses = makeStyles({
-  cell: {
-    minWidth: '160px',
-  },
   container: {
     minWidth: 'fit-content',
     width: '100%',
@@ -44,29 +42,41 @@ const useClasses = makeStyles({
   skeletonCell: {
     width: '100%',
   },
+  cell: {
+    minWidth: '160px',
+  },
 })
 
-const SimpleDataGrid = <T, K>(props: Props<T, K>) => {
+const MemoizedGrid = memo(DataGrid)
+MemoizedGrid.displayName = 'MemoizedGrid'
+
+export default function SimpleDataGrid<T>(props: Props<T>) {
   const { cellFocusMode } = props
+
   const classes = useClasses()
 
-  const renderHeaderCell: <K>(def: TableColumnDefinition<K>) => JSX.Element =
-    useCallback(
-      ({ renderHeaderCell }) => (
-        <DataGridHeaderCell className={classes.cell}>
-          {renderHeaderCell()}
-        </DataGridHeaderCell>
-      ),
-      [classes.cell],
-    )
+  const MemoizedGridBody = useMemo(() => {
+    const component = memo<DataGridBodyProps<T>>(DataGridBody)
+    component.displayName = 'MemoizedGridBody'
+    return component
+  }, [])
 
-  const renderCell: (def: TableRowData<T>) => JSX.Element = useCallback(
-    ({ item, rowId }) => (
+  const renderHeaderCell = useCallback(
+    ({ renderHeaderCell, columnId }: TableColumnDefinition<T>) => (
+      <DataGridHeaderCell className={classes.cell} key={columnId}>
+        {renderHeaderCell()}
+      </DataGridHeaderCell>
+    ),
+    [classes.cell],
+  )
+
+  const renderCell = useCallback(
+    ({ rowId, item }: TableRowData<T>) => (
       <DataGridRow key={rowId}>
-        {({ columnId, renderCell }) => (
+        {({ renderCell, columnId }) => (
           <DataGridCell
-            className={classes.cell}
             focusMode={cellFocusMode(columnId)}
+            className={classes.cell}
             key={columnId}>
             {
               <Suspense
@@ -84,19 +94,20 @@ const SimpleDataGrid = <T, K>(props: Props<T, K>) => {
     ),
     [cellFocusMode, classes.cell, classes.skeletonCell],
   )
+
   return (
     <Loader
       label={<Subtitle1>Loading Table...</Subtitle1>}
       labelPosition="below"
       size="huge">
-      <DataGrid {...props} className={classes.grid}>
+      <MemoizedGrid {...props} className={classes.grid}>
         <DataGridHeader className={classes.container}>
           <DataGridRow>{renderHeaderCell}</DataGridRow>
         </DataGridHeader>
-        <DataGridBody className={classes.container}>{renderCell}</DataGridBody>
-      </DataGrid>
+        <MemoizedGridBody className={classes.container}>
+          {renderCell}
+        </MemoizedGridBody>
+      </MemoizedGrid>
     </Loader>
   )
 }
-
-export default SimpleDataGrid

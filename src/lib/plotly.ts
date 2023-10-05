@@ -1,6 +1,6 @@
 import type { ColorTokens } from '@fluentui/react-components'
 
-import { transpose } from './array'
+import { transpose, range } from './array'
 import { just, list } from './utils'
 
 type ColorToken = Property<ColorTokens>
@@ -44,7 +44,7 @@ export const fluentColorScale = (
     .convert(just)((x) => x as [Rgb, Rgb])(transpose)
     .convert(list)()
 
-  return just(n)(Array)(Array.from).convert(list)((_, i) => i)(divideBy(n - 1))(
+  return list(range(n))(divideBy(n - 1))(
     timeToColorStep(rgbDiffs),
   )() as Plotly.ColorScale
 }

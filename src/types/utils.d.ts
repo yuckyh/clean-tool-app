@@ -14,13 +14,13 @@ type IsArray<T> = T extends unknown[]
 
 type AsArray<T> = T extends readonly unknown[] | unknown[]
   ? T
-  : T[] | readonly T[]
+  : readonly T[] | T[]
 
-type AnyArray = IsArray<readonly unknown[] | unknown[]>
+type AnyArray = readonly unknown[] | unknown[]
 
 type ArrayElement<T extends AnyArray> = T extends
-  | (infer U)[]
   | readonly (infer U)[]
+  | (infer U)[]
   ? U
   : never
 
@@ -61,6 +61,6 @@ interface Monad<T> {
 type JustMonad<T> = Monad<T> & (<U>(fn: (value: T) => U) => JustMonad<U>)
 
 type ListMonad<T extends AnyArray> = Monad<T> &
-  (<V extends IsArray<W[] | readonly W[]>, W>(
+  (<V extends IsArray<readonly W[] | W[]>, W>(
     fn?: (value: ArrayElement<T>, index: number, array: T) => W,
   ) => ListMonad<V>)

@@ -1,57 +1,58 @@
 import type { WorkBook } from 'xlsx'
 
-import { getFormattedFileName } from '@/lib/string'
-import { just } from '@/lib/utils'
 import XLSX from 'xlsx'
 
 export interface SheetRequest extends WorkerRequest {
-  file?: File
-  fileName: string
-  method: 'get' | 'postFile' | 'postFormattedJSON' | 'remove'
+  method: 'postFormattedJSON' | 'postFile' | 'remove' | 'get'
   workbook?: WorkBook
+  fileName: string
+  file?: File
 }
 
 export interface SheetResponse extends WorkerResponse {
-  file?: File
-  fileName: string
   workbook?: WorkBook
+  fileName: string
 }
 
 type Handler = RequestHandler<SheetRequest, SheetResponse>
 
+const getRootHandle = async () => await navigator.storage.getDirectory()
+
 const getRootFileHandle = async (fileName: string, create?: boolean) =>
-  await (
-    await navigator.storage.getDirectory()
-  ).getFileHandle(fileName, {
-    create,
-  })
+  await getRootHandle().then((dir) =>
+    dir.getFileHandle(fileName, {
+      create,
+    }),
+  )
 
 const get: Handler = async ({ fileName }) => {
-  const fileHandle = await just(fileName)(getRootFileHandle)()
+  const fileHandle = await getRootFileHandle(fileName)
 
-  const file = await fileHandle.getFile()
-  const workbook = await file.arrayBuffer().then(XLSX.read)
+  const workbook = await fileHandle
+    .getFile()
+    .then((file) => file.arrayBuffer())
+    .then(XLSX.read)
 
   return {
-    file,
-    fileName,
     status: 'ok',
+    fileName,
     workbook,
   }
 }
 
-const postFile: Handler = async ({ file, fileName }) => {
+const postFile: Handler = async ({ fileName, file }) => {
   if (!file) {
     throw new Error('No file uploaded')
   }
 
-  const fileHandle = await getRootFileHandle(fileName, true)
-  const writableStream = await fileHandle.createWritable()
+  const writableStream = await getRootFileHandle(fileName, true).then(
+    (handle) => handle.createWritable(),
+  )
 
   await writableStream.write(file)
-  void writableStream.close()
+  await writableStream.close()
 
-  return { fileName, status: 'ok' }
+  return { status: 'ok', fileName }
 }
 
 const postFormattedJSON: Handler = async ({ fileName, workbook }) => {
@@ -59,52 +60,49 @@ const postFormattedJSON: Handler = async ({ fileName, workbook }) => {
     throw new Error('No workbook provided')
   }
 
-  const formattedFileName = just(fileName)(getFormattedFileName)()
-
   const buffer = XLSX.write(workbook, {
     bookType: workbook.bookType,
     type: 'array',
   }) as ArrayBuffer
 
-  const file = new File([buffer], formattedFileName)
+  const file = new File([buffer], fileName)
 
-  const fileHandle = await getRootFileHandle(formattedFileName, true)
-  const writableStream = await fileHandle.createWritable()
+  const writableStream = await getRootFileHandle(fileName, true).then(
+    (handle) => handle.createWritable(),
+  )
 
   await writableStream.write(file)
-  void writableStream.close()
+  await writableStream.close()
 
-  return { fileName, status: 'ok' }
+  return { status: 'ok', fileName }
 }
 
 const remove: Handler = async ({ fileName }) => {
-  const rootHandle = await navigator.storage.getDirectory()
-  await rootHandle.removeEntry(fileName)
+  await getRootHandle().then((root) => root.removeEntry(fileName))
 
-  return { fileName, status: 'ok' }
+  return { status: 'ok', fileName }
 }
 
 const controller: Controller<SheetRequest, SheetResponse> = {
-  get,
-  postFile,
   postFormattedJSON,
+  postFile,
   remove,
+  get,
 }
 
 const main = async (data: SheetRequest) => {
   const { method } = data
   try {
     const response = await controller[method](data)
-    const buffer = await response.file?.arrayBuffer()
-    postMessage(response, buffer ? [buffer] : [])
+    postMessage(response)
   } catch (error) {
     console.error(error)
     postMessage({ status: 'fail', ...data, error } as SheetResponse)
   }
 }
 
-addEventListener('message', ({ data }) => {
-  void main(data as SheetRequest)
+addEventListener('message', ({ data }: MessageEvent<SheetRequest>) => {
+  void main(data)
 })
 
 addEventListener('error', ({ error }) => {

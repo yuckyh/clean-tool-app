@@ -1,5 +1,5 @@
-import { Toaster, useId, useToastController } from '@fluentui/react-components'
-import { forwardRef, useImperativeHandle } from 'react'
+import { useToastController, Toaster, useId } from '@fluentui/react-components'
+import { useImperativeHandle, forwardRef } from 'react'
 
 export type SimpleToasterRef = ReturnType<typeof useToastController>
 

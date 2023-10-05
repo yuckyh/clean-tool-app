@@ -1,202 +1,94 @@
-import type { AlertRef } from '@/components/AlertDialog'
 import type {
+  DataGridFocusMode,
   DataGridProps,
-  TableColumnDefinition,
 } from '@fluentui/react-components'
+import type { Props as SimpleDataGridProps } from '@/components/SimpleDataGrid'
+import type { AlertRef } from '@/components/AlertDialog'
 import type { RefObject } from 'react'
 
-import HeaderCell from '@/components/Cells/HeaderCell'
-import Loader from '@/components/Loader'
-import SimpleDataGrid from '@/components/SimpleDataGrid'
 import {
+  useLoadingTransition,
   useAppDispatch,
   useAppSelector,
   useAsyncEffect,
-  useLoadingTransition,
+  useEffectLog,
 } from '@/lib/hooks'
-import { fluentColorScale } from '@/lib/plotly'
-import { createLazyMemo, just } from '@/lib/utils'
 import {
-  Spinner,
-  Subtitle1,
+  getVisitsComparer,
+  getMatchComparer,
+  getScoreComparer,
+} from '@/features/columns/selectors'
+import {
   createTableColumn,
-  tokens,
+  Subtitle1,
+  Spinner,
 } from '@fluentui/react-components'
-import { memo, useMemo, useState } from 'react'
-
-import type { ColumnNameData } from '../features/columnsSlice'
-
-import { fetchMatches } from '../features/columnsSlice'
-import { fetchWorkbook, getOriginalColumns } from '../features/sheetSlice'
+import { getColumnComparer, getColumns } from '@/features/sheet/selectors'
+import { useCallback, useEffect, useState, useMemo, memo } from 'react'
+import { saveSheetState, pushVisit } from '@/features/sheet/reducers'
+import { saveColumnState } from '@/features/columns/reducers'
+import { fetchMatches } from '@/features/columns/actions'
+import { fetchWorkbook } from '@/features/sheet/actions'
+import SimpleDataGrid from '@/components/SimpleDataGrid'
+import HeaderCell from '@/components/Cells/HeaderCell'
+import { createLazyMemo } from '@/lib/utils'
+import Loader from '@/components/Loader'
+import { range } from '@/lib/array'
 
 interface Props {
   alertRef: RefObject<AlertRef>
 }
 
-type SimpleDataGridProps = ReturnType<
-  typeof SimpleDataGrid<ColumnNameData, ColumnNameData>
->['props']
-
 const MemoizedMatchCell = createLazyMemo(
   'MemoizedMatchCell',
-  () => import('./Cells/MatchCell'),
+  () => import('../features/columns/components/MatchCell'),
 )
 const MemoizedScoreCell = createLazyMemo(
   'MemoizedScoreCell',
-  () => import('./Cells/ScoreCell'),
+  () => import('../features/columns/components/ScoreCell'),
 )
 const MemoizedVisitsCell = createLazyMemo(
   'MemoizedVisitsCell',
-  () => import('./Cells/VisitsCell'),
+  () => import('../features/columns/components/VisitsCell'),
 )
-const MemoizedDataGrid = memo<SimpleDataGridProps>(SimpleDataGrid)
+const MemoizedDataGrid = memo<SimpleDataGridProps<number>>(SimpleDataGrid)
 MemoizedDataGrid.displayName = 'MemoizedDataGrid'
 
 const ColumnsDataGrid = ({ alertRef }: Props) => {
   const dispatch = useAppDispatch()
-  const { fileName } = useAppSelector(({ sheet }) => sheet)
-  const { matchLists } = useAppSelector(({ columns }) => columns)
-  const originalColumns = useAppSelector(getOriginalColumns)
+
+  const fileName = useAppSelector(({ sheet }) => sheet.fileName)
+  const visits = useAppSelector(({ sheet }) => sheet.visits)
+  const matchLists = useAppSelector(({ columns }) => columns.matchLists)
+  const matchVisits = useAppSelector(({ columns }) => columns.matchVisits)
+  const originalColumns = useAppSelector((state) => getColumns(state))
+  const columnComparer = useAppSelector((state) => getColumnComparer(state))
+  const matchComparer = useAppSelector(getMatchComparer)
+  const visitsComparer = useAppSelector(getVisitsComparer)
+  const scoreComparer = useAppSelector(getScoreComparer)
+
   const [isLoading, setIsLoading] = useLoadingTransition()
 
   const [sortState, setSortState] = useState<
     Parameters<NonNullable<DataGridProps['onSortChange']>>[1]
   >({
-    sortColumn: 'matches',
     sortDirection: 'ascending',
+    sortColumn: 'matches',
   })
 
-  const colorscale = useMemo(
-    () =>
-      fluentColorScale(
-        tokens.colorStatusSuccessForeground3,
-        tokens.colorStatusDangerForeground3,
-        64,
-      ),
+  const handleSortChange: Required<DataGridProps>['onSortChange'] = useCallback(
+    (_event, nextSortState) => {
+      setSortState(nextSortState)
+    },
     [],
   )
 
-  const [config] = useState<Partial<Plotly.Config>>({
-    displayModeBar: false,
-    scrollZoom: false,
-  })
-
-  const [layout] = useState<Partial<Plotly.Layout>>({
-    autosize: true,
-
-    clickmode: 'none',
-    dragmode: false,
-    margin: {
-      b: 0,
-      l: 0,
-      r: 0,
-      t: 0,
-    },
-    xaxis: {
-      fixedrange: true,
-      nticks: 0,
-      range: [0, 1],
-      showgrid: false,
-      showticklabels: false,
-      ticks: '',
-      zeroline: false,
-    },
-    yaxis: {
-      fixedrange: true,
-      nticks: 0,
-      showticklabels: false,
-      ticks: '',
-    },
-  })
-
-  const handleSortChange: DataGridProps['onSortChange'] = (
-    _event,
-    nextSortState,
-  ) => {
-    setSortState(nextSortState)
-  }
-
-  const columnDefinitions: TableColumnDefinition<ColumnNameData>[] = useMemo(
-    () => [
-      createTableColumn({
-        columnId: 'original',
-        compare: (a, b) =>
-          originalColumns[a.pos]?.localeCompare(originalColumns[b.pos] ?? '') ??
-          0,
-        renderCell: ({ pos }) => <>{originalColumns[pos]}</>,
-        renderHeaderCell: () => (
-          <HeaderCell
-            header="Original"
-            subtitle="The loaded column names (raw)"
-          />
-        ),
-      }),
-      createTableColumn<ColumnNameData>({
-        columnId: 'matches',
-        compare: (...args) => {
-          const [a, b] = args.map(
-            (arg) =>
-              matchLists[arg.pos]?.matches[matchLists[arg.pos]?.index ?? 0] ??
-              '',
-          ) as [string, string]
-          return a.localeCompare(b)
-        },
-        renderCell: (item) => (
-          <MemoizedMatchCell alertRef={alertRef} item={item} />
-        ),
-        renderHeaderCell: () => (
-          <HeaderCell
-            header="Replacement"
-            subtitle="List of possible replacements (sorted by score)"
-          />
-        ),
-      }),
-      createTableColumn({
-        columnId: 'visit',
-        renderCell: (item) => (
-          <MemoizedVisitsCell alertRef={alertRef} item={item} />
-        ),
-        renderHeaderCell: () => (
-          <HeaderCell header="Visit" subtitle="The matching visit number" />
-        ),
-      }),
-      createTableColumn({
-        columnId: 'score',
-        compare: (...args) =>
-          args
-            .map(({ pos }) => {
-              const { index, scores } = matchLists[pos] ?? {
-                index: -1,
-                scores: [],
-              }
-              return scores[index] ?? 1
-            })
-            .reduce((a, b) => a - b),
-        renderCell: (item) => (
-          <MemoizedScoreCell
-            colorscale={colorscale}
-            config={config}
-            item={item}
-            layout={layout}
-          />
-        ),
-        renderHeaderCell: () => (
-          <HeaderCell
-            header="Score"
-            subtitle="The fuzzy search score (1 indicates a perfect match)"
-          />
-        ),
-      }),
-    ],
-    [alertRef, colorscale, config, layout, matchLists, originalColumns],
-  )
-
-  useAsyncEffect(async () => {
+  useEffect(() => {
     if (!fileName) {
       return
     }
 
-    await just(fileName)(fetchWorkbook)((x) => dispatch(x))()
+    void dispatch(fetchWorkbook(fileName))
   }, [dispatch, fileName])
 
   useAsyncEffect(async () => {
@@ -204,22 +96,112 @@ const ColumnsDataGrid = ({ alertRef }: Props) => {
       return
     }
 
-    await just(originalColumns)(fetchMatches)(dispatch)()
+    await dispatch(fetchMatches())
 
     setIsLoading(false)
-  }, [dispatch, originalColumns])
+  }, [dispatch, originalColumns.length])
 
-  return matchLists.length > 0 || !isLoading ? (
+  useEffect(() => {
+    if (!matchVisits.length) {
+      return
+    }
+
+    const newVisitsLength = Math.max(...matchVisits) + 1
+
+    const visitsLengthDiff = newVisitsLength - visits.length
+
+    if (visitsLengthDiff > 0) {
+      range(visitsLengthDiff - visits.length).forEach(() =>
+        dispatch(pushVisit()),
+      )
+    }
+  }, [dispatch, matchVisits, visits.length])
+
+  const columnsDefinition = useMemo(
+    () => [
+      createTableColumn({
+        renderHeaderCell: () => (
+          <HeaderCell
+            subtitle="The loaded column names (raw)"
+            header="Original"
+          />
+        ),
+        renderCell: (pos) => <>{originalColumns[pos]}</>,
+        compare: columnComparer,
+        columnId: 'original',
+      }),
+      createTableColumn({
+        renderHeaderCell: () => (
+          <HeaderCell
+            subtitle="List of possible replacements (sorted by score)"
+            header="Replacement"
+          />
+        ),
+        renderCell: (pos) => (
+          <MemoizedMatchCell alertRef={alertRef} pos={pos} />
+        ),
+        compare: matchComparer,
+        columnId: 'matches',
+      }),
+      createTableColumn({
+        renderHeaderCell: () => (
+          <HeaderCell subtitle="The matching visit number" header="Visit" />
+        ),
+        renderCell: (pos) => (
+          <MemoizedVisitsCell alertRef={alertRef} pos={pos} />
+        ),
+        compare: visitsComparer,
+        columnId: 'visit',
+      }),
+      createTableColumn({
+        renderHeaderCell: () => (
+          <HeaderCell
+            subtitle="The fuzzy search score (1 indicates a perfect match)"
+            header="Score"
+          />
+        ),
+        renderCell: (pos) => <MemoizedScoreCell pos={pos} />,
+        compare: scoreComparer,
+        columnId: 'score',
+      }),
+    ],
+    [
+      alertRef,
+      columnComparer,
+      matchComparer,
+      originalColumns,
+      scoreComparer,
+      visitsComparer,
+    ],
+  )
+
+  const cellFocusMode = useCallback(() => 'none', [])
+  const focusMode: DataGridFocusMode = useMemo(() => 'composite', [])
+
+  useEffect(() => {
+    const handleUnload = () => {
+      dispatch(saveSheetState())
+      dispatch(saveColumnState())
+    }
+
+    window.addEventListener('unload', handleUnload)
+
+    return () => {
+      window.removeEventListener('unload', handleUnload)
+    }
+  }, [dispatch])
+
+  return !isLoading ? (
     <Loader
       label={<Subtitle1>Matching columns...</Subtitle1>}
       labelPosition="below"
       size="huge">
       <MemoizedDataGrid
-        cellFocusMode={() => 'none'}
-        columns={columnDefinitions}
-        focusMode="composite"
-        items={matchLists}
+        items={range(matchLists.length)}
         onSortChange={handleSortChange}
+        cellFocusMode={cellFocusMode}
+        columns={columnsDefinition}
+        focusMode={focusMode}
         sortState={sortState}
         sortable
       />

@@ -1,44 +1,43 @@
 import type { DialogProps } from '@fluentui/react-components'
 
 import {
-  Button,
-  Dialog,
   DialogActions,
-  DialogBody,
   DialogContent,
   DialogSurface,
-  DialogTitle,
   DialogTrigger,
+  DialogTitle,
+  DialogBody,
+  Button,
+  Dialog,
 } from '@fluentui/react-components'
-import { forwardRef, useImperativeHandle, useState } from 'react'
+import { useImperativeHandle, forwardRef, useState } from 'react'
 
 export interface AlertRef {
-  openAlert: () => void
+  open: () => void
 }
 
 interface Props {
-  content: string
   onConfirm?: () => void
+  content: string
   title: string
 }
-export const AlertDialog = forwardRef<AlertRef, Props>(
-  ({ content, onConfirm, title }, ref) => {
+
+const AlertDialog = forwardRef<AlertRef, Props>(
+  ({ onConfirm, content, title }, ref) => {
     const [open, setOpen] = useState(false)
 
     const handleOpen: DialogProps['onOpenChange'] = (_event, data) => {
       setOpen(data.open)
     }
 
-    const openAlert = () => {
-      setOpen(true)
-    }
-
     useImperativeHandle(ref, () => ({
-      openAlert,
+      open: () => {
+        setOpen(true)
+      },
     }))
 
     return (
-      <Dialog modalType="alert" onOpenChange={handleOpen} open={open}>
+      <Dialog onOpenChange={handleOpen} modalType="alert" open={open}>
         <DialogSurface>
           <DialogBody>
             <DialogTitle>{title}</DialogTitle>
@@ -59,4 +58,7 @@ export const AlertDialog = forwardRef<AlertRef, Props>(
     )
   },
 )
+
 AlertDialog.displayName = 'AlertDialog'
+
+export default AlertDialog
