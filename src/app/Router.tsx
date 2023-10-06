@@ -17,7 +17,10 @@ const routes = createRoutesFromElements(
         path="column-matching"
       />
       <Route lazy={() => import('@/pages/EDA')} path="EDA">
-        <Route lazy={() => import('@/pages/EDA/Variable')} path=":variable" />
+        <Route path=":column">
+          <Route lazy={() => import('@/pages/EDA/Variable')} index />
+          <Route lazy={() => import('@/pages/EDA/Variable')} path=":visit" />
+        </Route>
       </Route>
       <Route lazy={() => import('@/pages/Download')} path="download" />
     </Route>
