@@ -15,6 +15,8 @@ import {
   useNavigate,
 } from 'react-router-dom'
 import { useAppDispatch, useAppSelector } from '@/lib/hooks'
+import { Helmet } from 'react-helmet-async'
+import { getPathTitle } from '@/lib/string'
 import { toObject } from '@/lib/array'
 import { routes } from '@/app/Router'
 import { useEffect } from 'react'
@@ -44,7 +46,10 @@ const useClasses = makeStyles({
 })
 
 export const ProgressNav = (props: ProgressBarProps) => {
+  const classes = useClasses()
+
   const navigate = useNavigate()
+
   const dispatch = useAppDispatch()
 
   const { progress } = useAppSelector(({ progress }) => progress)
@@ -52,14 +57,19 @@ export const ProgressNav = (props: ProgressBarProps) => {
   const { pathname: componentPath } = useResolvedPath('')
   const { pathname: locationPath } = useLocation()
 
-  const classes = useClasses()
+  const title = getPathTitle(
+    locationPath,
+    locationPath.includes('eda/') ? 2 : 0,
+  )
 
-  const componentPathDepth = componentPath.split('/').length
+  const componentPathDepth = componentPath.split('/').length - 1
 
   const pathList =
     matchRoutes(routes, componentPath)
       ?.find(({ route }) => !route.index)
-      ?.route.children.map(({ path }) => resolvePath(path ?? '').pathname) ?? []
+      ?.route.children.map(({ path }) =>
+        resolvePath(path ?? '').pathname.toLowerCase(),
+      ) ?? []
 
   const allowedPaths =
     toObject(['none', 'uploaded', 'matched', 'explored'] as Progress[], (i) => [
@@ -68,7 +78,7 @@ export const ProgressNav = (props: ProgressBarProps) => {
 
   const position = pathList.findIndex(
     (path) =>
-      path.replace('/', '') === locationPath.split('/')[componentPathDepth - 1],
+      path.replace('/', '') === locationPath.split('/')[componentPathDepth],
   )
 
   // Ternary expression for animation hack
@@ -97,6 +107,9 @@ export const ProgressNav = (props: ProgressBarProps) => {
 
   return (
     <div className={classes.root}>
+      <Helmet>
+        <title>{title}</title>
+      </Helmet>
       <ProgressBar
         className={mergeClasses(
           classes.progressBar,

@@ -10,7 +10,6 @@ import { HelmetProvider, Helmet } from 'react-helmet-async'
 import { useRegisterSW } from 'virtual:pwa-register/react'
 import globalStyles from '@/app/global.css?inline'
 import { useAsyncEffect } from '@/lib/hooks'
-import { usePathTitle } from '@/lib/string'
 import { Outlet } from 'react-router-dom'
 import { Provider } from 'react-redux'
 import { just } from '@/lib/utils'
@@ -37,7 +36,6 @@ const useThemePreference = (dark = webDarkTheme, light = webLightTheme) => {
 }
 
 const App = () => {
-  const title = usePathTitle()
   const theme = useThemePreference()
 
   useGlobalStyles()
@@ -64,12 +62,11 @@ const App = () => {
             <meta content={author.name} name="author" />
             <meta content={description} name="description" />
             <meta content={keywords.join(',')} name="keywords" />
-            <title>{title}</title>
           </Helmet>
+          <Layout>
+            <Outlet />
+          </Layout>
         </HelmetProvider>
-        <Layout>
-          <Outlet />
-        </Layout>
       </FluentProvider>
     </Provider>
   )

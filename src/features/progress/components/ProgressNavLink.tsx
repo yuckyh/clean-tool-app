@@ -1,3 +1,5 @@
+import type { LinkProps } from 'react-router-dom'
+
 import {
   Subtitle2Stronger,
   mergeClasses,
@@ -10,7 +12,8 @@ import {
 import { useLinkClickHandler, useHref } from 'react-router-dom'
 import { postFormattedJSON } from '@/features/sheet/actions'
 import { useAppDispatch } from '@/lib/hooks'
-import { usePathTitle } from '@/lib/string'
+import { getPathTitle } from '@/lib/string'
+import { useCallback } from 'react'
 
 interface Props {
   disabled: boolean
@@ -48,21 +51,24 @@ const ProgressNavLink = ({ disabled, done, path }: Props) => {
 
   const dispatch = useAppDispatch()
 
-  const label = usePathTitle(path)
+  const label = getPathTitle(path)
   const href = useHref(disabled ? '#' : path)
   const isActive = href === path
-  const handleLinkClick = useLinkClickHandler(href)
+  const linkClickHandler = useLinkClickHandler(href)
+
+  const handleLinkClick: Required<LinkProps>['onClick'] = useCallback(
+    (e) => {
+      linkClickHandler(e)
+
+      path.includes('/eda') && void dispatch(postFormattedJSON())
+    },
+    [dispatch, linkClickHandler, path],
+  )
 
   return (
     <div className={classes.root}>
       <Link
-        onClick={(e) => {
-          handleLinkClick(e)
-
-          if (path.includes('/EDA')) {
-            void dispatch(postFormattedJSON())
-          }
-        }}
+        onClick={handleLinkClick}
         className={classes.link}
         appearance="subtle"
         disabled={disabled}>
