@@ -22,8 +22,16 @@ const Plot = ({ config, layout, ...props }: Props) => {
 
   const defaultLayout: Partial<Plotly.Layout> = useMemo(
     () => ({
+      colorway: [
+        tokens.colorBrandBackground,
+        tokens.colorPaletteGreenBackground3,
+        tokens.colorPaletteBerryBackground3,
+        tokens.colorPalettePurpleBackground2,
+        tokens.colorPaletteRedBackground3,
+        tokens.colorPaletteYellowBackground3,
+      ].map(tokenToHex),
       font: {
-        color: tokenToHex(tokens.colorNeutralStroke1),
+        color: tokenToHex(tokens.colorNeutralStrokeAccessible),
         family: 'Droid Sans',
       },
       paper_bgcolor: 'rgba(0, 0, 0, 0)',

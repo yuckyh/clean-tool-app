@@ -3,21 +3,25 @@ import {
   FluentProvider,
   webLightTheme,
   webDarkTheme,
+  makeStyles,
+  shorthands,
+  Subtitle1,
+  Spinner,
+  tokens,
 } from '@fluentui/react-components'
+import ProgressNav from '@/features/progress/components/ProgressNav'
 import { description, keywords, author } from '@/../package.json'
-import { useSyncExternalStore, useState, lazy } from 'react'
+import { useSyncExternalStore, useState, useMemo } from 'react'
 import { HelmetProvider, Helmet } from 'react-helmet-async'
 import { useRegisterSW } from 'virtual:pwa-register/react'
+import { useNavigation, Outlet } from 'react-router-dom'
 import globalStyles from '@/app/global.css?inline'
 import { useAsyncEffect } from '@/lib/hooks'
-import { Outlet } from 'react-router-dom'
+import Loader from '@/components/Loader'
 import { Provider } from 'react-redux'
-import { just } from '@/lib/utils'
 import store from '@/app/store'
 
 const useGlobalStyles = makeStaticStyles(globalStyles)
-
-const Layout = just(() => import('@/app/Layout'))(lazy)()
 
 const useThemePreference = (dark = webDarkTheme, light = webLightTheme) => {
   const [themeMedia] = useState(matchMedia('(prefers-color-scheme: dark)'))
@@ -35,18 +39,37 @@ const useThemePreference = (dark = webDarkTheme, light = webLightTheme) => {
     : light
 }
 
+const useClasses = makeStyles({
+  main: {
+    flexDirection: 'column',
+    display: 'flex',
+    ...shorthands.padding(tokens.spacingVerticalXXXL),
+  },
+  header: {
+    ...shorthands.padding(tokens.spacingVerticalXXL),
+  },
+})
+
 const App = () => {
+  useGlobalStyles()
+  const classes = useClasses()
+
+  const navigation = useNavigation()
   const theme = useThemePreference()
 
-  useGlobalStyles()
   useAsyncEffect(async () => {
     ;(await navigator.storage.persisted()) &&
       (await navigator.storage.persist())
   }, [])
 
+  const loading = useMemo(
+    () => navigation.state === 'loading',
+    [navigation.state],
+  )
+
   useRegisterSW({
     onOfflineReady: () => {
-      just('offline ready')(console.log)
+      console.log('offline ready')
     },
     immediate: true,
   })
@@ -63,9 +86,25 @@ const App = () => {
             <meta content={description} name="description" />
             <meta content={keywords.join(',')} name="keywords" />
           </Helmet>
-          <Layout>
-            <Outlet />
-          </Layout>
+          <header className={classes.header}>
+            <ProgressNav thickness="large" />
+          </header>
+          <main className={classes.main}>
+            <Loader
+              label={<Subtitle1>Loading...</Subtitle1>}
+              labelPosition="below"
+              size="huge">
+              {loading ? (
+                <Spinner
+                  label={<Subtitle1>Loading...</Subtitle1>}
+                  labelPosition="below"
+                  size="huge"
+                />
+              ) : (
+                <Outlet />
+              )}
+            </Loader>
+          </main>
         </HelmetProvider>
       </FluentProvider>
     </Provider>

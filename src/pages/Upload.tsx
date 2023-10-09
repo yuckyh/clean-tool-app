@@ -21,19 +21,19 @@ import {
   useAppSelector,
   useAsyncEffect,
 } from '@/lib/hooks'
+import { saveColumnState, deleteColumns } from '@/features/columns/reducers'
 import SheetPickerInput from '@/features/sheet/components/SheetPickerInput'
 import SheetUploadInput from '@/features/sheet/components/SheetUploadInput'
 import { deleteProgress, setProgress } from '@/features/progress/reducers'
 import PreviewDataGrid from '@/features/sheet/components/PreviewDataGrid'
 import { deleteWorkbook, fetchWorkbook } from '@/features/sheet/actions'
 import VisitsInput from '@/features/sheet/components/VisitsInput'
-import { deleteColumns } from '@/features/columns/reducers'
+import { getColumns, getSheet } from '@/features/sheet/selectors'
+import { useBeforeUnload, useNavigate } from 'react-router-dom'
 import { saveSheetState } from '@/features/sheet/reducers'
-import { getColumns } from '@/features/sheet/selectors'
 import SimpleToaster from '@/components/SimpleToaster'
-import { useCallback, useEffect, useRef } from 'react'
 import AlertDialog from '@/components/AlertDialog'
-import { useNavigate } from 'react-router-dom'
+import { useCallback, useRef } from 'react'
 
 const useClasses = makeStyles({
   root: {
@@ -70,13 +70,12 @@ export const Component = () => {
 
   const dispatch = useAppDispatch()
 
-  const sheetName = useAppSelector(({ sheet }) => sheet.sheetName)
   const fileName = useAppSelector(({ sheet }) => sheet.fileName)
-  const hasSheet = useAppSelector(
-    ({ sheet }) => !!sheet.original.sheets[sheetName],
-  )
+  const hasSheet = useAppSelector((state) => !!getSheet(state))
   const hasMultipleSheets = useAppSelector(({ sheet }) => !sheet.bookType)
-  const originalColumns = useAppSelector((state) => getColumns(state))
+  const originalColumnsLength = useAppSelector(
+    (state) => getColumns(state).length,
+  )
 
   const [isLoading, setIsLoading] = useLoadingTransition()
 
@@ -84,9 +83,13 @@ export const Component = () => {
   const toasterRef = useRef<SimpleToasterRef>(null)
   const sheetInputRef = useRef<SheetInputRef>(null)
 
-  const handleResetClick = () => {
+  const handleResetClick = useCallback(() => {
+    alertRef.current?.setContent(
+      'Are you sure you want to reset the file? This will delete all progress.',
+    )
+    alertRef.current?.setTitle('Confirm Reset')
     alertRef.current?.open()
-  }
+  }, [alertRef])
 
   const handleResetConfirm = useCallback(() => {
     sheetInputRef.current?.setFileTask('deleted')
@@ -106,17 +109,12 @@ export const Component = () => {
     setIsLoading(false)
   }, [dispatch, fileName])
 
-  useEffect(() => {
-    const handleUnload = () => {
+  useBeforeUnload(
+    useCallback(() => {
       dispatch(saveSheetState())
-    }
-
-    window.addEventListener('unload', handleUnload)
-
-    return () => {
-      window.removeEventListener('unload', handleUnload)
-    }
-  }, [dispatch])
+      dispatch(saveColumnState())
+    }, [dispatch]),
+  )
 
   return (
     <section className={classes.root}>
@@ -144,14 +142,8 @@ export const Component = () => {
           }
         />
       </Card>
-      <AlertDialog
-        content="Are you sure you want to reset the file? This will delete all
-        progress."
-        onConfirm={handleResetConfirm}
-        title="Confirm Reset"
-        ref={alertRef}
-      />
-      {originalColumns.length > 0 &&
+      <AlertDialog onConfirm={handleResetConfirm} ref={alertRef} />
+      {originalColumnsLength > 0 &&
         (!isLoading ? (
           <>
             <Title2>Data Preview</Title2>

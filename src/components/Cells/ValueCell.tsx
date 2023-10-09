@@ -1,15 +1,15 @@
-import { getColumns } from '@/features/sheet/selectors'
+import { getColumn, getData } from '@/features/sheet/selectors'
 import { useAppSelector } from '@/lib/hooks'
 
 interface Props {
-  item: CellItem
-  pos: number
+  col: number
+  row: number
 }
 
-const ValueCell = ({ item, pos }: Props) => {
-  const column = useAppSelector((state) => getColumns(state)[pos] ?? '')
+const ValueCell = ({ row, col }: Props) => {
+  const column = useAppSelector((state) => getColumn(state, true, col))
 
-  return <>{item[column]}</>
+  return useAppSelector((state) => getData(state)[row]?.[column])
 }
 
 export default ValueCell

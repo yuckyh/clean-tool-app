@@ -1,15 +1,12 @@
 import type { DropdownProps } from '@fluentui/react-components'
 import type { AlertRef } from '@/components/AlertDialog'
-import type { RefObject } from 'react'
 
 import { makeStyles, Dropdown, Option } from '@fluentui/react-components'
 import { useAppDispatch, useAppSelector } from '@/lib/hooks'
+import { indexDuplicateSearcher } from '@/lib/array'
+import { type RefObject, useCallback } from 'react'
 
-import {
-  getIndexDuplicateSearcher,
-  getMatchColumn,
-  getMatchVisit,
-} from '../selectors'
+import { getMatchColumn, getMatchVisit, getIndices } from '../selectors'
 import { setMatchVisit } from '../reducers'
 
 interface Props {
@@ -32,27 +29,33 @@ const VisitsCell = ({ alertRef, pos }: Props) => {
   const matchColumn = useAppSelector((state) => getMatchColumn(state, pos))
   const matchVisit = useAppSelector((state) => getMatchVisit(state, pos))
   const visit = useAppSelector(({ sheet }) => sheet.visits[matchVisit] ?? '')
-  const indexDuplicateSearcher = useAppSelector(getIndexDuplicateSearcher)
+  const indices = useAppSelector(getIndices)
 
-  const handleOptionSelect: DropdownProps['onOptionSelect'] = (
-    _e,
-    { optionValue },
-  ) => {
-    const newMatchVisit = parseInt(optionValue ?? '1')
+  const handleOptionSelect: Required<DropdownProps>['onOptionSelect'] =
+    useCallback(
+      (_e, { optionValue }) => {
+        const newMatchVisit = parseInt(optionValue ?? '1')
 
-    if (newMatchVisit === matchVisit) {
-      return
-    }
+        if (newMatchVisit === matchVisit) {
+          return
+        }
 
-    if (indexDuplicateSearcher([matchColumn, newMatchVisit]).length) {
-      console.log('too many of the same columns')
+        if (
+          indexDuplicateSearcher(indices, [matchColumn, newMatchVisit] as const)
+            .length
+        ) {
+          alertRef.current?.setContent(
+            'You have selected the same column multiple times. Changes will not be made.',
+          )
+          alertRef.current?.setTitle('Column Matching Error')
+          alertRef.current?.open()
+          return
+        }
 
-      alertRef.current?.open()
-      return
-    }
-
-    dispatch(setMatchVisit({ matchVisit: newMatchVisit, pos }))
-  }
+        dispatch(setMatchVisit({ matchVisit: newMatchVisit, pos }))
+      },
+      [alertRef, dispatch, indices, matchColumn, matchVisit, pos],
+    )
 
   return (
     <Dropdown

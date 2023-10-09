@@ -9,7 +9,7 @@ import {
 } from '@fluentui/react-components'
 import { useAppDispatch, useAppSelector, useDebounced } from '@/lib/hooks'
 import { useCallback, useState, useMemo, memo } from 'react'
-import { transpose, range } from '@/lib/array'
+import { indexDuplicateSearcher, range } from '@/lib/array'
 import { just } from '@/lib/utils'
 import fuse from '@/lib/fuse'
 
@@ -71,11 +71,10 @@ const MatchCell = ({ alertRef, pos }: Props) => {
           return
         }
 
-        const duplicates = indices.filter((index) =>
-          transpose([index, [newMatchColumn, matchVisit]] as const).every(
-            ([index, filter]) => index === filter,
-          ),
-        )
+        const duplicates = indexDuplicateSearcher(indices, [
+          newMatchColumn,
+          matchVisit,
+        ])
 
         if (duplicates.length) {
           const newMatchVisit = range(visits.length).findIndex(
@@ -83,6 +82,10 @@ const MatchCell = ({ alertRef, pos }: Props) => {
           )
 
           if (newMatchVisit === -1) {
+            alertRef.current?.setContent(
+              'You have selected the same column multiple times. Changes will not be made.',
+            )
+            alertRef.current?.setTitle('Column Matching Error')
             alertRef.current?.open()
             setValue(matchColumn)
             return

@@ -22,3 +22,16 @@ export const toObject = <K, T extends Key[]>(
     obj[key] = callback(i)
     return obj
   }, {})
+
+export const indexDuplicateSearcher = <
+  T extends AsArray<readonly U[] | U[]>,
+  U,
+>(
+  indices: T[],
+  filterIndex: T,
+) =>
+  indices.filter((index) =>
+    transpose([index, filterIndex] as const).every(
+      ([index, filter]) => index === filter,
+    ),
+  )

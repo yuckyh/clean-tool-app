@@ -1,13 +1,23 @@
 import type { RootState } from '@/app/store'
 
+import { indexDuplicateSearcher, transpose } from '@/lib/array'
 import { createSelector } from '@reduxjs/toolkit'
-import { transpose } from '@/lib/array'
+import fuse from '@/lib/fuse'
 
 // Selectors
 const getMatchColumns = ({ columns }: RootState) => columns.matchColumns
 const getMatchLists = ({ columns }: RootState) => columns.matchLists
 const getMatchVisits = ({ columns }: RootState) => columns.matchVisits
 const getVisits = ({ sheet }: RootState) => sheet.visits
+
+export const getIndices = createSelector(
+  [getMatchColumns, getMatchVisits],
+  (matchColumns, matchVisits) =>
+    transpose([matchColumns, matchVisits] as const) as (readonly [
+      string,
+      number,
+    ])[],
+)
 
 export const getMatchColumn = (state: RootState, pos: number) =>
   getMatchColumns(state)[pos] ?? ''
@@ -18,31 +28,47 @@ const getMatchList = (state: RootState, pos: number) =>
 export const getMatchVisit = (state: RootState, pos: number) =>
   getMatchVisits(state)[pos] ?? 0
 
-export const getIndices = createSelector(
-  [getMatchColumns, getMatchVisits],
-  (matchColumns, matchVisits) =>
-    transpose([matchColumns, matchVisits] as const),
+export const getColumnDuplicates = createSelector(
+  [getMatchColumns, getMatchColumn],
+  (matchColumns, matchColumn) =>
+    indexDuplicateSearcher(
+      matchColumns.map((match) => [match] as const),
+      [matchColumn],
+    ).map(([match]) => match),
 )
 
-export const getIndexDuplicateSearcher = createSelector(
-  [getIndices],
-  (indices) => (filterIndex: [string, number]) =>
-    indices.filter((index) =>
-      transpose([index, filterIndex]).every(
-        ([index, filter]) => index === filter,
-      ),
-    ),
+export const getShouldFormat = createSelector(
+  [getMatchVisit, getColumnDuplicates],
+  (matchVisit, columnDuplicates) =>
+    columnDuplicates.length > 1 || matchVisit !== 0,
 )
 
-export const getFormattedColumns = createSelector(
-  [getIndices, getVisits],
-  (indices, visits) =>
-    indices.map(([indexColumn, indexVisit]) =>
-      indices.filter(([checkColumn]) => indexColumn === checkColumn).length >
-        1 || indexVisit !== 0
-        ? `${indexColumn}_${visits[indexVisit]}`
-        : indexColumn,
-    ),
+export const getColumnsPath = createSelector(
+  [getMatchColumn, getMatchVisit, getShouldFormat, getVisits],
+  (matchColumn, matchVisit, shouldFormat, visits) =>
+    shouldFormat
+      ? `/eda/${matchColumn.replace(/_/g, '-')}/${visits[matchVisit]}`
+      : `/eda/${matchColumn.replace(/_/g, '-')}`,
+)
+
+export const getFormattedColumn = createSelector(
+  [getMatchColumn, getMatchVisit, getShouldFormat, getVisits],
+  (matchColumn, matchVisit, shouldFormat, visits) =>
+    shouldFormat ? `${matchColumn}_${visits[matchVisit]}` : matchColumn,
+)
+
+export const getMatchIndex = createSelector(
+  [getMatchColumn, getMatchList],
+  (matchColumn, matchList) =>
+    matchList.matches.find(({ match }) => match === matchColumn),
+)
+
+export const getScore = createSelector(
+  [getMatchIndex, getMatchColumn],
+  (matchIndex, matchColumn) =>
+    (
+      1 - (matchIndex?.score ?? fuse.search(matchColumn)[0]?.score ?? 1)
+    ).toFixed(2),
 )
 
 export const getMatchComparer = createSelector(
@@ -63,12 +89,6 @@ export const getVisitsComparer = createSelector(
   (matchVisits) =>
     (...args: [number, number]) =>
       args.map((pos) => matchVisits[pos] ?? 0).reduce((a, b) => a - b),
-)
-
-export const getMatchIndex = createSelector(
-  [getMatchColumn, getMatchList],
-  (matchColumn, matchList) =>
-    matchList.matches.find(({ match }) => match === matchColumn),
 )
 
 export const getScoreComparer = createSelector(

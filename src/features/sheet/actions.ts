@@ -7,7 +7,7 @@ import { toObject } from '@/lib/array'
 import { utils } from 'xlsx'
 
 import { getFormattedFileName, getColumns, getData } from './selectors'
-import { getFormattedColumns } from '../columns/selectors'
+import { getFormattedColumn } from '../columns/selectors'
 
 const messagePromise = () => promisedWorker('message', sheetWorker)
 
@@ -48,11 +48,14 @@ export const postFile = createAsyncThunk(
 export const postFormattedJSON = createAsyncThunk(
   'sheet/postFormattedJSON',
   async (_, { getState }) => {
-    const formattedColumns = getFormattedColumns(getState() as RootState)
-    const originalColumns = getColumns(getState() as RootState)
-    const data = getData(getState() as RootState)
-    const { sheetName } = (getState() as RootState).sheet
-    const formattedFileName = getFormattedFileName(getState() as RootState)
+    const state = getState() as RootState
+    const originalColumns = getColumns(state)
+    const formattedColumns = originalColumns.map((_, pos) =>
+      getFormattedColumn(state, pos),
+    )
+    const data = getData(state)
+    const { sheetName } = state.sheet
+    const formattedFileName = getFormattedFileName(state)
 
     const formattedData = data.map((item) =>
       toObject(formattedColumns, (i) => item[originalColumns[i] ?? ''] ?? ''),

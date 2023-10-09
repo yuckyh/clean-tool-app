@@ -12,16 +12,11 @@ export const getData = createSelector([getSheet], (sheet) =>
   utils.sheet_to_json<CellItem>(sheet ?? {}),
 )
 
-export const getPreviewData = createSelector([getData], (data) =>
-  data.slice(0, 5),
-)
+export const getColumn = (state: RootState, isOriginal: boolean, pos: number) =>
+  getColumns(state, isOriginal)[pos] ?? ''
 
 export const getColumns = createSelector([getData], (data) =>
   just(data[0] ?? {})(Object.keys)(),
-)
-
-export const getColumnsPath = createSelector([getColumns], (columns) =>
-  columns.map((str: string) => `/EDA/${str.replace(/_/g, '-')}`),
 )
 
 export const getColumnComparer = createSelector(

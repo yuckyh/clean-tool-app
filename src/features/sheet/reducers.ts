@@ -24,13 +24,17 @@ const name = 'sheet'
 const defaultValue = ''
 const fileNameKey = 'fileName'
 const visitsKey = 'visits'
+const initialWorkbookState: WorkbookState = {
+  sheetNames: [],
+  sheets: {},
+}
 
 const initialState: State = {
   visits: getPersisted(visitsKey, defaultValue).split(',').filter(Boolean),
   fileName: getPersisted(fileNameKey, defaultValue),
   sheetName: getPersisted(name, defaultValue),
-  original: { sheetNames: [], sheets: {} },
-  edited: { sheetNames: [], sheets: {} },
+  original: initialWorkbookState,
+  edited: initialWorkbookState,
 }
 
 const sheetSlice = createSlice({
@@ -38,6 +42,11 @@ const sheetSlice = createSlice({
     builder
       .addCase(fetchWorkbook.fulfilled, (state, { payload }) => {
         const { SheetNames, fileName, bookType, Sheets } = payload
+
+        if ([SheetNames, Sheets, bookType].some((item) => !item)) {
+          return
+        }
+
         const workbookState = {
           sheetNames: SheetNames ?? [],
           sheets: Sheets ?? {},

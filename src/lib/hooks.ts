@@ -1,3 +1,9 @@
+import type {
+  DependencyList,
+  SetStateAction,
+  EffectCallback,
+  Dispatch,
+} from 'react'
 import type { AppDispatch, RootState } from '@/app/store'
 import type { TypedUseSelectorHook } from 'react-redux'
 
@@ -23,11 +29,7 @@ interface Ref<T> {
   current?: T
 }
 
-export const waitForValue = <T>(
-  ref: Ref<T>,
-  intervalMs = 50,
-  timeoutMs = 2000,
-) => {
+const waitForValue = <T>(ref: Ref<T>, intervalMs = 50, timeoutMs = 2000) => {
   let elapsedTime = 0
 
   const checkValue = () => {
@@ -48,12 +50,12 @@ export const waitForValue = <T>(
 }
 
 export const useAsyncEffect = (
-  effect: () => Promise<ReturnType<React.EffectCallback>>,
-  deps: React.DependencyList = [],
+  effect: () => Promise<ReturnType<EffectCallback>>,
+  deps: DependencyList = [],
 ) => {
   useEffect(
     () => {
-      let cleanup: ReturnType<React.EffectCallback> | undefined
+      let cleanup: ReturnType<EffectCallback> | undefined
 
       const ref: Ref<typeof cleanup> = {}
 
@@ -74,7 +76,7 @@ export const useAsyncEffect = (
 
 export const useAsyncCallback = <T, K extends unknown[]>(
   callback: (...args: K) => Promise<T>,
-  deps: React.DependencyList = [],
+  deps: DependencyList = [],
 ) =>
   useCallback((...args: Parameters<typeof callback>) => {
     const ref: Ref<T> = {}
@@ -88,17 +90,20 @@ export const useAsyncCallback = <T, K extends unknown[]>(
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, deps)
 
-export const useEffectLog = (dep: ArrayElement<React.DependencyList>) => {
+export const useEffectLog = (
+  dep: ArrayElement<DependencyList>,
+  ...args: [...unknown[]]
+) => {
   useEffect(() => {
-    console.trace(dep)
-  }, [dep])
+    console.trace(dep, ...args)
+  }, [dep, args])
 }
 
 export const useLoadingTransition = () => {
   const [isLoading, setIsLoading] = useState(true)
   const [isPending, startTransition] = useTransition()
 
-  const setLoadingTransition: React.Dispatch<React.SetStateAction<boolean>> = (
+  const setLoadingTransition: Dispatch<SetStateAction<boolean>> = (
     isLoading,
   ) => {
     startTransition(() => {
@@ -108,6 +113,6 @@ export const useLoadingTransition = () => {
 
   return [isLoading || isPending, setLoadingTransition] as [
     boolean,
-    React.Dispatch<React.SetStateAction<boolean>>,
+    Dispatch<SetStateAction<boolean>>,
   ]
 }

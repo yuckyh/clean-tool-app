@@ -1,11 +1,10 @@
 import { makeStyles, tokens } from '@fluentui/react-components'
-import { useAppSelector, useEffectLog } from '@/lib/hooks'
 import { fluentColorScale } from '@/lib/plotly'
+import { useAppSelector } from '@/lib/hooks'
 import Plot from '@/components/Plot'
 import { useMemo } from 'react'
-import fuse from '@/lib/fuse'
 
-import { getMatchColumn, getMatchIndex } from '../selectors'
+import { getScore } from '../selectors'
 
 const useClasses = makeStyles({
   plot: {
@@ -22,22 +21,13 @@ interface Props {
 const ScoreCell = ({ pos }: Props) => {
   const classes = useClasses()
 
-  const matchColumn = useAppSelector((state) => getMatchColumn(state, pos))
-  const matchIndex = useAppSelector((state) => getMatchIndex(state, pos))
-
-  const score = useMemo(
-    () =>
-      (
-        1 - (matchIndex?.score ?? fuse.search(matchColumn)[0]?.score ?? 1)
-      ).toFixed(2),
-    [matchColumn, matchIndex],
-  )
+  const score = useAppSelector((state) => getScore(state, pos))
 
   const colorscale = useMemo(
     () =>
       fluentColorScale(
-        tokens.colorStatusDangerForeground3,
-        tokens.colorStatusSuccessForeground3,
+        tokens.colorStatusDangerForegroundInverted,
+        tokens.colorStatusSuccessForegroundInverted,
         64,
       ),
     [],

@@ -1,13 +1,11 @@
-import {
-  getFormattedFileName,
-  getColumnsPath,
-} from '@/features/sheet/selectors'
+import { useAppDispatch, useAppSelector, useAsyncEffect } from '@/lib/hooks'
+import { getFormattedFileName } from '@/features/sheet/selectors'
 import { makeStyles, tokens } from '@fluentui/react-components'
-import { useAppDispatch, useAppSelector } from '@/lib/hooks'
+import { saveSheetState } from '@/features/sheet/reducers'
+import { useBeforeUnload, Outlet } from 'react-router-dom'
 import { fetchWorkbook } from '@/features/sheet/actions'
-import { Outlet } from 'react-router-dom'
+import { useCallback } from 'react'
 import Nav from '@/components/Nav'
-import { useEffect } from 'react'
 
 const useClasses = makeStyles({
   root: {
@@ -17,24 +15,29 @@ const useClasses = makeStyles({
   },
 })
 
+// TODO: add visit detection prompt
+
 export const Component = () => {
   const classes = useClasses()
 
   const dispatch = useAppDispatch()
 
   const formattedFileName = useAppSelector(getFormattedFileName)
-  const paths = useAppSelector((state) => getColumnsPath(state, false))
 
-  useEffect(() => {
-    void dispatch(fetchWorkbook(formattedFileName))
+  useAsyncEffect(async () => {
+    await dispatch(fetchWorkbook(formattedFileName))
   }, [dispatch, formattedFileName])
+
+  useBeforeUnload(
+    useCallback(() => {
+      dispatch(saveSheetState())
+    }, [dispatch]),
+  )
 
   return (
     <div className={classes.root}>
-      <Nav vertical={true} paths={paths} />
+      <Nav vertical={true} />
       <Outlet />
     </div>
   )
 }
-
-Component.displayName = 'EDA'

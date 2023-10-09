@@ -72,19 +72,17 @@ const ProgressNavLink = ({ disabled, done, path }: Props) => {
         className={classes.link}
         appearance="subtle"
         disabled={disabled}>
-        <>
-          <div
-            className={mergeClasses(
-              classes.stepThumb,
-              done ? classes.activeStepThumb : '',
-            )}
-          />
-          {isActive ? (
-            <Subtitle2Stronger>{label}</Subtitle2Stronger>
-          ) : (
-            <Subtitle2>{label}</Subtitle2>
+        <div
+          className={mergeClasses(
+            classes.stepThumb,
+            done ? classes.activeStepThumb : '',
           )}
-        </>
+        />
+        {isActive ? (
+          <Subtitle2Stronger>{label}</Subtitle2Stronger>
+        ) : (
+          <Subtitle2>{label}</Subtitle2>
+        )}
       </Link>
     </div>
   )
