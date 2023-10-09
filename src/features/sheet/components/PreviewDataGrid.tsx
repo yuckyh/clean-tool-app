@@ -5,12 +5,12 @@ import {
   makeStyles,
   tokens,
 } from '@fluentui/react-components'
-import { getFormattedColumns } from '@/features/columns/selectors'
+import { useCallback, useMemo, memo } from 'react'
 import { useAppSelector } from '@/lib/hooks'
-import { useCallback, useMemo } from 'react'
 import { createLazyMemo } from '@/lib/utils'
+import { range } from '@/lib/array'
 
-import { getPreviewData, getColumns } from '../selectors'
+import { getColumns, getColumn } from '../selectors'
 
 interface Props {
   isOriginal?: boolean
@@ -21,7 +21,7 @@ const MemoizedValueCell = createLazyMemo(
   () => import('@/components/Cells/ValueCell'),
 )
 
-const MemoizedSimpleDataGrid = createLazyMemo<SimpleDataGridProps<CellItem>>(
+const MemoizedSimpleDataGrid = createLazyMemo<SimpleDataGridProps<number>>(
   'MemoizedSimpleDataGrid',
   () => import('@/components/SimpleDataGrid'),
 )
@@ -38,27 +38,37 @@ const useClasses = makeStyles({
   },
 })
 
-const PreviewDataGrid = ({ isOriginal = false }: Props) => {
+interface PreviewHeaderCellProps {
+  isOriginal: boolean
+  col: number
+}
+
+const PreviewHeaderCell = ({ isOriginal, col }: PreviewHeaderCellProps) => {
   const classes = useClasses()
 
-  const columns = useAppSelector(
-    isOriginal ? (state) => getColumns(state) : getFormattedColumns,
-  )
+  const column = useAppSelector((state) => getColumn(state, isOriginal, col))
 
-  const previewData = useAppSelector((state) => getPreviewData(state))
+  return <div className={classes.columnHeader}>{column}</div>
+}
+
+const MemoizedHeaderCell = memo(PreviewHeaderCell)
+MemoizedHeaderCell.displayName = 'MemoizedHeaderCell'
+
+const PreviewDataGrid = ({ isOriginal = false }: Props) => {
+  const columnsLength = useAppSelector((state) => getColumns(state).length)
 
   const columnsDefinition = useMemo(
     () =>
-      columns.map((column, pos) =>
-        createTableColumn<CellItem>({
+      range(columnsLength).map((column, col) =>
+        createTableColumn<number>({
           renderHeaderCell: () => (
-            <div className={classes.columnHeader}>{column}</div>
+            <MemoizedHeaderCell isOriginal={isOriginal} col={col} />
           ),
-          renderCell: (item) => <MemoizedValueCell item={item} pos={pos} />,
+          renderCell: (row) => <MemoizedValueCell row={row} col={col} />,
           columnId: column,
         }),
       ),
-    [classes.columnHeader, columns],
+    [columnsLength, isOriginal],
   )
 
   const cellFocusMode = useCallback(() => 'none', [])
@@ -67,7 +77,7 @@ const PreviewDataGrid = ({ isOriginal = false }: Props) => {
     <MemoizedSimpleDataGrid
       cellFocusMode={cellFocusMode}
       columns={columnsDefinition}
-      items={previewData}
+      items={range(5)}
     />
   )
 }

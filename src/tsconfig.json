@@ -8,7 +8,6 @@
     /* Bundler mode */
     "allowImportingTsExtensions": true,
     "isolatedModules": true,
-    "outDir": "dist",
     "jsx": "react-jsx",
 
     "paths": {

@@ -9,14 +9,13 @@ import {
   Spinner,
   tokens,
 } from '@fluentui/react-components'
+import { useSyncExternalStore, useEffect, useState, useMemo } from 'react'
 import ProgressNav from '@/features/progress/components/ProgressNav'
 import { description, keywords, author } from '@/../package.json'
-import { useSyncExternalStore, useState, useMemo } from 'react'
 import { HelmetProvider, Helmet } from 'react-helmet-async'
 import { useRegisterSW } from 'virtual:pwa-register/react'
 import { useNavigation, Outlet } from 'react-router-dom'
 import globalStyles from '@/app/global.css?inline'
-import { useAsyncEffect } from '@/lib/hooks'
 import Loader from '@/components/Loader'
 import { Provider } from 'react-redux'
 import store from '@/app/store'
@@ -57,9 +56,10 @@ const App = () => {
   const navigation = useNavigation()
   const theme = useThemePreference()
 
-  useAsyncEffect(async () => {
-    ;(await navigator.storage.persisted()) &&
-      (await navigator.storage.persist())
+  useEffect(() => {
+    void navigator.storage.persisted().then((persisted) => {
+      persisted && void navigator.storage.persist()
+    })
   }, [])
 
   const loading = useMemo(

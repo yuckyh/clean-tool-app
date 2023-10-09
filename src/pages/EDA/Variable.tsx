@@ -14,7 +14,6 @@ import {
   useLoadingTransition,
   useAppDispatch,
   useAppSelector,
-  useAsyncEffect,
 } from '@/lib/hooks'
 import { getFormattedFileName, getData } from '@/features/sheet/selectors'
 import { fetchWorkbook } from '@/features/sheet/actions'
@@ -120,9 +119,10 @@ export const Component = () => {
 
   const [dataRevision, setDataRevision] = useState(0)
 
-  useAsyncEffect(async () => {
-    await dispatch(fetchWorkbook(formattedFileName))
-    setIsLoading(false)
+  useEffect(() => {
+    void dispatch(fetchWorkbook(formattedFileName)).then(() => {
+      setIsLoading(false)
+    })
   }, [dispatch, formattedFileName])
 
   useEffect(() => {

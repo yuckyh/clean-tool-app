@@ -7,17 +7,15 @@ import type { AlertRef } from '@/components/AlertDialog'
 import type { RefObject } from 'react'
 
 import {
-  useLoadingTransition,
-  useAppDispatch,
-  useAppSelector,
-  useAsyncEffect,
-  useEffectLog,
-} from '@/lib/hooks'
-import {
   getVisitsComparer,
   getMatchComparer,
   getScoreComparer,
 } from '@/features/columns/selectors'
+import {
+  useLoadingTransition,
+  useAppDispatch,
+  useAppSelector,
+} from '@/lib/hooks'
 import {
   createTableColumn,
   Subtitle1,
@@ -91,14 +89,14 @@ const ColumnsDataGrid = ({ alertRef }: Props) => {
     void dispatch(fetchWorkbook(fileName))
   }, [dispatch, fileName])
 
-  useAsyncEffect(async () => {
+  useEffect(() => {
     if (!originalColumns.length) {
       return
     }
 
-    await dispatch(fetchMatches())
-
-    setIsLoading(false)
+    void dispatch(fetchMatches()).then(() => {
+      setIsLoading(false)
+    })
   }, [dispatch, originalColumns.length])
 
   useEffect(() => {
