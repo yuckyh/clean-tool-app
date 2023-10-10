@@ -1,8 +1,10 @@
 import type { ColorScale } from 'plotly.js-cartesian-dist-min'
 import type { ColorTokens } from '@fluentui/react-components'
 
-import { transpose, range } from './array'
+import _ from 'lodash'
+
 import { just, list } from './utils'
+import { range } from './array'
 
 type ColorToken = Property<ColorTokens>
 type Rgb = readonly [number, number, number]
@@ -24,15 +26,16 @@ const numToHex = (x: number) => x.toString(16).padStart(2, '0')
 
 const interpolate =
   (time: number) =>
-  ([start, end]: readonly [number, number]) =>
+  ([start = 0, end = 0]) =>
     Math.round(start + time * (end - start))
 
 const divideBy = (n: number) => (x: number) => x / n
 
-const timeToColorStep = (rgbDiffs: Transpose<[Rgb, Rgb]>) => (t: number) => [
-  t,
-  list(rgbDiffs)(interpolate(t))(numToHex).convert(just)((x) => x.join(''))(),
-]
+const timeToColorStep =
+  (rgbDiffs: [undefined | number, undefined | number][]) => (t: number) => [
+    t,
+    list(rgbDiffs)(interpolate(t))(numToHex).convert(just)((x) => x.join(''))(),
+  ]
 
 export const fluentColorScale = (
   color1Token: ColorToken,
@@ -42,7 +45,7 @@ export const fluentColorScale = (
   const rgbDiffs = list([color1Token, color2Token] as const)(tokenToHex)(
     hexToRgb,
   )
-    .convert(just)((x) => x as [Rgb, Rgb])(transpose)
+    .convert(just)((x) => _.zip(...(x as [Rgb, Rgb])))
     .convert(list)()
 
   return list(range(n))(divideBy(n - 1))(

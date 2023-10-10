@@ -11,12 +11,6 @@ export const range = (end: number, start = 0, steps = 1) => {
   )() as number[]
 }
 
-export const transpose = <T extends readonly AnyArray[] | AnyArray[]>(
-  matrix: T,
-): Transpose<T> =>
-  (matrix[0]?.map((_, i) => matrix.map((row) => row[i])) ??
-    matrix) as Transpose<T>
-
 export const toObject = <K, T extends Key[]>(
   keyArr: T,
   callback: (i: number) => K,

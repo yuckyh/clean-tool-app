@@ -26,20 +26,6 @@ type ArrayElement<T extends AnyArray> = T extends
 
 type ExcludeFirst<A> = A extends [unknown, ...infer U] ? U : never
 
-type Transpose<T extends IsArray<AnyArray>> = T extends (infer U)[]
-  ? {
-      [K in keyof U]: {
-        [L in keyof T]: T[L][K]
-      }
-    }
-  : T extends readonly (infer U)[]
-  ? {
-      readonly [K in keyof U]: {
-        readonly [L in keyof T]: T[L][K]
-      }
-    }
-  : never
-
 // XLSX support
 
 type CellItem = Record<Column, boolean | number | string>

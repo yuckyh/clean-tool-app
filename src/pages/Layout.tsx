@@ -32,7 +32,7 @@ const Layout = () => {
   )
 
   return (
-    <>
+    <div>
       <header className={classes.header}>
         <ProgressNav thickness="large" />
       </header>
@@ -52,7 +52,7 @@ const Layout = () => {
           )}
         </Loader>
       </main>
-    </>
+    </div>
   )
 }
 

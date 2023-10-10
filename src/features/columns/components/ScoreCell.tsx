@@ -34,7 +34,7 @@ const ScoreCell = ({ pos }: Props) => {
   )
 
   return (
-    <>
+    <div>
       <Plot
         layout={{
           xaxis: {
@@ -86,7 +86,7 @@ const ScoreCell = ({ pos }: Props) => {
         className={classes.plot}
       />
       {score}
-    </>
+    </div>
   )
 }
 

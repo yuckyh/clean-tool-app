@@ -59,7 +59,7 @@ const VisitsInput = () => {
   )
 
   return (
-    <>
+    <div>
       <Field label="Number of visits" required>
         <Input
           onChange={handleNoOfVisitChange}
@@ -79,7 +79,7 @@ const VisitsInput = () => {
           />
         </Field>
       ))}
-    </>
+    </div>
   )
 }
 

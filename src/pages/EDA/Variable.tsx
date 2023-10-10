@@ -271,14 +271,14 @@ export const Component = () => {
           <Card className={classes.card} size="large">
             <CardHeader header={<Title1>Plot Options</Title1>} />
             {measurementType !== 'categorical' && (
-              <>
+              <div>
                 <Field label="Minimum value">
                   <Input appearance="filled-darker" type="number" />
                 </Field>
                 <Field label="Maximum value">
                   <Input appearance="filled-darker" type="number" />
                 </Field>
-              </>
+              </div>
             )}
             <CardFooter
               action={

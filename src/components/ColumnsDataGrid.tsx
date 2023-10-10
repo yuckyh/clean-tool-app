@@ -209,7 +209,7 @@ interface ValueCellProps {
 const ValueCell = ({ pos }: ValueCellProps) => {
   const column = useAppSelector((state) => getColumn(state, true, pos))
 
-  return <>{column}</>
+  return <div>{column}</div>
 }
 
 export default ColumnsDataGrid

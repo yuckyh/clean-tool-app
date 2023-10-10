@@ -64,14 +64,14 @@ const PreviewDataGrid = ({ isOriginal = false }: Props) => {
   const items = useMemo(() => range(5), [])
 
   return (
-    <>
+    <div>
       <Title2>Data Preview</Title2>
       <MemoizedSimpleDataGrid
         cellFocusMode={cellFocusMode}
         columns={columnsDefinition}
         items={items}
       />
-    </>
+    </div>
   )
 }
 
