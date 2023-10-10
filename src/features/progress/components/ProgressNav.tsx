@@ -124,7 +124,7 @@ export const ProgressNav = (props: ProgressBarProps) => {
     return () => {
       document.body.classList.remove(...classList)
     }
-  })
+  }, [themeClasses])
 
   useBeforeUnload(
     useCallback(() => {

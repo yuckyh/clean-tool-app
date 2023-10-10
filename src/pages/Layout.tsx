@@ -7,7 +7,6 @@ import {
 } from '@fluentui/react-components'
 import ProgressNav from '@/features/progress/components/ProgressNav'
 import { useNavigation, Outlet } from 'react-router-dom'
-import { useEffectLog } from '@/lib/hooks'
 import Loader from '@/components/Loader'
 import { useMemo } from 'react'
 
@@ -26,6 +25,7 @@ const Layout = () => {
   const classes = useClasses()
 
   const navigation = useNavigation()
+
   const loading = useMemo(
     () => navigation.state === 'loading',
     [navigation.state],

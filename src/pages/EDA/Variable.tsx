@@ -1,4 +1,4 @@
-import type { PlotType, Layout, Data } from 'plotly.js-cartesian-dist-min'
+import type { Layout, Data } from 'plotly.js-cartesian-dist-min'
 
 import {
   CardFooter,
@@ -11,6 +11,10 @@ import {
   Field,
   Input,
   Card,
+  createTableColumn,
+  DataGridProps,
+  TableRowId,
+  Spinner,
 } from '@fluentui/react-components'
 import {
   useLoadingTransition,
@@ -26,6 +30,7 @@ import Plot from '@/components/Plot'
 import { range } from '@/lib/array'
 import { codebook } from '@/data'
 import _ from 'lodash'
+import SimpleDataGrid from '@/components/SimpleDataGrid'
 
 type VariableType = Extract<Property<typeof variableType>, string>
 
@@ -44,6 +49,12 @@ const useClasses = makeStyles({
     width: '100%',
   },
   root: {
+    display: 'flex',
+    flexDirection: 'column',
+    rowGap: tokens.spacingVerticalXL,
+    width: '100%',
+  },
+  columns: {
     columnGap: tokens.spacingVerticalXL,
     display: 'flex',
     width: '100%',
@@ -58,12 +69,10 @@ const useClasses = makeStyles({
     flexShrink: 2,
     flexGrow: 2,
   },
+  columnHeader: {
+    fontWeight: 'bold',
+  },
 })
-
-const plotTypes: Record<VariableType, PlotType> = {
-  categorical: 'bar',
-  numerical: 'box',
-}
 
 export const Component = () => {
   const classes = useClasses()
@@ -74,6 +83,8 @@ export const Component = () => {
 
   const formattedFileName = useAppSelector(getFormattedFileName)
   const dataset = useAppSelector((state) => getData(state, false))
+
+  const [isLoading, setIsLoading] = useLoadingTransition()
 
   const column = params.column?.replace(/-/g, '_') ?? ''
   const visit = params.visit ?? ''
@@ -109,6 +120,128 @@ export const Component = () => {
 
   const index = useMemo(() => dataset.map((row) => `${row.sno}`), [dataset])
 
+  useEffect(() => {
+    void dispatch(fetchWorkbook(formattedFileName)).then(() => {
+      setIsLoading(false)
+    })
+  }, [dispatch, formattedFileName, setIsLoading])
+
+  const columnsDefinition = useMemo(
+    () => [
+      createTableColumn<number>({
+        renderHeaderCell: () => <div className={classes.columnHeader}>sno</div>,
+        renderCell: (row) => index[row] ?? '',
+        columnId: 'index',
+      }),
+      createTableColumn<number>({
+        renderHeaderCell: () => <div>{variable}</div>,
+        renderCell: (row) => series[row] ?? '',
+        columnId: variable,
+      }),
+    ],
+    [classes.columnHeader, dataset.length],
+  )
+
+  const [flaggedRows, setFlaggedRows] = useState(new Set<TableRowId>([]))
+
+  const handleSelectionChange: DataGridProps['onSelectionChange'] = (
+    _,
+    { selectedItems },
+  ) => {
+    setFlaggedRows(selectedItems)
+  }
+
+  const isParsedCategorical =
+    series.some((value) => !value.replace(/[^.!?]*[.!?]$/, '')) ||
+    series.some((value) => isNaN(Number(value)))
+
+  return !isLoading ? (
+    <section className={classes.root}>
+      <div className={classes.columns}>
+        <div className={classes.plot}>
+          <Card>
+            {isParsedCategorical || isCategorical ? (
+              <CategoricalPlot series={series} variable={variable} />
+            ) : (
+              <NumericalPlot
+                series={series}
+                variable={variable}
+                unit={unit}
+                index={index}
+              />
+            )}
+          </Card>
+        </div>
+        <div className={classes.options}>
+          <Card className={classes.card} size="large">
+            <CardHeader header={<Title1>Plot Options</Title1>} />
+            {measurementType !== 'categorical' && (
+              <div>
+                <Field label="Minimum value">
+                  <Input appearance="filled-darker" type="number" />
+                </Field>
+                <Field label="Maximum value">
+                  <Input appearance="filled-darker" type="number" />
+                </Field>
+              </div>
+            )}
+            <CardFooter
+              action={
+                <div className={classes.actions}>
+                  <Button appearance="primary">Plot</Button>
+                </div>
+              }
+            />
+          </Card>
+        </div>
+      </div>
+      <div className={classes.columns}>
+        <SimpleDataGrid
+          selectionMode="multiselect"
+          selectedItems={flaggedRows}
+          onSelectionChange={handleSelectionChange}
+          items={range(dataset.length)}
+          columns={columnsDefinition}
+          cellFocusMode={() => 'none'}
+        />
+      </div>
+    </section>
+  ) : (
+    <Spinner
+      label={<Title1>Plotting Data...</Title1>}
+      labelPosition="below"
+      size="huge"
+    />
+  )
+}
+
+interface VariablePlotProps {
+  variable: string
+  layout: Partial<Layout>
+  data: Partial<Data>[]
+}
+
+const VariablePlot = ({ variable, layout, data }: VariablePlotProps) => (
+  <Plot
+    layout={{
+      showlegend: false,
+      title: variable,
+      ...layout,
+    }}
+    data={data.map((obj) => ({
+      name: '',
+      ...obj,
+    }))}
+    useResizeHandler
+  />
+)
+
+interface CategoricalPlotProps {
+  series: string[]
+  variable: string
+}
+
+const CategoricalPlot = ({ series, variable }: CategoricalPlotProps) => {
   const count = useMemo(
     () =>
       series.reduce<Record<string, number>>((acc, curr) => {
@@ -120,20 +253,41 @@ export const Component = () => {
 
   const maxCount = useMemo(() => Math.max(...Object.values(count)), [count])
 
-  const [isLoading, setIsLoading] = useLoadingTransition()
+  const data: Partial<Data>[] = [
+    {
+      type: 'bar',
+      y: Object.values(count),
+      x: Object.keys(count),
+    },
+  ]
 
-  const [dataRevision, setDataRevision] = useState(0)
+  const layout: Partial<Layout> = {
+    yaxis: {
+      tickvals: range(maxCount + 1, 0),
+      range: [0, maxCount],
+      tickformat: 'd',
+    },
+    xaxis: {
+      type: 'category',
+    },
+  }
 
-  useEffect(() => {
-    void dispatch(fetchWorkbook(formattedFileName)).then(() => {
-      setIsLoading(false)
-    })
-  }, [dispatch, formattedFileName, setIsLoading])
+  return <VariablePlot data={data} layout={layout} variable={variable} />
+}
 
-  useEffect(() => {
-    setDataRevision((prev) => prev + 1)
-  }, [series])
+interface NumericalPlotProps {
+  series: string[]
+  variable: string
+  unit: string
+  index: string[]
+}
 
+const NumericalPlot = ({
+  series,
+  variable,
+  unit,
+  index,
+}: NumericalPlotProps) => {
   const quartiles = useMemo(() => {
     const sorted = series.map(Number).sort((a, b) => a - b)
     return range(4, 1).map(
@@ -167,129 +321,66 @@ export const Component = () => {
         : [],
     [series, index, isOutlier],
   )
-  const commonData = {
-    name: '',
+
+  const layout: Partial<Layout> = {
+    yaxis2: {
+      zeroline: false,
+      range: [-1, 5],
+      tickvals: [],
+    },
+    yaxis: {
+      range: [-1, 1],
+      tickvals: [],
+    },
+    xaxis: {
+      title: unit,
+    },
   }
 
-  const commonLayout: Partial<Layout> = {
-    datarevision: dataRevision,
-    showlegend: false,
-    title: variable,
-  }
+  const data: Partial<Data>[] = [
+    {
+      marker: {
+        opacity: 0,
+      },
+      hovertemplate: `%{customdata}: %{x} ${unit}`,
+      type: 'box',
+      boxpoints: 'outliers',
+      customdata: index,
+      boxmean: 'sd',
+      pointpos: -2,
+      jitter: 0.3,
+      x: series,
+      width: 1,
+    },
+    {
+      marker: {
+        color: tokenToHex(tokens.colorBrandBackground),
+        symbol: 'x',
+        size: 8,
+      },
+      customdata: notOutliers.map(([, index = '']) => index),
+      y: series.map(() => Math.random() * 0.2 - 0.1),
+      hovertemplate: `%{customdata}: %{x} ${unit}`,
+      x: notOutliers.map(([value = '0']) => value),
+      type: 'scatter',
+      mode: 'markers',
+      yaxis: 'y2',
+    },
+    {
+      marker: {
+        color: tokenToHex(tokens.colorStatusDangerForeground3),
+        symbol: 'x',
+        size: 8,
+      },
+      customdata: outliers.map(([, index = '']) => index),
+      y: series.map(() => Math.random() * 0.2 - 0.1),
+      hovertemplate: `%{customdata}: %{x} ${unit}`,
+      x: outliers.map(([value = '0']) => value),
+      type: 'scatter',
+      mode: 'markers',
+      yaxis: 'y2',
+    },
+  ]
 
-  const data: Partial<Data>[] = isCategorical
-    ? [
-        {
-          ...commonData,
-          type: plotTypes[measurementType],
-          y: Object.values(count),
-          x: Object.keys(count),
-        },
-      ]
-    : [
-        {
-          ...commonData,
-          marker: {
-            opacity: 0,
-          },
-          hovertemplate: `%{customdata}: %{x} ${unit}`,
-          type: plotTypes[measurementType],
-          boxpoints: 'outliers',
-          customdata: index,
-          boxmean: 'sd',
-          pointpos: -2,
-          jitter: 0.3,
-          x: series,
-          width: 1,
-        },
-        {
-          ...commonData,
-          marker: {
-            color: tokenToHex(tokens.colorBrandBackground),
-            symbol: 'x',
-            size: 8,
-          },
-          customdata: notOutliers.map(([, index = '']) => index),
-          y: series.map(() => Math.random() * 0.2 - 0.1),
-          hovertemplate: `%{customdata}: %{x} ${unit}`,
-          x: notOutliers.map(([value = '0']) => value),
-          type: 'scatter',
-          mode: 'markers',
-          yaxis: 'y2',
-        },
-        {
-          ...commonData,
-          marker: {
-            color: tokenToHex(tokens.colorStatusDangerForeground3),
-            symbol: 'x',
-            size: 8,
-          },
-          customdata: outliers.map(([, index = '']) => index),
-          y: series.map(() => Math.random() * 0.2 - 0.1),
-          hovertemplate: `%{customdata}: %{x} ${unit}`,
-          x: outliers.map(([value = '0']) => value),
-          type: 'scatter',
-          mode: 'markers',
-          yaxis: 'y2',
-        },
-      ]
-
-  const layout: Partial<Layout> = isCategorical
-    ? {
-        ...commonLayout,
-        yaxis: {
-          tickvals: range(maxCount + 1, 0),
-          range: [0, maxCount],
-          tickformat: 'd',
-        },
-      }
-    : {
-        ...commonLayout,
-        yaxis2: {
-          zeroline: false,
-          range: [-1, 5],
-          tickvals: [],
-        },
-        yaxis: {
-          range: [-1, 1],
-          tickvals: [],
-        },
-        xaxis: {
-          title: unit,
-        },
-      }
-
-  return (
-    !isLoading && (
-      <section className={classes.root}>
-        <div className={classes.plot}>
-          <Card>
-            <Plot layout={layout} data={data} />
-          </Card>
-        </div>
-        <div className={classes.options}>
-          <Card className={classes.card} size="large">
-            <CardHeader header={<Title1>Plot Options</Title1>} />
-            {measurementType !== 'categorical' && (
-              <div>
-                <Field label="Minimum value">
-                  <Input appearance="filled-darker" type="number" />
-                </Field>
-                <Field label="Maximum value">
-                  <Input appearance="filled-darker" type="number" />
-                </Field>
-              </div>
-            )}
-            <CardFooter
-              action={
-                <div className={classes.actions}>
-                  <Button appearance="primary">Plot</Button>
-                </div>
-              }
-            />
-          </Card>
-        </div>
-      </section>
-    )
-  )
+  return <VariablePlot layout={layout} variable={variable} data={data} />
 }

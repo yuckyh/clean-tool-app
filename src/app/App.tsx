@@ -5,7 +5,7 @@ import {
   webDarkTheme,
 } from '@fluentui/react-components'
 import { description, keywords, author } from '@/../package.json'
-import { useSyncExternalStore, useEffect, useState } from 'react'
+import { useSyncExternalStore, useEffect, useMemo } from 'react'
 import { HelmetProvider, Helmet } from 'react-helmet-async'
 import { useRegisterSW } from 'virtual:pwa-register/react'
 import globalStyles from '@/app/global.css?inline'
@@ -16,9 +16,12 @@ import store from '@/app/store'
 const useGlobalStyles = makeStaticStyles(globalStyles)
 
 const useThemePreference = (dark = webDarkTheme, light = webLightTheme) => {
-  const [themeMedia] = useState(matchMedia('(prefers-color-scheme: dark)'))
+  const themeMedia = useMemo(
+    () => matchMedia('(prefers-color-scheme: dark)'),
+    [],
+  )
 
-  return useSyncExternalStore(
+  const theme = useSyncExternalStore(
     (cb) => {
       themeMedia.addEventListener('change', cb)
       return () => {
@@ -27,8 +30,8 @@ const useThemePreference = (dark = webDarkTheme, light = webLightTheme) => {
     },
     () => themeMedia.matches,
   )
-    ? dark
-    : light
+
+  return theme ? dark : light
 }
 
 const App = () => {

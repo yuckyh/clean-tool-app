@@ -1,6 +1,6 @@
 import type { TabListProps } from '@fluentui/react-components'
 
-import { useLinkClickHandler, useLocation } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import { getColumnsPath } from '@/features/columns/selectors'
 import { TabList, Tab } from '@fluentui/react-components'
 import { getColumns } from '@/features/sheet/selectors'
@@ -33,12 +33,11 @@ export const NavTab = ({ pos }: NavTabProps) => {
   const path = useAppSelector((state) => getColumnsPath(state, pos))
 
   const label = path.split('/').slice(2).join('_').replace(/-/g, '_')
-  const handleLinkClick = useLinkClickHandler(path)
 
   return (
-    <a onClick={handleLinkClick}>
+    <Link to={path} style={{ all: 'unset' }}>
       <Tab value={path}>{label}</Tab>
-    </a>
+    </Link>
   )
 }
 
