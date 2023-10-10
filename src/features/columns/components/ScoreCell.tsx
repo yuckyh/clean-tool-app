@@ -11,6 +11,12 @@ const useClasses = makeStyles({
     maxHeight: '44px',
     height: '44px',
     width: '80%',
+    flexGrow: 1,
+  },
+  root: {
+    alignItems: 'center',
+    display: 'flex',
+    width: '100%',
   },
 })
 
@@ -34,7 +40,7 @@ const ScoreCell = ({ pos }: Props) => {
   )
 
   return (
-    <div>
+    <div className={classes.root}>
       <Plot
         layout={{
           xaxis: {

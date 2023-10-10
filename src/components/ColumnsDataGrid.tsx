@@ -74,7 +74,7 @@ const ColumnsDataGrid = ({ alertRef }: Props) => {
 
   const [sortState, setSortState] = useState<
     Parameters<NonNullable<DataGridProps['onSortChange']>>[1]
-  >({ sortDirection: 'ascending', sortColumn: 'matches' })
+  >({ sortDirection: 'ascending', sortColumn: '' })
 
   const handleSortChange: Required<DataGridProps>['onSortChange'] = useCallback(
     (_event, nextSortState) => {
