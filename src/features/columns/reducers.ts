@@ -2,7 +2,7 @@ import type { PayloadAction } from '@reduxjs/toolkit'
 
 import { getPersisted, setPersisted } from '@/lib/utils'
 import { createSlice } from '@reduxjs/toolkit'
-import { transpose } from '@/lib/array'
+import _ from 'lodash'
 
 import { fetchMatches, name } from './actions'
 
@@ -79,8 +79,8 @@ const columnsSlice = createSlice({
   reducers: {
     saveColumnState: (state) => {
       const { matchColumns, matchVisits } = state
-      transpose([keys, [matchColumns, matchVisits]] as const).forEach(
-        ([key, val]) => {
+      _.zip(keys, [matchColumns, matchVisits]).forEach(
+        ([key = '', val = []]) => {
           setPersisted(key, val.join(','))
         },
       )

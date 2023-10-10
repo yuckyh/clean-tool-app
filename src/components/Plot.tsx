@@ -1,26 +1,27 @@
+import type { Config, Layout, Data } from 'plotly.js-cartesian-dist-min'
 import type { PlotParams } from 'react-plotly.js'
 
 import createPlotlyComponent from 'react-plotly.js/factory'
 import { tokens } from '@fluentui/react-components'
-import Plotly from 'plotly.js-cartesian-dist'
+import Plotly from 'plotly.js-cartesian-dist-min'
 import { tokenToHex } from '@/lib/plotly'
 import { useMemo } from 'react'
 
 interface Props extends Partial<PlotParams> {
-  data: Plotly.Data[]
+  data: Data[]
 }
 
 const PlotlyPlot = createPlotlyComponent(Plotly)
 
 const Plot = ({ config, layout, ...props }: Props) => {
-  const defaultConfig: Partial<Plotly.Config> = useMemo(
+  const defaultConfig: Partial<Config> = useMemo(
     () => ({
       responsive: true,
     }),
     [],
   )
 
-  const defaultLayout: Partial<Plotly.Layout> = useMemo(
+  const defaultLayout: Partial<Layout> = useMemo(
     () => ({
       colorway: [
         tokens.colorBrandBackground,

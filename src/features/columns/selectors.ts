@@ -1,8 +1,9 @@
 import type { RootState } from '@/app/store'
 
-import { indexDuplicateSearcher, transpose } from '@/lib/array'
+import { indexDuplicateSearcher } from '@/lib/array'
 import { createSelector } from '@reduxjs/toolkit'
 import fuse from '@/lib/fuse'
+import _ from 'lodash'
 
 // Selectors
 const getMatchColumns = ({ columns }: RootState) => columns.matchColumns
@@ -12,11 +13,7 @@ const getVisits = ({ sheet }: RootState) => sheet.visits
 
 export const getIndices = createSelector(
   [getMatchColumns, getMatchVisits],
-  (matchColumns, matchVisits) =>
-    transpose([matchColumns, matchVisits] as const) as (readonly [
-      string,
-      number,
-    ])[],
+  (matchColumns, matchVisits) => _.zip(matchColumns, matchVisits),
 )
 
 export const getMatchColumn = (state: RootState, pos: number) =>

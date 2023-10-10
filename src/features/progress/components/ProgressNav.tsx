@@ -1,6 +1,7 @@
 import type { ProgressBarProps } from '@fluentui/react-components'
 
 import {
+  useThemeClassName,
   mergeClasses,
   ProgressBar,
   makeStyles,
@@ -9,17 +10,18 @@ import {
 } from '@fluentui/react-components'
 import {
   useResolvedPath,
+  useBeforeUnload,
   matchRoutes,
   resolvePath,
   useLocation,
   useNavigate,
 } from 'react-router-dom'
 import { useAppDispatch, useAppSelector } from '@/lib/hooks'
+import { useCallback, useEffect, useMemo } from 'react'
 import { Helmet } from 'react-helmet-async'
 import { getPathTitle } from '@/lib/string'
 import { toObject } from '@/lib/array'
 import { routes } from '@/app/Router'
-import { useEffect } from 'react'
 
 import { saveProgressState, type Progress } from '../reducers'
 import ProgressNavLink from './ProgressNavLink'
@@ -57,53 +59,78 @@ export const ProgressNav = (props: ProgressBarProps) => {
   const { pathname: componentPath } = useResolvedPath('')
   const { pathname: locationPath } = useLocation()
 
-  const title = getPathTitle(
-    locationPath,
-    locationPath.includes('eda/') ? 2 : 0,
+  const title = useMemo(
+    () => getPathTitle(locationPath, locationPath.includes('eda/') ? 2 : 0),
+    [locationPath],
   )
 
-  const componentPathDepth = componentPath.split('/').length - 1
+  const themeClasses = useThemeClassName()
 
-  const pathList =
-    matchRoutes(routes, componentPath)
-      ?.find(({ route }) => !route.index)
-      ?.route.children.map(({ path }) =>
-        resolvePath(path ?? '').pathname.toLowerCase(),
-      ) ?? []
+  const componentPathDepth = useMemo(
+    () => componentPath.split('/').length - 1,
+    [componentPath],
+  )
 
-  const allowedPaths =
-    toObject(['none', 'uploaded', 'matched', 'explored'] as Progress[], (i) => [
-      ...pathList.slice(0, i + 2),
-    ])[progress] ?? []
+  const pathList = useMemo(
+    () =>
+      matchRoutes(routes, componentPath)
+        ?.find(({ route }) => !route.index)
+        ?.route.children?.find(({ index }) => !index)
+        ?.children?.map(({ path = '' }) =>
+          resolvePath(path).pathname.toLowerCase(),
+        ) ?? [],
+    [componentPath],
+  )
 
-  const position = pathList.findIndex(
-    (path) =>
-      path.replace('/', '') === locationPath.split('/')[componentPathDepth],
+  const allowedPaths = useMemo(
+    () =>
+      toObject(
+        ['none', 'uploaded', 'matched', 'explored'] as Progress[],
+        (i) => [...pathList.slice(0, i + 2)],
+      )[progress] ?? [],
+    [pathList, progress],
+  )
+
+  const position = useMemo(
+    () =>
+      pathList.findIndex(
+        (path) =>
+          path.replace('/', '') === locationPath.split('/')[componentPathDepth],
+      ),
+    [componentPathDepth, locationPath, pathList],
   )
 
   // Ternary expression for animation hack
-  const progressValue = position / (pathList.length - 1) || 0.011
-
-  if (
-    locationPath !== '/' &&
-    !allowedPaths.some((path) =>
-      locationPath.split('/').includes(path.replace('/', '')),
-    )
-  ) {
-    navigate(allowedPaths.at(-1) ?? '/')
-  }
+  const progressValue = useMemo(
+    () => position / (pathList.length - 1) || 0.011,
+    [pathList.length, position],
+  )
 
   useEffect(() => {
-    const handleUnload = () => {
-      dispatch(saveProgressState())
+    if (
+      locationPath !== '/' &&
+      !allowedPaths.some((path) =>
+        locationPath.split('/').splice(1).includes(path.replace('/', '')),
+      )
+    ) {
+      navigate(allowedPaths.at(-1) ?? '/')
     }
+  }, [allowedPaths, locationPath, navigate])
 
-    window.addEventListener('unload', handleUnload)
+  useEffect(() => {
+    const classList = themeClasses.split(' ')
+    document.body.classList.add(...classList)
 
     return () => {
-      window.removeEventListener('unload', handleUnload)
+      document.body.classList.remove(...classList)
     }
-  }, [dispatch])
+  })
+
+  useBeforeUnload(
+    useCallback(() => {
+      dispatch(saveProgressState())
+    }, [dispatch]),
+  )
 
   return (
     <div className={classes.root}>

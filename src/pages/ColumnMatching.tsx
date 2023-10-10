@@ -1,4 +1,3 @@
-import type { Progress } from '@/features/progress/reducers'
 import type { AlertRef } from '@/components/AlertDialog'
 
 import {
@@ -6,14 +5,13 @@ import {
   shorthands,
   Button,
   Title1,
-  Title2,
   tokens,
 } from '@fluentui/react-components'
 import { postFormattedJSON } from '@/features/sheet/actions'
 import { setProgress } from '@/features/progress/reducers'
 import AlertDialog from '@/components/AlertDialog'
-import { createLazyMemo, just } from '@/lib/utils'
 import { useNavigate } from 'react-router-dom'
+import { createLazyMemo } from '@/lib/utils'
 import { useAppDispatch } from '@/lib/hooks'
 import { useCallback, useRef } from 'react'
 
@@ -45,8 +43,8 @@ export const Component = () => {
   const dispatch = useAppDispatch()
 
   const handleCommitChanges = useCallback(() => {
-    navigate('/EDA')
-    just<Progress>('matched')(setProgress)(dispatch)()
+    navigate('/eda')
+    dispatch(setProgress('matched'))
     void dispatch(postFormattedJSON())
   }, [dispatch, navigate])
 
@@ -57,14 +55,9 @@ export const Component = () => {
       <Title1>Column Matching</Title1>
 
       <MemoizedColumnsDataGrid alertRef={alertRef} />
-      <Title2>Changes Preview</Title2>
       <MemoizedPreviewDataGrid />
 
-      <AlertDialog
-        content="You have selected the same column multiple times. Changes will not be made."
-        title="Column Matching Error"
-        ref={alertRef}
-      />
+      <AlertDialog ref={alertRef} />
       <div>
         <Button onClick={handleCommitChanges} appearance="primary">
           Done

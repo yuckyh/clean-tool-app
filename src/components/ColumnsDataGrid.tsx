@@ -7,23 +7,25 @@ import type { AlertRef } from '@/components/AlertDialog'
 import type { RefObject } from 'react'
 
 import {
-  useLoadingTransition,
-  useAppDispatch,
-  useAppSelector,
-  useAsyncEffect,
-  useEffectLog,
-} from '@/lib/hooks'
-import {
   getVisitsComparer,
   getMatchComparer,
   getScoreComparer,
 } from '@/features/columns/selectors'
 import {
+  getColumnComparer,
+  getColumns,
+  getColumn,
+} from '@/features/sheet/selectors'
+import {
+  useLoadingTransition,
+  useAppDispatch,
+  useAppSelector,
+} from '@/lib/hooks'
+import {
   createTableColumn,
   Subtitle1,
   Spinner,
 } from '@fluentui/react-components'
-import { getColumnComparer, getColumns } from '@/features/sheet/selectors'
 import { useCallback, useEffect, useState, useMemo, memo } from 'react'
 import { saveSheetState, pushVisit } from '@/features/sheet/reducers'
 import { saveColumnState } from '@/features/columns/reducers'
@@ -31,6 +33,7 @@ import { fetchMatches } from '@/features/columns/actions'
 import { fetchWorkbook } from '@/features/sheet/actions'
 import SimpleDataGrid from '@/components/SimpleDataGrid'
 import HeaderCell from '@/components/Cells/HeaderCell'
+import { useBeforeUnload } from 'react-router-dom'
 import { createLazyMemo } from '@/lib/utils'
 import Loader from '@/components/Loader'
 import { range } from '@/lib/array'
@@ -41,15 +44,15 @@ interface Props {
 
 const MemoizedMatchCell = createLazyMemo(
   'MemoizedMatchCell',
-  () => import('../features/columns/components/MatchCell'),
+  () => import('@/features/columns/components/MatchCell'),
 )
 const MemoizedScoreCell = createLazyMemo(
   'MemoizedScoreCell',
-  () => import('../features/columns/components/ScoreCell'),
+  () => import('@/features/columns/components/ScoreCell'),
 )
 const MemoizedVisitsCell = createLazyMemo(
   'MemoizedVisitsCell',
-  () => import('../features/columns/components/VisitsCell'),
+  () => import('@/features/columns/components/VisitsCell'),
 )
 const MemoizedDataGrid = memo<SimpleDataGridProps<number>>(SimpleDataGrid)
 MemoizedDataGrid.displayName = 'MemoizedDataGrid'
@@ -71,10 +74,7 @@ const ColumnsDataGrid = ({ alertRef }: Props) => {
 
   const [sortState, setSortState] = useState<
     Parameters<NonNullable<DataGridProps['onSortChange']>>[1]
-  >({
-    sortDirection: 'ascending',
-    sortColumn: 'matches',
-  })
+  >({ sortDirection: 'ascending', sortColumn: 'matches' })
 
   const handleSortChange: Required<DataGridProps>['onSortChange'] = useCallback(
     (_event, nextSortState) => {
@@ -91,31 +91,15 @@ const ColumnsDataGrid = ({ alertRef }: Props) => {
     void dispatch(fetchWorkbook(fileName))
   }, [dispatch, fileName])
 
-  useAsyncEffect(async () => {
+  useEffect(() => {
     if (!originalColumns.length) {
       return
     }
 
-    await dispatch(fetchMatches())
-
-    setIsLoading(false)
-  }, [dispatch, originalColumns.length])
-
-  useEffect(() => {
-    if (!matchVisits.length) {
-      return
-    }
-
-    const newVisitsLength = Math.max(...matchVisits) + 1
-
-    const visitsLengthDiff = newVisitsLength - visits.length
-
-    if (visitsLengthDiff > 0) {
-      range(visitsLengthDiff - visits.length).forEach(() =>
-        dispatch(pushVisit()),
-      )
-    }
-  }, [dispatch, matchVisits, visits.length])
+    void dispatch(fetchMatches()).then(() => {
+      setIsLoading(false)
+    })
+  }, [dispatch, originalColumns.length, setIsLoading])
 
   const columnsDefinition = useMemo(
     () => [
@@ -126,7 +110,7 @@ const ColumnsDataGrid = ({ alertRef }: Props) => {
             header="Original"
           />
         ),
-        renderCell: (pos) => <>{originalColumns[pos]}</>,
+        renderCell: (pos) => <ValueCell pos={pos} />,
         compare: columnComparer,
         columnId: 'original',
       }),
@@ -165,31 +149,34 @@ const ColumnsDataGrid = ({ alertRef }: Props) => {
         columnId: 'score',
       }),
     ],
-    [
-      alertRef,
-      columnComparer,
-      matchComparer,
-      originalColumns,
-      scoreComparer,
-      visitsComparer,
-    ],
+    [alertRef, columnComparer, matchComparer, scoreComparer, visitsComparer],
   )
 
   const cellFocusMode = useCallback(() => 'none', [])
-  const focusMode: DataGridFocusMode = useMemo(() => 'composite', [])
+  const focusMode = useMemo<DataGridFocusMode>(() => 'composite', [])
 
   useEffect(() => {
-    const handleUnload = () => {
+    if (!matchVisits.length) {
+      return
+    }
+
+    const newVisitsLength = Math.max(...matchVisits) + 1
+
+    const visitsLengthDiff = newVisitsLength - visits.length
+
+    if (visitsLengthDiff > 0) {
+      range(visitsLengthDiff - visits.length).forEach(() =>
+        dispatch(pushVisit()),
+      )
+    }
+  }, [dispatch, matchVisits, visits.length])
+
+  useBeforeUnload(
+    useCallback(() => {
       dispatch(saveSheetState())
       dispatch(saveColumnState())
-    }
-
-    window.addEventListener('unload', handleUnload)
-
-    return () => {
-      window.removeEventListener('unload', handleUnload)
-    }
-  }, [dispatch])
+    }, [dispatch]),
+  )
 
   return !isLoading ? (
     <Loader
@@ -213,6 +200,16 @@ const ColumnsDataGrid = ({ alertRef }: Props) => {
       size="huge"
     />
   )
+}
+
+interface ValueCellProps {
+  pos: number
+}
+
+const ValueCell = ({ pos }: ValueCellProps) => {
+  const column = useAppSelector((state) => getColumn(state, true, pos))
+
+  return <>{column}</>
 }
 
 export default ColumnsDataGrid

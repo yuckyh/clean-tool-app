@@ -29,7 +29,7 @@ export const Component = () => {
 
   const uploadHref = useHref('/upload')
 
-  const handleClick = useLinkClickHandler(uploadHref)
+  const handleClick = useLinkClickHandler('/upload')
 
   return (
     <section className={classes.root}>

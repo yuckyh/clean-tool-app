@@ -78,13 +78,13 @@ export default defineConfig(({ mode }) => {
           manualChunks: {
             react: ['react', 'react-dom'],
             reactHelpers: [
-              'react-helmet',
+              'react-helmet-async',
               'react-router-dom',
               'react-dropzone',
             ],
             fluentui: ['@fluentui/react-components'],
             tauri: ['@tauri-apps/api'],
-            plotly: ['react-plotly.js', 'plotly.js'],
+            plotly: ['react-plotly.js', 'plotly.js-cartesian-dist-min'],
           },
         },
       },

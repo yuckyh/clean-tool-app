@@ -44,6 +44,9 @@ const useClasses = makeStyles({
   activeStepThumb: {
     backgroundColor: tokens.colorCompoundBrandBackground,
   },
+  linkText: {
+    textAlign: 'center',
+  },
 })
 
 const ProgressNavLink = ({ disabled, done, path }: Props) => {
@@ -54,7 +57,7 @@ const ProgressNavLink = ({ disabled, done, path }: Props) => {
   const label = getPathTitle(path)
   const href = useHref(disabled ? '#' : path)
   const isActive = href === path
-  const linkClickHandler = useLinkClickHandler(href)
+  const linkClickHandler = useLinkClickHandler(path)
 
   const handleLinkClick: Required<LinkProps>['onClick'] = useCallback(
     (e) => {
@@ -71,7 +74,8 @@ const ProgressNavLink = ({ disabled, done, path }: Props) => {
         onClick={handleLinkClick}
         className={classes.link}
         appearance="subtle"
-        disabled={disabled}>
+        disabled={disabled}
+        href={href}>
         <div
           className={mergeClasses(
             classes.stepThumb,
@@ -79,9 +83,11 @@ const ProgressNavLink = ({ disabled, done, path }: Props) => {
           )}
         />
         {isActive ? (
-          <Subtitle2Stronger>{label}</Subtitle2Stronger>
+          <Subtitle2Stronger className={classes.linkText}>
+            {label}
+          </Subtitle2Stronger>
         ) : (
-          <Subtitle2>{label}</Subtitle2>
+          <Subtitle2 className={classes.linkText}>{label}</Subtitle2>
         )}
       </Link>
     </div>

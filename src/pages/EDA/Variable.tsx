@@ -1,3 +1,5 @@
+import type { PlotType, Layout, Data } from 'plotly.js-cartesian-dist-min'
+
 import {
   CardFooter,
   CardHeader,
@@ -14,16 +16,16 @@ import {
   useLoadingTransition,
   useAppDispatch,
   useAppSelector,
-  useAsyncEffect,
 } from '@/lib/hooks'
 import { getFormattedFileName, getData } from '@/features/sheet/selectors'
+import { useCallback, useEffect, useState, useMemo } from 'react'
 import { fetchWorkbook } from '@/features/sheet/actions'
-import { useEffect, useState, useMemo } from 'react'
-import { transpose, range } from '@/lib/array'
 import { useParams } from 'react-router-dom'
 import { tokenToHex } from '@/lib/plotly'
 import Plot from '@/components/Plot'
+import { range } from '@/lib/array'
 import { codebook } from '@/data'
+import _ from 'lodash'
 
 type VariableType = Extract<Property<typeof variableType>, string>
 
@@ -58,7 +60,7 @@ const useClasses = makeStyles({
   },
 })
 
-const plotTypes: Record<VariableType, Plotly.PlotType> = {
+const plotTypes: Record<VariableType, PlotType> = {
   categorical: 'bar',
   numerical: 'box',
 }
@@ -78,8 +80,6 @@ export const Component = () => {
 
   const variable = `${column}${visit ? `_${visit}` : ''}`
 
-  console.log(variable)
-
   const codebookVariable = codebook.find(({ name }) => name === column) ?? {
     description: '',
     category: '',
@@ -87,6 +87,10 @@ export const Component = () => {
     type: '',
     unit: '',
   }
+
+  const isCustom = !codebookVariable.name
+
+  console.log(isCustom)
 
   const { type, unit } = codebookVariable
 
@@ -120,10 +124,11 @@ export const Component = () => {
 
   const [dataRevision, setDataRevision] = useState(0)
 
-  useAsyncEffect(async () => {
-    await dispatch(fetchWorkbook(formattedFileName))
-    setIsLoading(false)
-  }, [dispatch, formattedFileName])
+  useEffect(() => {
+    void dispatch(fetchWorkbook(formattedFileName)).then(() => {
+      setIsLoading(false)
+    })
+  }, [dispatch, formattedFileName, setIsLoading])
 
   useEffect(() => {
     setDataRevision((prev) => prev + 1)
@@ -141,43 +146,38 @@ export const Component = () => {
     return [2.5 * q1 - 1.5 * q3, 2.5 * q3 - 1.5 * q1] as const
   }, [quartiles])
 
+  const isOutlier = useCallback(
+    (value: string) =>
+      parseInt(value) < fences[0] || parseInt(value) > fences[1],
+    [fences],
+  )
+
   const outliers = useMemo(
     () =>
       series.length && index.length
-        ? transpose(
-            transpose([series, index] as const).filter(
-              ([value]) =>
-                parseInt(value) < fences[0] || parseInt(value) > fences[1],
-            ),
-          )
+        ? _.zip(series, index).filter(([value = '0']) => isOutlier(value))
         : [],
-    [series, index, fences],
+    [series, index, isOutlier],
   )
 
   const notOutliers = useMemo(
     () =>
       series.length && index.length
-        ? transpose(
-            transpose([series, index] as const).filter(
-              ([value]) =>
-                parseInt(value) >= fences[0] && parseInt(value) <= fences[1],
-            ),
-          )
+        ? _.zip(series, index).filter(([value = '0']) => !isOutlier(value))
         : [],
-    [series, index, fences],
+    [series, index, isOutlier],
   )
-
   const commonData = {
     name: '',
   }
 
-  const commonLayout: Partial<Plotly.Layout> = {
+  const commonLayout: Partial<Layout> = {
     datarevision: dataRevision,
     showlegend: false,
     title: variable,
   }
 
-  const data: Partial<Plotly.Data>[] = isCategorical
+  const data: Partial<Data>[] = isCategorical
     ? [
         {
           ...commonData,
@@ -209,10 +209,10 @@ export const Component = () => {
             symbol: 'x',
             size: 8,
           },
+          customdata: notOutliers.map(([, index = '']) => index),
           y: series.map(() => Math.random() * 0.2 - 0.1),
           hovertemplate: `%{customdata}: %{x} ${unit}`,
-          customdata: notOutliers[1],
-          x: notOutliers[0],
+          x: notOutliers.map(([value = '0']) => value),
           type: 'scatter',
           mode: 'markers',
           yaxis: 'y2',
@@ -224,17 +224,17 @@ export const Component = () => {
             symbol: 'x',
             size: 8,
           },
+          customdata: outliers.map(([, index = '']) => index),
           y: series.map(() => Math.random() * 0.2 - 0.1),
           hovertemplate: `%{customdata}: %{x} ${unit}`,
-          customdata: outliers[1],
+          x: outliers.map(([value = '0']) => value),
           type: 'scatter',
           mode: 'markers',
-          x: outliers[0],
           yaxis: 'y2',
         },
       ]
 
-  const layout: Partial<Plotly.Layout> = isCategorical
+  const layout: Partial<Layout> = isCategorical
     ? {
         ...commonLayout,
         yaxis: {

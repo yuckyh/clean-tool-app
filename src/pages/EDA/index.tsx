@@ -1,10 +1,10 @@
-import { useAppDispatch, useAppSelector, useAsyncEffect } from '@/lib/hooks'
 import { getFormattedFileName } from '@/features/sheet/selectors'
 import { makeStyles, tokens } from '@fluentui/react-components'
+import { useAppDispatch, useAppSelector } from '@/lib/hooks'
 import { saveSheetState } from '@/features/sheet/reducers'
 import { useBeforeUnload, Outlet } from 'react-router-dom'
 import { fetchWorkbook } from '@/features/sheet/actions'
-import { useCallback } from 'react'
+import { useCallback, useEffect } from 'react'
 import Nav from '@/components/Nav'
 
 const useClasses = makeStyles({
@@ -24,8 +24,8 @@ export const Component = () => {
 
   const formattedFileName = useAppSelector(getFormattedFileName)
 
-  useAsyncEffect(async () => {
-    await dispatch(fetchWorkbook(formattedFileName))
+  useEffect(() => {
+    void dispatch(fetchWorkbook(formattedFileName))
   }, [dispatch, formattedFileName])
 
   useBeforeUnload(

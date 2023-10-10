@@ -19,7 +19,6 @@ import {
   useLoadingTransition,
   useAppDispatch,
   useAppSelector,
-  useAsyncEffect,
 } from '@/lib/hooks'
 import { saveColumnState, deleteColumns } from '@/features/columns/reducers'
 import SheetPickerInput from '@/features/sheet/components/SheetPickerInput'
@@ -32,8 +31,8 @@ import { getColumns, getSheet } from '@/features/sheet/selectors'
 import { useBeforeUnload, useNavigate } from 'react-router-dom'
 import { saveSheetState } from '@/features/sheet/reducers'
 import SimpleToaster from '@/components/SimpleToaster'
+import { useCallback, useEffect, useRef } from 'react'
 import AlertDialog from '@/components/AlertDialog'
-import { useCallback, useRef } from 'react'
 
 const useClasses = makeStyles({
   root: {
@@ -104,10 +103,11 @@ export const Component = () => {
     navigate('/column-matching')
   }, [dispatch, navigate])
 
-  useAsyncEffect(async () => {
-    await dispatch(fetchWorkbook(fileName))
-    setIsLoading(false)
-  }, [dispatch, fileName])
+  useEffect(() => {
+    void dispatch(fetchWorkbook(fileName)).then(() => {
+      setIsLoading(false)
+    })
+  }, [dispatch, fileName, setIsLoading])
 
   useBeforeUnload(
     useCallback(() => {
@@ -145,10 +145,7 @@ export const Component = () => {
       <AlertDialog onConfirm={handleResetConfirm} ref={alertRef} />
       {originalColumnsLength > 0 &&
         (!isLoading ? (
-          <>
-            <Title2>Data Preview</Title2>
-            <PreviewDataGrid isOriginal />
-          </>
+          <PreviewDataGrid isOriginal />
         ) : (
           <Spinner
             label={<Subtitle1>Loading Preview...</Subtitle1>}

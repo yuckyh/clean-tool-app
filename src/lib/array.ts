@@ -1,3 +1,5 @@
+import _ from 'lodash'
+
 import { list } from './utils'
 
 type Key = number | string | symbol
@@ -12,7 +14,8 @@ export const range = (end: number, start = 0, steps = 1) => {
 export const transpose = <T extends readonly AnyArray[] | AnyArray[]>(
   matrix: T,
 ): Transpose<T> =>
-  matrix[0]?.map((_, i) => matrix.map((row) => row[i])) as Transpose<T>
+  (matrix[0]?.map((_, i) => matrix.map((row) => row[i])) ??
+    matrix) as Transpose<T>
 
 export const toObject = <K, T extends Key[]>(
   keyArr: T,
@@ -31,7 +34,5 @@ export const indexDuplicateSearcher = <
   filterIndex: T,
 ) =>
   indices.filter((index) =>
-    transpose([index, filterIndex] as const).every(
-      ([index, filter]) => index === filter,
-    ),
+    _.zip(index, filterIndex).every(([index, filter]) => index === filter),
   )

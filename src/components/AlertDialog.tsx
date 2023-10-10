@@ -13,51 +13,61 @@ import {
 import { useImperativeHandle, forwardRef, useState } from 'react'
 
 export interface AlertRef {
+  setContent: (content: string) => void
+  setTitle: (title: string) => void
   open: () => void
 }
 
 interface Props {
   onConfirm?: () => void
-  content: string
-  title: string
 }
 
-const AlertDialog = forwardRef<AlertRef, Props>(
-  ({ onConfirm, content, title }, ref) => {
-    const [open, setOpen] = useState(false)
+const AlertDialog = forwardRef<AlertRef, Props>(({ onConfirm }, ref) => {
+  const [open, setOpen] = useState(false)
+  const [content, setContent] = useState('')
+  const [title, setTitle] = useState('')
 
-    const handleOpen: DialogProps['onOpenChange'] = (_event, data) => {
-      setOpen(data.open)
-    }
+  const handleOpen: DialogProps['onOpenChange'] = (_event, data) => {
+    setOpen(data.open)
+  }
 
-    useImperativeHandle(ref, () => ({
+  useImperativeHandle(
+    ref,
+    () => ({
+      setContent: (newContent) => {
+        setContent(newContent)
+      },
+      setTitle: (newTitle) => {
+        setTitle(newTitle)
+      },
       open: () => {
         setOpen(true)
       },
-    }))
+    }),
+    [],
+  )
 
-    return (
-      <Dialog onOpenChange={handleOpen} modalType="alert" open={open}>
-        <DialogSurface>
-          <DialogBody>
-            <DialogTitle>{title}</DialogTitle>
-            <DialogContent>{content}</DialogContent>
-            <DialogActions>
-              <DialogTrigger disableButtonEnhancement>
-                <Button>Cancel</Button>
-              </DialogTrigger>
-              <DialogTrigger disableButtonEnhancement>
-                <Button appearance="primary" onClick={onConfirm}>
-                  Okay
-                </Button>
-              </DialogTrigger>
-            </DialogActions>
-          </DialogBody>
-        </DialogSurface>
-      </Dialog>
-    )
-  },
-)
+  return (
+    <Dialog onOpenChange={handleOpen} modalType="alert" open={open}>
+      <DialogSurface>
+        <DialogBody>
+          <DialogTitle>{title}</DialogTitle>
+          <DialogContent>{content}</DialogContent>
+          <DialogActions>
+            <DialogTrigger disableButtonEnhancement>
+              <Button>Cancel</Button>
+            </DialogTrigger>
+            <DialogTrigger disableButtonEnhancement>
+              <Button appearance="primary" onClick={onConfirm}>
+                Okay
+              </Button>
+            </DialogTrigger>
+          </DialogActions>
+        </DialogBody>
+      </DialogSurface>
+    </Dialog>
+  )
+})
 
 AlertDialog.displayName = 'AlertDialog'
 

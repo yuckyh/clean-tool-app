@@ -12,12 +12,20 @@ const rootDOM =
   )
 const root = createRoot(rootDOM)
 
+// root.render(
+//   <StrictMode>
+//     <RouterProvider
+//       fallbackElement={<Spinner size="huge" />}
+//       future={{ v7_startTransition: true }}
+//       router={router}
+//     />
+//   </StrictMode>,
+// )
+
 root.render(
-  <StrictMode>
-    <RouterProvider
-      fallbackElement={<Spinner size="huge" />}
-      future={{ v7_startTransition: true }}
-      router={router}
-    />
-  </StrictMode>,
+  <RouterProvider
+    fallbackElement={<Spinner size="huge" />}
+    future={{ v7_startTransition: true }}
+    router={router}
+  />,
 )

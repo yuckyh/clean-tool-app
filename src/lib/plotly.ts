@@ -1,3 +1,4 @@
+import type { ColorScale } from 'plotly.js-cartesian-dist-min'
 import type { ColorTokens } from '@fluentui/react-components'
 
 import { transpose, range } from './array'
@@ -46,5 +47,5 @@ export const fluentColorScale = (
 
   return list(range(n))(divideBy(n - 1))(
     timeToColorStep(rgbDiffs),
-  )() as Plotly.ColorScale
+  )() as ColorScale
 }

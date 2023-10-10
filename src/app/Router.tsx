@@ -1,15 +1,14 @@
-import type { RouteObject } from 'react-router-dom'
-
 import {
   createRoutesFromElements,
   createBrowserRouter,
   Route,
 } from 'react-router-dom'
+import Layout from '@/pages/Layout'
 import App from '@/app/App'
 
 const routes = createRoutesFromElements(
-  <>
-    <Route element={<App />}>
+  <Route element={<App />}>
+    <Route element={<Layout />}>
       <Route lazy={() => import('@/pages')} index />
       <Route lazy={() => import('@/pages/Upload')} path="upload" />
       <Route
@@ -25,8 +24,8 @@ const routes = createRoutesFromElements(
       <Route lazy={() => import('@/pages/Download')} path="download" />
     </Route>
     <Route lazy={() => import('@/pages/404')} path="*" />
-  </>,
-) as Required<RouteObject>[]
+  </Route>,
+)
 
 const router = createBrowserRouter(routes, {
   future: {

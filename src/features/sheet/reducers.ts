@@ -68,6 +68,8 @@ const sheetSlice = createSlice({
         state = { ...initialState }
         state.fileName = defaultValue
         state.sheetName = defaultValue
+        state.original = initialWorkbookState
+        state.edited = initialWorkbookState
         state.visits = []
 
         return state
