@@ -8,8 +8,8 @@ import {
 } from '@fluentui/react-components'
 import { getFormattedColumn } from '@/features/columns/selectors'
 import { useAppSelector } from '@/lib/hooks'
-import { useCallback, useMemo } from 'react'
 import { createLazyMemo } from '@/lib/utils'
+import { useCallback, useMemo } from 'react'
 import { range } from '@/lib/array'
 
 import { getColumns, getColumn } from '../selectors'

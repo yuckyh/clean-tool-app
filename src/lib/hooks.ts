@@ -1,9 +1,4 @@
-import type {
-  DependencyList,
-  SetStateAction,
-  EffectCallback,
-  Dispatch,
-} from 'react'
+import type { DependencyList, SetStateAction, Dispatch } from 'react'
 import type { AppDispatch, RootState } from '@/app/store'
 import type { TypedUseSelectorHook } from 'react-redux'
 
@@ -23,10 +18,6 @@ export const useDebounced = <T>(value: T, delay = 100) => {
   }, [delay, value])
 
   return debouncedValue
-}
-
-interface Ref<T> {
-  current?: T
 }
 
 export const useEffectLog = (

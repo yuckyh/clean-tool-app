@@ -158,5 +158,5 @@
     "semi": false,
     "bracketSameLine": true
   },
-  "packageManager": "yarn@4.0.0-rc.53"
+  "packageManager": "yarn@3.6.4"
 }
