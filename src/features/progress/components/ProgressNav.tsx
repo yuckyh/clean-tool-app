@@ -1,9 +1,5 @@
-import type { ProgressBarProps } from '@fluentui/react-components'
-
 import {
   useThemeClassName,
-  mergeClasses,
-  ProgressBar,
   makeStyles,
   shorthands,
   tokens,
@@ -11,20 +7,25 @@ import {
 import {
   useResolvedPath,
   useBeforeUnload,
-  matchRoutes,
-  resolvePath,
   useLocation,
   useNavigate,
 } from 'react-router-dom'
-import { useAppDispatch, useAppSelector } from '@/lib/hooks'
 import { useCallback, useEffect, useMemo } from 'react'
 import { Helmet } from 'react-helmet-async'
-import { getPathTitle } from '@/lib/string'
-import { toObject } from '@/lib/array'
-import { routes } from '@/app/Router'
+import { range, split, flow, map, zip } from 'lodash/fp'
+import { useAppDispatch, useAppSelector } from '@/lib/hooks'
 
-import { saveProgressState, type Progress } from '../reducers'
+import { saveProgressState } from '../reducers'
 import ProgressNavLink from './ProgressNavLink'
+import { just } from '@/lib/monads'
+import {
+  getShouldNavigateToAllowed,
+  getAllowedPaths,
+  getPosition,
+  getPaths,
+  getTitle,
+} from '../selectors'
+import ProgressNavBar from './ProgressNavBar'
 
 const useClasses = makeStyles({
   root: {
@@ -37,88 +38,45 @@ const useClasses = makeStyles({
     display: 'flex',
     width: '100%',
   },
-  progressBar: {
-    width: '80%',
-    ...shorthands.margin(0, 'auto'),
-  },
-  // Animation hack for initial progress bar
-  progressBarInitial: {
-    width: '81%',
-  },
 })
 
-export const ProgressNav = (props: ProgressBarProps) => {
+export default function ProgressNav() {
   const classes = useClasses()
 
   const navigate = useNavigate()
 
   const dispatch = useAppDispatch()
 
-  const { progress } = useAppSelector(({ progress }) => progress)
-
   const { pathname: componentPath } = useResolvedPath('')
   const { pathname: locationPath } = useLocation()
 
-  const title = useMemo(
-    () => getPathTitle(locationPath, locationPath.includes('eda/') ? 2 : 0),
-    [locationPath],
+  const params = useMemo(
+    () => [componentPath, locationPath] as [string, string],
+    [componentPath, locationPath],
   )
 
   const themeClasses = useThemeClassName()
 
-  const componentPathDepth = useMemo(
-    () => componentPath.split('/').length - 1,
-    [componentPath],
+  const paths = useAppSelector((state) => getPaths(state, componentPath))
+  const allowedPaths = useAppSelector((state) =>
+    getAllowedPaths(state, componentPath),
   )
+  const position = useAppSelector((state) => getPosition(state, ...params))
+  const title = useAppSelector((state) => getTitle(state, ...params))
 
-  const pathList = useMemo(
-    () =>
-      matchRoutes(routes, componentPath)
-        ?.find(({ route }) => !route.index)
-        ?.route.children?.find(({ index }) => !index)
-        ?.children?.map(({ path = '' }) =>
-          resolvePath(path).pathname.toLowerCase(),
-        ) ?? [],
-    [componentPath],
-  )
-
-  const allowedPaths = useMemo(
-    () =>
-      toObject(
-        ['none', 'uploaded', 'matched', 'explored'] as Progress[],
-        (i) => [...pathList.slice(0, i + 2)],
-      )[progress] ?? [],
-    [pathList, progress],
-  )
-
-  const position = useMemo(
-    () =>
-      pathList.findIndex(
-        (path) =>
-          path.replace('/', '') === locationPath.split('/')[componentPathDepth],
-      ),
-    [componentPathDepth, locationPath, pathList],
-  )
-
-  // Ternary expression for animation hack
-  const progressValue = useMemo(
-    () => position / (pathList.length - 1) || 0.011,
-    [pathList.length, position],
+  const shouldNavigateToAllowed = useAppSelector((state) =>
+    getShouldNavigateToAllowed(state, ...params),
   )
 
   useEffect(() => {
-    if (
-      locationPath !== '/' &&
-      !allowedPaths.some((path) =>
-        locationPath.split('/').splice(1).includes(path.replace('/', '')),
-      )
-    ) {
+    console.log(allowedPaths)
+    if (shouldNavigateToAllowed) {
       navigate(allowedPaths.at(-1) ?? '/')
     }
-  }, [allowedPaths, locationPath, navigate])
+  }, [allowedPaths, navigate, shouldNavigateToAllowed])
 
   useEffect(() => {
-    const classList = themeClasses.split(' ')
+    const classList = split(' ')(themeClasses)
     document.body.classList.add(...classList)
 
     return () => {
@@ -128,7 +86,7 @@ export const ProgressNav = (props: ProgressBarProps) => {
 
   useBeforeUnload(
     useCallback(() => {
-      dispatch(saveProgressState())
+      just(saveProgressState).pass()(dispatch)
     }, [dispatch]),
   )
 
@@ -137,28 +95,20 @@ export const ProgressNav = (props: ProgressBarProps) => {
       <Helmet>
         <title>{title}</title>
       </Helmet>
-      <ProgressBar
-        className={mergeClasses(
-          classes.progressBar,
-          position == 0 && classes.progressBarInitial,
-        )}
-        title="Progress Bar Navigation"
-        value={progressValue}
-        max={1}
-        {...props}
-      />
+      <ProgressNavBar />
       <div className={classes.linkContainer}>
-        {pathList.map((path, i) => (
-          <ProgressNavLink
-            disabled={!allowedPaths.includes(path)}
-            done={position >= i}
-            path={path}
-            key={i}
-          />
-        ))}
+        {flow(
+          zip(range(0)(paths.length)),
+          map<[number, string], JSX.Element>(([pos = -1, path = '']) => (
+            <ProgressNavLink
+              done={position >= pos}
+              path={path}
+              key={path}
+              pos={pos}
+            />
+          )),
+        )(paths)}
       </div>
     </div>
   )
 }
-
-export default ProgressNav

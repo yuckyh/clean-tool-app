@@ -61,7 +61,7 @@ export default function SimpleDataGrid<T>(props: Props<T>) {
     return component
   }, [])
 
-  const renderHeaderCell = useCallback(
+  const renderHeaderCellFn = useCallback(
     ({ renderHeaderCell, columnId }: TableColumnDefinition<T>) => (
       <DataGridHeaderCell className={classes.cell} key={columnId}>
         {renderHeaderCell()}
@@ -70,7 +70,7 @@ export default function SimpleDataGrid<T>(props: Props<T>) {
     [classes.cell],
   )
 
-  const renderCell = useCallback(
+  const renderCellFn = useCallback(
     ({ rowId, item }: TableRowData<T>) => (
       <DataGridRow key={rowId}>
         {({ renderCell, columnId }) => (
@@ -78,16 +78,14 @@ export default function SimpleDataGrid<T>(props: Props<T>) {
             focusMode={cellFocusMode(columnId)}
             className={classes.cell}
             key={columnId}>
-            {
-              <Suspense
-                fallback={
-                  <Skeleton className={classes.skeletonCell}>
-                    <SkeletonItem size={40} />
-                  </Skeleton>
-                }>
-                {renderCell(item)}
-              </Suspense>
-            }
+            <Suspense
+              fallback={
+                <Skeleton className={classes.skeletonCell}>
+                  <SkeletonItem size={40} />
+                </Skeleton>
+              }>
+              {renderCell(item)}
+            </Suspense>
           </DataGridCell>
         )}
       </DataGridRow>
@@ -102,10 +100,10 @@ export default function SimpleDataGrid<T>(props: Props<T>) {
       size="huge">
       <MemoizedGrid {...props} className={classes.grid}>
         <DataGridHeader className={classes.container}>
-          <DataGridRow>{renderHeaderCell}</DataGridRow>
+          <DataGridRow>{renderHeaderCellFn}</DataGridRow>
         </DataGridHeader>
         <MemoizedGridBody className={classes.container}>
-          {renderCell}
+          {renderCellFn}
         </MemoizedGridBody>
       </MemoizedGrid>
     </Loader>

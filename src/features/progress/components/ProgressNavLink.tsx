@@ -7,16 +7,22 @@ import {
   tokens,
   Link,
 } from '@fluentui/react-components'
-import { useLinkClickHandler, useHref, useNavigation } from 'react-router-dom'
-import { postFormattedJSON } from '@/features/sheet/actions'
-import { useAppDispatch } from '@/lib/hooks'
+import {
+  useLinkClickHandler,
+  useResolvedPath,
+  useLocation,
+  useHref,
+} from 'react-router-dom'
+import { useMemo } from 'react'
 import { getPathTitle } from '@/lib/string'
-import { useEffect } from 'react'
+import { useAppSelector } from '@/lib/hooks'
+import { useLoggerEffect } from '@/lib/logger'
+import { getDisabled, getPath } from '../selectors'
 
 interface Props {
-  disabled: boolean
   done: boolean
   path: string
+  pos: number
 }
 
 const useClasses = makeStyles({
@@ -47,22 +53,28 @@ const useClasses = makeStyles({
   },
 })
 
-const ProgressNavLink = ({ disabled, done, path }: Props) => {
+export default function ProgressNavLink({ done, path, pos }: Props) {
   const classes = useClasses()
 
-  const dispatch = useAppDispatch()
+  const { pathname: locationPath } = useLocation()
+  const { pathname: componentPath } = useResolvedPath('')
 
-  const navigation = useNavigation()
+  const params = useMemo(
+    () => [componentPath, locationPath, pos] as const,
+    [componentPath, locationPath, pos],
+  )
+
+  const disabled = useAppSelector((state) => getDisabled(state, ...params))
   const href = useHref(disabled ? '#' : path)
   const handleLinkClick = useLinkClickHandler(path)
 
-  const label = getPathTitle(path)
-  const isActive = href === path
+  const selectedPath = useAppSelector((state) => getPath(state, ...params))
 
-  useEffect(() => {
-    navigation.location?.pathname.includes('eda') &&
-      void dispatch(postFormattedJSON())
-  }, [dispatch, navigation.location])
+  useLoggerEffect({ disabled })
+  useLoggerEffect({ selectedPath })
+
+  const label = getPathTitle(path)
+  const isActive = useLocation().pathname === path
 
   return (
     <div className={classes.root}>
@@ -89,5 +101,3 @@ const ProgressNavLink = ({ disabled, done, path }: Props) => {
     </div>
   )
 }
-
-export default ProgressNavLink

@@ -1,29 +1,32 @@
 import type { ComboboxProps } from '@fluentui/react-components'
-import type { AlertRef } from '@/components/AlertDialog'
-
 import {
   makeStyles,
   Combobox,
   Spinner,
   Option,
 } from '@fluentui/react-components'
-import { useAppDispatch, useAppSelector, useDebounced } from '@/lib/hooks'
 import { useCallback, useState, useMemo, memo } from 'react'
+import { zip } from 'lodash'
+import type { AlertRef } from '@/components/AlertDialog'
+
+import { useAppDispatch, useAppSelector, useDebounced } from '@/lib/hooks'
 import { indexDuplicateSearcher, range } from '@/lib/array'
-import { just } from '@/lib/utils'
+import { just } from '@/lib/monads'
 import fuse from '@/lib/fuse'
 
-import { getMatchColumn, getMatchVisit, getIndices } from '../selectors'
+import type { ColumnMatch } from '../reducers'
+
+import {
+  getMatchColumn,
+  getMatchVisit,
+  getMatches,
+  getIndices,
+  getScores,
+} from '../selectors'
 import { setMatchColumn, setMatchVisit } from '../reducers'
 
 interface Props {
   alertRef: React.RefObject<AlertRef>
-  pos: number
-}
-
-interface FilteredMatch {
-  match: string
-  score: number
   pos: number
 }
 
@@ -33,7 +36,33 @@ const useClasses = makeStyles({
   },
 })
 
-const MatchCell = ({ alertRef, pos }: Props) => {
+interface FilteredOptionsProps {
+  filteredMatches: ColumnMatch[]
+  value: string
+}
+
+const search = fuse.search.bind(fuse)
+
+function FilteredOptions({ filteredMatches, value }: FilteredOptionsProps) {
+  return filteredMatches.length ? (
+    filteredMatches.map(({ match, score }) => (
+      <Option value={match} text={match} key={match}>
+        {match}, {(1 - score).toFixed(2)}
+      </Option>
+    ))
+  ) : (
+    <Option value={value} text={value}>
+      Create column? {value},{' '}
+      {just(value)(search)(([match]) => match?.score ?? 1)(
+        (score) => 1 - score,
+      )().toFixed(2)}
+    </Option>
+  )
+}
+
+const MemoizedFilteredOptions = memo(FilteredOptions)
+
+export default function MatchCell({ alertRef, pos }: Props) {
   const classes = useClasses()
 
   const dispatch = useAppDispatch()
@@ -41,22 +70,27 @@ const MatchCell = ({ alertRef, pos }: Props) => {
   const visits = useAppSelector(({ sheet }) => sheet.visits)
   const matchColumn = useAppSelector((state) => getMatchColumn(state, pos))
   const matchVisit = useAppSelector((state) => getMatchVisit(state, pos))
-
-  const matches = useAppSelector(
-    ({ columns }) => columns.matchLists[pos]?.matches ?? [],
-  )
+  const matches = useAppSelector((state) => getMatches(state, pos))
+  const scores = useAppSelector((state) => getScores(state, pos))
   const indices = useAppSelector(getIndices)
 
-  const [open, setOpen] = useState(false)
+  const [comboboxOpen, setComboboxOpen] = useState(false)
   const [value, setValue] = useState(matchColumn)
 
   const deferredValue = useDebounced(value, 200)
 
   const isDebouncing = value !== deferredValue
 
-  const filteredMatches = useMemo(() => {
-    return matches.filter(({ match }) => match.includes(deferredValue))
-  }, [deferredValue, matches])
+  const filteredMatches = useMemo(
+    () =>
+      zip(matches, scores)
+        .map(([match = '', score = 0]) => ({
+          match,
+          score,
+        }))
+        .filter(({ match }) => match.includes(deferredValue)),
+    [deferredValue, matches, scores],
+  )
 
   const handleOptionSelect: Required<ComboboxProps>['onOptionSelect'] =
     useCallback(
@@ -91,13 +125,13 @@ const MatchCell = ({ alertRef, pos }: Props) => {
             return
           }
 
-          just({ matchVisit: newMatchVisit, pos })(setMatchVisit)(dispatch)()
+          just({ matchVisit: newMatchVisit, pos })(setMatchVisit)(dispatch)
         }
 
-        just({ matchColumn: newMatchColumn, pos })(setMatchColumn)(dispatch)()
+        just({ matchColumn: newMatchColumn, pos })(setMatchColumn)(dispatch)
 
         setValue(newMatchColumn)
-        setOpen(false)
+        setComboboxOpen(false)
       },
       [
         alertRef,
@@ -112,11 +146,11 @@ const MatchCell = ({ alertRef, pos }: Props) => {
 
   const handleComboboxChange: ComboboxProps['onChange'] = ({ target }) => {
     setValue(target.value)
-    setOpen(true)
+    setComboboxOpen(true)
   }
 
   const handleOpenChange: ComboboxProps['onOpenChange'] = (_e, { open }) => {
-    setOpen(open)
+    setComboboxOpen(open)
   }
 
   return (
@@ -127,38 +161,19 @@ const MatchCell = ({ alertRef, pos }: Props) => {
       selectedOptions={[matchColumn]}
       appearance="filled-darker"
       className={classes.root}
+      open={comboboxOpen}
       value={value}
-      open={open}
       freeform>
       {isDebouncing ? (
         <Option text="loading">
-          <Spinner label={'Loading options...'} />
+          <Spinner label="Loading options..." />
         </Option>
-      ) : filteredMatches.length ? (
-        <MemoizedFilteredOptions filteredMatches={filteredMatches} />
       ) : (
-        <Option value={value} text={value}>
-          Create column? {value},{' '}
-          {just(value)(fuse.search.bind(fuse))(([match]) => match?.score ?? 1)(
-            (score) => 1 - score,
-          )((score) => score.toFixed(2))()}
-        </Option>
+        <MemoizedFilteredOptions
+          filteredMatches={filteredMatches}
+          value={value}
+        />
       )}
     </Combobox>
   )
 }
-
-interface FilteredOptionsProps {
-  filteredMatches: FilteredMatch[]
-}
-
-const FilteredOptions = ({ filteredMatches }: FilteredOptionsProps) =>
-  filteredMatches.map(({ match, score }) => (
-    <Option value={match} text={match} key={match}>
-      {match}, {(1 - score).toFixed(2)}
-    </Option>
-  ))
-
-const MemoizedFilteredOptions = memo(FilteredOptions)
-
-export default MatchCell

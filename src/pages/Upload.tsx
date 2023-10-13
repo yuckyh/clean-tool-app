@@ -1,7 +1,3 @@
-import type { SheetInputRef } from '@/features/sheet/components/SheetUploadInput'
-import type { SimpleToasterRef } from '@/components/SimpleToaster'
-import type { AlertRef } from '@/components/AlertDialog'
-
 import {
   CardFooter,
   CardHeader,
@@ -15,6 +11,12 @@ import {
   tokens,
   Card,
 } from '@fluentui/react-components'
+import { useBeforeUnload, useNavigate } from 'react-router-dom'
+import { useCallback, useEffect, useRef } from 'react'
+import type { SheetInputRef } from '@/features/sheet/components/SheetUploadInput'
+import type { SimpleToasterRef } from '@/components/SimpleToaster'
+import type { AlertRef } from '@/components/AlertDialog'
+
 import {
   useLoadingTransition,
   useAppDispatch,
@@ -23,16 +25,15 @@ import {
 import { saveColumnState, deleteColumns } from '@/features/columns/reducers'
 import SheetPickerInput from '@/features/sheet/components/SheetPickerInput'
 import SheetUploadInput from '@/features/sheet/components/SheetUploadInput'
-import { deleteProgress, setProgress } from '@/features/progress/reducers'
+import { deleteProgressState, setProgress } from '@/features/progress/reducers'
 import PreviewDataGrid from '@/features/sheet/components/PreviewDataGrid'
-import { deleteWorkbook, fetchWorkbook } from '@/features/sheet/actions'
+import { deleteSheet, fetchSheet } from '@/features/sheet/actions'
 import VisitsInput from '@/features/sheet/components/VisitsInput'
-import { getColumns, getSheet } from '@/features/sheet/selectors'
-import { useBeforeUnload, useNavigate } from 'react-router-dom'
+import { getColumnsLength } from '@/features/sheet/selectors'
 import { saveSheetState } from '@/features/sheet/reducers'
 import SimpleToaster from '@/components/SimpleToaster'
-import { useCallback, useEffect, useRef } from 'react'
 import AlertDialog from '@/components/AlertDialog'
+import { just } from '@/lib/monads'
 
 const useClasses = makeStyles({
   root: {
@@ -62,21 +63,19 @@ const useClasses = makeStyles({
   },
 })
 
-export const Component = () => {
+// eslint-disable-next-line import/prefer-default-export
+export function Component() {
   const classes = useClasses()
 
   const navigate = useNavigate()
 
   const dispatch = useAppDispatch()
 
-  const fileName = useAppSelector(({ sheet }) => sheet.fileName)
-  const hasSheet = useAppSelector((state) => !!getSheet(state))
+  const hasSheet = useAppSelector(({ sheet }) => !!sheet.data.length)
   const hasMultipleSheets = useAppSelector(({ sheet }) => !sheet.bookType)
-  const originalColumnsLength = useAppSelector(
-    (state) => getColumns(state).length,
-  )
+  const columnsLength = useAppSelector(getColumnsLength)
 
-  const [isLoading, setIsLoading] = useLoadingTransition()
+  const [isLoading, stopLoading] = useLoadingTransition()
 
   const alertRef = useRef<AlertRef>(null)
   const toasterRef = useRef<SimpleToasterRef>(null)
@@ -92,27 +91,35 @@ export const Component = () => {
 
   const handleResetConfirm = useCallback(() => {
     sheetInputRef.current?.setFileTask('deleted')
-    dispatch(deleteProgress())
-    dispatch(deleteColumns())
-    void dispatch(deleteWorkbook())
+    just(deleteProgressState).pass()(dispatch)
+    just(deleteColumns).pass()(dispatch)
+    just(deleteSheet)
+      .pass()((x) => dispatch(x))()
+      .catch(console.error)
   }, [dispatch])
 
   const handleSubmit = useCallback(() => {
-    dispatch(setProgress('uploaded'))
+    just(setProgress).pass('uploaded')((x) => dispatch(x))
 
     navigate('/column-matching')
   }, [dispatch, navigate])
 
   useEffect(() => {
-    void dispatch(fetchWorkbook(fileName)).then(() => {
-      setIsLoading(false)
-    })
-  }, [dispatch, fileName, setIsLoading])
+    if (columnsLength) {
+      stopLoading()
+      return
+    }
+
+    just(fetchSheet)
+      .pass()((x) => dispatch(x))()
+      .catch(console.error)
+      .finally(stopLoading)
+  }, [columnsLength, dispatch, stopLoading])
 
   useBeforeUnload(
     useCallback(() => {
-      dispatch(saveSheetState())
-      dispatch(saveColumnState())
+      just(saveSheetState).pass()((x) => dispatch(x))
+      just(saveColumnState).pass()((x) => dispatch(x))
     }, [dispatch]),
   )
 
@@ -143,16 +150,15 @@ export const Component = () => {
         />
       </Card>
       <AlertDialog onConfirm={handleResetConfirm} ref={alertRef} />
-      {originalColumnsLength > 0 &&
-        (!isLoading ? (
-          <PreviewDataGrid isOriginal />
-        ) : (
-          <Spinner
-            label={<Subtitle1>Loading Preview...</Subtitle1>}
-            labelPosition="below"
-            size="huge"
-          />
-        ))}
+      {!isLoading ? (
+        <PreviewDataGrid isOriginal />
+      ) : (
+        <Spinner
+          label={<Subtitle1>Loading Preview...</Subtitle1>}
+          labelPosition="below"
+          size="huge"
+        />
+      )}
       <SimpleToaster ref={toasterRef} />
     </section>
   )

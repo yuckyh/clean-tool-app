@@ -11,7 +11,8 @@ const useClasses = makeStyles({
   },
 })
 
-export const Component = () => {
+// eslint-disable-next-line import/prefer-default-export
+export function Component() {
   const classes = useClasses()
 
   const href = useHref('/')

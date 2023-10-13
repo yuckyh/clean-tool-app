@@ -1,18 +1,14 @@
+import type { DataGridCellFocusMode } from '@fluentui/react-components'
+import { createTableColumn, Title2 } from '@fluentui/react-components'
+import { useMemo } from 'react'
 import type { Props as SimpleDataGridProps } from '@/components/SimpleDataGrid'
 
-import {
-  createTableColumn,
-  makeStyles,
-  tokens,
-  Title2,
-} from '@fluentui/react-components'
-import { getFormattedColumn } from '@/features/columns/selectors'
 import { useAppSelector } from '@/lib/hooks'
 import { createLazyMemo } from '@/lib/utils'
-import { useCallback, useMemo } from 'react'
 import { range } from '@/lib/array'
 
-import { getColumns, getColumn } from '../selectors'
+import PreviewHeaderCell from './PreviewHeaderCell'
+import { getColumnsLength } from '../selectors'
 
 interface Props {
   isOriginal?: boolean
@@ -20,7 +16,7 @@ interface Props {
 
 const MemoizedValueCell = createLazyMemo(
   'MemoizedValueCell',
-  () => import('@/components/Cells/ValueCell'),
+  () => import('./PreviewValueCell'),
 )
 
 const MemoizedSimpleDataGrid = createLazyMemo<SimpleDataGridProps<number>>(
@@ -28,22 +24,12 @@ const MemoizedSimpleDataGrid = createLazyMemo<SimpleDataGridProps<number>>(
   () => import('@/components/SimpleDataGrid'),
 )
 
-const useClasses = makeStyles({
-  categoricalHeader: {
-    backgroundColor: tokens.colorPalettePurpleBackground2,
-  },
-  numericalHeader: {
-    backgroundColor: tokens.colorPaletteBerryBackground2,
-  },
-  columnHeader: {
-    fontWeight: 'bold',
-  },
-})
+const items = range(5)
 
-const PreviewDataGrid = ({ isOriginal = false }: Props) => {
-  const columnsLength = useAppSelector(
-    (state) => getColumns(state, true).length,
-  )
+const cellFocusMode: () => DataGridCellFocusMode = () => 'none'
+
+function PreviewDataGrid({ isOriginal = false }: Props) {
+  const columnsLength = useAppSelector(getColumnsLength)
 
   const columnsDefinition = useMemo(
     () =>
@@ -59,37 +45,22 @@ const PreviewDataGrid = ({ isOriginal = false }: Props) => {
     [columnsLength, isOriginal],
   )
 
-  const cellFocusMode = useCallback(() => 'none', [])
-
-  const items = useMemo(() => range(5), [])
-
   return (
-    <div>
-      <Title2>Data Preview</Title2>
-      <MemoizedSimpleDataGrid
-        cellFocusMode={cellFocusMode}
-        columns={columnsDefinition}
-        items={items}
-      />
-    </div>
+    columnsLength > 0 && (
+      <div>
+        <Title2>Data Preview</Title2>
+        <MemoizedSimpleDataGrid
+          cellFocusMode={cellFocusMode}
+          columns={columnsDefinition}
+          items={items}
+        />
+      </div>
+    )
   )
 }
 
-interface PreviewHeaderCellProps {
-  isOriginal: boolean
-  pos: number
-}
-
-const PreviewHeaderCell = ({ isOriginal, pos }: PreviewHeaderCellProps) => {
-  const classes = useClasses()
-
-  const column = useAppSelector((state) =>
-    isOriginal
-      ? getColumn(state, isOriginal, pos)
-      : getFormattedColumn(state, pos),
-  )
-
-  return <div className={classes.columnHeader}>{column}</div>
+PreviewDataGrid.defaultProps = {
+  isOriginal: false,
 }
 
 export default PreviewDataGrid

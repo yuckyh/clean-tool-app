@@ -1,5 +1,3 @@
-import type { AlertRef } from '@/components/AlertDialog'
-
 import {
   makeStyles,
   shorthands,
@@ -7,13 +5,15 @@ import {
   Title1,
   tokens,
 } from '@fluentui/react-components'
-import { postFormattedJSON } from '@/features/sheet/actions'
+import { useNavigate } from 'react-router-dom'
+import { useCallback, useRef } from 'react'
+import type { AlertRef } from '@/components/AlertDialog'
+
 import { setProgress } from '@/features/progress/reducers'
 import AlertDialog from '@/components/AlertDialog'
-import { useNavigate } from 'react-router-dom'
 import { createLazyMemo } from '@/lib/utils'
+import { just } from '@/lib/monads'
 import { useAppDispatch } from '@/lib/hooks'
-import { useCallback, useRef } from 'react'
 
 const useClasses = makeStyles({
   root: {
@@ -27,7 +27,7 @@ const useClasses = makeStyles({
 
 const MemoizedColumnsDataGrid = createLazyMemo(
   'MemoizedColumnsDataGrid',
-  () => import('@/components/ColumnsDataGrid'),
+  () => import('@/pages/ColumnMatching/ColumnsDataGrid'),
 )
 
 const MemoizedPreviewDataGrid = createLazyMemo(
@@ -35,7 +35,8 @@ const MemoizedPreviewDataGrid = createLazyMemo(
   () => import('@/features/sheet/components/PreviewDataGrid'),
 )
 
-export const Component = () => {
+// eslint-disable-next-line import/prefer-default-export
+export function Component() {
   const classes = useClasses()
 
   const navigate = useNavigate()
@@ -44,8 +45,7 @@ export const Component = () => {
 
   const handleCommitChanges = useCallback(() => {
     navigate('/eda')
-    dispatch(setProgress('matched'))
-    void dispatch(postFormattedJSON())
+    just(setProgress).pass('matched')(dispatch)
   }, [dispatch, navigate])
 
   const alertRef = useRef<AlertRef>(null)

@@ -1,12 +1,11 @@
 import type { InputProps } from '@fluentui/react-components'
 
 import { makeStyles, Field, Input } from '@fluentui/react-components'
-import { useAppDispatch, useAppSelector } from '@/lib/hooks'
 import { useCallback, useState } from 'react'
-import { range } from '@/lib/array'
-import { just } from '@/lib/utils'
+import { useAppDispatch, useAppSelector } from '@/lib/hooks'
 
-import { deleteVisits, pushVisit, popVisit, setVisit } from '../reducers'
+import { deleteVisits, syncVisits, setVisit } from '../reducers'
+import { just } from '@/lib/monads'
 
 const useClasses = makeStyles({
   input: {
@@ -15,46 +14,61 @@ const useClasses = makeStyles({
   },
 })
 
-const VisitsInput = () => {
+interface VisitInputProps {
+  visit: string
+  pos: number
+}
+
+function VisitInput({ visit, pos }: VisitInputProps) {
   const classes = useClasses()
 
   const dispatch = useAppDispatch()
 
-  const { visits } = useAppSelector(({ sheet }) => sheet)
+  const handleVisitChange: Required<InputProps>['onChange'] = useCallback(
+    ({ target }) => {
+      const { value } = target
+
+      just({ visit: value, pos })(setVisit)(dispatch)
+    },
+    [dispatch, pos],
+  )
+
+  return (
+    <Field label={`Time for visit ${pos + 1}`}>
+      <Input
+        onChange={handleVisitChange}
+        appearance="filled-darker"
+        className={classes.input}
+        value={visit}
+      />
+    </Field>
+  )
+}
+
+export default function VisitsInput() {
+  const classes = useClasses()
+
+  const dispatch = useAppDispatch()
+
+  const visits = useAppSelector(({ sheet }) => sheet.visits)
+
   const [visitsValue, setVisitsValue] = useState(visits.length || 1)
 
-  const handleNoOfVisitChange: InputProps['onChange'] = (_event, { value }) => {
-    const newVisitsLength = parseInt(value)
-    setVisitsValue(newVisitsLength)
-    if (isNaN(newVisitsLength)) {
-      return
-    }
+  const handleNoOfVisitChange: Required<InputProps>['onChange'] = useCallback(
+    (_event, { value }) => {
+      const newVisitsLength = parseInt(value, 10)
+      setVisitsValue(newVisitsLength)
+      if (Number.isNaN(newVisitsLength)) {
+        return
+      }
 
-    const visitsLengthDiff = newVisitsLength - visits.length
+      if (newVisitsLength === 1) {
+        just(deleteVisits).pass()(dispatch)
+        return
+      }
 
-    if (newVisitsLength === 1) {
-      dispatch(deleteVisits())
-      return
-    }
-
-    if (visitsLengthDiff > 0) {
-      range(visitsLengthDiff).forEach(() => dispatch(pushVisit()))
-      return
-    }
-
-    if (visitsLengthDiff < 0) {
-      range(-1 * visitsLengthDiff).forEach(() => dispatch(popVisit()))
-      return
-    }
-  }
-
-  const handleVisitChange = useCallback(
-    (pos: number): Required<InputProps>['onChange'] =>
-      ({ target }) => {
-        const { value } = target
-
-        just({ visit: value, pos })(setVisit)(dispatch)()
-      },
+      just(newVisitsLength)(syncVisits)(dispatch)
+    },
     [dispatch],
   )
 
@@ -69,18 +83,9 @@ const VisitsInput = () => {
           type="number"
         />
       </Field>
-      {visits.map((visit, i) => (
-        <Field label={`Time for visit ${i + 1}`} key={i}>
-          <Input
-            onChange={handleVisitChange(i)}
-            appearance="filled-darker"
-            className={classes.input}
-            value={visit}
-          />
-        </Field>
+      {visits.map((visit, pos) => (
+        <VisitInput visit={visit} key={visit} pos={pos} />
       ))}
     </div>
   )
 }
-
-export default VisitsInput

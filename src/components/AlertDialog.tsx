@@ -70,5 +70,8 @@ const AlertDialog = forwardRef<AlertRef, Props>(({ onConfirm }, ref) => {
 })
 
 AlertDialog.displayName = 'AlertDialog'
+AlertDialog.defaultProps = {
+  onConfirm: () => {},
+}
 
 export default AlertDialog

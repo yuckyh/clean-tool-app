@@ -1,12 +1,13 @@
 import {
   CardFooter,
   CardHeader,
+  makeStyles,
+  shorthands,
   Button,
   Title1,
   tokens,
   Card,
 } from '@fluentui/react-components'
-import { makeStyles, shorthands } from '@fluentui/react-components'
 import { useLinkClickHandler, useHref } from 'react-router-dom'
 
 const useClasses = makeStyles({
@@ -24,7 +25,8 @@ const useClasses = makeStyles({
 // TODO: add download button
 // TODO: make download work
 
-export const Component = () => {
+// eslint-disable-next-line import/prefer-default-export
+export function Component() {
   const classes = useClasses()
 
   const uploadHref = useHref('/upload')
@@ -34,7 +36,7 @@ export const Component = () => {
   return (
     <section className={classes.root}>
       <Card className={classes.card} size="large">
-        <CardHeader header={<Title1>CLEaN Tool</Title1>}></CardHeader>
+        <CardHeader header={<Title1>CLEaN Tool</Title1>} />
         <CardFooter
           action={
             <Button
@@ -44,7 +46,8 @@ export const Component = () => {
               as="a">
               Upload
             </Button>
-          }></CardFooter>
+          }
+        />
       </Card>
     </section>
   )

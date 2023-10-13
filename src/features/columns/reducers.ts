@@ -1,25 +1,21 @@
 import type { PayloadAction } from '@reduxjs/toolkit'
 
-import { getPersisted, setPersisted } from '@/lib/utils'
 import { createSlice } from '@reduxjs/toolkit'
-import _ from 'lodash'
+import { zip } from 'lodash'
+import { getPersisted, setPersisted } from '@/lib/localStorage'
 
-import { fetchMatches, name } from './actions'
+import { fetchMatches, sliceName } from './actions'
+import { makeIndexPair } from '@/lib/array'
 
-interface ColumnMatch {
+export interface ColumnMatch {
   match: string
   score: number
-  pos: number
-}
-
-interface ColumnMatches {
-  matches: ColumnMatch[]
-  pos: number
 }
 
 interface State {
-  matchLists: ColumnMatches[]
+  matchesList: string[][]
   matchColumns: string[]
+  scoresList: number[][]
   matchVisits: number[]
 }
 
@@ -30,9 +26,10 @@ const initialState: State = {
   matchVisits: getPersisted(keys[1], defaultValue)
     .split(',')
     .filter(Boolean)
-    .map((visit) => parseInt(visit)),
+    .map((visit) => parseInt(visit, 10)),
   matchColumns: getPersisted(keys[0], defaultValue).split(',').filter(Boolean),
-  matchLists: [],
+  matchesList: [],
+  scoresList: [],
 }
 
 // Slice
@@ -41,14 +38,13 @@ const columnsSlice = createSlice({
     builder.addCase(fetchMatches.fulfilled, (state, { payload }) => {
       const { matchColumns, matchVisits } = state
 
-      state.matchLists = payload.map((matches, i) => ({
-        matches: matches.map(({ item: { name }, score = 1 }, j) => ({
-          match: name,
-          pos: j,
-          score,
-        })),
-        pos: i,
-      }))
+      state.matchesList = payload.map((matches) =>
+        matches.map(({ item: { name } }) => name),
+      )
+
+      state.scoresList = payload.map((matches) =>
+        matches.map(({ score = 0 }) => score),
+      )
 
       if (!matchColumns.length) {
         state.matchColumns = payload.map(([match]) => match?.item.name ?? '')
@@ -56,7 +52,7 @@ const columnsSlice = createSlice({
 
       if (!matchVisits.length) {
         state.matchVisits = state.matchColumns
-          .map((match, i) => [match, i] as const) // Save the original index
+          .map(makeIndexPair) // Save the original index
           .sort(([a], [b]) => a.localeCompare(b)) // Sort by name to detect duplicates
           .map(([match, i], sortedI, arr) => {
             const [prevMatch] = arr[sortedI - 1] ?? ['', 0]
@@ -79,11 +75,9 @@ const columnsSlice = createSlice({
   reducers: {
     saveColumnState: (state) => {
       const { matchColumns, matchVisits } = state
-      _.zip(keys, [matchColumns, matchVisits]).forEach(
-        ([key = '', val = []]) => {
-          setPersisted(key, val.join(','))
-        },
-      )
+      zip(keys, [matchColumns, matchVisits]).forEach(([key = '', val = []]) => {
+        setPersisted(key, val.join(','))
+      })
     },
     setMatchColumn: (
       state,
@@ -102,16 +96,14 @@ const columnsSlice = createSlice({
       state.matchVisits[pos] = matchVisit
     },
     deleteColumns: (state) => {
-      state = { ...initialState }
       state.matchColumns = []
       state.matchVisits = []
-      state.matchLists = []
-
-      return state
+      state.matchesList = []
+      state.scoresList = []
     },
   },
+  name: sliceName,
   initialState,
-  name,
 })
 
 export const { saveColumnState, setMatchColumn, deleteColumns, setMatchVisit } =

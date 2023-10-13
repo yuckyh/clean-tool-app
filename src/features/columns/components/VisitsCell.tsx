@@ -1,13 +1,19 @@
 import type { DropdownProps } from '@fluentui/react-components'
+import { makeStyles, Dropdown, Option } from '@fluentui/react-components'
+import { type RefObject, useCallback } from 'react'
 import type { AlertRef } from '@/components/AlertDialog'
 
-import { makeStyles, Dropdown, Option } from '@fluentui/react-components'
 import { useAppDispatch, useAppSelector } from '@/lib/hooks'
 import { indexDuplicateSearcher } from '@/lib/array'
-import { type RefObject, useCallback } from 'react'
 
-import { getMatchColumn, getMatchVisit, getIndices } from '../selectors'
+import {
+  getMatchColumn,
+  getMatchVisit,
+  getIndices,
+  getVisit,
+} from '../selectors'
 import { setMatchVisit } from '../reducers'
+import { just } from '@/lib/monads'
 
 interface Props {
   alertRef: RefObject<AlertRef>
@@ -20,7 +26,7 @@ const useClasses = makeStyles({
   },
 })
 
-const VisitsCell = ({ alertRef, pos }: Props) => {
+export default function VisitsCell({ alertRef, pos }: Props) {
   const classes = useClasses()
 
   const dispatch = useAppDispatch()
@@ -28,21 +34,20 @@ const VisitsCell = ({ alertRef, pos }: Props) => {
   const visits = useAppSelector(({ sheet }) => sheet.visits)
   const matchColumn = useAppSelector((state) => getMatchColumn(state, pos))
   const matchVisit = useAppSelector((state) => getMatchVisit(state, pos))
-  const visit = useAppSelector(({ sheet }) => sheet.visits[matchVisit] ?? '')
+  const visit = useAppSelector((state) => getVisit(state, pos))
   const indices = useAppSelector(getIndices)
 
   const handleOptionSelect: Required<DropdownProps>['onOptionSelect'] =
     useCallback(
       (_e, { optionValue }) => {
-        const newMatchVisit = parseInt(optionValue ?? '1')
+        const newMatchVisit = parseInt(optionValue ?? '1', 10)
 
         if (newMatchVisit === matchVisit) {
           return
         }
 
         if (
-          indexDuplicateSearcher(indices, [matchColumn, newMatchVisit] as const)
-            .length
+          indexDuplicateSearcher(indices, [matchColumn, newMatchVisit]).length
         ) {
           alertRef.current?.setContent(
             'You have selected the same column multiple times. Changes will not be made.',
@@ -52,7 +57,7 @@ const VisitsCell = ({ alertRef, pos }: Props) => {
           return
         }
 
-        dispatch(setMatchVisit({ matchVisit: newMatchVisit, pos }))
+        just({ matchVisit: newMatchVisit, pos })(setMatchVisit)(dispatch)
       },
       [alertRef, dispatch, indices, matchColumn, matchVisit, pos],
     )
@@ -64,13 +69,11 @@ const VisitsCell = ({ alertRef, pos }: Props) => {
       appearance="filled-darker"
       className={classes.root}
       value={visit}>
-      {visits.map((visit, i) => (
-        <Option text={visit.toString()} value={i.toString()} key={visit}>
-          {visit}
+      {visits.map((visitStr, i) => (
+        <Option value={i.toString()} text={visitStr} key={visitStr}>
+          {visitStr}
         </Option>
       ))}
     </Dropdown>
   )
 }
-
-export default VisitsCell

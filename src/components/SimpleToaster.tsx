@@ -7,9 +7,7 @@ const SimpleToaster = forwardRef<SimpleToasterRef, unknown>((_, ref) => {
   const id = useId('simpleToaster')
   const controller = useToastController(id)
 
-  useImperativeHandle(ref, () => ({
-    ...controller,
-  }))
+  useImperativeHandle(ref, () => controller, [controller])
 
   return <Toaster toasterId={id} />
 })

@@ -1,6 +1,6 @@
+import { configureStore } from '@reduxjs/toolkit'
 import progress from '@/features/progress/reducers'
 import columns from '@/features/columns/reducers'
-import { configureStore } from '@reduxjs/toolkit'
 import sheet from '@/features/sheet/reducers'
 
 const store = configureStore({

@@ -1,8 +1,7 @@
-import { codebook } from '@/data'
 import Fuse from 'fuse.js'
+import { codebook } from '@/data'
 
 const fuse = new Fuse(codebook, {
-  fieldNormWeight: 1000,
   includeScore: true,
   keys: ['name'],
   threshold: 1,

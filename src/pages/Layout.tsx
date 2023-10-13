@@ -5,10 +5,10 @@ import {
   Spinner,
   tokens,
 } from '@fluentui/react-components'
-import ProgressNav from '@/features/progress/components/ProgressNav'
 import { useNavigation, Outlet } from 'react-router-dom'
-import Loader from '@/components/Loader'
 import { useMemo } from 'react'
+import ProgressNav from '@/features/progress/components/ProgressNav'
+import Loader from '@/components/Loader'
 
 const useClasses = makeStyles({
   main: {
@@ -21,7 +21,7 @@ const useClasses = makeStyles({
   },
 })
 
-const Layout = () => {
+export default function Layout() {
   const classes = useClasses()
 
   const navigation = useNavigation()
@@ -34,7 +34,7 @@ const Layout = () => {
   return (
     <div>
       <header className={classes.header}>
-        <ProgressNav thickness="large" />
+        <ProgressNav />
       </header>
       <main className={classes.main}>
         <Loader
@@ -55,5 +55,3 @@ const Layout = () => {
     </div>
   )
 }
-
-export default Layout

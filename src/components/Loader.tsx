@@ -6,8 +6,6 @@ import { Suspense } from 'react'
 
 type Props = SpinnerProps & PropsWithChildren
 
-const Loader = ({ children, ...props }: Props) => (
-  <Suspense fallback={<Spinner {...props} />}>{children}</Suspense>
-)
-
-export default Loader
+export default function Loader({ children, ...props }: Props) {
+  return <Suspense fallback={<Spinner {...props} />}>{children}</Suspense>
+}

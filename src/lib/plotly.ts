@@ -1,18 +1,15 @@
 import type { ColorScale } from 'plotly.js-cartesian-dist-min'
 import type { ColorTokens } from '@fluentui/react-components'
 
-import _ from 'lodash'
+import { range, zip } from 'lodash'
 
-import { just, list } from './utils'
-import { range } from './array'
+import { just, list } from './monads'
+// import { range } from './array'
+import { divideBy } from './number'
+import { useTokenToHex } from './hooks'
 
 type ColorToken = Property<ColorTokens>
 type Rgb = readonly [number, number, number]
-
-export const tokenToHex = (token: ColorToken) =>
-  getComputedStyle(document.body).getPropertyValue(
-    token.substring(4, token.length - 1),
-  )
 
 const parseHex = (hexString: string) => parseInt(hexString, 16)
 
@@ -25,30 +22,30 @@ const hexToRgb = (hexString: string) =>
 const numToHex = (x: number) => x.toString(16).padStart(2, '0')
 
 const interpolate =
-  (time: number) =>
   ([start = 0, end = 0]) =>
+  (time: number) =>
     Math.round(start + time * (end - start))
 
-const divideBy = (n: number) => (x: number) => x / n
-
 const timeToColorStep =
-  (rgbDiffs: [undefined | number, undefined | number][]) => (t: number) => [
+  (t: number) => (rgbDiffs: [undefined | number, undefined | number][]) => [
     t,
-    list(rgbDiffs)(interpolate(t))(numToHex).convert(just)((x) => x.join(''))(),
+    list(rgbDiffs)(interpolate).pass(t)(numToHex)().join(''),
   ]
 
-export const fluentColorScale = (
+// eslint-disable-next-line import/prefer-default-export
+export const useFluentColorScale = (
   color1Token: ColorToken,
   color2Token: ColorToken,
   n: number,
 ) => {
-  const rgbDiffs = list([color1Token, color2Token] as const)(tokenToHex)(
+  const rgbDiffs = list([color1Token, color2Token] as const)(useTokenToHex)(
     hexToRgb,
   )
-    .convert(just)((x) => _.zip(...(x as [Rgb, Rgb])))
+    .convert(just)(([x = [], y = []]) => zip<number, number>(x, y))
     .convert(list)()
 
-  return list(range(n))(divideBy(n - 1))(
-    timeToColorStep(rgbDiffs),
-  )() as ColorScale
+  return just(n)(range)
+    .convert(list)(divideBy)
+    .pass(n - 1)(timeToColorStep)
+    .pass(rgbDiffs)() as ColorScale
 }

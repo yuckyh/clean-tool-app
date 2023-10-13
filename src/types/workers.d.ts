@@ -3,7 +3,7 @@
 type RequestHandler<
   Request extends WorkerRequest,
   Response extends WorkerResponse,
-> = (request: Request) => Promise<Response>
+> = (request: Request) => Promise<Response> | Response
 
 type Controller<
   Request extends WorkerRequest,

@@ -4,8 +4,7 @@ import type { PlotParams } from 'react-plotly.js'
 import createPlotlyComponent from 'react-plotly.js/factory'
 import { tokens } from '@fluentui/react-components'
 import Plotly from 'plotly.js-cartesian-dist-min'
-import { tokenToHex } from '@/lib/plotly'
-import { useMemo } from 'react'
+import { useTokenToHex } from '@/lib/hooks'
 
 interface Props extends Partial<PlotParams> {
   data: Data[]
@@ -13,33 +12,31 @@ interface Props extends Partial<PlotParams> {
 
 const PlotlyPlot = createPlotlyComponent(Plotly)
 
-const Plot = ({ config, layout, ...props }: Props) => {
-  const defaultConfig: Partial<Config> = useMemo(
-    () => ({
-      responsive: true,
-    }),
-    [],
-  )
+const defaultConfig: Partial<Config> = {
+  responsive: true,
+}
 
-  const defaultLayout: Partial<Layout> = useMemo(
-    () => ({
-      colorway: [
-        tokens.colorBrandBackground,
-        tokens.colorPaletteGreenBackground3,
-        tokens.colorPaletteBerryBackground3,
-        tokens.colorPalettePurpleBackground2,
-        tokens.colorPaletteRedBackground3,
-        tokens.colorPaletteYellowBackground3,
-      ].map(tokenToHex),
-      font: {
-        color: tokenToHex(tokens.colorNeutralStrokeAccessible),
-        family: 'Droid Sans',
-      },
-      paper_bgcolor: 'rgba(0, 0, 0, 0)',
-      plot_bgcolor: 'rgba(0, 0, 0, 0)',
-    }),
-    [],
-  )
+export default function Plot({ config, layout, ...props }: Props) {
+  const color = useTokenToHex(tokens.colorNeutralStrokeAccessible)
+  const colorway = [
+    tokens.colorBrandBackground,
+    tokens.colorPaletteGreenBackground3,
+    tokens.colorPaletteBerryBackground3,
+    tokens.colorPalettePurpleBackground2,
+    tokens.colorPaletteRedBackground3,
+    tokens.colorPaletteYellowBackground3,
+  ].map(useTokenToHex)
+
+  const defaultLayout: Partial<Layout> = {
+    paper_bgcolor: 'rgba(0, 0, 0, 0)',
+    plot_bgcolor: 'rgba(0, 0, 0, 0)',
+    font: {
+      color,
+    },
+    colorway,
+  }
+
+  // console.log('rendering', colorway, color, config, layout, props)
 
   return (
     <PlotlyPlot
@@ -50,5 +47,3 @@ const Plot = ({ config, layout, ...props }: Props) => {
     />
   )
 }
-
-export default Plot

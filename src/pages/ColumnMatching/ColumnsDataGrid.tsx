@@ -1,10 +1,18 @@
 import type {
+  DataGridCellFocusMode,
   DataGridFocusMode,
   DataGridProps,
 } from '@fluentui/react-components'
+import type { RefObject } from 'react'
+import {
+  createTableColumn,
+  Subtitle1,
+  Spinner,
+} from '@fluentui/react-components'
+import { useCallback, useEffect, useState, useMemo, memo } from 'react'
+import { useBeforeUnload } from 'react-router-dom'
 import type { Props as SimpleDataGridProps } from '@/components/SimpleDataGrid'
 import type { AlertRef } from '@/components/AlertDialog'
-import type { RefObject } from 'react'
 
 import {
   getVisitsComparer,
@@ -12,31 +20,23 @@ import {
   getScoreComparer,
 } from '@/features/columns/selectors'
 import {
-  getColumnComparer,
-  getColumns,
-  getColumn,
-} from '@/features/sheet/selectors'
-import {
   useLoadingTransition,
   useAppDispatch,
   useAppSelector,
 } from '@/lib/hooks'
-import {
-  createTableColumn,
-  Subtitle1,
-  Spinner,
-} from '@fluentui/react-components'
-import { useCallback, useEffect, useState, useMemo, memo } from 'react'
-import { saveSheetState, pushVisit } from '@/features/sheet/reducers'
+import { getColumnComparer, getColumnsLength } from '@/features/sheet/selectors'
 import { saveColumnState } from '@/features/columns/reducers'
+import { saveSheetState } from '@/features/sheet/reducers'
 import { fetchMatches } from '@/features/columns/actions'
-import { fetchWorkbook } from '@/features/sheet/actions'
 import SimpleDataGrid from '@/components/SimpleDataGrid'
-import HeaderCell from '@/components/Cells/HeaderCell'
-import { useBeforeUnload } from 'react-router-dom'
+import { fetchSheet } from '@/features/sheet/actions'
 import { createLazyMemo } from '@/lib/utils'
+import { just } from '@/lib/monads'
 import Loader from '@/components/Loader'
 import { range } from '@/lib/array'
+
+import HeaderCell from './HeaderCell'
+import ValueCell from './ValueCell'
 
 interface Props {
   alertRef: RefObject<AlertRef>
@@ -57,20 +57,20 @@ const MemoizedVisitsCell = createLazyMemo(
 const MemoizedDataGrid = memo<SimpleDataGridProps<number>>(SimpleDataGrid)
 MemoizedDataGrid.displayName = 'MemoizedDataGrid'
 
-const ColumnsDataGrid = ({ alertRef }: Props) => {
+const cellFocusMode: () => DataGridCellFocusMode = () => 'none'
+const focusMode: DataGridFocusMode = 'composite'
+
+export default function ColumnsDataGrid({ alertRef }: Props) {
   const dispatch = useAppDispatch()
 
-  const fileName = useAppSelector(({ sheet }) => sheet.fileName)
-  const visits = useAppSelector(({ sheet }) => sheet.visits)
-  const matchLists = useAppSelector(({ columns }) => columns.matchLists)
-  const matchVisits = useAppSelector(({ columns }) => columns.matchVisits)
-  const originalColumns = useAppSelector((state) => getColumns(state))
-  const columnComparer = useAppSelector((state) => getColumnComparer(state))
+  const columnsLength = useAppSelector(getColumnsLength)
+
+  const columnComparer = useAppSelector(getColumnComparer)
   const matchComparer = useAppSelector(getMatchComparer)
   const visitsComparer = useAppSelector(getVisitsComparer)
   const scoreComparer = useAppSelector(getScoreComparer)
 
-  const [isLoading, setIsLoading] = useLoadingTransition()
+  const [isLoading, stopLoading] = useLoadingTransition()
 
   const [sortState, setSortState] = useState<
     Parameters<NonNullable<DataGridProps['onSortChange']>>[1]
@@ -83,23 +83,7 @@ const ColumnsDataGrid = ({ alertRef }: Props) => {
     [],
   )
 
-  useEffect(() => {
-    if (!fileName) {
-      return
-    }
-
-    void dispatch(fetchWorkbook(fileName))
-  }, [dispatch, fileName])
-
-  useEffect(() => {
-    if (!originalColumns.length) {
-      return
-    }
-
-    void dispatch(fetchMatches()).then(() => {
-      setIsLoading(false)
-    })
-  }, [dispatch, originalColumns.length, setIsLoading])
+  const items = useMemo(() => range(columnsLength), [columnsLength])
 
   const columnsDefinition = useMemo(
     () => [
@@ -152,29 +136,26 @@ const ColumnsDataGrid = ({ alertRef }: Props) => {
     [alertRef, columnComparer, matchComparer, scoreComparer, visitsComparer],
   )
 
-  const cellFocusMode = useCallback(() => 'none', [])
-  const focusMode = useMemo<DataGridFocusMode>(() => 'composite', [])
-
   useEffect(() => {
-    if (!matchVisits.length) {
+    const startFetchMatches = () =>
+      just(fetchMatches).pass()((x) => dispatch(x))()
+
+    if (columnsLength) {
+      startFetchMatches().catch(console.error).finally(stopLoading)
       return
     }
 
-    const newVisitsLength = Math.max(...matchVisits) + 1
-
-    const visitsLengthDiff = newVisitsLength - visits.length
-
-    if (visitsLengthDiff > 0) {
-      range(visitsLengthDiff - visits.length).forEach(() =>
-        dispatch(pushVisit()),
-      )
-    }
-  }, [dispatch, matchVisits, visits.length])
+    just(fetchSheet)
+      .pass()((x) => dispatch(x))()
+      .then(startFetchMatches)
+      .catch(console.error)
+      .finally(stopLoading)
+  }, [dispatch, columnsLength, stopLoading])
 
   useBeforeUnload(
     useCallback(() => {
-      dispatch(saveSheetState())
-      dispatch(saveColumnState())
+      just(saveSheetState).pass()(dispatch)
+      just(saveColumnState).pass()(dispatch)
     }, [dispatch]),
   )
 
@@ -184,12 +165,12 @@ const ColumnsDataGrid = ({ alertRef }: Props) => {
       labelPosition="below"
       size="huge">
       <MemoizedDataGrid
-        items={range(matchLists.length)}
         onSortChange={handleSortChange}
         cellFocusMode={cellFocusMode}
         columns={columnsDefinition}
         focusMode={focusMode}
         sortState={sortState}
+        items={items}
         sortable
       />
     </Loader>
@@ -201,15 +182,3 @@ const ColumnsDataGrid = ({ alertRef }: Props) => {
     />
   )
 }
-
-interface ValueCellProps {
-  pos: number
-}
-
-const ValueCell = ({ pos }: ValueCellProps) => {
-  const column = useAppSelector((state) => getColumn(state, true, pos))
-
-  return <div>{column}</div>
-}
-
-export default ColumnsDataGrid

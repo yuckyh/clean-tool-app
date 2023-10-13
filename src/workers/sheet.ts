@@ -16,10 +16,10 @@ export interface SheetResponse extends WorkerResponse {
 
 type Handler = RequestHandler<SheetRequest, SheetResponse>
 
-const getRootHandle = async () => await navigator.storage.getDirectory()
+const getRootHandle = () => navigator.storage.getDirectory()
 
-const getRootFileHandle = async (fileName: string, create?: boolean) =>
-  await getRootHandle().then((dir) =>
+const getRootFileHandle = (fileName: string, create?: boolean) =>
+  getRootHandle().then((dir) =>
     dir.getFileHandle(fileName, {
       create,
     }),
@@ -101,10 +101,13 @@ const main = async (data: SheetRequest) => {
   }
 }
 
-addEventListener('message', ({ data }: MessageEvent<SheetRequest>) => {
-  void main(data)
-})
+globalThis.addEventListener(
+  'message',
+  ({ data }: MessageEvent<SheetRequest>) => {
+    main(data).catch(console.error)
+  },
+)
 
-addEventListener('error', ({ error }) => {
+globalThis.addEventListener('error', ({ error }) => {
   console.error(error)
 })

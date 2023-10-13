@@ -7,8 +7,8 @@ interface Props {
   fileTask: FileTaskType
 }
 
-const FileToast = ({ fileTask }: Props) => {
-  const { fileName } = useAppSelector(({ sheet }) => sheet)
+export default function FileToast({ fileTask }: Props) {
+  const fileName = useAppSelector(({ sheet }) => sheet.fileName)
 
   return (
     <Toast>
@@ -19,5 +19,3 @@ const FileToast = ({ fileTask }: Props) => {
     </Toast>
   )
 }
-
-export default FileToast

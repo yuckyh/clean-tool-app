@@ -4,9 +4,9 @@ import {
   Route,
 } from 'react-router-dom'
 import Layout from '@/pages/Layout'
-import App from '@/app/App'
+import App from '@/app'
 
-const routes = createRoutesFromElements(
+export const routes = createRoutesFromElements(
   <Route element={<App />}>
     <Route element={<Layout />}>
       <Route lazy={() => import('@/pages')} index />
@@ -27,10 +27,8 @@ const routes = createRoutesFromElements(
   </Route>,
 )
 
-const router = createBrowserRouter(routes, {
+export const router = createBrowserRouter(routes, {
   future: {
     v7_normalizeFormMethod: true,
   },
 })
-
-export { router, routes }

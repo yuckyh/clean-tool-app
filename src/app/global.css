@@ -70,6 +70,7 @@ object {
 
 .js-plotly-plot {
   width: 100%;
+  height: 100%;
 }
 
 .plot-container.plotly {

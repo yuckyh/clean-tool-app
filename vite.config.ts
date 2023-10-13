@@ -12,87 +12,87 @@ export default defineConfig(({ mode }) => {
   const isDev = mode === 'development'
 
   return {
-    define: {
-      __APP_ENV__: JSON.stringify(env),
+    build: {
+      rollupOptions: {
+        output: {
+          manualChunks: {
+            reactHelpers: [
+              'react-helmet-async',
+              'react-router-dom',
+              'react-dropzone',
+            ],
+            plotly: ['react-plotly.js', 'plotly.js-cartesian-dist-min'],
+            fluentui: ['@fluentui/react-components'],
+            react: ['react', 'react-dom'],
+            tauri: ['@tauri-apps/api'],
+          },
+        },
+      },
+      // Tauri uses Chromium on Windows and WebKit on macOS and Linux
+      target: env.TAURI_PLATFORM === 'windows' ? 'chrome105' : 'safari13',
+      cssMinify: isDev ? false : 'lightningcss',
+      // don't minify for debug builds
+      minify: isDev ? false : 'esbuild',
+      // produce sourcemaps for debug builds
+      sourcemap: isDev,
     },
     plugins: [
       react(),
       VitePWA({
-        registerType: 'autoUpdate',
-        injectRegister: 'auto',
+        manifest: {
+          description: 'A clean tool app for Essilor',
+          short_name: 'CleanToolApp',
+          orientation: 'landscape',
+          name: 'CLEaN Tool App',
+          theme_color: '#0F6CBD',
+          id: '/',
+        },
         workbox: {
           globPatterns: [
             '**/*.{js,html,webmanifest}',
             '**/*.{svg,png,jpg,gif}',
           ],
         },
-        manifest: {
-          id: '/',
-          name: 'CLEaN Tool App',
-          short_name: 'CleanToolApp',
-          description: 'A clean tool app for Essilor',
-          theme_color: '#0F6CBD',
-          orientation: 'landscape',
-        },
+        registerType: 'autoUpdate',
+        injectRegister: 'auto',
       }),
       lightningcss({
-        minify: !isDev,
-        sourceMap: isDev,
         browserslist: 'last 2 versions, not dead, >0.2%, ie 11',
+        sourceMap: isDev,
+        minify: !isDev,
       }),
       mkcert(),
     ],
-    // prevent vite from obscuring rust errors
-    clearScreen: false,
+    preview: {
+      strictPort: true,
+      cors: false,
+      https: true,
+    },
     // Tauri expects a fixed port, fail if that port is not available
     server: {
       strictPort: true,
       cors: false,
       https: true,
     },
-    preview: {
-      strictPort: true,
-      cors: false,
-      https: true,
-    },
-    // esbuild: {
-    jsxInject: `import React from 'react'`,
-    // },
-    // to make use of `TAURI_PLATFORM`, `TAURI_ARCH`, `TAURI_FAMILY`,
-    // `TAURI_PLATFORM_VERSION`, `TAURI_PLATFORM_TYPE` and `TAURI_DEBUG`
-    // env variables
-    envPrefix: ['VITE_', 'TAURI_'],
-    commonjsOptions: {
-      esmExternals: true,
-    },
-    build: {
-      // Tauri uses Chromium on Windows and WebKit on macOS and Linux
-      target: env.TAURI_PLATFORM == 'windows' ? 'chrome105' : 'safari13',
-      // don't minify for debug builds
-      minify: isDev ? false : 'esbuild',
-      // produce sourcemaps for debug builds
-      sourcemap: isDev,
-      cssMinify: isDev ? false : 'lightningcss',
-      rollupOptions: {
-        output: {
-          manualChunks: {
-            react: ['react', 'react-dom'],
-            reactHelpers: [
-              'react-helmet-async',
-              'react-router-dom',
-              'react-dropzone',
-            ],
-            fluentui: ['@fluentui/react-components'],
-            tauri: ['@tauri-apps/api'],
-            plotly: ['react-plotly.js', 'plotly.js-cartesian-dist-min'],
-          },
-        },
-      },
-    },
     resolve: {
       alias: {
         '@': resolveDir`src`,
       },
     },
+    define: {
+      __APP_ENV__: JSON.stringify(env),
+    },
+    // },
+    // to make use of `TAURI_PLATFORM`, `TAURI_ARCH`, `TAURI_FAMILY`,
+    // `TAURI_PLATFORM_VERSION`, `TAURI_PLATFORM_TYPE` and `TAURI_DEBUG`
+    commonjsOptions: {
+      esmExternals: true,
+    },
+    // esbuild: {
+    jsxInject: `import React from 'react'`,
+    // env variables
+    envPrefix: ['VITE_', 'TAURI_'],
+    // prevent vite from obscuring rust errors
+    clearScreen: false,
   }
 })

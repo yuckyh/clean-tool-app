@@ -1,11 +1,11 @@
-import { getFormattedFileName } from '@/features/sheet/selectors'
+// import { getFormattedFileName } from '@/features/sheet/selectors'
 import { makeStyles, tokens } from '@fluentui/react-components'
-import { useAppDispatch, useAppSelector } from '@/lib/hooks'
-import { saveSheetState } from '@/features/sheet/reducers'
 import { useBeforeUnload, Outlet } from 'react-router-dom'
-import { fetchWorkbook } from '@/features/sheet/actions'
-import { useCallback, useEffect } from 'react'
-import Nav from '@/components/Nav'
+import { useCallback } from 'react'
+import { useAppDispatch } from '@/lib/hooks'
+import { saveSheetState } from '@/features/sheet/reducers'
+import Nav from '@/pages/EDA/Variable/Nav'
+import { just } from '@/lib/monads'
 
 const useClasses = makeStyles({
   root: {
@@ -17,26 +17,22 @@ const useClasses = makeStyles({
 
 // TODO: add visit detection prompt
 
-export const Component = () => {
+// eslint-disable-next-line import/prefer-default-export
+export function Component() {
   const classes = useClasses()
 
   const dispatch = useAppDispatch()
 
-  const formattedFileName = useAppSelector(getFormattedFileName)
-
-  useEffect(() => {
-    void dispatch(fetchWorkbook(formattedFileName))
-  }, [dispatch, formattedFileName])
-
   useBeforeUnload(
     useCallback(() => {
-      dispatch(saveSheetState())
+      just(saveSheetState).pass()(dispatch)
     }, [dispatch]),
   )
 
+  // TODO: Sticky nav
   return (
     <div className={classes.root}>
-      <Nav vertical={true} />
+      <Nav vertical />
       <Outlet />
     </div>
   )

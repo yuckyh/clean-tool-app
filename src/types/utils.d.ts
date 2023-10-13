@@ -18,6 +18,8 @@ type AsArray<T> = T extends readonly unknown[] | unknown[]
 
 type AnyArray = readonly unknown[] | unknown[]
 
+type ToArray<T> = readonly T[] | T[]
+
 type ArrayElement<T extends AnyArray> = T extends
   | readonly (infer U)[]
   | (infer U)[]
@@ -33,9 +35,15 @@ type Column = number | string
 
 // Functional Programming
 
-type Curried<Args extends AnyArray, Return> = Args[0] extends undefined
-  ? Return
-  : (arg: Args[0]) => Curried<ExcludeFirst<Args>, Return>
+type FunctionReturnType<T, V extends AnyArray> = T extends (
+  ...args: [...V]
+) => infer R
+  ? R
+  : T
+
+type Curried<V extends AnyArray, R> = V[number] extends undefined
+  ? R
+  : (arg: V[0]) => Curried<ExcludeFirst<V>, R>
 
 type MonadFactory<M extends Monad<T>, T> = (value: T) => M
 
@@ -44,9 +52,27 @@ interface Monad<T> {
   convert: <M extends Monad<T>>(converter: MonadFactory<M, T>) => M
 }
 
-type JustMonad<T> = Monad<T> & (<U>(fn: (value: T) => U) => JustMonad<U>)
+interface JustMonad<T> extends Monad<T> {
+  <U>(fn: (value: T) => U): JustMonad<U>
+  pass: {
+    <U extends AnyArray>(...args: U): JustMonad<FunctionReturnType<T, U>>
+    (): JustMonad<T>
+  }
+}
 
-type ListMonad<T extends AnyArray> = Monad<T> &
-  (<V extends IsArray<readonly W[] | W[]>, W>(
-    fn?: (value: ArrayElement<T>, index: number, array: T) => W,
-  ) => ListMonad<V>)
+interface ListMonad<T extends AnyArray> extends Monad<T> {
+  (): T
+  <U extends ToArray<V>, V>(
+    fn?: (
+      value: ArrayElement<T>,
+      index: number,
+      array: ToArray<ArrayElement<T>>,
+    ) => V,
+  ): ListMonad<U>
+  pass: {
+    <U extends AnyArray>(
+      ...args: [...U]
+    ): ListMonad<ToArray<FunctionReturnType<ArrayElement<T>, U>>>
+    (): ListMonad<T>
+  }
+}

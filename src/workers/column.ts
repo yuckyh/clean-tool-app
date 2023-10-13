@@ -1,5 +1,5 @@
-import type { codebook } from '@/data'
 import type Fuse from 'fuse.js'
+import type { codebook } from '@/data'
 
 import fuse from '@/lib/fuse'
 
@@ -16,11 +16,10 @@ export interface ColumnResponse extends WorkerResponse {
 
 type Handler = RequestHandler<ColumnRequest, ColumnResponse>
 
-const get: Handler = async ({ columns }) =>
-  await Promise.resolve({
-    matches: columns.map((column) => fuse.search(column)),
-    status: 'ok',
-  })
+const get: Handler = ({ columns }) => ({
+  matches: columns.map((column) => fuse.search(column)),
+  status: 'ok',
+})
 
 const controller: Controller<ColumnRequest, ColumnResponse> = {
   get,
@@ -32,10 +31,14 @@ const main = async (data: ColumnRequest) => {
   postMessage(await controller[method](data))
 }
 
-addEventListener(
+globalThis.addEventListener(
   'message',
   ({ data }: MessageEvent<ColumnRequest>) => {
-    void main(data)
+    main(data).catch(console.error)
   },
   false,
 )
+
+globalThis.addEventListener('error', ({ error }) => {
+  console.error(error)
+})

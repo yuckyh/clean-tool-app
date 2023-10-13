@@ -1,8 +1,7 @@
 import { makeStyles, tokens } from '@fluentui/react-components'
-import { fluentColorScale } from '@/lib/plotly'
+import { useFluentColorScale } from '@/lib/plotly'
 import { useAppSelector } from '@/lib/hooks'
 import Plot from '@/components/Plot'
-import { useMemo } from 'react'
 
 import { getScore } from '../selectors'
 
@@ -24,19 +23,15 @@ interface Props {
   pos: number
 }
 
-const ScoreCell = ({ pos }: Props) => {
+export default function ScoreCell({ pos }: Props) {
   const classes = useClasses()
 
   const score = useAppSelector((state) => getScore(state, pos))
 
-  const colorscale = useMemo(
-    () =>
-      fluentColorScale(
-        tokens.colorStatusDangerForegroundInverted,
-        tokens.colorStatusSuccessForegroundInverted,
-        64,
-      ),
-    [],
+  const colorscale = useFluentColorScale(
+    tokens.colorStatusDangerForegroundInverted,
+    tokens.colorStatusSuccessForegroundInverted,
+    16,
   )
 
   return (
@@ -95,5 +90,3 @@ const ScoreCell = ({ pos }: Props) => {
     </div>
   )
 }
-
-export default ScoreCell

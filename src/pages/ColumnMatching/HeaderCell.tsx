@@ -12,7 +12,7 @@ interface Props {
   header: string
 }
 
-const HeaderCell = ({ subtitle, header }: Props) => {
+export default function HeaderCell({ subtitle, header }: Props) {
   const classes = useClasses()
 
   return (
@@ -22,5 +22,3 @@ const HeaderCell = ({ subtitle, header }: Props) => {
     </div>
   )
 }
-
-export default HeaderCell

@@ -1,22 +1,21 @@
+import { createAsyncThunk } from '@reduxjs/toolkit'
 import type { RootState } from '@/app/store'
 
-import { createAsyncThunk } from '@reduxjs/toolkit'
-import { promisedWorker } from '@/lib/utils'
-import { sheetWorker } from '@/app/workers'
-import { toObject } from '@/lib/array'
-import { utils } from 'xlsx'
+import { promisedWorker, sheetWorker } from '@/app/workers'
 
-import { getFormattedFileName, getColumns, getData } from './selectors'
-import { getFormattedColumn } from '../columns/selectors'
+export const sliceName = 'sheet'
 
-const messagePromise = () => promisedWorker('message', sheetWorker)
+const messagePromise = async () =>
+  (await promisedWorker('message', sheetWorker)).data
 
-export const fetchWorkbook = createAsyncThunk(
-  'sheet/fetchWorkbook',
-  async (fileName: string) => {
+export const fetchSheet = createAsyncThunk(
+  `${sliceName}/fetchSheet`,
+  async (_, { getState }) => {
+    const { fileName } = (getState() as RootState).sheet
+
     sheetWorker.postMessage({ method: 'get', fileName })
 
-    const { workbook } = (await messagePromise()).data
+    const { workbook } = await messagePromise()
 
     return {
       SheetNames: workbook?.SheetNames,
@@ -28,7 +27,7 @@ export const fetchWorkbook = createAsyncThunk(
 )
 
 export const postFile = createAsyncThunk(
-  'sheet/postFile',
+  `${sliceName}/postFile`,
   async (file: File) => {
     const buffer = await file.arrayBuffer()
 
@@ -41,42 +40,37 @@ export const postFile = createAsyncThunk(
       [buffer],
     )
 
-    return (await messagePromise()).data.fileName
+    return (await messagePromise()).fileName
   },
 )
 
-export const postFormattedJSON = createAsyncThunk(
-  'sheet/postFormattedJSON',
-  async (_, { getState }) => {
-    const state = getState() as RootState
-    const originalColumns = getColumns(state)
-    const formattedColumns = originalColumns.map((_, pos) =>
-      getFormattedColumn(state, pos),
-    )
-    const data = getData(state)
-    const { sheetName } = state.sheet
-    const formattedFileName = getFormattedFileName(state)
+// export const postFormattedJSON = createAsyncThunk(
+//   'sheet/postFormattedJSON',
+//   async (_, { getState }) => {
+//     const state = getState() as RootState
+//     const { formattedColumns, sheetName, data } = state.sheet
+//     const formattedFileName = getFormattedFileName(state)
 
-    const formattedData = data.map((item) =>
-      toObject(formattedColumns, (i) => item[originalColumns[i] ?? ''] ?? ''),
-    )
+//     const formattedData = data.map((item) =>
+//       toObject(formattedColumns, (i) => item[i] ?? ''),
+//     )
 
-    const formattedSheet = utils.json_to_sheet(formattedData)
-    const workbook = utils.book_new()
-    utils.book_append_sheet(workbook, formattedSheet, sheetName)
+//     const formattedSheet = utils.json_to_sheet(formattedData)
+//     const workbook = utils.book_new()
+//     utils.book_append_sheet(workbook, formattedSheet, sheetName)
 
-    sheetWorker.postMessage({
-      method: 'postFormattedJSON',
-      fileName: formattedFileName,
-      workbook,
-    })
+//     sheetWorker.postMessage({
+//       method: 'postFormattedJSON',
+//       fileName: formattedFileName,
+//       workbook,
+//     })
 
-    return (await messagePromise()).data.fileName
-  },
-)
+//     return (await messagePromise()).fileName
+//   },
+// )
 
-export const deleteWorkbook = createAsyncThunk(
-  'sheet/deleteWorkbook',
+export const deleteSheet = createAsyncThunk(
+  `${sliceName}/deleteSheet`,
   async (_, { getState }) => {
     const { fileName } = (getState() as RootState).sheet
     sheetWorker.postMessage({ method: 'remove', fileName })
