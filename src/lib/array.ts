@@ -1,14 +1,6 @@
-import { zip } from 'lodash'
-import { just } from './monads'
+import { filter, every, flow, zip } from 'lodash/fp'
 
 type Key = number | string | symbol
-
-export const range = (end: number, start = 0, steps = 1) => {
-  const length = Number.isFinite(end - start) ? end - start : 0
-  return [...just(length / steps)(Math.round)(Array)().keys()].map(
-    (_1, i) => start + i * steps,
-  )
-}
 
 export const toObject = <K, T extends Key[]>(
   keyArr: T,
@@ -30,8 +22,9 @@ export const indexDuplicateSearcher = <T extends ToArray<undefined | U>, U>(
   indices: T[],
   filterIndex: T,
 ) =>
-  indices.filter((index) =>
-    zip(index, filterIndex).every(
-      ([value, filterValue]) => value === filterValue,
+  filter(
+    flow(
+      zip(filterIndex),
+      every(([filterIndexer, indexer]) => indexer === filterIndexer),
     ),
-  )
+  )(indices)

@@ -16,9 +16,20 @@ import {
   Card,
 } from '@fluentui/react-components'
 import { useCallback, useState, useMemo } from 'react'
-import _ from 'lodash'
+import {
+  findIndex,
+  constant,
+  parseInt,
+  includes,
+  filter,
+  range,
+  every,
+  some,
+  flow,
+  find,
+  zip,
+} from 'lodash/fp'
 import SimpleDataGrid from '@/components/SimpleDataGrid'
-import { range } from '@/lib/array'
 import { useAppDispatch, useAppSelector } from '@/lib/hooks'
 import { addFlaggedCell } from '@/features/sheet/reducers'
 import { just } from '@/lib/monads'
@@ -49,7 +60,7 @@ const useClasses = makeStyles({
   },
 })
 
-const cellFocusMode: () => DataGridCellFocusMode = () => 'none'
+const cellFocusMode: () => DataGridCellFocusMode = constant('none')
 
 export default function FlaggedDataGrid({ series, title }: Props) {
   const classes = useClasses()
@@ -65,9 +76,9 @@ export default function FlaggedDataGrid({ series, title }: Props) {
   ) => {
     const checkedIndex =
       flaggedRows.size < selectedItems.size
-        ? parseInt(`${Array.from(selectedItems).pop()}`, 10)
-        : Array.from(flaggedRows).findIndex(
-            (flagged) => !selectedItems.has(flagged),
+        ? parseInt(10)(`${Array.from(selectedItems).pop()}`)
+        : findIndex<TableRowId>((flagged) => !selectedItems.has(flagged))(
+            Array.from(flaggedRows),
           )
 
     console.log(checkedIndex)
@@ -78,18 +89,21 @@ export default function FlaggedDataGrid({ series, title }: Props) {
       console.log('checking', flaggedCells.length)
 
       console.log(
-        flaggedCells.every((index) =>
-          index.some((cell, i) => cell !== payload[i]),
+        every(
+          flow(
+            zip(payload),
+            some(([payloadValue, cell]) => cell !== payloadValue),
+          )(flaggedCells),
         ),
       )
       // just(addFlaggedCell).pass([...checked, 'outlier'])(dispatch)
     } else {
       console.log('unchecking')
-      const checkedIndex = Array.from(flaggedRows).find(
-        (flagged) => !selectedItems.has(flagged),
-      )
+      // const checkedIndex = find<TableRowId>(
+      //   (flagged) => !selectedItems.has(flagged),
+      // )(Array.from(flaggedRows))
 
-      console.log(checkedIndex, flaggedRows.at(-1))
+      console.log(checkedIndex, Array.from(flaggedRows).at(-1))
 
       console.log(flaggedCells.splice(checkedIndex, 1))
     }
@@ -119,14 +133,17 @@ export default function FlaggedDataGrid({ series, title }: Props) {
 
   const filteredRows = useMemo(
     () =>
-      series.filter(
+      filter<readonly [string, string]>(
         ([value, index]) =>
-          index.includes(indexFilter) && value.includes(valueFilter),
-      ),
+          includes(indexFilter)(index) && includes(valueFilter)(value),
+      )(series),
     [indexFilter, series, valueFilter],
   )
 
-  const items = useMemo(() => range(filteredRows.length), [filteredRows.length])
+  const items = useMemo(
+    () => range(0)(filteredRows.length),
+    [filteredRows.length],
+  )
 
   const columnsDefinition = useMemo(
     () => [

@@ -1,5 +1,5 @@
 import { createSelector } from '@reduxjs/toolkit'
-import { zip } from 'lodash'
+import { kebabCase, findIndex, reduce, flow, map, nth, zip } from 'lodash/fp'
 import {
   getMatchColumns,
   getMatchVisits,
@@ -42,10 +42,11 @@ export const getVisit = createSelector(
 export const getColumnDuplicates = createSelector(
   [getMatchColumns, getMatchColumn],
   (matchColumns, matchColumn) =>
-    indexDuplicateSearcher(
-      matchColumns.map((match) => [match]),
-      [matchColumn],
-    ).map(([match]) => match),
+    map(nth(0))(
+      indexDuplicateSearcher(map((match) => [match])(matchColumns), [
+        matchColumn,
+      ]),
+    ),
 )
 
 export const getShouldFormat = createSelector(
@@ -57,7 +58,7 @@ export const getShouldFormat = createSelector(
 export const getColumnPath = createSelector(
   [getMatchColumn, getShouldFormat, getVisit],
   (matchColumn, shouldFormat, visit) =>
-    `/eda/${matchColumn.replace(/_/g, '-')}${shouldFormat ? `/${visit}` : ''}`,
+    `/eda/${kebabCase(matchColumn)}${shouldFormat ? `/${visit}` : ''}`,
 )
 
 export const getFormattedColumn = createSelector(
@@ -69,19 +70,22 @@ export const getFormattedColumn = createSelector(
 export const getIndices = createSelector(
   [getMatchColumns, getMatchVisits],
   (matchColumns, matchVisits) =>
-    zip(matchColumns, matchVisits).map(
-      ([matchColumn = '', matchVisit = 0]) =>
-        [matchColumn, matchVisit] as const,
-    ),
+    flow(
+      zip(matchColumns),
+      map(
+        ([matchColumn = '', matchVisit = 0]) =>
+          [matchColumn, matchVisit] as const,
+      ),
+    )(matchVisits),
 )
 
 export const getSearchedPos = createSelector(
   [getIndices, getVisits, getColumnParam, getVisitParam],
   (indices, visits, column, visit) =>
-    indices.findIndex(
+    findIndex<readonly [string, number]>(
       ([matchColumn, matchVisit]) =>
         column === matchColumn && visit === visits[matchVisit],
-    ),
+    )(indices),
 )
 
 export const getMatchIndex = createSelector(
@@ -105,10 +109,9 @@ export const getMatchComparer = createSelector(
   [getMatchColumns],
   (matchColumns) =>
     (...args: [number, number]) => {
-      const [a, b] = args.map((pos) => matchColumns[pos] ?? '') as [
-        string,
-        string,
-      ]
+      const [a, b] = map<number, string>((pos) => matchColumns[pos] ?? '')(
+        args,
+      ) as [string, string]
 
       return a.localeCompare(b)
     },
@@ -118,7 +121,10 @@ export const getVisitsComparer = createSelector(
   [getMatchVisits],
   (matchVisits) =>
     (...args: [number, number]) =>
-      args.map((pos) => matchVisits[pos] ?? 0).reduce((a, b) => a - b),
+      flow(
+        map<number, number>((pos) => matchVisits[pos] ?? 0),
+        reduce<number, number>((a, b) => a - b),
+      )(args),
 )
 
 export const getScoreComparer = createSelector(

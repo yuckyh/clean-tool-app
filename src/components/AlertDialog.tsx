@@ -10,6 +10,7 @@ import {
   Button,
   Dialog,
 } from '@fluentui/react-components'
+import { noop } from 'lodash/fp'
 import { useImperativeHandle, forwardRef, useState } from 'react'
 
 export interface AlertRef {
@@ -71,7 +72,7 @@ const AlertDialog = forwardRef<AlertRef, Props>(({ onConfirm }, ref) => {
 
 AlertDialog.displayName = 'AlertDialog'
 AlertDialog.defaultProps = {
-  onConfirm: () => {},
+  onConfirm: noop,
 }
 
 export default AlertDialog

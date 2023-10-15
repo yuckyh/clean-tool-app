@@ -2,7 +2,20 @@ import type { PayloadAction } from '@reduxjs/toolkit'
 
 import { createSlice } from '@reduxjs/toolkit'
 import { type BookType, utils } from 'xlsx'
-import { zip } from 'lodash'
+import {
+  findIndex,
+  isEqual,
+  forEach,
+  isEmpty,
+  negate,
+  filter,
+  every,
+  split,
+  some,
+  flow,
+  zip,
+  map,
+} from 'lodash/fp'
 import { just, list } from '@/lib/monads'
 import { getPersisted, setPersisted } from '@/lib/localStorage'
 
@@ -27,21 +40,27 @@ const listKeys = ['sheetNames', 'visits', 'originalColumns'] as const
 const fileNameKey = 'fileName'
 
 const initialState: State = {
-  flaggedCells: getPersisted('flaggedCells', defaultValue)
-    .slice(1, -1)
-    .split('],[')
-    .filter(Boolean)
-    .map(
-      (entry) =>
-        entry.split(',').filter(Boolean) as [string, string, FlagReason],
-    ),
-  originalColumns: getPersisted(listKeys[2], defaultValue)
-    .split(',')
-    .filter(Boolean),
-  sheetNames: getPersisted(listKeys[0], defaultValue)
-    .split(',')
-    .filter(Boolean),
-  visits: getPersisted(listKeys[1], defaultValue).split(',').filter(Boolean),
+  flaggedCells: flow(
+    split('],['),
+    filter<string>(negate(isEmpty)),
+    map<string, string[]>(flow(split(','), filter(negate(isEmpty)))),
+  )(getPersisted('flaggedCells', defaultValue).slice(1, -1)) as [
+    string,
+    string,
+    FlagReason,
+  ][],
+  originalColumns: flow(
+    split(','),
+    filter<string>(negate(isEmpty)),
+  )(getPersisted(listKeys[2], defaultValue)),
+  sheetNames: flow(
+    split(','),
+    filter<string>(negate(isEmpty)),
+  )(getPersisted(listKeys[0], defaultValue)),
+  visits: flow(
+    split(','),
+    filter<string>(negate(isEmpty)),
+  )(getPersisted(listKeys[1], defaultValue)),
   data: JSON.parse(getPersisted('data', '[]')) as CellItem[],
   fileName: getPersisted(fileNameKey, defaultValue),
   sheetName: getPersisted(sliceName, defaultValue),
@@ -64,11 +83,9 @@ const sheetSlice = createSlice({
       setPersisted(fileNameKey, fileName)
       setPersisted('data', JSON.stringify(data))
 
-      zip(listKeys, [sheetNames, visits, originalColumns]).forEach(
-        ([key = '', value = []]) => {
-          setPersisted(key, value.join(','))
-        },
-      )
+      forEach(([key = '', value = []]) => {
+        setPersisted(key, value.join(','))
+      })(zip(listKeys)([sheetNames, visits, originalColumns] as const))
 
       setPersisted('flaggedCells', `[${flaggedCells.join('],[')}]`)
     },
@@ -83,28 +100,31 @@ const sheetSlice = createSlice({
         }
       })
     },
-    removeFlaggedCell: (
-      state,
-      { payload }: PayloadAction<[string, string]>,
-    ) => {
-      const index = state.flaggedCells.findIndex((cell) =>
-        cell.every((item) => item === payload[0] || item === payload[1]),
-      )
-
-      if (index >= 0) {
-        state.flaggedCells.splice(index, 1)
-      }
-    },
     addFlaggedCell: (
       state,
       { payload }: PayloadAction<[string, string, FlagReason]>,
     ) => {
-      const shouldAdd = state.flaggedCells.every((index) =>
-        index.some((cell, i) => cell !== payload[i]),
-      )
+      const shouldAdd = every(
+        flow(
+          zip(payload),
+          some(([newCell, cell]) => cell !== newCell),
+        ),
+      )(state.flaggedCells)
 
       if (shouldAdd) {
         state.flaggedCells.push(payload)
+      }
+    },
+    removeFlaggedCell: (
+      state,
+      { payload }: PayloadAction<[string, string, FlagReason]>,
+    ) => {
+      const index = findIndex<ArrayElement<typeof state.flaggedCells>>(
+        flow(map(isEqual), every(some(payload))),
+      )(state.flaggedCells)
+
+      if (index >= 0) {
+        state.flaggedCells.splice(index, 1)
       }
     },
     setVisit: (
@@ -128,7 +148,7 @@ const sheetSlice = createSlice({
       .addCase(fetchSheet.fulfilled, (state, { payload }) => {
         const { SheetNames, bookType, Sheets } = payload
 
-        if ([SheetNames, Sheets, bookType].some((item) => !item)) {
+        if (some(negate)([SheetNames, Sheets, bookType] as const)) {
           return
         }
 

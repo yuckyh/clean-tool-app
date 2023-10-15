@@ -13,11 +13,12 @@ import {
   Card,
 } from '@fluentui/react-components'
 import { useMemo } from 'react'
+import { constant } from 'lodash/fp'
 import SimpleDataGrid from '@/components/SimpleDataGrid'
 import { useAppSelector } from '@/lib/hooks'
 import { getRowBlanks } from '@/features/sheet/selectors'
 
-const cellFocusMode: () => DataGridCellFocusMode = () => 'none'
+const cellFocusMode: () => DataGridCellFocusMode = constant('none')
 
 const useClasses = makeStyles({
   card: {

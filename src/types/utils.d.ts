@@ -62,13 +62,7 @@ interface JustMonad<T> extends Monad<T> {
 
 interface ListMonad<T extends AnyArray> extends Monad<T> {
   (): T
-  <U extends ToArray<V>, V>(
-    fn?: (
-      value: ArrayElement<T>,
-      index: number,
-      array: ToArray<ArrayElement<T>>,
-    ) => V,
-  ): ListMonad<U>
+  <U extends ToArray<V>, V>(fn?: (value: ArrayElement<T>) => V): ListMonad<U>
   pass: {
     <U extends AnyArray>(
       ...args: [...U]

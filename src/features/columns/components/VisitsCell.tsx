@@ -1,6 +1,7 @@
 import type { DropdownProps } from '@fluentui/react-components'
 import { makeStyles, Dropdown, Option } from '@fluentui/react-components'
 import { type RefObject, useCallback } from 'react'
+import { range, flow, map, zip } from 'lodash/fp'
 import type { AlertRef } from '@/components/AlertDialog'
 
 import { useAppDispatch, useAppSelector } from '@/lib/hooks'
@@ -69,11 +70,14 @@ export default function VisitsCell({ alertRef, pos }: Props) {
       appearance="filled-darker"
       className={classes.root}
       value={visit}>
-      {visits.map((visitStr, i) => (
-        <Option value={i.toString()} text={visitStr} key={visitStr}>
-          {visitStr}
-        </Option>
-      ))}
+      {flow(
+        zip(range(0)(visits.length)),
+        map<[number, string], JSX.Element>(([i = 0, visitStr = '']) => (
+          <Option value={i.toString()} text={visitStr} key={visitStr}>
+            {visitStr}
+          </Option>
+        )),
+      )(visits)}
     </Dropdown>
   )
 }

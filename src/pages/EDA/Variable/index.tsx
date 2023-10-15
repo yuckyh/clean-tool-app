@@ -1,4 +1,8 @@
-import type { TableColumnDefinition } from '@fluentui/react-components'
+import type {
+  DataGridCellFocusMode,
+  TableColumnDefinition,
+  TableColumnId,
+} from '@fluentui/react-components'
 import {
   createTableColumn,
   CardHeader,
@@ -12,7 +16,19 @@ import {
 } from '@fluentui/react-components'
 import { useBeforeUnload, useParams } from 'react-router-dom'
 import { useCallback, useState, useMemo } from 'react'
-import { snakeCase } from 'lodash'
+import {
+  snakeCase,
+  defaultTo,
+  constant,
+  includes,
+  property,
+  isEqual,
+  reduce,
+  flow,
+  find,
+  nth,
+  map,
+} from 'lodash/fp'
 import { useAppDispatch, useAppSelector } from '@/lib/hooks'
 import { getCleanNumericalRow, getIndexedRow } from '@/features/sheet/selectors'
 import CategoricalPlot from '@/pages/EDA/Variable/CategoricalPlot'
@@ -26,7 +42,6 @@ import SimpleDataGrid from '@/components/SimpleDataGrid'
 import { just } from '@/lib/monads'
 import { saveColumnState } from '@/features/columns/reducers'
 import { saveSheetState } from '@/features/sheet/reducers'
-import { useLoggerEffect } from '@/lib/logger'
 
 type VariableType = Extract<Property<typeof variableType>, string>
 
@@ -81,6 +96,9 @@ const useClasses = makeStyles({
   },
 })
 
+const cellFocusMode: (tableColumnId: TableColumnId) => DataGridCellFocusMode =
+  constant('none')
+
 // eslint-disable-next-line import/prefer-default-export
 export function Component() {
   const classes = useClasses()
@@ -93,8 +111,8 @@ export function Component() {
 
   // const [isLoading, stopLoading] = useLoadingTransition()
 
-  const column = snakeCase(params.column ?? '')
-  const visit = params.visit ?? firstVisit
+  const column = flow(defaultTo(''), snakeCase)(params.colum)
+  const visit = defaultTo(firstVisit)(params.visit)
 
   const series = useAppSelector((state) => getIndexedRow(state, column, visit))
   const cleanNumericalSeries = useAppSelector((state) =>
@@ -103,22 +121,28 @@ export function Component() {
 
   const title = `${column}${visit && visit !== '1' ? `_${visit}` : ''}`
 
-  const codebookVariable = codebook.find(({ name }) => name === column) ?? {
-    description: '',
-    category: '',
-    name: '',
-    type: '',
-    unit: '',
-  }
+  const codebookVariable = flow(
+    find<ArrayElement<typeof codebook>>(
+      flow(property('name'), isEqual(column)),
+    ),
+    defaultTo({
+      description: '',
+      category: '',
+      name: '',
+      type: '',
+      unit: '',
+    }),
+  )(codebook)
   const isCustom = !codebookVariable.name
 
   console.log(isCustom)
 
   const { type, unit } = codebookVariable
 
-  const measurementType: VariableType = ['whole_number', 'interval'].includes(
-    type,
-  )
+  const measurementType: VariableType = includes(type)([
+    'whole_number',
+    'interval',
+  ])
     ? 'numerical'
     : 'categorical'
 
@@ -138,24 +162,32 @@ export function Component() {
         : [
             { value: cleanNumericalSeries.length, statistic: 'Count' },
             {
-              value: Math.min(...cleanNumericalSeries.map(([value]) => value)),
+              value: Math.min(
+                ...map<readonly [number, string], number>(
+                  flow(nth(0), defaultTo(0)),
+                )(cleanNumericalSeries),
+              ),
               statistic: 'Min',
             },
             {
-              value: Math.max(...cleanNumericalSeries.map(([value]) => value)),
+              value: Math.max(
+                ...map<readonly [number, string], number>(
+                  flow(nth(0), defaultTo(0)),
+                )(cleanNumericalSeries),
+              ),
               statistic: 'Max',
             },
             {
               value:
-                cleanNumericalSeries.reduce((sum, [value]) => sum + value, 0) /
-                cleanNumericalSeries.length,
+                reduce<readonly [number, string], number>(
+                  (sum, [value]) => sum + value,
+                )(0)(cleanNumericalSeries) / cleanNumericalSeries.length,
               statistic: 'Mean',
             },
             {
-              value: cleanNumericalSeries.reduce(
+              value: reduce<readonly [number, string], number>(
                 (sum, [value]) => sum + value,
-                0,
-              ),
+              )(0)(cleanNumericalSeries),
               statistic: 'Sum',
             },
           ],
@@ -166,12 +198,12 @@ export function Component() {
     () => [
       createTableColumn({
         renderCell: ({ statistic }) => statistic,
-        renderHeaderCell: () => 'Statistic',
+        renderHeaderCell: constant('Statistic'),
         columnId: 'statistic',
       }),
       createTableColumn({
+        renderHeaderCell: constant('Value'),
         renderCell: ({ value }) => value,
-        renderHeaderCell: () => 'Value',
         columnId: 'value',
       }),
     ],
@@ -213,7 +245,7 @@ export function Component() {
           <Card className={classes.card} size="large">
             <CardHeader header={<Title1>Summary Statistics</Title1>} />
             <SimpleDataGrid
-              cellFocusMode={() => 'none'}
+              cellFocusMode={cellFocusMode}
               columns={columnDefinition}
               items={summaryStatistics}
             />

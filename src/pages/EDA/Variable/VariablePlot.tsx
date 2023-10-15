@@ -1,5 +1,6 @@
 import type { Layout, Data } from 'plotly.js-cartesian-dist-min'
 
+import { map } from 'lodash/fp'
 import Plot from '@/components/Plot'
 
 interface Props {
@@ -16,10 +17,10 @@ export default function VariablePlot({ variable, layout, data }: Props) {
         title: variable,
         ...layout,
       }}
-      data={data.map((obj) => ({
+      data={map<Data, Data>((obj) => ({
         name: '',
         ...obj,
-      }))}
+      }))(data)}
       useResizeHandler
     />
   )

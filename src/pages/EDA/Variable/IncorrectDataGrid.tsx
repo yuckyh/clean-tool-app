@@ -6,18 +6,18 @@ import {
   createTableColumn,
   makeStyles,
   shorthands,
-  Subtitle2,
   Title2,
   tokens,
   Body1,
   Card,
 } from '@fluentui/react-components'
 import { useMemo } from 'react'
+import { constant } from 'lodash/fp'
 import SimpleDataGrid from '@/components/SimpleDataGrid'
 import { getRowIncorrects } from '@/features/sheet/selectors'
 import { useAppSelector } from '@/lib/hooks'
 
-const cellFocusMode: () => DataGridCellFocusMode = () => 'none'
+const cellFocusMode: () => DataGridCellFocusMode = constant('none')
 
 const useClasses = makeStyles({
   card: {

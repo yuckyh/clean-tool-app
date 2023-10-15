@@ -6,11 +6,11 @@ import {
   Option,
 } from '@fluentui/react-components'
 import { useCallback, useState, useMemo, memo } from 'react'
-import { zip } from 'lodash'
+import { findIndex, includes, filter, range, flow, map, zip } from 'lodash/fp'
 import type { AlertRef } from '@/components/AlertDialog'
 
 import { useAppDispatch, useAppSelector, useDebounced } from '@/lib/hooks'
-import { indexDuplicateSearcher, range } from '@/lib/array'
+import { indexDuplicateSearcher } from '@/lib/array'
 import { just } from '@/lib/monads'
 import fuse from '@/lib/fuse'
 
@@ -45,11 +45,11 @@ const search = fuse.search.bind(fuse)
 
 function FilteredOptions({ filteredMatches, value }: FilteredOptionsProps) {
   return filteredMatches.length ? (
-    filteredMatches.map(({ match, score }) => (
+    map<ColumnMatch, JSX.Element>(({ match, score }) => (
       <Option value={match} text={match} key={match}>
         {match}, {(1 - score).toFixed(2)}
       </Option>
-    ))
+    ))(filteredMatches)
   ) : (
     <Option value={value} text={value}>
       Create column? {value},{' '}
@@ -83,12 +83,14 @@ export default function MatchCell({ alertRef, pos }: Props) {
 
   const filteredMatches = useMemo(
     () =>
-      zip(matches, scores)
-        .map(([match = '', score = 0]) => ({
+      flow(
+        filter<string>(includes(deferredValue)),
+        zip(scores),
+        map(([score = 0, match = '']) => ({
           match,
           score,
-        }))
-        .filter(({ match }) => match.includes(deferredValue)),
+        })),
+      )(matches),
     [deferredValue, matches, scores],
   )
 
@@ -111,9 +113,10 @@ export default function MatchCell({ alertRef, pos }: Props) {
         ])
 
         if (duplicates.length) {
-          const newMatchVisit = range(visits.length).findIndex(
-            (visit) => visit !== matchVisit,
-          )
+          const newMatchVisit = flow(
+            range(0),
+            findIndex((visit) => visit !== matchVisit),
+          )(visits.length)
 
           if (newMatchVisit === -1) {
             alertRef.current?.setContent(

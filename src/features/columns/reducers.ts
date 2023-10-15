@@ -1,7 +1,18 @@
 import type { PayloadAction } from '@reduxjs/toolkit'
 
 import { createSlice } from '@reduxjs/toolkit'
-import { zip } from 'lodash'
+import {
+  defaultTo,
+  parseInt,
+  property,
+  forEach,
+  filter,
+  split,
+  flow,
+  map,
+  zip,
+  nth,
+} from 'lodash/fp'
 import { getPersisted, setPersisted } from '@/lib/localStorage'
 
 import { fetchMatches, sliceName } from './actions'
@@ -20,14 +31,18 @@ interface State {
 }
 
 const keys = ['matchColumns', 'matchVisits'] as const
-const defaultValue = ''
+const defaultStateValue = ''
 
 const initialState: State = {
-  matchVisits: getPersisted(keys[1], defaultValue)
-    .split(',')
-    .filter(Boolean)
-    .map((visit) => parseInt(visit, 10)),
-  matchColumns: getPersisted(keys[0], defaultValue).split(',').filter(Boolean),
+  matchVisits: flow(
+    split(','),
+    filter<string>(Boolean),
+    map(parseInt(10)),
+  )(getPersisted(keys[1], defaultStateValue)),
+  matchColumns: flow(
+    split(','),
+    filter<string>(Boolean),
+  )(getPersisted(keys[0], defaultStateValue)),
   matchesList: [],
   scoresList: [],
 }
@@ -38,16 +53,20 @@ const columnsSlice = createSlice({
     builder.addCase(fetchMatches.fulfilled, (state, { payload }) => {
       const { matchColumns, matchVisits } = state
 
-      state.matchesList = payload.map((matches) =>
-        matches.map(({ item: { name } }) => name),
-      )
+      type Match = ArrayElement<ArrayElement<typeof payload>>
 
-      state.scoresList = payload.map((matches) =>
-        matches.map(({ score = 0 }) => score),
-      )
+      state.matchesList = map(
+        map<Match, string>(flow(property('item.name'), defaultTo(''))),
+      )(payload)
+
+      state.scoresList = map(
+        map<Match, number>(flow(property('score'), defaultTo(0))),
+      )(payload)
 
       if (!matchColumns.length) {
-        state.matchColumns = payload.map(([match]) => match?.item.name ?? '')
+        state.matchColumns = map<ArrayElement<typeof payload>, string>(
+          flow(nth(0), property('item.name'), defaultTo('')),
+        )(payload)
       }
 
       if (!matchVisits.length) {
@@ -68,16 +87,17 @@ const columnsSlice = createSlice({
             ] as const
           }) // Increment the ones to get the visit number
           .sort(([, a], [, b]) => a - b) // Sort by the original index
-          .map(([increment]) => increment) // Remove the original index
+          .map(nth(0)) // Remove the original index
       }
     })
   },
   reducers: {
     saveColumnState: (state) => {
       const { matchColumns, matchVisits } = state
-      zip(keys, [matchColumns, matchVisits]).forEach(([key = '', val = []]) => {
+
+      forEach(([key = '', val = []]) => {
         setPersisted(key, val.join(','))
-      })
+      })(zip(keys)([matchColumns, matchVisits] as const))
     },
     setMatchColumn: (
       state,

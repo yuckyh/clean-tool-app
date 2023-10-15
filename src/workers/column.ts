@@ -1,7 +1,10 @@
 import type Fuse from 'fuse.js'
+import { map } from 'lodash/fp'
 import type { codebook } from '@/data'
 
 import fuse from '@/lib/fuse'
+
+const search = fuse.search.bind(fuse)
 
 export type CodebookEntry = (typeof codebook)[0]
 
@@ -17,7 +20,7 @@ export interface ColumnResponse extends WorkerResponse {
 type Handler = RequestHandler<ColumnRequest, ColumnResponse>
 
 const get: Handler = ({ columns }) => ({
-  matches: columns.map((column) => fuse.search(column)),
+  matches: map(search)(columns),
   status: 'ok',
 })
 

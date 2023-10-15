@@ -2,9 +2,9 @@ import type { TabListProps } from '@fluentui/react-components'
 
 import { TabList } from '@fluentui/react-components'
 import { useLocation } from 'react-router-dom'
+import { range, flow, map } from 'lodash/fp'
 import { getColumnsLength } from '@/features/sheet/selectors'
 import { useAppSelector } from '@/lib/hooks'
-import { range } from '@/lib/array'
 
 import NavTab from './Tab'
 
@@ -17,9 +17,10 @@ export default function Nav({ vertical }: Props) {
 
   return (
     <TabList selectedValue={pathname} vertical={vertical}>
-      {range(columnsLength).map((pos) => (
-        <NavTab key={pos} pos={pos} />
-      ))}
+      {flow(
+        range(0),
+        map((pos) => <NavTab key={pos} pos={pos} />),
+      )(columnsLength)}
     </TabList>
   )
 }

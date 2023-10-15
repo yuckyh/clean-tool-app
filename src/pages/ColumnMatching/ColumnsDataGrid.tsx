@@ -11,6 +11,7 @@ import {
 } from '@fluentui/react-components'
 import { useCallback, useEffect, useState, useMemo, memo } from 'react'
 import { useBeforeUnload } from 'react-router-dom'
+import { constant, range } from 'lodash/fp'
 import type { Props as SimpleDataGridProps } from '@/components/SimpleDataGrid'
 import type { AlertRef } from '@/components/AlertDialog'
 
@@ -33,7 +34,6 @@ import { fetchSheet } from '@/features/sheet/actions'
 import { createLazyMemo } from '@/lib/utils'
 import { just } from '@/lib/monads'
 import Loader from '@/components/Loader'
-import { range } from '@/lib/array'
 
 import HeaderCell from './HeaderCell'
 import ValueCell from './ValueCell'
@@ -57,7 +57,7 @@ const MemoizedVisitsCell = createLazyMemo(
 const MemoizedDataGrid = memo<SimpleDataGridProps<number>>(SimpleDataGrid)
 MemoizedDataGrid.displayName = 'MemoizedDataGrid'
 
-const cellFocusMode: () => DataGridCellFocusMode = () => 'none'
+const cellFocusMode: () => DataGridCellFocusMode = constant('none')
 const focusMode: DataGridFocusMode = 'composite'
 
 export default function ColumnsDataGrid({ alertRef }: Props) {
@@ -83,7 +83,7 @@ export default function ColumnsDataGrid({ alertRef }: Props) {
     [],
   )
 
-  const items = useMemo(() => range(columnsLength), [columnsLength])
+  const items = useMemo(() => range(0)(columnsLength), [columnsLength])
 
   const columnsDefinition = useMemo(
     () => [

@@ -1,7 +1,17 @@
-import { replace, toUpper, split, slice, join, flow, map, gte } from 'lodash/fp'
+import {
+  capitalize,
+  toLength,
+  toUpper,
+  split,
+  slice,
+  join,
+  flow,
+  map,
+  gte,
+} from 'lodash/fp'
 
 const acronymizedTitleCase = (word: string) =>
-  gte(3)(word.length) ? toUpper(word) : replace(/^\w/)(toUpper)(word)
+  gte(3)(toLength(word)) ? toUpper(word) : capitalize(word)
 
 const kebabToTitle = (slug: string) =>
   flow(split('-'), map(acronymizedTitleCase), join(' '))(slug)

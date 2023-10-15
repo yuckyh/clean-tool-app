@@ -12,7 +12,7 @@ import {
 } from 'react-router-dom'
 import { useCallback, useEffect, useMemo } from 'react'
 import { Helmet } from 'react-helmet-async'
-import { range, split, flow, map, zip } from 'lodash/fp'
+import { range, split, flow, map, zip, nth } from 'lodash/fp'
 import { useAppDispatch, useAppSelector } from '@/lib/hooks'
 
 import { saveProgressState } from '../reducers'
@@ -71,7 +71,7 @@ export default function ProgressNav() {
   useEffect(() => {
     console.log(allowedPaths)
     if (shouldNavigateToAllowed) {
-      navigate(allowedPaths.at(-1) ?? '/')
+      navigate(nth(-1)(allowedPaths) ?? '/')
     }
   }, [allowedPaths, navigate, shouldNavigateToAllowed])
 

@@ -2,7 +2,8 @@ import type { Layout, Data } from 'plotly.js-cartesian-dist-min'
 
 import { tokens } from '@fluentui/react-components'
 import { useRef } from 'react'
-import { accessArray, range } from '@/lib/array'
+import { filter, negate, range, map } from 'lodash/fp'
+import { accessArray } from '@/lib/array'
 
 import VariablePlot from './VariablePlot'
 import { list } from '@/lib/monads'
@@ -32,7 +33,7 @@ export default function NumericalPlot({
     (a, b) => a - b,
   )
 
-  const [q1, , q3] = list(range(4, 1))(multiply)
+  const [q1, , q3] = list(range(1)(4))(multiply)
     .pass(series.length)(divideBy)
     .pass(4)(Math.floor)(accessArray)
     .pass(sorted)() as [number, number, number]
@@ -41,12 +42,10 @@ export default function NumericalPlot({
 
   const isOutlier = ([value]: ArrayElement<IndexedSeries>) =>
     value < lower || value > upper
-  const isNotOutlier = ([value]: ArrayElement<IndexedSeries>) =>
-    value > lower && value < upper
 
-  const outliers = series.filter(isOutlier)
+  const outliers = filter(isOutlier)(series)
 
-  const notOutliers = series.filter(isNotOutlier)
+  const notOutliers = filter(negate(isOutlier))(series)
 
   const notOutlierColor = useTokenToHex(tokens.colorBrandBackground)
   const outlierColor = useTokenToHex(tokens.colorStatusDangerForeground3)
@@ -72,8 +71,8 @@ export default function NumericalPlot({
       marker: {
         opacity: 0,
       },
-      customdata: series.map(getIndex),
-      x: series.map(getValue),
+      customdata: map(getIndex)(series),
+      x: map(getValue)(series),
       boxpoints: 'outliers',
       boxmean: true,
       // pointpos: -2,
@@ -88,9 +87,9 @@ export default function NumericalPlot({
         size: 8,
       },
       hovertemplate: `%{customdata}: %{x} ${unit}`,
-      customdata: notOutliers.map(getIndex),
-      x: notOutliers.map(getValue),
-      y: notOutliers.map(jitterY),
+      customdata: map(getIndex)(notOutliers),
+      x: map(getValue)(notOutliers),
+      y: map(jitterY)(notOutliers),
       type: 'scatter',
       mode: 'markers',
       yaxis: 'y2',
@@ -102,9 +101,9 @@ export default function NumericalPlot({
         size: 8,
       },
       hovertemplate: `%{customdata}: %{x} ${unit}`,
-      customdata: outliers.map(getIndex),
-      x: outliers.map(getValue),
-      y: outliers.map(jitterY),
+      customdata: map(getIndex)(outliers),
+      x: map(getValue)(outliers),
+      y: map(jitterY)(outliers),
       type: 'scatter',
       mode: 'markers',
       yaxis: 'y2',

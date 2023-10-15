@@ -2,6 +2,7 @@ import type { InputProps } from '@fluentui/react-components'
 
 import { makeStyles, Field, Input } from '@fluentui/react-components'
 import { useCallback, useState } from 'react'
+import { range, flow, map, zip } from 'lodash/fp'
 import { useAppDispatch, useAppSelector } from '@/lib/hooks'
 
 import { deleteVisits, syncVisits, setVisit } from '../reducers'
@@ -83,9 +84,12 @@ export default function VisitsInput() {
           type="number"
         />
       </Field>
-      {visits.map((visit, pos) => (
-        <VisitInput visit={visit} key={visit} pos={pos} />
-      ))}
+      {flow(
+        zip(range(0)(visits.length)),
+        map<[number, string], JSX.Element>(([pos = 0, visit = '']) => (
+          <VisitInput visit={visit} key={visit} pos={pos} />
+        )),
+      )(visits)}
     </div>
   )
 }

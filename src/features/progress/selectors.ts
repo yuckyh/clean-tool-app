@@ -1,6 +1,7 @@
 import { createSelector } from '@reduxjs/toolkit'
 import { matchRoutes, resolvePath } from 'react-router-dom'
 import {
+  defaultTo,
   parseInt,
   includes,
   indexOf,
@@ -13,6 +14,7 @@ import {
   find,
   some,
   map,
+  nth,
 } from 'lodash/fp'
 import { getProgress } from '@/app/selectors'
 import { routes } from '@/app/Router'
@@ -52,9 +54,8 @@ export const getPaths = createSelector(
     )(matchRoutes(routes, componentPath) ?? []),
 )
 
-export const getPath = createSelector(
-  [getPaths, getPosParam],
-  (paths, pos) => paths[pos] ?? '',
+export const getPath = createSelector([getPaths, getPosParam], (paths, pos) =>
+  flow<[string[]], undefined | string, string>(nth(pos), defaultTo(''))(paths),
 )
 
 // export const getPathLabel = createSelector([getPath])
@@ -80,8 +81,7 @@ export const getPosition = createSelector(
 
 const getLocationHasVisit = createSelector(
   [getLocationPathWords],
-  (locationPathWords) =>
-    flow(parseInt(10), negate(isNaN))(locationPathWords[2] ?? ''),
+  flow(nth(2), defaultTo(''), parseInt(10), negate(isNaN)),
 )
 
 const getIsAtEda = createSelector([getPosition], (position) => position === 3)
@@ -101,6 +101,9 @@ export const getShouldNavigateToAllowed = createSelector(
   [getLocationPathWords, getAllowedPaths],
   (locationPathWords, allowedPaths) =>
     some<string>(
-      flow(replace('/', ''), negate(includes(locationPathWords[0] ?? ''))),
+      flow(
+        replace('/', ''),
+        negate(includes(flow(nth(0), defaultTo(''))(locationPathWords))),
+      ),
     )(allowedPaths),
 )

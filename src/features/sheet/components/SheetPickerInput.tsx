@@ -2,6 +2,7 @@ import type { DropdownProps } from '@fluentui/react-components'
 
 import { makeStyles, Dropdown, Option, Field } from '@fluentui/react-components'
 import { useCallback } from 'react'
+import { map } from 'lodash/fp'
 import { useAppDispatch, useAppSelector } from '@/lib/hooks'
 
 import { setSheetName } from '../reducers'
@@ -38,11 +39,11 @@ export default function SheetPickerInput() {
         appearance="filled-darker"
         className={classes.input}
         value={sheetName}>
-        {sheetNames.map((name) => (
+        {map<string, JSX.Element>((name) => (
           <Option value={name} key={name}>
             {name}
           </Option>
-        ))}
+        ))(sheetNames)}
       </Dropdown>
     </Field>
   )

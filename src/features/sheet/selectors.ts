@@ -1,14 +1,20 @@
 import { createSelector } from '@reduxjs/toolkit'
 import {
+  isUndefined,
   findIndex,
+  defaultTo,
   property,
   toLength,
   isString,
-  template,
+  toNumber,
   replace,
   toLower,
+  isEqual,
   filter,
   reduce,
+  negate,
+  isNaN,
+  every,
   flow,
   some,
   map,
@@ -18,7 +24,6 @@ import {
 import { getPosParam, getColumns, getData } from '@/app/selectors'
 
 import { getSearchedPos, getIndices } from '../columns/selectors'
-import { just } from '@/lib/monads'
 
 export const getColumnsLength = createSelector([getColumns], toLength)
 
@@ -33,7 +38,7 @@ export const getColumnComparer = createSelector(
       flow(
         map<number, string>((pos) => nth(pos)(columns) ?? ''),
         reduce<string, number | string>(localeCompare)(0),
-      )(args),
+      )(args) as number,
 )
 
 export const getColumn = createSelector(
@@ -84,44 +89,58 @@ export const getRowBlanks = createSelector(
   ),
 )
 
-const getBlanklessRow = createSelector([getRow], (row) =>
-  row.filter((value) =>
-    ['', 'na', 'none', 'blank'].every(
-      (marker) => marker !== value.toLowerCase().replace('/', ''),
-    ),
+const getBlanklessRow = createSelector(
+  [getRow],
+  filter((value) =>
+    every(flow(toLower, replace('/')(''), isEqual(value), negate))([
+      '',
+      'na',
+      'none',
+      'blank',
+    ]),
   ),
 )
 
-const getParsedCategoricalRow = createSelector([getBlanklessRow], (row) =>
-  row.map((value) => value.replace('/', '')),
+const getParsedCategoricalRow = createSelector(
+  [getBlanklessRow],
+  map(replace('/')('')),
 )
 
-const getParsedNumericalRow = createSelector([getBlanklessRow], (row) =>
-  row.map((value) => value.replace(/[!,.?]+/, '.')).map(Number),
+const getParsedNumericalRow = createSelector(
+  [getBlanklessRow],
+  map(flow(replace(/[!,.?]+/)('.'), toNumber)),
 )
 
 const getIndexedParsedCategoricalRow = createSelector(
   [getParsedCategoricalRow, getIndexRow],
   (row, indexRow) =>
-    zip(row, indexRow)
-      .filter(([value]) => value !== undefined)
-      .map(([value = '', index = '']) => [value, index] as const),
+    flow(
+      zip(row),
+      filter<[undefined | string, undefined | string]>(
+        flow(nth(0), isUndefined, negate),
+      ),
+      map(map<undefined | string, string>(defaultTo(''))),
+    )(indexRow) as [string, string][],
 )
 
 const getIndexedParsedNumericalRow = createSelector(
   [getParsedNumericalRow, getIndexRow],
   (row, indexRow) =>
-    zip(row, indexRow)
-      .filter(([value]) => value !== undefined)
-      .map(([value = 0, index = '']) => [value, index] as const),
+    flow(
+      zip(row),
+      filter<[undefined | number, undefined | string]>(
+        flow(nth(0), isUndefined, negate),
+      ),
+      map(map<undefined | string, string | number>(defaultTo(''))),
+    )(indexRow) as [number, string][],
 )
 
 export const getRowIncorrects = createSelector(
   [getIndexedParsedCategoricalRow],
-  (row) => row.filter(([value]) => just(value)(Number)(Number.isNaN)()),
+  filter<[string, string]>(flow(nth(0), Number, isNaN)),
 )
 
 export const getCleanNumericalRow = createSelector(
   [getIndexedParsedNumericalRow],
-  (row) => row.filter((value) => just(value)(Number)(Number.isNaN)()),
+  filter<[number, string]>(flow(nth(0), Number, isNaN)),
 )
