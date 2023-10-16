@@ -10,11 +10,11 @@ type Controller<
   Response extends WorkerResponse,
 > = Record<Request['method'], RequestHandler<Request, Response>>
 
-interface WorkerRequest {
+type WorkerRequest = readonly {
   method: string
 }
 
-interface WorkerResponse {
+type WorkerResponse = readonly {
   status: 'fail' | 'ok'
   error?: Error
 }
@@ -26,16 +26,16 @@ interface GenericWorkerEventMap<T> extends WorkerEventMap {
 
 interface RequestWorker<Req extends WorkerRequest, Res extends WorkerResponse>
   extends Worker {
-  addEventListener<K extends keyof GenericWorkerEventMap<Res>>(
+  removeEventListener: <K extends keyof GenericWorkerEventMap<Res>>(
     type: K,
-    listener: (this: Worker, ev: GenericWorkerEventMap<Res>[K]) => void,
-    options?: AddEventListenerOptions | boolean,
-  ): void
-  removeEventListener<K extends keyof GenericWorkerEventMap<Res>>(
-    type: K,
-    listener: (this: Worker, ev: GenericWorkerEventMap<Res>[K]) => void,
+    listener: (this: Worker, ev: GenericWorkerEventMap<Res>[K]) => undefined,
     options?: EventListenerOptions | boolean,
-  ): void
-  postMessage(request: Req, options?: StructuredSerializeOptions): void
-  postMessage(request: Req, transfer: Transferable[]): void
+  ) => undefined
+  addEventListener: <K extends keyof GenericWorkerEventMap<Res>>(
+    type: K,
+    listener: (this: Worker, ev: GenericWorkerEventMap<Res>[K]) => undefined,
+    options?: AddEventListenerOptions | boolean,
+  ) => undefined
+  postMessage: (request: Req, options?: StructuredSerializeOptions) => undefined
+  postMessage: (request: Req, transfer: Transferable[]) => undefined
 }

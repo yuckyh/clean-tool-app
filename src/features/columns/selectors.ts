@@ -1,5 +1,9 @@
 import { createSelector } from '@reduxjs/toolkit'
-import { kebabCase, findIndex, reduce, flow, map, nth, zip } from 'lodash/fp'
+import { pipe } from 'fp-ts/function'
+import { flatten, reduce, map, zip } from 'fp-ts/ReadonlyNonEmptyArray'
+import { findIndex } from 'fp-ts/ReadonlyArray'
+import { getOrElse } from 'fp-ts/Option'
+import * as Str from 'fp-ts/string'
 import {
   getMatchColumns,
   getMatchVisits,
@@ -120,23 +124,41 @@ export const getMatchComparer = createSelector(
 export const getVisitsComparer = createSelector(
   [getMatchVisits],
   (matchVisits) =>
-    (...args: [number, number]) =>
-      flow(
-        map<number, number>((pos) => matchVisits[pos] ?? 0),
-        reduce<number, number>((a, b) => a - b),
-      )(args),
+    ([a, b]: readonly [number, number]) =>
+      pipe(
+        [a, b] as const,
+        map((pos) => matchVisits[pos] ?? 0),
+        reduce(0, (acc, curr) => acc - curr),
+      ),
 )
 
 export const getScoreComparer = createSelector(
   [getMatchesList, getScoresList, getMatchColumns],
   (matchesList, scoresList, matchColumns) =>
-    (...args: [number, number]) =>
-      args
-        .map(
-          (pos) =>
-            scoresList[pos]?.[
-              matchesList[pos]?.indexOf(matchColumns[pos] ?? '') ?? 0
-            ] ?? 1,
-        )
-        .reduce((a, b) => a - b),
+    ([a, b]: readonly [number, number]) =>
+      pipe(
+        [a, b] as const,
+        map((pos) =>
+          pipe(
+            scoresList,
+            zip(matchesList),
+            flatten,
+            zip(matchColumns),
+            flatten,
+            map(
+              ([scores = [], matches = [], matchColumn = '']) =>
+                scores[
+                  pipe(
+                    matches,
+                    findIndex((match) => Str.Eq(matchColumn, match)),
+                    getOrElse(constant(-1)),
+                  )
+                ],
+            ),
+            nth(pos),
+            defaultTo(0),
+          ),
+        ),
+        reduce(0, (acc, curr) => acc - curr),
+      ),
 )

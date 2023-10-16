@@ -9,6 +9,7 @@ import { createLazyMemo } from '@/lib/utils'
 
 import PreviewHeaderCell from './PreviewHeaderCell'
 import { getColumnsLength } from '../selectors'
+import { useLoggerEffect } from '@/lib/logger'
 
 interface Props {
   isOriginal?: boolean
@@ -47,6 +48,8 @@ function PreviewDataGrid({ isOriginal = false }: Props) {
       )(columnsLength),
     [columnsLength, isOriginal],
   )
+
+  // useLoggerEffect({ columnsLength })
 
   return (
     columnsLength > 0 && (

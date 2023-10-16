@@ -2,6 +2,7 @@ import { createSelector } from '@reduxjs/toolkit'
 import { matchRoutes, resolvePath } from 'react-router-dom'
 import {
   defaultTo,
+  fromPairs,
   parseInt,
   includes,
   indexOf,
@@ -10,15 +11,17 @@ import {
   negate,
   isNaN,
   split,
+  range,
+  slice,
   flow,
   find,
   some,
   map,
   nth,
+  zip,
 } from 'lodash/fp'
 import { getProgress } from '@/app/selectors'
 import { routes } from '@/app/Router'
-import { toObject } from '@/lib/array'
 import type { Progress } from './reducers'
 import { getPathTitle } from '@/lib/string'
 import type { RootState } from '@/app/store'
@@ -63,9 +66,11 @@ export const getPath = createSelector([getPaths, getPosParam], (paths, pos) =>
 export const getAllowedPaths = createSelector(
   [getPaths, getProgress],
   (paths, progress) =>
-    toObject(['none', 'uploaded', 'matched', 'explored'] as Progress[], (i) => [
-      ...paths.slice(0, i + 2),
-    ])[progress] ?? [],
+    fromPairs<string[]>(
+      zip(['none', 'uploaded', 'matched', 'explored'] as Progress[])(
+        map<number, string[]>((i) => slice(0)(i + 2)(paths))(range(0)(4)),
+      ) as [Progress, string[]][],
+    )[progress] ?? [],
 )
 
 export const getDisabled = createSelector(

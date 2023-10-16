@@ -2,17 +2,15 @@ import type { PayloadAction } from '@reduxjs/toolkit'
 
 import { createSlice } from '@reduxjs/toolkit'
 import {
-  defaultTo,
-  parseInt,
-  property,
-  forEach,
+  type ReadonlyNonEmptyArray,
   filter,
-  split,
-  flow,
   map,
   zip,
-  nth,
-} from 'lodash/fp'
+  of,
+} from 'fp-ts/ReadonlyNonEmptyArray'
+import { constant, pipe } from 'fp-ts/function'
+import * as Str from 'fp-ts/string'
+import { getOrElse } from 'fp-ts/Option'
 import { getPersisted, setPersisted } from '@/lib/localStorage'
 
 import { fetchMatches, sliceName } from './actions'
@@ -24,27 +22,31 @@ export interface ColumnMatch {
 }
 
 interface State {
-  matchesList: string[][]
-  matchColumns: string[]
-  scoresList: number[][]
-  matchVisits: number[]
+  matchesList: ReadonlyNonEmptyArray<ReadonlyNonEmptyArray<string>>
+  scoresList: ReadonlyNonEmptyArray<ReadonlyNonEmptyArray<number>>
+  matchColumns: ReadonlyNonEmptyArray<string>
+  matchVisits: ReadonlyNonEmptyArray<number>
 }
 
 const keys = ['matchColumns', 'matchVisits'] as const
-const defaultStateValue = ''
+const defaultValue = ''
 
 const initialState: State = {
-  matchVisits: flow(
-    split(','),
-    filter<string>(Boolean),
-    map(parseInt(10)),
-  )(getPersisted(keys[1], defaultStateValue)),
-  matchColumns: flow(
-    split(','),
-    filter<string>(Boolean),
-  )(getPersisted(keys[0], defaultStateValue)),
-  matchesList: [],
-  scoresList: [],
+  matchVisits: pipe(
+    getPersisted(keys[1], defaultValue),
+    Str.split(','),
+    filter(Str.isEmpty),
+    getOrElse(constant(of(''))),
+    map((value) => parseInt(value, 10)),
+  ),
+  matchColumns: pipe(
+    getPersisted(keys[0], defaultValue),
+    Str.split(','),
+    filter(Str.isEmpty),
+    getOrElse(constant(of(''))),
+  ),
+  matchesList: of(of([])),
+  scoresList: of(of([])),
 }
 
 // Slice
@@ -89,15 +91,23 @@ const columnsSlice = createSlice({
           .sort(([, a], [, b]) => a - b) // Sort by the original index
           .map(nth(0)) // Remove the original index
       }
+
+      return state
     })
   },
   reducers: {
     saveColumnState: (state) => {
       const { matchColumns, matchVisits } = state
 
-      forEach(([key = '', val = []]) => {
-        setPersisted(key, val.join(','))
-      })(zip(keys)([matchColumns, matchVisits] as const))
+      pipe(
+        [matchColumns, matchVisits] as const,
+        zip(keys),
+        map(([value, key]) => {
+          setPersisted(key, value.join(','))
+        }),
+      )
+
+      return state
     },
     setMatchColumn: (
       state,
@@ -106,6 +116,8 @@ const columnsSlice = createSlice({
       const { matchColumn, pos } = payload
 
       state.matchColumns[pos] = matchColumn
+
+      return state
     },
     setMatchVisit: (
       state,
@@ -114,12 +126,16 @@ const columnsSlice = createSlice({
       const { matchVisit, pos } = payload
 
       state.matchVisits[pos] = matchVisit
+
+      return state
     },
     deleteColumns: (state) => {
       state.matchColumns = []
       state.matchVisits = []
       state.matchesList = []
       state.scoresList = []
+
+      return state
     },
   },
   name: sliceName,

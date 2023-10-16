@@ -1,6 +1,8 @@
+import { constant } from 'fp-ts/function'
 import type { WorkBook } from 'xlsx'
 
 import XLSX from 'xlsx'
+import { console } from 'fp-ts'
 
 export interface SheetRequest extends WorkerRequest {
   method: 'postFormattedJSON' | 'postFile' | 'remove' | 'get'
@@ -16,7 +18,7 @@ export interface SheetResponse extends WorkerResponse {
 
 type Handler = RequestHandler<SheetRequest, SheetResponse>
 
-const getRootHandle = () => navigator.storage.getDirectory()
+const getRootHandle = constant(navigator.storage.getDirectory())
 
 const getRootFileHandle = (fileName: string, create?: boolean) =>
   getRootHandle().then((dir) =>
@@ -49,8 +51,10 @@ const postFile: Handler = async ({ fileName, file }) => {
     (handle) => handle.createWritable(),
   )
 
-  await writableStream.write(file)
-  await writableStream.close()
+  writableStream
+    .write(file)
+    .then(() => writableStream.close())
+    .catch(console.error)
 
   return { status: 'ok', fileName }
 }
@@ -71,8 +75,10 @@ const postFormattedJSON: Handler = async ({ fileName, workbook }) => {
     (handle) => handle.createWritable(),
   )
 
-  await writableStream.write(file)
-  await writableStream.close()
+  writableStream
+    .write(file)
+    .then(() => writableStream.close())
+    .catch(console.error)
 
   return { status: 'ok', fileName }
 }
@@ -94,10 +100,10 @@ const main = async (data: SheetRequest) => {
   const { method } = data
   try {
     const response = await controller[method](data)
-    postMessage(response)
+    globalThis.postMessage(response)
   } catch (error) {
     console.error(error)
-    postMessage({ status: 'fail', ...data, error } as SheetResponse)
+    globalThis.postMessage({ status: 'fail', ...data, error } as SheetResponse)
   }
 }
 
@@ -105,9 +111,11 @@ globalThis.addEventListener(
   'message',
   ({ data }: MessageEvent<SheetRequest>) => {
     main(data).catch(console.error)
+    return undefined
   },
 )
 
-globalThis.addEventListener('error', ({ error }) => {
+globalThis.addEventListener('error', ({ error }: ErrorEvent) => {
   console.error(error)
+  return undefined
 })

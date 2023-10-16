@@ -16,7 +16,6 @@ export const fetchSheet = createAsyncThunk(
     sheetWorker.postMessage({ method: 'get', fileName })
 
     const { workbook } = await messagePromise()
-
     return {
       SheetNames: workbook?.SheetNames,
       bookType: workbook?.bookType,

@@ -28,8 +28,8 @@
     "@fluentui/react-icons": "^2.0.219",
     "@reduxjs/toolkit": "^1.9.7",
     "@tauri-apps/api": "^1.5.0",
+    "fp-ts": "^2.16.1",
     "fuse.js": "^6.6.2",
-    "lodash": "^4.17.21",
     "plotly.js-cartesian-dist-min": "^2.26.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -46,7 +46,6 @@
     "@rollup/plugin-terser": "^0.4.4",
     "@tauri-apps/cli": "^1.5.2",
     "@types/eslint": "^8.44.4",
-    "@types/lodash": "^4.14.199",
     "@types/node": "^20.8.4",
     "@types/plotly.js-cartesian-dist-min": "npm:@types/plotly.js@*",
     "@types/react": "^18.2.28",
@@ -62,13 +61,13 @@
     "eslint-config-airbnb": "^19.0.4",
     "eslint-config-airbnb-typescript": "^17.1.0",
     "eslint-config-prettier": "^9.0.0",
+    "eslint-plugin-fp-ts": "^0.3.2",
+    "eslint-plugin-functional": "^6.0.0",
     "eslint-plugin-immutable": "^1.0.0",
     "eslint-plugin-import": "^2.28.1",
     "eslint-plugin-json": "^3.1.0",
     "eslint-plugin-json-format": "^2.0.1",
     "eslint-plugin-jsx-a11y": "^6.7.1",
-    "eslint-plugin-lodash": "^7.4.0",
-    "eslint-plugin-lodash-fp": "^2.2.0-a1",
     "eslint-plugin-optimize-regex": "^1.2.1",
     "eslint-plugin-perfectionist": "^2.1.0",
     "eslint-plugin-prettier": "^5.0.1",
@@ -120,8 +119,12 @@
       "plugin:json/recommended",
       "plugin:perfectionist/recommended-line-length",
       "plugin:optimize-regex/all",
-      "plugin:lodash/canonical",
-      "plugin:lodash-fp/recommended"
+      "plugin:immutable/recommended",
+      "plugin:fp-ts/recommended",
+      "plugin:fp-ts/recommended-requiring-type-checking",
+      "plugin:functional/recommended",
+      "plugin:functional/external-typescript-recommended",
+      "plugin:functional/stylistic"
     ],
     "ignorePatterns": [
       "dist"
@@ -154,8 +157,8 @@
       "perfectionist",
       "optimize-regex",
       "immutable",
-      "lodash",
-      "lodash-fp"
+      "fp-ts",
+      "functional"
     ],
     "rules": {
       "perfectionist/sort-imports": "off",
@@ -167,7 +170,8 @@
       "react/jsx-props-no-spreading": "off",
       "@typescript-eslint/semi": "off",
       "@typescript-eslint/consistent-type-exports": "error",
-      "@typescript-eslint/consistent-type-imports": "error"
+      "@typescript-eslint/consistent-type-imports": "error",
+      "import/no-extraneous-dependencies": "off"
     }
   },
   "prettier": {

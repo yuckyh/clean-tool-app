@@ -14,10 +14,8 @@ import {
   useHref,
 } from 'react-router-dom'
 import { useMemo } from 'react'
-import { isEqual } from 'lodash/fp'
 import { getPathTitle } from '@/lib/string'
 import { useAppSelector } from '@/lib/hooks'
-import { useLoggerEffect } from '@/lib/logger'
 import { getDisabled, getPath } from '../selectors'
 
 interface Props {
@@ -71,11 +69,8 @@ export default function ProgressNavLink({ done, path, pos }: Props) {
 
   const selectedPath = useAppSelector((state) => getPath(state, ...params))
 
-  useLoggerEffect({ disabled })
-  useLoggerEffect({ selectedPath })
-
   const label = getPathTitle(path)
-  const isActive = isEqual(useLocation().pathname)(path)
+  const isActive = useLocation().pathname === path
 
   return (
     <div className={classes.root}>

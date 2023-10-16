@@ -3,30 +3,36 @@ import {
   createBrowserRouter,
   Route,
 } from 'react-router-dom'
+import { constant } from 'fp-ts/function'
 import Layout from '@/pages/Layout'
 import App from '@/app'
 
+// eslint-disable-next-line functional/prefer-immutable-types
 export const routes = createRoutesFromElements(
   <Route element={<App />}>
     <Route element={<Layout />}>
-      <Route lazy={() => import('@/pages')} index />
-      <Route lazy={() => import('@/pages/Upload')} path="upload" />
+      <Route lazy={constant(import('@/pages'))} index />
+      <Route lazy={constant(import('@/pages/Upload'))} path="upload" />
       <Route
-        lazy={() => import('@/pages/ColumnMatching')}
+        lazy={constant(import('@/pages/ColumnMatching'))}
         path="column-matching"
       />
-      <Route lazy={() => import('@/pages/EDA')} path="EDA">
+      <Route lazy={constant(import('@/pages/EDA'))} path="EDA">
         <Route path=":column">
-          <Route lazy={() => import('@/pages/EDA/Variable')} index />
-          <Route lazy={() => import('@/pages/EDA/Variable')} path=":visit" />
+          <Route lazy={constant(import('@/pages/EDA/Variable'))} index />
+          <Route
+            lazy={constant(import('@/pages/EDA/Variable'))}
+            path=":visit"
+          />
         </Route>
       </Route>
-      <Route lazy={() => import('@/pages/Download')} path="download" />
+      <Route lazy={constant(import('@/pages/Download'))} path="download" />
     </Route>
-    <Route lazy={() => import('@/pages/404')} path="*" />
+    <Route lazy={constant(import('@/pages/404'))} path="*" />
   </Route>,
 )
 
+// eslint-disable-next-line functional/prefer-immutable-types
 export const router = createBrowserRouter(routes, {
   future: {
     v7_normalizeFormMethod: true,

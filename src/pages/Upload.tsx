@@ -1,3 +1,5 @@
+/* eslint-disable functional/no-return-void */
+/* eslint-disable functional/no-expression-statements */
 import {
   CardFooter,
   CardHeader,
@@ -63,7 +65,7 @@ const useClasses = makeStyles({
   },
 })
 
-// eslint-disable-next-line import/prefer-default-export
+// eslint-disable-next-line import/prefer-default-export, functional/functional-parameters
 export function Component() {
   const classes = useClasses()
 
@@ -87,6 +89,7 @@ export function Component() {
     )
     alertRef.current?.setTitle('Confirm Reset')
     alertRef.current?.open()
+    return true
   }, [alertRef])
 
   const handleResetConfirm = useCallback(() => {
@@ -96,14 +99,19 @@ export function Component() {
     just(deleteSheet)
       .pass()((x) => dispatch(x))()
       .catch(console.error)
+
+    return true
   }, [dispatch])
 
   const handleSubmit = useCallback(() => {
     just(setProgress).pass('uploaded')((x) => dispatch(x))
 
     navigate('/column-matching')
+
+    return true
   }, [dispatch, navigate])
 
+  // eslint-disable-next-line functional/no-expression-statements
   useEffect(() => {
     if (columnsLength) {
       stopLoading()
@@ -116,10 +124,14 @@ export function Component() {
       .finally(stopLoading)
   }, [columnsLength, dispatch, stopLoading])
 
+  // useLoggerEffect({ isLoading })
+
   useBeforeUnload(
     useCallback(() => {
       just(saveSheetState).pass()((x) => dispatch(x))
       just(saveColumnState).pass()((x) => dispatch(x))
+
+      return true
     }, [dispatch]),
   )
 
@@ -163,5 +175,3 @@ export function Component() {
     </section>
   )
 }
-
-Component.displayName = 'Upload'

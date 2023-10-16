@@ -35,7 +35,7 @@ type Column = number | string
 
 // Functional Programming
 
-type FunctionReturnType<T, V extends AnyArray> = T extends (
+type FunctionReturnType<T, V extends readonly unknown[]> = T extends (
   ...args: [...V]
 ) => infer R
   ? R

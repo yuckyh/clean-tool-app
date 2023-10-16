@@ -1,80 +1,60 @@
 import { createSelector } from '@reduxjs/toolkit'
-import {
-  isUndefined,
-  findIndex,
-  defaultTo,
-  property,
-  toLength,
-  isString,
-  toNumber,
-  replace,
-  toLower,
-  isEqual,
-  filter,
-  reduce,
-  negate,
-  isNaN,
-  every,
-  flow,
-  some,
-  map,
-  zip,
-  nth,
-} from 'lodash/fp'
+
+import { map, zip } from 'fp-ts/ReadonlyNonEmptyArray'
+import { constant, pipe } from 'fp-ts/function'
+import { getOrElse } from 'fp-ts/EitherT'
+import { fromNullable } from 'fp-ts/Option'
+import { getSearchedPos, getIndices } from '../columns/selectors'
 import { getPosParam, getColumns, getData } from '@/app/selectors'
 
-import { getSearchedPos, getIndices } from '../columns/selectors'
-
-export const getColumnsLength = createSelector([getColumns], toLength)
+export const getColumnsLength = createSelector(
+  [getColumns],
+  (columns) => columns.length,
+)
 
 function localeCompare(acc: number | string, prev: string) {
-  return isString(acc) ? acc.localeCompare(prev) : prev
+  return typeof acc === 'string' ? acc.localeCompare(prev) : prev
 }
 
 export const getColumnComparer = createSelector(
   [getColumns],
   (columns) =>
     (...args: [number, number]) =>
-      flow(
-        map<number, string>((pos) => nth(pos)(columns) ?? ''),
-        reduce<string, number | string>(localeCompare)(0),
-      )(args) as number,
+      args.map((pos) => columns[pos] ?? '').reduce(localeCompare, 0),
 )
 
 export const getColumn = createSelector(
   [getColumns, getPosParam],
-  (columns, pos) => nth(pos)(columns) ?? '',
+  (columns, pos) => columns[pos] ?? '',
 )
 
 const getIndexRow = createSelector(
   [getData, getColumns, getIndices],
   (data, columns, indices) =>
-    map<CellItem, string>(
+    data.map(
       (row) =>
-        `${property<CellItem, string>(
-          nth(
-            findIndex(
-              ([matchColumn, matchVisit]: readonly [string, number]) =>
-                matchColumn === 'sno' && matchVisit === 0,
-            )(indices),
-          )(columns) ?? '',
-        )(row)}`,
-    )(data),
+        `${
+          row[
+            columns[
+              indices.findIndex(
+                ([matchColumn, matchVisit]: readonly [string, number]) =>
+                  matchColumn === 'sno' && matchVisit === 0,
+              )
+            ]
+          ] ?? ''
+        }`,
+    ),
 )
 
 export const getRow = createSelector(
   [getData, getColumns, getSearchedPos],
-  (data, columns, pos) =>
-    map((row) => `${property(nth(pos)(columns) ?? '')(row)}`)(data),
+  (data, columns, pos) => map((row) => `${row[columns[pos] ?? '']}`)(data),
 )
 
 export const getIndexedRow = createSelector(
   [getRow, getIndexRow],
   (row, indexRow) =>
-    flow(
-      zip(row),
-      map(([value = '', index = '']) => [value, index] as const),
-    )(indexRow),
+    pipe(indexRow, zip(row), map(map(fromNullable(getOrElse(constant('')))))),
 )
 
 export const getRowBlanks = createSelector(
@@ -92,12 +72,20 @@ export const getRowBlanks = createSelector(
 const getBlanklessRow = createSelector(
   [getRow],
   filter((value) =>
-    every(flow(toLower, replace('/')(''), isEqual(value), negate))([
-      '',
-      'na',
-      'none',
-      'blank',
-    ]),
+    every(
+      flow<
+        [string],
+        string,
+        string,
+        (arg: string) => boolean,
+        (arg: string) => boolean
+      >(
+        replace('/')(''),
+        toLower,
+        isEqual,
+        negate,
+      )(value),
+    )(['', 'na', 'none', 'blank']),
   ),
 )
 
@@ -137,10 +125,10 @@ const getIndexedParsedNumericalRow = createSelector(
 
 export const getRowIncorrects = createSelector(
   [getIndexedParsedCategoricalRow],
-  filter<[string, string]>(flow(nth(0), Number, isNaN)),
+  (row) => row.filter(([value]) => isNaN(Number(value))),
 )
 
 export const getCleanNumericalRow = createSelector(
   [getIndexedParsedNumericalRow],
-  filter<[number, string]>(flow(nth(0), Number, isNaN)),
+  (row) => row.filter(([value]) => !isNaN(value)),
 )

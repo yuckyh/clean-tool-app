@@ -26,7 +26,6 @@ import {
   every,
   some,
   flow,
-  find,
   zip,
 } from 'lodash/fp'
 import SimpleDataGrid from '@/components/SimpleDataGrid'

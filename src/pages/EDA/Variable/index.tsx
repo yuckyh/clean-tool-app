@@ -16,19 +16,8 @@ import {
 } from '@fluentui/react-components'
 import { useBeforeUnload, useParams } from 'react-router-dom'
 import { useCallback, useState, useMemo } from 'react'
-import {
-  snakeCase,
-  defaultTo,
-  constant,
-  includes,
-  property,
-  isEqual,
-  reduce,
-  flow,
-  find,
-  nth,
-  map,
-} from 'lodash/fp'
+import { constant } from 'fp-ts/function'
+import { reduce, map } from 'fp-ts/ReadonlyNonEmptyArray'
 import { useAppDispatch, useAppSelector } from '@/lib/hooks'
 import { getCleanNumericalRow, getIndexedRow } from '@/features/sheet/selectors'
 import CategoricalPlot from '@/pages/EDA/Variable/CategoricalPlot'
@@ -96,8 +85,9 @@ const useClasses = makeStyles({
   },
 })
 
-const cellFocusMode: (tableColumnId: TableColumnId) => DataGridCellFocusMode =
-  constant('none')
+const cellFocusMode: (
+  tableColumnId: TableColumnId,
+) => DataGridCellFocusMode = () => 'none'
 
 // eslint-disable-next-line import/prefer-default-export
 export function Component() {
@@ -111,8 +101,8 @@ export function Component() {
 
   // const [isLoading, stopLoading] = useLoadingTransition()
 
-  const column = flow(defaultTo(''), snakeCase)(params.colum)
-  const visit = defaultTo(firstVisit)(params.visit)
+  const column = params.column?.replace(/_/g, '-') ?? ''
+  const visit = params.visit ?? firstVisit
 
   const series = useAppSelector((state) => getIndexedRow(state, column, visit))
   const cleanNumericalSeries = useAppSelector((state) =>
@@ -121,18 +111,13 @@ export function Component() {
 
   const title = `${column}${visit && visit !== '1' ? `_${visit}` : ''}`
 
-  const codebookVariable = flow(
-    find<ArrayElement<typeof codebook>>(
-      flow(property('name'), isEqual(column)),
-    ),
-    defaultTo({
-      description: '',
-      category: '',
-      name: '',
-      type: '',
-      unit: '',
-    }),
-  )(codebook)
+  const codebookVariable = codebook.find(({ name }) => column === name) ?? {
+    description: '',
+    category: '',
+    name: '',
+    type: '',
+    unit: '',
+  }
   const isCustom = !codebookVariable.name
 
   console.log(isCustom)
@@ -163,31 +148,26 @@ export function Component() {
             { value: cleanNumericalSeries.length, statistic: 'Count' },
             {
               value: Math.min(
-                ...map<readonly [number, string], number>(
-                  flow(nth(0), defaultTo(0)),
-                )(cleanNumericalSeries),
+                ...cleanNumericalSeries.map(([value]) => value ?? 0),
               ),
               statistic: 'Min',
             },
             {
               value: Math.max(
-                ...map<readonly [number, string], number>(
-                  flow(nth(0), defaultTo(0)),
-                )(cleanNumericalSeries),
+                ...map(([value]) => value ?? '')(cleanNumericalSeries),
               ),
               statistic: 'Max',
             },
             {
               value:
-                reduce<readonly [number, string], number>(
-                  (sum, [value]) => sum + value,
-                )(0)(cleanNumericalSeries) / cleanNumericalSeries.length,
+                reduce((sum, [value]) => sum + value)(0)(cleanNumericalSeries) /
+                cleanNumericalSeries.length,
               statistic: 'Mean',
             },
             {
-              value: reduce<readonly [number, string], number>(
-                (sum, [value]) => sum + value,
-              )(0)(cleanNumericalSeries),
+              value: reduce((sum, [value]) => sum + value)(0)(
+                cleanNumericalSeries,
+              ),
               statistic: 'Sum',
             },
           ],

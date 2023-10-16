@@ -1,3 +1,4 @@
+/* eslint-disable functional/prefer-immutable-types */
 import type { PayloadAction } from '@reduxjs/toolkit'
 
 import { createSlice } from '@reduxjs/toolkit'
@@ -23,12 +24,18 @@ const progressSlice = createSlice({
       const { progress } = state
 
       setPersisted(sliceName, progress)
+
+      return state
     },
     setProgress: (state, { payload }: PayloadAction<Progress>) => {
       state.progress = payload
+
+      return state
     },
     deleteProgressState: (state) => {
       state.progress = defaultValue
+
+      return state
     },
   },
   name: sliceName,
