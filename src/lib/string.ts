@@ -1,3 +1,5 @@
+import { string } from 'fp-ts'
+
 const acronymizedTitleCase = (word: string) =>
   word.length >= 3
     ? word.toLocaleUpperCase()
@@ -6,7 +8,6 @@ const acronymizedTitleCase = (word: string) =>
 const kebabToTitle = (slug: string) =>
   slug.split('-').map(acronymizedTitleCase).join(' ')
 
-// eslint-disable-next-line import/prefer-default-export
 export const getPathTitle = (path: string, depth = 1) => {
   const result = path
     .split('/')
@@ -16,3 +17,10 @@ export const getPathTitle = (path: string, depth = 1) => {
 
   return result.length ? result : 'Home'
 }
+
+export function localeCompare(acc: number | string, prev: string): number {
+  return typeof acc === 'string' ? acc.localeCompare(prev) : acc
+}
+
+export const strEquals = (str: string) => (other: string) =>
+  string.Eq.equals(str, other)

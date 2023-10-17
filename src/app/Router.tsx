@@ -7,7 +7,6 @@ import { constant } from 'fp-ts/function'
 import Layout from '@/pages/Layout'
 import App from '@/app'
 
-// eslint-disable-next-line functional/prefer-immutable-types
 export const routes = createRoutesFromElements(
   <Route element={<App />}>
     <Route element={<Layout />}>
@@ -32,7 +31,6 @@ export const routes = createRoutesFromElements(
   </Route>,
 )
 
-// eslint-disable-next-line functional/prefer-immutable-types
 export const router = createBrowserRouter(routes, {
   future: {
     v7_normalizeFormMethod: true,

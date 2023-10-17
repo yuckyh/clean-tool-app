@@ -1,13 +1,10 @@
-/* eslint-disable functional/prefer-immutable-types */
-/* eslint-disable functional/immutable-data */
-/* eslint-disable functional/no-expression-statements */
 import type { PayloadAction } from '@reduxjs/toolkit'
 
 import { createSlice } from '@reduxjs/toolkit'
 import { type BookType, utils } from 'xlsx'
 
 import { constant, pipe } from 'fp-ts/function'
-import * as Str from 'fp-ts/string'
+import Str from 'fp-ts/string'
 import { fromNullable, getOrElse, isNone } from 'fp-ts/Option'
 import type { ReadonlyNonEmptyArray } from 'fp-ts/ReadonlyNonEmptyArray'
 import {
@@ -19,17 +16,17 @@ import {
   of,
 } from 'fp-ts/ReadonlyNonEmptyArray'
 import { findIndex, deleteAt, insertAt, append } from 'fp-ts/ReadonlyArray'
-import { deleteSheet, fetchSheet, sliceName, postFile } from './actions'
 import { getPersisted, setPersisted } from '@/lib/localStorage'
+import { deleteSheet, fetchSheet, sliceName, postFile } from './actions'
 
 type FlagReason = 'incorrect' | 'missing' | 'outlier'
 
 interface State {
-  flaggedCells: ReadonlyNonEmptyArray<readonly [string, string, FlagReason]>
-  originalColumns: ReadonlyNonEmptyArray<string>
-  sheetNames: ReadonlyNonEmptyArray<string>
-  visits: ReadonlyNonEmptyArray<string>
-  data: ReadonlyNonEmptyArray<CellItem>
+  flaggedCells: readonly (readonly [string, string, FlagReason])[]
+  originalColumns: readonly string[]
+  sheetNames: readonly string[]
+  visits: readonly string[]
+  data: readonly CellItem[]
   bookType?: BookType
   sheetName: string
   fileName: string
@@ -180,9 +177,7 @@ const sheetSlice = createSlice({
       return state
     },
   },
-  // eslint-disable-next-line functional/no-return-void
   extraReducers: (builder) => {
-    // eslint-disable-next-line functional/no-expression-statements
     builder
       .addCase(fetchSheet.fulfilled, (state, { payload }) => {
         const { SheetNames, bookType, Sheets } = payload

@@ -1,9 +1,8 @@
 import type { Layout, Data } from 'plotly.js-cartesian-dist-min'
 
-import { reduce, values, range, keys } from 'lodash/fp'
 import VariablePlot from './VariablePlot'
 
-type IndexedSeries = (readonly [string, string])[]
+type IndexedSeries = readonly (readonly [string, string])[]
 
 interface Props {
   series: IndexedSeries

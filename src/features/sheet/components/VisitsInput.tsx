@@ -5,8 +5,8 @@ import { useCallback, useState } from 'react'
 import { range, flow, map, zip } from 'lodash/fp'
 import { useAppDispatch, useAppSelector } from '@/lib/hooks'
 
-import { deleteVisits, syncVisits, setVisit } from '../reducers'
 import { just } from '@/lib/monads'
+import { deleteVisits, syncVisits, setVisit } from '../reducers'
 
 const useClasses = makeStyles({
   input: {

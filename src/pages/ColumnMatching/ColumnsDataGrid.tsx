@@ -1,5 +1,6 @@
 import type {
   DataGridCellFocusMode,
+  TableColumnDefinition,
   DataGridFocusMode,
   DataGridProps,
 } from '@fluentui/react-components'
@@ -9,11 +10,11 @@ import {
   Subtitle1,
   Spinner,
 } from '@fluentui/react-components'
-import { useCallback, useEffect, useState, useMemo, memo } from 'react'
+import { useCallback, useEffect, useState, useMemo } from 'react'
 import { useBeforeUnload } from 'react-router-dom'
-import { constant, range } from 'lodash/fp'
 import type { Props as SimpleDataGridProps } from '@/components/SimpleDataGrid'
 import type { AlertRef } from '@/components/AlertDialog'
+import Task, { fromIO } from 'fp-ts/Task'
 
 import {
   getVisitsComparer,
@@ -31,10 +32,12 @@ import { saveSheetState } from '@/features/sheet/reducers'
 import { fetchMatches } from '@/features/columns/actions'
 import SimpleDataGrid from '@/components/SimpleDataGrid'
 import { fetchSheet } from '@/features/sheet/actions'
-import { createLazyMemo } from '@/lib/utils'
-import { just } from '@/lib/monads'
+import { createLazyMemo, createMemo } from '@/lib/utils'
 import Loader from '@/components/Loader'
 
+import { constant, identity, pipe } from 'fp-ts/function'
+import { makeBy } from 'fp-ts/ReadonlyArray'
+import { Either, getOrElse, left, right } from 'fp-ts/Either'
 import HeaderCell from './HeaderCell'
 import ValueCell from './ValueCell'
 
@@ -54,13 +57,15 @@ const MemoizedVisitsCell = createLazyMemo(
   'MemoizedVisitsCell',
   () => import('@/features/columns/components/VisitsCell'),
 )
-const MemoizedDataGrid = memo<SimpleDataGridProps<number>>(SimpleDataGrid)
-MemoizedDataGrid.displayName = 'MemoizedDataGrid'
+const MemoizedDataGrid = createMemo<SimpleDataGridProps<number>>(
+  'MemoizedDataGrid',
+  SimpleDataGrid,
+)
 
 const cellFocusMode: () => DataGridCellFocusMode = constant('none')
 const focusMode: DataGridFocusMode = 'composite'
 
-export default function ColumnsDataGrid({ alertRef }: Props) {
+export default function ColumnsDataGrid({ alertRef }: Readonly<Props>) {
   const dispatch = useAppDispatch()
 
   const columnsLength = useAppSelector(getColumnsLength)
@@ -79,13 +84,15 @@ export default function ColumnsDataGrid({ alertRef }: Props) {
   const handleSortChange: Required<DataGridProps>['onSortChange'] = useCallback(
     (_event, nextSortState) => {
       setSortState(nextSortState)
+
+      return undefined
     },
     [],
   )
 
-  const items = useMemo(() => range(0)(columnsLength), [columnsLength])
+  const items = useMemo(() => makeBy(columnsLength, identity), [columnsLength])
 
-  const columnsDefinition = useMemo(
+  const columnsDefinition: readonly TableColumnDefinition<number>[] = useMemo(
     () => [
       createTableColumn({
         renderHeaderCell: () => (
@@ -145,11 +152,26 @@ export default function ColumnsDataGrid({ alertRef }: Props) {
       return
     }
 
+    pipe(
+      columnsLength,
+      (length): Either<ReturnType<typeof fetchMatches>, typeof stopLoading> =>
+        length === 0 ? left(fetchMatches()) : right(stopLoading),
+      getOrElse((action) =>
+        pipe(
+          stopLoading,
+          Task.of,
+          Task.tap(() => Task.of(dispatch(action))),
+        ),
+      ),
+    )
+
     just(fetchSheet)
       .pass()((x) => dispatch(x))()
       .then(startFetchMatches)
       .catch(console.error)
       .finally(stopLoading)
+
+    return undefined
   }, [dispatch, columnsLength, stopLoading])
 
   useBeforeUnload(

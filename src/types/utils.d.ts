@@ -12,17 +12,13 @@ type IsArray<T> = T extends unknown[]
   ? T
   : never
 
-type AsArray<T> = T extends readonly unknown[] | unknown[]
-  ? T
-  : readonly T[] | T[]
+type AsArray<T> = T extends readonly unknown[] ? T : readonly T[] | T[]
 
-type AnyArray = readonly unknown[] | unknown[]
+type AnyArray = readonly unknown[]
 
-type ToArray<T> = readonly T[] | T[]
+type ToArray<T> = readonly T[]
 
-type ArrayElement<T extends AnyArray> = T extends
-  | readonly (infer U)[]
-  | (infer U)[]
+type ArrayElement<T extends AnyArray> = T extends readonly (infer U)[]
   ? U
   : never
 
@@ -35,38 +31,42 @@ type Column = number | string
 
 // Functional Programming
 
-type FunctionReturnType<T, V extends readonly unknown[]> = T extends (
-  ...args: [...V]
-) => infer R
-  ? R
-  : T
+// type FunctionReturnType<T, V extends readonly unknown[]> = T extends (
+//   ...args: readonly [...V]
+// ) => infer R
+//   ? R
+//   : T
 
-type Curried<V extends AnyArray, R> = V[number] extends undefined
-  ? R
-  : (arg: V[0]) => Curried<ExcludeFirst<V>, R>
+// type Curried<V extends AnyArray, R> = V[number] extends undefined
+//   ? R
+//   : (arg: V[0]) => Curried<ExcludeFirst<V>, R>
 
-type MonadFactory<M extends Monad<T>, T> = (value: T) => M
+// type MonadFactory<M extends Monad<T>, T> = (value: T) => M
 
-interface Monad<T> {
-  (): T
-  convert: <M extends Monad<T>>(converter: MonadFactory<M, T>) => M
-}
+// interface Monad<T> {
+//   (): T
+//   convert: <M extends Monad<T>>(converter: MonadFactory<M, T>) => M
+// }
 
-interface JustMonad<T> extends Monad<T> {
-  <U>(fn: (value: T) => U): JustMonad<U>
-  pass: {
-    <U extends AnyArray>(...args: U): JustMonad<FunctionReturnType<T, U>>
-    (): JustMonad<T>
-  }
-}
+// interface JustMonad<T> extends Monad<T> {
+//   <U>(fn: (value: T) => U): Readonly<JustMonad<U>>
+//   pass: {
+//     <U extends AnyArray>(
+//       ...args: U
+//     ): Readonly<JustMonad<FunctionReturnType<T, U>>>
+//     (): Readonly<JustMonad<T>>
+//   }
+// }
 
-interface ListMonad<T extends AnyArray> extends Monad<T> {
-  (): T
-  <U extends ToArray<V>, V>(fn?: (value: ArrayElement<T>) => V): ListMonad<U>
-  pass: {
-    <U extends AnyArray>(
-      ...args: [...U]
-    ): ListMonad<ToArray<FunctionReturnType<ArrayElement<T>, U>>>
-    (): ListMonad<T>
-  }
-}
+// interface ListMonad<T extends AnyArray> extends Monad<T> {
+//   (): T
+//   <U extends ToArray<V>, V>(
+//     fn?: (value: ArrayElement<T>) => V,
+//   ): Readonly<ListMonad<U>>
+//   pass: {
+//     <U extends AnyArray>(
+//       ...args: readonly [...U]
+//     ): Readonly<ListMonad<ToArray<FunctionReturnType<ArrayElement<T>, U>>>>
+//     (): Readonly<ListMonad<T>>
+//   }
+// }

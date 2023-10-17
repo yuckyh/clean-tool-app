@@ -1,20 +1,16 @@
+/* eslint-disable no-param-reassign */
+/* eslint-disable functional/immutable-data */
 import type { PayloadAction } from '@reduxjs/toolkit'
 
 import { createSlice } from '@reduxjs/toolkit'
-import {
-  type ReadonlyNonEmptyArray,
-  filter,
-  map,
-  zip,
-  of,
-} from 'fp-ts/ReadonlyNonEmptyArray'
-import { constant, pipe } from 'fp-ts/function'
-import * as Str from 'fp-ts/string'
-import { getOrElse } from 'fp-ts/Option'
+import RA from 'fp-ts/ReadonlyArray'
+import { constant, flow, pipe } from 'fp-ts/function'
+import Str from 'fp-ts/string'
 import { getPersisted, setPersisted } from '@/lib/localStorage'
 
-import { fetchMatches, sliceName } from './actions'
 import { makeIndexPair } from '@/lib/array'
+import { getOrElse } from 'fp-ts/Option'
+import { fetchMatches, sliceName } from './actions'
 
 export interface ColumnMatch {
   match: string
@@ -22,31 +18,29 @@ export interface ColumnMatch {
 }
 
 interface State {
-  matchesList: ReadonlyNonEmptyArray<ReadonlyNonEmptyArray<string>>
-  scoresList: ReadonlyNonEmptyArray<ReadonlyNonEmptyArray<number>>
-  matchColumns: ReadonlyNonEmptyArray<string>
-  matchVisits: ReadonlyNonEmptyArray<number>
+  matchesList: readonly (readonly string[])[]
+  scoresList: readonly (readonly number[])[]
+  matchColumns: readonly string[]
+  matchVisits: readonly number[]
 }
 
 const keys = ['matchColumns', 'matchVisits'] as const
 const defaultValue = ''
 
-const initialState: State = {
+const initialState: Readonly<State> = {
   matchVisits: pipe(
     getPersisted(keys[1], defaultValue),
     Str.split(','),
-    filter(Str.isEmpty),
-    getOrElse(constant(of(''))),
-    map((value) => parseInt(value, 10)),
+    RA.filter(Str.isEmpty),
+    RA.map((value) => parseInt(value, 10)),
   ),
   matchColumns: pipe(
     getPersisted(keys[0], defaultValue),
     Str.split(','),
-    filter(Str.isEmpty),
-    getOrElse(constant(of(''))),
+    RA.filter(Str.isEmpty),
   ),
-  matchesList: of(of([])),
-  scoresList: of(of([])),
+  matchesList: [],
+  scoresList: [],
 }
 
 // Slice
@@ -55,20 +49,25 @@ const columnsSlice = createSlice({
     builder.addCase(fetchMatches.fulfilled, (state, { payload }) => {
       const { matchColumns, matchVisits } = state
 
-      type Match = ArrayElement<ArrayElement<typeof payload>>
+      const matchesList = pipe(
+        payload,
+        RA.map(RA.map(({ item: { name } }) => name)),
+      )
 
-      state.matchesList = map(
-        map<Match, string>(flow(property('item.name'), defaultTo(''))),
-      )(payload)
+      state.matchesList = matchesList as string[][]
 
-      state.scoresList = map(
-        map<Match, number>(flow(property('score'), defaultTo(0))),
-      )(payload)
+      state.scoresList = pipe(
+        payload,
+        RA.map(RA.map(({ score = 0 }) => score)),
+      ) as number[][]
 
       if (!matchColumns.length) {
-        state.matchColumns = map<ArrayElement<typeof payload>, string>(
-          flow(nth(0), property('item.name'), defaultTo('')),
-        )(payload)
+        state.matchColumns = pipe(
+          matchesList,
+          RA.map(flow(RA.head, getOrElse(constant('')))),
+        ) as string[]
+
+        return state
       }
 
       if (!matchVisits.length) {
@@ -89,11 +88,15 @@ const columnsSlice = createSlice({
             ] as const
           }) // Increment the ones to get the visit number
           .sort(([, a], [, b]) => a - b) // Sort by the original index
-          .map(nth(0)) // Remove the original index
+          .map(([match]) => match) // Remove the original index
+
+        return state
       }
 
       return state
     })
+
+    return undefined
   },
   reducers: {
     saveColumnState: (state) => {
@@ -101,9 +104,10 @@ const columnsSlice = createSlice({
 
       pipe(
         [matchColumns, matchVisits] as const,
-        zip(keys),
-        map(([value, key]) => {
+        RA.zip(keys),
+        RA.map(([value, key]) => {
           setPersisted(key, value.join(','))
+          return undefined
         }),
       )
 
@@ -111,7 +115,9 @@ const columnsSlice = createSlice({
     },
     setMatchColumn: (
       state,
-      { payload }: PayloadAction<{ matchColumn: string; pos: number }>,
+      {
+        payload,
+      }: Readonly<PayloadAction<{ matchColumn: string; pos: number }>>,
     ) => {
       const { matchColumn, pos } = payload
 
@@ -121,7 +127,7 @@ const columnsSlice = createSlice({
     },
     setMatchVisit: (
       state,
-      { payload }: PayloadAction<{ matchVisit: number; pos: number }>,
+      { payload }: Readonly<PayloadAction<{ matchVisit: number; pos: number }>>,
     ) => {
       const { matchVisit, pos } = payload
 

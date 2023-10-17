@@ -1,5 +1,3 @@
-/* eslint-disable functional/no-return-void */
-/* eslint-disable functional/no-expression-statements */
 import {
   CardFooter,
   CardHeader,
@@ -27,6 +25,7 @@ import {
 import { saveColumnState, deleteColumns } from '@/features/columns/reducers'
 import SheetPickerInput from '@/features/sheet/components/SheetPickerInput'
 import SheetUploadInput from '@/features/sheet/components/SheetUploadInput'
+import type { Progress } from '@/features/progress/reducers'
 import { deleteProgressState, setProgress } from '@/features/progress/reducers'
 import PreviewDataGrid from '@/features/sheet/components/PreviewDataGrid'
 import { deleteSheet, fetchSheet } from '@/features/sheet/actions'
@@ -35,7 +34,11 @@ import { getColumnsLength } from '@/features/sheet/selectors'
 import { saveSheetState } from '@/features/sheet/reducers'
 import SimpleToaster from '@/components/SimpleToaster'
 import AlertDialog from '@/components/AlertDialog'
-import { just } from '@/lib/monads'
+import { noOp } from '@/lib/utils'
+import IO from 'fp-ts/IO'
+import { pipe } from 'fp-ts/function'
+import TE from 'fp-ts/TaskEither'
+import Task from 'fp-ts/Task'
 
 const useClasses = makeStyles({
   root: {
@@ -65,7 +68,7 @@ const useClasses = makeStyles({
   },
 })
 
-// eslint-disable-next-line import/prefer-default-export, functional/functional-parameters
+// eslint-disable-next-line import/prefer-default-export
 export function Component() {
   const classes = useClasses()
 
@@ -93,45 +96,56 @@ export function Component() {
   }, [alertRef])
 
   const handleResetConfirm = useCallback(() => {
-    sheetInputRef.current?.setFileTask('deleted')
-    just(deleteProgressState).pass()(dispatch)
-    just(deleteColumns).pass()(dispatch)
-    just(deleteSheet)
-      .pass()((x) => dispatch(x))()
-      .catch(console.error)
+    pipe(
+      sheetInputRef.current?.setFileTask('deleted'),
+      deleteProgressState,
+      (x) => dispatch(x),
+      deleteColumns,
+      (x) => dispatch(x),
+      deleteSheet,
+      (x) => dispatch(x),
+      Task.of,
+    )()
 
-    return true
+    return undefined
   }, [dispatch])
 
   const handleSubmit = useCallback(() => {
-    just(setProgress).pass('uploaded')((x) => dispatch(x))
-
-    navigate('/column-matching')
-
-    return true
+    return pipe(
+      'uploaded' as Progress,
+      setProgress,
+      (action) => dispatch(action),
+      IO.of,
+      IO.tap(() =>
+        IO.of(() => {
+          navigate('/column-matching')
+          return undefined
+        }),
+      ),
+    )()
   }, [dispatch, navigate])
 
-  // eslint-disable-next-line functional/no-expression-statements
   useEffect(() => {
-    if (columnsLength) {
-      stopLoading()
-      return
-    }
-
-    just(fetchSheet)
-      .pass()((x) => dispatch(x))()
-      .catch(console.error)
-      .finally(stopLoading)
+    return pipe(
+      columnsLength,
+      (
+        length,
+      ): TE.TaskEither<ReturnType<typeof fetchSheet>, typeof stopLoading> =>
+        length === 0 ? TE.left(fetchSheet()) : TE.right(stopLoading),
+      TE.getOrElse((action) => pipe(Task.of(stopLoading), Task.tap(() => Task.of(dispatch(action))))),
+      noOp
+    )()
   }, [columnsLength, dispatch, stopLoading])
-
-  // useLoggerEffect({ isLoading })
 
   useBeforeUnload(
     useCallback(() => {
-      just(saveSheetState).pass()((x) => dispatch(x))
-      just(saveColumnState).pass()((x) => dispatch(x))
-
-      return true
+      return pipe(
+        IO.Do,
+        () => saveColumnState(),
+        (x) => IO.of(dispatch(x)),
+        () => saveSheetState(),
+        (x) => IO.of(dispatch(x)),
+      )()
     }, [dispatch]),
   )
 

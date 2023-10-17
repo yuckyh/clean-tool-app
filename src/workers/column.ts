@@ -1,6 +1,7 @@
 import type Fuse from 'fuse.js'
-import { type ReadonlyNonEmptyArray, map } from 'fp-ts/ReadonlyNonEmptyArray'
+import { map } from 'fp-ts/ReadonlyArray'
 import type { codebook } from '@/data'
+import { console } from 'fp-ts'
 
 import fuse from '@/lib/fuse'
 
@@ -9,14 +10,15 @@ const search = fuse.search.bind(fuse)
 export type CodebookEntry = (typeof codebook)[0]
 
 export interface ColumnRequest extends WorkerRequest {
-  columns: ReadonlyNonEmptyArray<string>
+  columns: readonly string[]
   method: 'get'
 }
 
 export interface ColumnResponse extends WorkerResponse {
-  matches: ReadonlyNonEmptyArray<
-    Omit<Fuse.FuseResult<CodebookEntry>, 'matches'>[]
-  >
+  matches: readonly (readonly Omit<
+    Fuse.FuseResult<CodebookEntry>,
+    'matches'
+  >[])[]
 }
 
 type Handler = RequestHandler<ColumnRequest, ColumnResponse>
@@ -30,7 +32,7 @@ const controller: Controller<ColumnRequest, ColumnResponse> = {
   get,
 }
 
-const main = async (data: ColumnRequest) => {
+const main = async (data: Readonly<ColumnRequest>) => {
   const { method } = data
 
   postMessage(await controller[method](data))
@@ -38,7 +40,7 @@ const main = async (data: ColumnRequest) => {
 
 globalThis.addEventListener(
   'message',
-  ({ data }: MessageEvent<ColumnRequest>) => {
+  ({ data }: Readonly<MessageEvent<ColumnRequest>>) => {
     main(data).catch(console.error)
     return undefined
   },

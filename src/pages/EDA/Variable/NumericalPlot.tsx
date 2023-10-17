@@ -2,15 +2,13 @@ import type { Layout, Data } from 'plotly.js-cartesian-dist-min'
 
 import { tokens } from '@fluentui/react-components'
 import { useRef } from 'react'
-import { filter, negate, range, map } from 'lodash/fp'
-import { accessArray } from '@/lib/array'
 
-import VariablePlot from './VariablePlot'
 import { list } from '@/lib/monads'
 import { multiply, divideBy } from '@/lib/number'
 import { useTokenToHex } from '@/lib/hooks'
+import VariablePlot from './VariablePlot'
 
-type IndexedSeries = (readonly [number, string])[]
+type IndexedSeries = readonly (readonly [string, number])[]
 
 interface NumericalPlotProps {
   series: IndexedSeries

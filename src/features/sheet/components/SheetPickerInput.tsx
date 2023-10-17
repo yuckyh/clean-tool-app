@@ -5,8 +5,8 @@ import { useCallback } from 'react'
 import { map } from 'lodash/fp'
 import { useAppDispatch, useAppSelector } from '@/lib/hooks'
 
-import { setSheetName } from '../reducers'
 import { just } from '@/lib/monads'
+import { setSheetName } from '../reducers'
 
 const useClasses = makeStyles({
   input: {

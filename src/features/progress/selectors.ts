@@ -22,9 +22,9 @@ import {
 } from 'lodash/fp'
 import { getProgress } from '@/app/selectors'
 import { routes } from '@/app/Router'
-import type { Progress } from './reducers'
 import { getPathTitle } from '@/lib/string'
 import type { RootState } from '@/app/store'
+import type { Progress } from './reducers'
 
 const getLocationPathParam = (_: RootState, _1: string, locationPath: string) =>
   locationPath

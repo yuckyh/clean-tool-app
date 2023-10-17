@@ -1,11 +1,12 @@
 import { createAsyncThunk } from '@reduxjs/toolkit'
 import type { RootState } from '@/app/store'
 
-import { just } from '@/lib/monads'
 import { promisedWorker, columnWorker } from '@/app/workers'
 import { getColumns } from '@/app/selectors'
 
+import { pipe } from 'fp-ts/function'
 import { syncVisits } from '../sheet/reducers'
+import { Either, left, right, getOrElse } from 'fp-ts/Either'
 
 const messagePromise = async () =>
   (await promisedWorker('message', columnWorker)).data
@@ -26,12 +27,13 @@ export const fetchMatches = createAsyncThunk(
 
     const { matchVisits } = (getState() as RootState).columns
 
-    if (matchVisits.length) {
-      const newVisitsLength = Math.max(...matchVisits) + 1
-
-      just(newVisitsLength)(syncVisits)(dispatch)
-    }
-
-    return result
+    return pipe(
+      matchVisits,
+      (value): Either<typeof value, typeof result> =>
+        value.length > 0 ? left(value) : right(result),
+      getOrElse((value) =>
+        pipe(Math.max(...value) + 1, syncVisits, dispatch, () => result),
+      ),
+    )
   },
 )

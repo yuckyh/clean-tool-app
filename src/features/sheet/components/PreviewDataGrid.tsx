@@ -7,9 +7,9 @@ import type { Props as SimpleDataGridProps } from '@/components/SimpleDataGrid'
 import { useAppSelector } from '@/lib/hooks'
 import { createLazyMemo } from '@/lib/utils'
 
+import { useLoggerEffect } from '@/lib/logger'
 import PreviewHeaderCell from './PreviewHeaderCell'
 import { getColumnsLength } from '../selectors'
-import { useLoggerEffect } from '@/lib/logger'
 
 interface Props {
   isOriginal?: boolean

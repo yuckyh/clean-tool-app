@@ -6,14 +6,13 @@ import { Provider } from 'react-redux'
 import { description, keywords, author } from '@/../package.json'
 import store from '@/app/store'
 import { useThemePreference, useGlobalStyles, useStorage } from '@/lib/hooks'
+import { console } from 'fp-ts'
 
 export default function App() {
   useGlobalStyles()
   useStorage()
   useRegisterSW({
-    onOfflineReady: () => {
-      console.log('offline ready')
-    },
+    onOfflineReady: () => console.log('offline ready'),
     immediate: true,
   })
 

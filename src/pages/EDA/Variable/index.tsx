@@ -16,21 +16,23 @@ import {
 } from '@fluentui/react-components'
 import { useBeforeUnload, useParams } from 'react-router-dom'
 import { useCallback, useState, useMemo } from 'react'
-import { constant } from 'fp-ts/function'
-import { reduce, map } from 'fp-ts/ReadonlyNonEmptyArray'
+import { constant, pipe } from 'fp-ts/function'
+import { reduce, some, map } from 'fp-ts/ReadonlyArray'
 import { useAppDispatch, useAppSelector } from '@/lib/hooks'
 import { getCleanNumericalRow, getIndexedRow } from '@/features/sheet/selectors'
 import CategoricalPlot from '@/pages/EDA/Variable/CategoricalPlot'
 import NumericalPlot from '@/pages/EDA/Variable/NumericalPlot'
 import { codebook } from '@/data'
 
-import FlaggedDataGrid from './FlaggedDataGrid'
-import BlankDataGrid from './BlankDataGrid'
-import IncorrectDataGrid from './IncorrectDataGrid'
 import SimpleDataGrid from '@/components/SimpleDataGrid'
-import { just } from '@/lib/monads'
 import { saveColumnState } from '@/features/columns/reducers'
 import { saveSheetState } from '@/features/sheet/reducers'
+import { includes } from 'fp-ts/string'
+import { console } from 'fp-ts'
+import IO from 'fp-ts/IO'
+import IncorrectDataGrid from './IncorrectDataGrid'
+import BlankDataGrid from './BlankDataGrid'
+import FlaggedDataGrid from './FlaggedDataGrid'
 
 type VariableType = Extract<Property<typeof variableType>, string>
 
@@ -124,10 +126,10 @@ export function Component() {
 
   const { type, unit } = codebookVariable
 
-  const measurementType: VariableType = includes(type)([
-    'whole_number',
-    'interval',
-  ])
+  const measurementType: VariableType = pipe(
+    ['whole_number', 'interval'] as const,
+    some(includes(type)),
+  )
     ? 'numerical'
     : 'categorical'
 
@@ -135,12 +137,26 @@ export function Component() {
 
   useBeforeUnload(
     useCallback(() => {
-      just(saveColumnState).pass()(dispatch)
-      just(saveSheetState).pass()(dispatch)
+      return pipe(
+        saveColumnState,
+        (x) => dispatch(x),
+        saveSheetState,
+        (x) => dispatch(x),
+        IO.of,
+      )()
     }, [dispatch]),
   )
 
-  const summaryStatistics: SummaryStats[] = useMemo(
+  const dataSum = useMemo(
+    () =>
+      pipe(
+        cleanNumericalSeries,
+        reduce(0, (sum, [, value]) => sum + value),
+      ),
+    [cleanNumericalSeries],
+  )
+
+  const summaryStatistics: readonly SummaryStats[] = useMemo(
     () =>
       isCategorical
         ? [{ value: series.length, statistic: 'Count' }]
@@ -148,32 +164,32 @@ export function Component() {
             { value: cleanNumericalSeries.length, statistic: 'Count' },
             {
               value: Math.min(
-                ...cleanNumericalSeries.map(([value]) => value ?? 0),
+                ...cleanNumericalSeries.map(([, value]) => value),
               ),
               statistic: 'Min',
             },
             {
               value: Math.max(
-                ...map(([value]) => value ?? '')(cleanNumericalSeries),
+                ...pipe(
+                  cleanNumericalSeries,
+                  map(([, value]) => value),
+                ),
               ),
               statistic: 'Max',
             },
             {
-              value:
-                reduce((sum, [value]) => sum + value)(0)(cleanNumericalSeries) /
-                cleanNumericalSeries.length,
+              value: dataSum / cleanNumericalSeries.length,
               statistic: 'Mean',
             },
             {
-              value: reduce((sum, [value]) => sum + value)(0)(
-                cleanNumericalSeries,
-              ),
               statistic: 'Sum',
+              value: dataSum,
             },
           ],
-    [cleanNumericalSeries, isCategorical, series.length],
+    [cleanNumericalSeries, isCategorical, series.length, dataSum],
   )
 
+  // eslint-disable-next-line functional/prefer-immutable-types
   const columnDefinition: TableColumnDefinition<SummaryStats>[] = useMemo(
     () => [
       createTableColumn({
@@ -202,6 +218,7 @@ export function Component() {
                 <Switch
                   onChange={({ target }) => {
                     setIsCustomCategorical(target.checked)
+                    return undefined
                   }}
                   label={isCustomCategorical ? 'Categorical' : 'Numerical'}
                   checked={isCustomCategorical}

@@ -19,7 +19,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "lint": "yarn dlx eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "lint": "eslint . --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
     "preview:clean": "tsc && vite build && vite preview"
   },
@@ -61,6 +61,7 @@
     "eslint-config-airbnb": "^19.0.4",
     "eslint-config-airbnb-typescript": "^17.1.0",
     "eslint-config-prettier": "^9.0.0",
+    "eslint-import-resolver-typescript": "^3.6.1",
     "eslint-plugin-fp-ts": "^0.3.2",
     "eslint-plugin-functional": "^6.0.0",
     "eslint-plugin-immutable": "^1.0.0",
@@ -127,7 +128,8 @@
       "plugin:functional/stylistic"
     ],
     "ignorePatterns": [
-      "dist"
+      "dist",
+      "dev-dist"
     ],
     "parser": "@typescript-eslint/parser",
     "parserOptions": {
@@ -145,6 +147,21 @@
     "settings": {
       "react": {
         "version": "detect"
+      },
+      "import/parsers": {
+        "@typescript-eslint/parser": [
+          ".ts",
+          ".tsx"
+        ]
+      },
+      "import/resolver": {
+        "typescript": {
+          "alwaysTryTypes": true,
+          "project": [
+            ".tsconfig.json",
+            "src/tsconfig.json"
+          ]
+        }
       }
     },
     "plugins": [
@@ -155,23 +172,36 @@
       "prettier",
       "json-format",
       "perfectionist",
+      "import",
       "optimize-regex",
       "immutable",
       "fp-ts",
       "functional"
     ],
     "rules": {
-      "perfectionist/sort-imports": "off",
-      "immutable/no-let": "error",
-      "immutable/no-this": "error",
-      "import/extensions": "off",
-      "no-console": "off",
-      "no-param-reassign": "off",
-      "react/jsx-props-no-spreading": "off",
-      "@typescript-eslint/semi": "off",
-      "@typescript-eslint/consistent-type-exports": "error",
-      "@typescript-eslint/consistent-type-imports": "error",
-      "import/no-extraneous-dependencies": "off"
+      "@typescript-eslint/semi": 0,
+      "@typescript-eslint/consistent-type-exports": 2,
+      "@typescript-eslint/consistent-type-imports": 2,
+      "perfectionist/sort-imports": 0,
+      "immutable/no-let": 2,
+      "immutable/no-this": 2,
+      "import/extensions": 0,
+      "import/no-extraneous-dependencies": 0,
+      "react/jsx-props-no-spreading": 0,
+      "functional/no-expression-statements": 0,
+      "functional/functional-parameters": 0,
+      "functional/no-return-void": 2,
+      "functional/no-mixed-types": 0,
+      "functional/prefer-immutable-types": [
+        "error",
+        {
+          "enforcement": "ReadonlyShallow",
+          "ignoreInferredTypes": true
+        }
+      ],
+      "redux/no-let": 0,
+      "redux/no-this": 0,
+      "redux/no-mutation": 0
     }
   },
   "prettier": {

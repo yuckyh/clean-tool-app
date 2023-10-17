@@ -7,6 +7,7 @@ import type { AlertRef } from '@/components/AlertDialog'
 import { useAppDispatch, useAppSelector } from '@/lib/hooks'
 import { indexDuplicateSearcher } from '@/lib/array'
 
+import { just } from '@/lib/monads'
 import {
   getMatchColumn,
   getMatchVisit,
@@ -14,7 +15,6 @@ import {
   getVisit,
 } from '../selectors'
 import { setMatchVisit } from '../reducers'
-import { just } from '@/lib/monads'
 
 interface Props {
   alertRef: RefObject<AlertRef>

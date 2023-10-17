@@ -1,9 +1,16 @@
 import { createSelector } from '@reduxjs/toolkit'
-import { pipe } from 'fp-ts/function'
-import { flatten, reduce, map, zip } from 'fp-ts/ReadonlyNonEmptyArray'
-import { findIndex } from 'fp-ts/ReadonlyArray'
+import { constant, pipe } from 'fp-ts/function'
+import {
+  findIndex,
+  lookup,
+  reduce,
+  head,
+  zip,
+  map,
+  of,
+} from 'fp-ts/ReadonlyArray'
 import { getOrElse } from 'fp-ts/Option'
-import * as Str from 'fp-ts/string'
+import Str from 'fp-ts/string'
 import {
   getMatchColumns,
   getMatchVisits,
@@ -13,10 +20,11 @@ import {
   getVisitParam,
   getPosParam,
   getVisits,
+  searchPos,
 } from '@/app/selectors'
-import { indexDuplicateSearcher } from '@/lib/array'
+import { indexDuplicateSearcher, numberLookup } from '@/lib/array'
 import fuse from '@/lib/fuse'
-import { just } from '@/lib/monads'
+import { strEquals } from '@/lib/string'
 
 export const getMatchVisit = createSelector(
   [getMatchVisits, getPosParam],
@@ -46,11 +54,7 @@ export const getVisit = createSelector(
 export const getColumnDuplicates = createSelector(
   [getMatchColumns, getMatchColumn],
   (matchColumns, matchColumn) =>
-    map(nth(0))(
-      indexDuplicateSearcher(map((match) => [match])(matchColumns), [
-        matchColumn,
-      ]),
-    ),
+    map(head)(indexDuplicateSearcher(pipe(matchColumns, of), [matchColumn])),
 )
 
 export const getShouldFormat = createSelector(
@@ -62,7 +66,7 @@ export const getShouldFormat = createSelector(
 export const getColumnPath = createSelector(
   [getMatchColumn, getShouldFormat, getVisit],
   (matchColumn, shouldFormat, visit) =>
-    `/eda/${kebabCase(matchColumn)}${shouldFormat ? `/${visit}` : ''}`,
+    `/eda/${matchColumn.replace(/_/g, '-')}${shouldFormat ? `/${visit}` : ''}`,
 )
 
 export const getFormattedColumn = createSelector(
@@ -73,28 +77,18 @@ export const getFormattedColumn = createSelector(
 
 export const getIndices = createSelector(
   [getMatchColumns, getMatchVisits],
-  (matchColumns, matchVisits) =>
-    flow(
-      zip(matchColumns),
-      map(
-        ([matchColumn = '', matchVisit = 0]) =>
-          [matchColumn, matchVisit] as const,
-      ),
-    )(matchVisits),
+  (matchColumns, matchVisits) => pipe(matchColumns, zip(matchVisits)),
 )
 
 export const getSearchedPos = createSelector(
   [getIndices, getVisits, getColumnParam, getVisitParam],
-  (indices, visits, column, visit) =>
-    findIndex<readonly [string, number]>(
-      ([matchColumn, matchVisit]) =>
-        column === matchColumn && visit === visits[matchVisit],
-    )(indices),
+  (indices, visits, column, visit) => searchPos(indices, visits, column, visit),
 )
 
 export const getMatchIndex = createSelector(
   [getMatches, getMatchColumn],
-  (matches, matchColumn) => matches.indexOf(matchColumn),
+  (matches, matchColumn) =>
+    pipe(matches, findIndex(strEquals(matchColumn)), getOrElse(constant(-1))),
 )
 
 const search = fuse.search.bind(fuse)
@@ -105,17 +99,18 @@ export const getScore = createSelector(
     (
       1 -
       (scores[matchIndex] ??
-        just(matchColumn)(search)(([match]) => match?.score ?? 1)())
+        pipe(matchColumn, search, ([match]) => match?.score ?? 1))
     ).toFixed(2),
 )
 
 export const getMatchComparer = createSelector(
   [getMatchColumns],
   (matchColumns) =>
-    (...args: [number, number]) => {
-      const [a, b] = map<number, string>((pos) => matchColumns[pos] ?? '')(
+    (...args: readonly [number, number]) => {
+      const [a, b] = pipe(
         args,
-      ) as [string, string]
+        map((pos) => pipe(matchColumns, lookup(pos), getOrElse(constant('')))),
+      ) as readonly [string, string]
 
       return a.localeCompare(b)
     },
@@ -124,10 +119,10 @@ export const getMatchComparer = createSelector(
 export const getVisitsComparer = createSelector(
   [getMatchVisits],
   (matchVisits) =>
-    ([a, b]: readonly [number, number]) =>
+    (...args: readonly [number, number]) =>
       pipe(
-        [a, b] as const,
-        map((pos) => matchVisits[pos] ?? 0),
+        args,
+        map(numberLookup(matchVisits)),
         reduce(0, (acc, curr) => acc - curr),
       ),
 )
@@ -135,28 +130,29 @@ export const getVisitsComparer = createSelector(
 export const getScoreComparer = createSelector(
   [getMatchesList, getScoresList, getMatchColumns],
   (matchesList, scoresList, matchColumns) =>
-    ([a, b]: readonly [number, number]) =>
+    (...args: readonly [number, number]) =>
       pipe(
-        [a, b] as const,
+        args,
         map((pos) =>
           pipe(
             scoresList,
             zip(matchesList),
-            flatten,
             zip(matchColumns),
-            flatten,
-            map(
-              ([scores = [], matches = [], matchColumn = '']) =>
-                scores[
+            map(([[scores, matches], matchColumn]) =>
+              pipe(
+                scores,
+                lookup(
                   pipe(
                     matches,
-                    findIndex((match) => Str.Eq(matchColumn, match)),
+                    findIndex((match) => Str.Eq.equals(matchColumn, match)),
                     getOrElse(constant(-1)),
-                  )
-                ],
+                  ),
+                ),
+                getOrElse(constant(1)),
+              ),
             ),
-            nth(pos),
-            defaultTo(0),
+            lookup(pos),
+            getOrElse(constant(1)),
           ),
         ),
         reduce(0, (acc, curr) => acc - curr),

@@ -18,6 +18,8 @@ import {
 } from '@fluentui/react-components'
 import type { AppDispatch, RootState } from '@/app/store'
 import globalStyles from '@/app/global.css?inline'
+import { chain, of } from 'fp-ts/IO'
+import { pipe } from 'fp-ts/function'
 
 export const useAppDispatch: () => AppDispatch = useDispatch
 export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector
@@ -39,12 +41,19 @@ export const useLoadingTransition = () => {
   const [isPending, startTransition] = useTransition()
 
   const stopLoading = useCallback(() => {
-    startTransition(() => {
-      setIsLoading(false)
-    })
+    return pipe(
+      startTransition,
+      of,
+      chain(() =>
+        of(() => {
+          setIsLoading(false)
+          return undefined
+        }),
+      ),
+    )
   }, [])
 
-  return [isLoading || isPending, stopLoading] as const
+  return [isLoading || isPending, stopLoading()] as const
 }
 
 export const useThemePreference = (

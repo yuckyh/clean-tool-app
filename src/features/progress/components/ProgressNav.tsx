@@ -15,9 +15,9 @@ import { Helmet } from 'react-helmet-async'
 import { range, split, flow, map, zip, nth } from 'lodash/fp'
 import { useAppDispatch, useAppSelector } from '@/lib/hooks'
 
+import { just } from '@/lib/monads'
 import { saveProgressState } from '../reducers'
 import ProgressNavLink from './ProgressNavLink'
-import { just } from '@/lib/monads'
 import {
   getShouldNavigateToAllowed,
   getAllowedPaths,
