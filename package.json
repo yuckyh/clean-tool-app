@@ -189,11 +189,11 @@
       "import/no-extraneous-dependencies": 0,
       "react/jsx-props-no-spreading": 0,
       "functional/no-expression-statements": 0,
-      "functional/functional-parameters": 0,
-      "functional/no-return-void": 2,
+      "functionaya l/functional-parameters": 0,
+      "functional/no-return-void": 0,
       "functional/no-mixed-types": 0,
       "functional/prefer-immutable-types": [
-        "error",
+        0,
         {
           "enforcement": "ReadonlyShallow",
           "ignoreInferredTypes": true

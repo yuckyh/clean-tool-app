@@ -1,33 +1,42 @@
 import type { ColorScale } from 'plotly.js-cartesian-dist-min'
 import type { ColorTokens } from '@fluentui/react-components'
 
-import { padCharsStart, parseInt, range, zip } from 'lodash/fp'
-
-import { just, list } from './monads'
+import { identity, flow, pipe } from 'fp-ts/function'
+import { makeBy, flap, map, zip } from 'fp-ts/ReadonlyArray'
+import { slice } from 'fp-ts/string'
 import { divideBy } from './number'
 import { useTokenToHex } from './hooks'
 
 type ColorToken = Property<ColorTokens>
 type Rgb = readonly [number, number, number]
+type Diff = readonly [number, number]
+type TransposedRgbDiff = readonly [Diff, Diff, Diff]
 
 const splitHexString = (hexString: string) =>
-  list([1, 3, 5] as const)((x) => hexString.slice(x, x + 2))()
+  pipe(
+    [1, 3, 5] as const,
+    map((x) => slice(x, x + 2)),
+    flap(hexString),
+  ) as readonly [string, string, string]
 
 const hexToRgb = (hexString: string) =>
-  just(hexString)(splitHexString).convert(list)(parseInt(16))() as Rgb
+  pipe(
+    hexString,
+    splitHexString,
+    map((hex) => parseInt(hex, 16)),
+  ) as Rgb
 
-const numToHex = (x: number) => padCharsStart('0')(2)(x.toString(16))
+const numToHex = (x: number) => x.toString(16).padStart(2, '0')
 
 const interpolate =
-  ([start = 0, end = 0]) =>
+  ([start, end]: Diff) =>
   (time: number) =>
     Math.round(start + time * (end - start))
 
-const timeToColorStep =
-  (t: number) => (rgbDiffs: [undefined | number, undefined | number][]) => [
-    t,
-    list(rgbDiffs)(interpolate).pass(t)(numToHex)().join(''),
-  ]
+const timeToColorStep = (t: number) => (rgbDiffs: TransposedRgbDiff) => [
+  t,
+  pipe(rgbDiffs, map(interpolate), flap(t), map(numToHex)).join(''),
+]
 
 // eslint-disable-next-line import/prefer-default-export
 export const useFluentColorScale = (
@@ -35,14 +44,17 @@ export const useFluentColorScale = (
   color2Token: ColorToken,
   n: number,
 ) => {
-  const rgbDiffs = list([color1Token, color2Token] as const)(useTokenToHex)(
-    hexToRgb,
-  )
-    .convert(just)(([x = [], y = []]) => zip(x)(y))
-    .convert(list)()
+  const rgbDiffs = pipe(
+    [color1Token, color2Token] as const,
+    map(flow(useTokenToHex, hexToRgb)),
+    ([rgb1, rgb2]) => zip(rgb1 ?? [])(rgb2 ?? []),
+  ) as TransposedRgbDiff
 
-  return just(n)(range(0))
-    .convert(list)(divideBy)
-    .pass(n - 1)(timeToColorStep)
-    .pass(rgbDiffs)() as ColorScale
+  return pipe(
+    makeBy(n, identity),
+    map(divideBy),
+    flap(n - 1),
+    map(timeToColorStep),
+    flap(rgbDiffs),
+  ) as ColorScale[]
 }

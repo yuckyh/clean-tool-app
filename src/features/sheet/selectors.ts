@@ -79,7 +79,7 @@ export const getIndexedRow = createSelector(
   (row, indexRow) => zip(indexRow)(row),
 )
 
-export const getRowBlanks = createSelector(
+const getRowBlanks = createSelector(
   [getRow],
   filter((cell) =>
     pipe(
@@ -90,6 +90,11 @@ export const getRowBlanks = createSelector(
       ),
     ),
   ),
+)
+
+export const getIndexedRowBlanks = createSelector(
+  [getRowBlanks, getIndexRow],
+  (row, indexRow) => zip(indexRow)(row),
 )
 
 const getBlanklessRow = createSelector(

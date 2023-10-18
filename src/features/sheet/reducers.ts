@@ -1,21 +1,25 @@
+/* eslint-disable no-param-reassign */
+/* eslint-disable functional/immutable-data */
 import type { PayloadAction } from '@reduxjs/toolkit'
 
 import { createSlice } from '@reduxjs/toolkit'
 import { type BookType, utils } from 'xlsx'
 
-import { constant, pipe } from 'fp-ts/function'
+import { constant, flow, pipe } from 'fp-ts/function'
 import Str from 'fp-ts/string'
-import { fromNullable, getOrElse, isNone } from 'fp-ts/Option'
-import type { ReadonlyNonEmptyArray } from 'fp-ts/ReadonlyNonEmptyArray'
+import { filter } from 'fp-ts/ReadonlyNonEmptyArray'
+import { fromNullable, getOrElse, isNone, match } from 'fp-ts/Option'
 import {
-  filter,
+  findIndex,
+  deleteAt,
+  insertAt,
   makeBy,
+  append,
   getEq,
   uniq,
   map,
   of,
-} from 'fp-ts/ReadonlyNonEmptyArray'
-import { findIndex, deleteAt, insertAt, append } from 'fp-ts/ReadonlyArray'
+} from 'fp-ts/ReadonlyArray'
 import { getPersisted, setPersisted } from '@/lib/localStorage'
 import { deleteSheet, fetchSheet, sliceName, postFile } from './actions'
 
@@ -71,15 +75,33 @@ const initialState: State = {
     filter(Str.isEmpty),
     getOrElse(constant(of(''))),
   ),
-  data: JSON.parse(
-    getPersisted('data', '[]'),
-  ) as ReadonlyNonEmptyArray<CellItem>,
+  data: JSON.parse(getPersisted('data', '[]')) as readonly CellItem[],
   fileName: getPersisted(fileNameKey, defaultValue),
   sheetName: getPersisted(sliceName, defaultValue),
 }
 
 const sheetSlice = createSlice({
   reducers: {
+    removeFlaggedCell: (
+      state,
+      { payload }: PayloadAction<readonly [string, string, FlagReason]>,
+    ) => {
+      const flaggedCells = state.flaggedCells as readonly (typeof payload)[]
+      state.flaggedCells = pipe(
+        flaggedCells,
+        findIndex((cell) => getEq(Str.Eq).equals(payload, cell)),
+        match(
+          constant(flaggedCells),
+          flow(
+            deleteAt,
+            (fn) => fn(flaggedCells),
+            pipe(flaggedCells, constant, getOrElse),
+          ),
+        ),
+      ) as [string, string, FlagReason][]
+
+      return state
+    },
     saveSheetState: (state) => {
       const {
         originalColumns,
@@ -96,44 +118,41 @@ const sheetSlice = createSlice({
       setPersisted('data', JSON.stringify(data))
       ;([sheetNames, visits, originalColumns] as const).forEach((value, i) => {
         setPersisted(listKeys[i] ?? '', value.join(','))
-
-        return undefined
       })
 
       setPersisted('flaggedCells', `[${flaggedCells.join('],[')}]`)
 
       return state
     },
-    removeFlaggedCell: (
-      state,
-      { payload }: PayloadAction<[string, string, FlagReason]>,
-    ) => {
-      state.flaggedCells = pipe(
-        state.flaggedCells,
-        deleteAt(
-          pipe(
-            state.flaggedCells,
-            findIndex((cell) => getEq(Str.Eq).equals(payload, cell)),
-            getOrElse(constant(-1)),
-          ),
-        ),
-        getOrElse(constant(state.flaggedCells)),
-      )
-
-      return state
-    },
     syncVisits: (state, { payload }: PayloadAction<number>) => {
       const visitsLengthDiff = payload - state.visits.length
 
-      makeBy(() => {
+      makeBy(visitsLengthDiff, () => {
         if (visitsLengthDiff > 0) {
           state.visits.push((state.visits.length + 1).toString())
+
           return undefined
         }
         state.visits.pop()
 
         return undefined
-      })(visitsLengthDiff)
+      })
+
+      return state
+    },
+    setVisit: (
+      state,
+      { payload }: PayloadAction<{ visit: string; pos: number }>,
+    ) => {
+      const { visit, pos } = payload
+      const visits = state.visits as readonly string[]
+
+      state.visits = pipe(
+        visits,
+        insertAt(pos, visit),
+        getOrElse(constant(visits)),
+        uniq(Str.Eq),
+      ) as string[]
 
       return state
     },
@@ -149,20 +168,6 @@ const sheetSlice = createSlice({
         append(payload)(state.flaggedCells)
         return state
       }
-
-      return state
-    },
-    setVisit: (
-      state,
-      { payload }: PayloadAction<{ visit: string; pos: number }>,
-    ) => {
-      const { visit, pos } = payload
-      state.visits = pipe(
-        state.visits,
-        insertAt(pos, visit),
-        getOrElse(constant(state.visits)),
-        uniq(Str.Eq),
-      )
 
       return state
     },
@@ -188,9 +193,9 @@ const sheetSlice = createSlice({
           return state
         }
 
-        if (!state.sheetName) {
-          state.sheetName = SheetNames?.[0] ?? defaultValue
-        }
+        state.sheetName = !state.sheetName
+          ? state.sheetName
+          : SheetNames?.[0] ?? defaultValue
 
         state.bookType = bookType
 

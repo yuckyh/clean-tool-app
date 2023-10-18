@@ -1,25 +1,7 @@
 import type { ComponentType } from 'react'
 import { lazy, memo } from 'react'
 import IO from 'fp-ts/IO'
-
-export const curry = <Args extends readonly unknown[], Return>(
-  fn: (...args: readonly [...Args]) => Return,
-): Curried<Args, Return> => {
-  const passed: readonly unknown[] = []
-
-  const curried = <Needs extends AnyArray>(
-    arg: Needs[number],
-  ): Curried<Needs, Return> => {
-    passed.push(arg)
-
-    return (
-      passed.length >= fn.length
-        ? fn(...(passed as Args))
-        : curried<ExcludeFirst<Needs>>
-    ) as Curried<Needs, Return>
-  }
-  return curried as Curried<Args, Return>
-}
+import Task from 'fp-ts/Task'
 
 export const createMemo = <T>(
   displayName: string,
@@ -42,4 +24,6 @@ export const createLazyMemo = <T>(
   return component
 }
 
-export const noOp = IO.of(() => undefined)
+export const noOpIO: IO.IO<() => void> = IO.of(() => {})
+
+export const noOpTask: Task.Task<() => void> = Task.of(() => {})

@@ -95,8 +95,6 @@ const columnsSlice = createSlice({
 
       return state
     })
-
-    return undefined
   },
   reducers: {
     saveColumnState: (state) => {
@@ -107,7 +105,6 @@ const columnsSlice = createSlice({
         RA.zip(keys),
         RA.map(([value, key]) => {
           setPersisted(key, value.join(','))
-          return undefined
         }),
       )
 

@@ -1,5 +1,5 @@
 /* eslint-disable functional/immutable-data */
-import { noOp } from '@/lib/utils'
+import { noOpIO } from '@/lib/utils'
 import type { DialogProps } from '@fluentui/react-components'
 
 import {
@@ -15,13 +15,13 @@ import {
 import { useImperativeHandle, forwardRef, useState } from 'react'
 
 export interface AlertRef {
-  setContent: (content: string) => undefined
-  setTitle: (title: string) => undefined
-  open: () => undefined
+  setContent: (content: string) => string
+  setTitle: (title: string) => string
+  open: () => boolean
 }
 
 interface Props {
-  onConfirm?: () => undefined
+  onConfirm?: () => void
 }
 
 const AlertDialog = forwardRef<AlertRef, Props>(({ onConfirm }, ref) => {
@@ -31,7 +31,6 @@ const AlertDialog = forwardRef<AlertRef, Props>(({ onConfirm }, ref) => {
 
   const handleOpen: DialogProps['onOpenChange'] = (_event, data) => {
     setOpen(data.open)
-    return undefined
   }
 
   useImperativeHandle(
@@ -39,12 +38,15 @@ const AlertDialog = forwardRef<AlertRef, Props>(({ onConfirm }, ref) => {
     () => ({
       setContent: (newContent) => {
         setContent(newContent)
+        return newContent
       },
       setTitle: (newTitle) => {
         setTitle(newTitle)
+        return newTitle
       },
       open: () => {
         setOpen(true)
+        return true
       },
     }),
     [],
@@ -74,7 +76,7 @@ const AlertDialog = forwardRef<AlertRef, Props>(({ onConfirm }, ref) => {
 
 AlertDialog.displayName = 'AlertDialog'
 AlertDialog.defaultProps = {
-  onConfirm: noOp(),
+  onConfirm: noOpIO(),
 }
 
 export default AlertDialog

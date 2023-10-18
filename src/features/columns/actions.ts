@@ -5,8 +5,9 @@ import { promisedWorker, columnWorker } from '@/app/workers'
 import { getColumns } from '@/app/selectors'
 
 import { pipe } from 'fp-ts/function'
+import type { Either } from 'fp-ts/Either'
+import { getOrElse, right, left } from 'fp-ts/Either'
 import { syncVisits } from '../sheet/reducers'
-import { Either, left, right, getOrElse } from 'fp-ts/Either'
 
 const messagePromise = async () =>
   (await promisedWorker('message', columnWorker)).data

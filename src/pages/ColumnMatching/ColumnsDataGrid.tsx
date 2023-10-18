@@ -14,7 +14,7 @@ import { useCallback, useEffect, useState, useMemo } from 'react'
 import { useBeforeUnload } from 'react-router-dom'
 import type { Props as SimpleDataGridProps } from '@/components/SimpleDataGrid'
 import type { AlertRef } from '@/components/AlertDialog'
-import Task, { fromIO } from 'fp-ts/Task'
+import Task from 'fp-ts/Task'
 
 import {
   getVisitsComparer,
@@ -32,12 +32,13 @@ import { saveSheetState } from '@/features/sheet/reducers'
 import { fetchMatches } from '@/features/columns/actions'
 import SimpleDataGrid from '@/components/SimpleDataGrid'
 import { fetchSheet } from '@/features/sheet/actions'
-import { createLazyMemo, createMemo } from '@/lib/utils'
+import { createLazyMemo, createMemo, noOpIO } from '@/lib/utils'
 import Loader from '@/components/Loader'
 
 import { constant, identity, pipe } from 'fp-ts/function'
 import { makeBy } from 'fp-ts/ReadonlyArray'
-import { Either, getOrElse, left, right } from 'fp-ts/Either'
+import IO from 'fp-ts/IO'
+import TE from 'fp-ts/TaskEither'
 import HeaderCell from './HeaderCell'
 import ValueCell from './ValueCell'
 
@@ -95,22 +96,22 @@ export default function ColumnsDataGrid({ alertRef }: Readonly<Props>) {
   const columnsDefinition: readonly TableColumnDefinition<number>[] = useMemo(
     () => [
       createTableColumn({
-        renderHeaderCell: () => (
+        renderHeaderCell: constant(
           <HeaderCell
             subtitle="The loaded column names (raw)"
             header="Original"
-          />
+          />,
         ),
         renderCell: (pos) => <ValueCell pos={pos} />,
         compare: columnComparer,
         columnId: 'original',
       }),
       createTableColumn({
-        renderHeaderCell: () => (
+        renderHeaderCell: constant(
           <HeaderCell
             subtitle="List of possible replacements (sorted by score)"
             header="Replacement"
-          />
+          />,
         ),
         renderCell: (pos) => (
           <MemoizedMatchCell alertRef={alertRef} pos={pos} />
@@ -119,8 +120,8 @@ export default function ColumnsDataGrid({ alertRef }: Readonly<Props>) {
         columnId: 'matches',
       }),
       createTableColumn({
-        renderHeaderCell: () => (
-          <HeaderCell subtitle="The matching visit number" header="Visit" />
+        renderHeaderCell: constant(
+          <HeaderCell subtitle="The matching visit number" header="Visit" />,
         ),
         renderCell: (pos) => (
           <MemoizedVisitsCell alertRef={alertRef} pos={pos} />
@@ -129,11 +130,11 @@ export default function ColumnsDataGrid({ alertRef }: Readonly<Props>) {
         columnId: 'visit',
       }),
       createTableColumn({
-        renderHeaderCell: () => (
+        renderHeaderCell: constant(
           <HeaderCell
             subtitle="The fuzzy search score (1 indicates a perfect match)"
             header="Score"
-          />
+          />,
         ),
         renderCell: (pos) => <MemoizedScoreCell pos={pos} />,
         compare: scoreComparer,
@@ -143,41 +144,30 @@ export default function ColumnsDataGrid({ alertRef }: Readonly<Props>) {
     [alertRef, columnComparer, matchComparer, scoreComparer, visitsComparer],
   )
 
+  // eslint-disable-next-line functional/prefer-tacit
   useEffect(() => {
-    const startFetchMatches = () =>
-      just(fetchMatches).pass()((x) => dispatch(x))()
-
-    if (columnsLength) {
-      startFetchMatches().catch(console.error).finally(stopLoading)
-      return
-    }
-
-    pipe(
+    return pipe(
       columnsLength,
-      (length): Either<ReturnType<typeof fetchMatches>, typeof stopLoading> =>
-        length === 0 ? left(fetchMatches()) : right(stopLoading),
-      getOrElse((action) =>
+      (length): TE.TaskEither<typeof fetchSheet, typeof fetchMatches> =>
+        length === 0 ? TE.left(fetchSheet) : TE.right(fetchMatches),
+      TE.getOrElse((x) =>
         pipe(
-          stopLoading,
-          Task.of,
-          Task.tap(() => Task.of(dispatch(action))),
+          Task.tap(() => IO.of(dispatch(x()))),
+          () => Task.of(fetchMatches),
         ),
       ),
-    )
-
-    just(fetchSheet)
-      .pass()((x) => dispatch(x))()
-      .then(startFetchMatches)
-      .catch(console.error)
-      .finally(stopLoading)
-
-    return undefined
+      Task.tap((x) => IO.of(dispatch(x()))),
+      Task.tapIO(stopLoading),
+      () => noOpIO,
+    )()
   }, [dispatch, columnsLength, stopLoading])
 
   useBeforeUnload(
     useCallback(() => {
-      just(saveSheetState).pass()(dispatch)
-      just(saveColumnState).pass()(dispatch)
+      return pipe(
+        [saveSheetState, saveColumnState] as const,
+        IO.traverseArray((x) => IO.of(dispatch(x()))),
+      )()
     }, [dispatch]),
   )
 

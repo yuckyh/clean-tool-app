@@ -13,10 +13,10 @@ import {
   Card,
 } from '@fluentui/react-components'
 import { useMemo } from 'react'
-import { constant } from 'lodash/fp'
 import SimpleDataGrid from '@/components/SimpleDataGrid'
 import { useAppSelector } from '@/lib/hooks'
-import { getRowBlanks } from '@/features/sheet/selectors'
+import { getIndexedRowBlanks } from '@/features/sheet/selectors'
+import { constant } from 'fp-ts/function'
 
 const cellFocusMode: () => DataGridCellFocusMode = constant('none')
 
@@ -62,7 +62,9 @@ function BlankDataGrid({ column, visit }: Props) {
       [classes.columnHeader, title],
     )
 
-  const series = useAppSelector((state) => getRowBlanks(state, column, visit))
+  const series = useAppSelector((state) =>
+    getIndexedRowBlanks(state, column, visit),
+  )
   // console.log(numericalSeries)
 
   return (

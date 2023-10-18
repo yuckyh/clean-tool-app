@@ -166,13 +166,15 @@ export default function FlaggedDataGrid({ series, title }: Readonly<Props>) {
   const columnsDefinition = useMemo(
     () => [
       createTableColumn<number>({
-        renderHeaderCell: () => <div className={classes.columnHeader}>sno</div>,
+        renderHeaderCell: constant(
+          <div className={classes.columnHeader}>sno</div>,
+        ),
         renderCell: (row) => filteredRows[row]?.[1],
         columnId: 'index',
       }),
       createTableColumn<number>({
-        renderHeaderCell: () => (
-          <div className={classes.columnHeader}>{title}</div>
+        renderHeaderCell: constant(
+          <div className={classes.columnHeader}>{title}</div>,
         ),
         renderCell: (row) => filteredRows[row]?.[0],
         columnId: title,

@@ -5,7 +5,8 @@ import { useCallback } from 'react'
 import { useAppDispatch } from '@/lib/hooks'
 import { saveSheetState } from '@/features/sheet/reducers'
 import Nav from '@/pages/EDA/Variable/Nav'
-import { just } from '@/lib/monads'
+import IO from 'fp-ts/IO'
+import { pipe } from 'fp-ts/function'
 
 const useClasses = makeStyles({
   root: {
@@ -25,7 +26,7 @@ export function Component() {
 
   useBeforeUnload(
     useCallback(() => {
-      just(saveSheetState).pass()(dispatch)
+      return pipe(saveSheetState(), (x) => dispatch(x), IO.of)()
     }, [dispatch]),
   )
 

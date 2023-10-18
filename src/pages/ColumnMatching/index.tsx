@@ -9,11 +9,12 @@ import { useNavigate } from 'react-router-dom'
 import { useCallback, useRef } from 'react'
 import type { AlertRef } from '@/components/AlertDialog'
 
+import type { Progress } from '@/features/progress/reducers'
 import { setProgress } from '@/features/progress/reducers'
 import AlertDialog from '@/components/AlertDialog'
-import { createLazyMemo } from '@/lib/utils'
-import { just } from '@/lib/monads'
+import { createLazyMemo, noOpIO } from '@/lib/utils'
 import { useAppDispatch } from '@/lib/hooks'
+import { pipe } from 'fp-ts/function'
 
 const useClasses = makeStyles({
   root: {
@@ -44,8 +45,17 @@ export function Component() {
   const dispatch = useAppDispatch()
 
   const handleCommitChanges = useCallback(() => {
-    navigate('/eda')
-    just(setProgress).pass('matched')(dispatch)
+    pipe(
+      'matched' as Progress,
+      setProgress,
+      dispatch,
+      () => {
+        navigate('/eda')
+        return undefined
+      },
+      noOpIO,
+    )()
+    return undefined
   }, [dispatch, navigate])
 
   const alertRef = useRef<AlertRef>(null)
@@ -66,5 +76,3 @@ export function Component() {
     </section>
   )
 }
-
-Component.displayName = 'ColumnMatching'

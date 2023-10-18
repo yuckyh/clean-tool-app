@@ -8,5 +8,5 @@ export const setPersisted = <T extends string, K extends string>(
   value: T,
 ) => {
   localStorage.setItem(key, value)
-  return undefined
+  return value
 }

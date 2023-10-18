@@ -12,10 +12,10 @@ import {
   Card,
 } from '@fluentui/react-components'
 import { useMemo } from 'react'
-import { constant } from 'lodash/fp'
 import SimpleDataGrid from '@/components/SimpleDataGrid'
 import { getRowIncorrects } from '@/features/sheet/selectors'
 import { useAppSelector } from '@/lib/hooks'
+import { constant } from 'fp-ts/function'
 
 const cellFocusMode: () => DataGridCellFocusMode = constant('none')
 
