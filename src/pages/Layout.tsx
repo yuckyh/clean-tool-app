@@ -1,3 +1,4 @@
+/* eslint-disable functional/functional-parameters */
 import {
   makeStyles,
   shorthands,

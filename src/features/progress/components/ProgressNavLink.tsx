@@ -16,7 +16,7 @@ import {
 import { useMemo } from 'react'
 import { getPathTitle } from '@/lib/string'
 import { useAppSelector } from '@/lib/hooks'
-import { getDisabled, getPath } from '../selectors'
+import { getDisabled } from '../selectors'
 
 interface Props {
   done: boolean
@@ -67,7 +67,7 @@ export default function ProgressNavLink({ done, path, pos }: Props) {
   const href = useHref(disabled ? '#' : path)
   const handleLinkClick = useLinkClickHandler(path)
 
-  const selectedPath = useAppSelector((state) => getPath(state, ...params))
+  // const selectedPath = useAppSelector((state) => getPath(state, ...params))
 
   const label = getPathTitle(path)
   const isActive = useLocation().pathname === path

@@ -2,10 +2,11 @@ import type { DropdownProps } from '@fluentui/react-components'
 
 import { makeStyles, Dropdown, Option, Field } from '@fluentui/react-components'
 import { useCallback } from 'react'
-import { map } from 'lodash/fp'
 import { useAppDispatch, useAppSelector } from '@/lib/hooks'
 
-import { just } from '@/lib/monads'
+import { tap, of } from 'fp-ts/IO'
+import { pipe } from 'fp-ts/function'
+import { map } from 'fp-ts/ReadonlyArray'
 import { setSheetName } from '../reducers'
 
 const useClasses = makeStyles({
@@ -15,6 +16,7 @@ const useClasses = makeStyles({
   },
 })
 
+// eslint-disable-next-line functional/functional-parameters
 export default function SheetPickerInput() {
   const classes = useClasses()
 
@@ -25,9 +27,13 @@ export default function SheetPickerInput() {
 
   const handleSheetSelect: Required<DropdownProps>['onOptionSelect'] =
     useCallback(
-      (_event, { optionValue = '' }) => {
-        just(optionValue)(setSheetName)(dispatch)
-      },
+      (_event, { optionValue = '' }) =>
+        pipe(
+          optionValue,
+          setSheetName,
+          of,
+          tap((x) => of(dispatch(x))),
+        ),
       [dispatch],
     )
 
@@ -39,11 +45,14 @@ export default function SheetPickerInput() {
         appearance="filled-darker"
         className={classes.input}
         value={sheetName}>
-        {map<string, JSX.Element>((name) => (
-          <Option value={name} key={name}>
-            {name}
-          </Option>
-        ))(sheetNames)}
+        {pipe(
+          sheetNames,
+          map((name) => (
+            <Option value={name} key={name}>
+              {name}
+            </Option>
+          )),
+        )}
       </Dropdown>
     </Field>
   )

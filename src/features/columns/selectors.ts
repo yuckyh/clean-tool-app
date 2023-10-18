@@ -1,5 +1,5 @@
 import { createSelector } from '@reduxjs/toolkit'
-import { constant, pipe } from 'fp-ts/function'
+import { constant, tupled, pipe, hole } from 'fp-ts/function'
 import {
   findIndex,
   lookup,
@@ -22,7 +22,7 @@ import {
   getVisits,
   searchPos,
 } from '@/app/selectors'
-import { indexDuplicateSearcher, numberLookup } from '@/lib/array'
+import { indexDuplicateSearcher, numberLookup, stringLookup } from '@/lib/array'
 import fuse from '@/lib/fuse'
 import { strEquals } from '@/lib/string'
 
@@ -105,56 +105,53 @@ export const getScore = createSelector(
 
 export const getMatchComparer = createSelector(
   [getMatchColumns],
-  (matchColumns) =>
-    (...args: readonly [number, number]) => {
-      const [a, b] = pipe(
-        args,
-        map((pos) => pipe(matchColumns, lookup(pos), getOrElse(constant('')))),
-      ) as readonly [string, string]
-
-      return a.localeCompare(b)
-    },
+  (matchColumns) => (a: number, b: number) => {
+    return pipe(
+      [a, b] as const,
+      map(stringLookup(matchColumns)),
+      hole<[string, string]>,
+      tupled(Str.Ord.compare),
+    )
+  },
 )
 
 export const getVisitsComparer = createSelector(
   [getMatchVisits],
-  (matchVisits) =>
-    (...args: readonly [number, number]) =>
-      pipe(
-        args,
-        map(numberLookup(matchVisits)),
-        reduce(0, (acc, curr) => acc - curr),
-      ),
+  (matchVisits) => (a: number, b: number) =>
+    pipe(
+      [a, b] as const,
+      map(numberLookup(matchVisits)),
+      reduce(0, (acc, curr) => acc - curr),
+    ),
 )
 
 export const getScoreComparer = createSelector(
   [getMatchesList, getScoresList, getMatchColumns],
-  (matchesList, scoresList, matchColumns) =>
-    (...args: readonly [number, number]) =>
-      pipe(
-        args,
-        map((pos) =>
-          pipe(
-            scoresList,
-            zip(matchesList),
-            zip(matchColumns),
-            map(([[scores, matches], matchColumn]) =>
-              pipe(
-                scores,
-                lookup(
-                  pipe(
-                    matches,
-                    findIndex((match) => Str.Eq.equals(matchColumn, match)),
-                    getOrElse(constant(-1)),
-                  ),
+  (matchesList, scoresList, matchColumns) => (a: number, b: number) =>
+    pipe(
+      [a, b] as const,
+      map((pos) =>
+        pipe(
+          scoresList,
+          zip(matchesList),
+          zip(matchColumns),
+          map(([[scores, matches], matchColumn]) =>
+            pipe(
+              scores,
+              lookup(
+                pipe(
+                  matches,
+                  findIndex((match) => Str.Eq.equals(matchColumn, match)),
+                  getOrElse(constant(-1)),
                 ),
-                getOrElse(constant(1)),
               ),
+              getOrElse(constant(1)),
             ),
-            lookup(pos),
-            getOrElse(constant(1)),
           ),
+          lookup(pos),
+          getOrElse(constant(1)),
         ),
-        reduce(0, (acc, curr) => acc - curr),
       ),
+      reduce(0, (acc, curr) => acc - curr),
+    ),
 )

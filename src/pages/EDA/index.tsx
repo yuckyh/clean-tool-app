@@ -1,3 +1,5 @@
+/* eslint-disable import/prefer-default-export */
+/* eslint-disable functional/functional-parameters */
 // import { getFormattedFileName } from '@/features/sheet/selectors'
 import { makeStyles, tokens } from '@fluentui/react-components'
 import { useBeforeUnload, Outlet } from 'react-router-dom'
@@ -18,7 +20,6 @@ const useClasses = makeStyles({
 
 // TODO: add visit detection prompt
 
-// eslint-disable-next-line import/prefer-default-export
 export function Component() {
   const classes = useClasses()
 

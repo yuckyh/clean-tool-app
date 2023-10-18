@@ -7,7 +7,7 @@ import { console } from 'fp-ts'
 import { multiply, divideBy, add } from '@/lib/number'
 import { useTokenToHex } from '@/lib/hooks'
 import { filter, makeBy, sort, map } from 'fp-ts/ReadonlyArray'
-import { flow, pipe } from 'fp-ts/function'
+import { constant, flow, pipe } from 'fp-ts/function'
 import { numberLookup } from '@/lib/array'
 import N from 'fp-ts/number'
 import VariablePlot from './VariablePlot'
@@ -22,7 +22,7 @@ interface NumericalPlotProps {
 
 const jitter = 0.3
 
-const jitterY = () => Math.random() * jitter * 2 - jitter
+const jitterY = constant(Math.random() * jitter * 2 - jitter)
 const getValue = ([, value]: ArrayElement<IndexedSeries>) => value
 const getIndex = ([index = '']: ArrayElement<IndexedSeries>) => index
 

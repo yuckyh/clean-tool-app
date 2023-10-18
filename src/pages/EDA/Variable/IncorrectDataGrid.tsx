@@ -48,15 +48,15 @@ export default function IncorrectDataGrid({ column, visit }: Props) {
     useMemo(
       () => [
         createTableColumn({
-          renderHeaderCell: () => (
-            <div className={classes.columnHeader}>sno</div>
+          renderHeaderCell: constant(
+            <div className={classes.columnHeader}>sno</div>,
           ),
           renderCell: ([, indexValue]) => indexValue,
           columnId: 'index',
         }),
         createTableColumn({
-          renderHeaderCell: () => (
-            <div className={classes.columnHeader}>{title}</div>
+          renderHeaderCell: constant(
+            <div className={classes.columnHeader}>{title}</div>,
           ),
           renderCell: ([seriesValue]) => seriesValue,
           columnId: title,

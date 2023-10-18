@@ -144,7 +144,6 @@ export default function ColumnsDataGrid({ alertRef }: Readonly<Props>) {
     [alertRef, columnComparer, matchComparer, scoreComparer, visitsComparer],
   )
 
-  // eslint-disable-next-line functional/prefer-tacit
   useEffect(() => {
     return pipe(
       columnsLength,
@@ -152,12 +151,12 @@ export default function ColumnsDataGrid({ alertRef }: Readonly<Props>) {
         length === 0 ? TE.left(fetchSheet) : TE.right(fetchMatches),
       TE.getOrElse((x) =>
         pipe(
-          Task.tap(() => IO.of(dispatch(x()))),
+          Task.tap(() => Task.of(dispatch(x()))),
           () => Task.of(fetchMatches),
         ),
       ),
       Task.tap((x) => IO.of(dispatch(x()))),
-      Task.tapIO(stopLoading),
+      Task.tapIO(() => stopLoading),
       () => noOpIO,
     )()
   }, [dispatch, columnsLength, stopLoading])

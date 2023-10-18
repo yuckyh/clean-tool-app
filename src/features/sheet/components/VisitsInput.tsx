@@ -2,10 +2,11 @@ import type { InputProps } from '@fluentui/react-components'
 
 import { makeStyles, Field, Input } from '@fluentui/react-components'
 import { useCallback, useState } from 'react'
-import { range, flow, map, zip } from 'lodash/fp'
 import { useAppDispatch, useAppSelector } from '@/lib/hooks'
 
-import { just } from '@/lib/monads'
+import * as IO from 'fp-ts/IO'
+import { pipe } from 'fp-ts/function'
+import { mapWithIndex } from 'fp-ts/ReadonlyArray'
 import { deleteVisits, syncVisits, setVisit } from '../reducers'
 
 const useClasses = makeStyles({
@@ -29,7 +30,12 @@ function VisitInput({ visit, pos }: VisitInputProps) {
     ({ target }) => {
       const { value } = target
 
-      just({ visit: value, pos })(setVisit)(dispatch)
+      return pipe(
+        { visit: value, pos },
+        IO.of,
+        IO.map(setVisit),
+        IO.tap((x) => IO.of(dispatch(x))),
+      )()
     },
     [dispatch, pos],
   )
@@ -46,6 +52,7 @@ function VisitInput({ visit, pos }: VisitInputProps) {
   )
 }
 
+// eslint-disable-next-line functional/functional-parameters
 export default function VisitsInput() {
   const classes = useClasses()
 
@@ -60,15 +67,23 @@ export default function VisitsInput() {
       const newVisitsLength = parseInt(value, 10)
       setVisitsValue(newVisitsLength)
       if (Number.isNaN(newVisitsLength)) {
-        return
+        return undefined
       }
 
       if (newVisitsLength === 1) {
-        just(deleteVisits).pass()(dispatch)
-        return
+        return pipe(
+          deleteVisits,
+          IO.of,
+          IO.tap((x) => IO.of(dispatch(x()))),
+        )()
       }
 
-      just(newVisitsLength)(syncVisits)(dispatch)
+      return pipe(
+        newVisitsLength,
+        syncVisits,
+        IO.of,
+        IO.tap((x) => IO.of(dispatch(x))),
+      )()
     },
     [dispatch],
   )
@@ -84,12 +99,12 @@ export default function VisitsInput() {
           type="number"
         />
       </Field>
-      {flow(
-        zip(range(0)(visits.length)),
-        map<[number, string], JSX.Element>(([pos = 0, visit = '']) => (
+      {pipe(
+        visits,
+        mapWithIndex((pos, visit) => (
           <VisitInput visit={visit} key={visit} pos={pos} />
         )),
-      )(visits)}
+      )}
     </div>
   )
 }

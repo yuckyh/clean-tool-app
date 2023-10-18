@@ -1,3 +1,4 @@
+/* eslint-disable functional/immutable-data */
 import type { SetStateAction, Dispatch } from 'react'
 import type { DropzoneOptions } from 'react-dropzone'
 import {
@@ -18,7 +19,9 @@ import { useAppDispatch, useAppSelector } from '@/lib/hooks'
 import FileToast from '@/components/FileToast'
 import { sheetWorker } from '@/app/workers'
 
-import { just } from '@/lib/monads'
+import { console } from 'fp-ts'
+import { constant, pipe } from 'fp-ts/function'
+import * as Task from 'fp-ts/Task'
 import { fetchSheet, postFile } from '../actions'
 
 export interface SheetInputRef {
@@ -59,12 +62,14 @@ const SheetUploadInput = forwardRef<SheetInputRef, Props>(
 
           setFileTask('uploaded')
 
-          const startFetchSheet = () =>
-            just(fetchSheet).pass()((x) => dispatch(x))()
-
-          just(file)(postFile)((x) => dispatch(x))()
-            .then(startFetchSheet)
-            .catch(console.error)
+          pipe(
+            file,
+            postFile,
+            Task.of,
+            Task.tap((x) => Task.of(dispatch(x))),
+            constant(Task.of(fetchSheet)),
+            Task.tap((x) => Task.of(dispatch(x()))),
+          )().catch(console.error)
         },
         accept: {
           'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': [
@@ -87,7 +92,11 @@ const SheetUploadInput = forwardRef<SheetInputRef, Props>(
         toasterRef.current?.dispatchToast(<FileToast fileTask={fileTask} />, {
           intent: 'success',
         })
+
+        return undefined
       }
+
+      return undefined
     }, [fileTask, toasterRef])
 
     useImperativeHandle(ref, () => ({
@@ -100,14 +109,16 @@ const SheetUploadInput = forwardRef<SheetInputRef, Props>(
 
         if (!isTask) {
           setFileTask(undefined)
-          return
+          return undefined
         }
 
         toastNotify()
+        return undefined
       }
 
       sheetWorker.addEventListener('message', handleWorkerLoad)
 
+      // eslint-disable-next-line functional/functional-parameters
       return () => {
         sheetWorker.removeEventListener('message', handleWorkerLoad)
       }

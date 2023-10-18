@@ -26,22 +26,22 @@ interface GenericWorkerEventMap<T> extends WorkerEventMap {
 
 interface RequestWorker<Req extends WorkerRequest, Res extends WorkerResponse>
   extends Worker {
-  postMessage: {
-    (
-      request: Readonly<Req>,
-      // eslint-disable-next-line functional/prefer-immutable-types
-      options?: Readonly<StructuredSerializeOptions>,
-    ): void
-    (request: Readonly<Req>, transfer: readonly Readonly<Transferable>[]): void
-  }
   removeEventListener: <K extends keyof GenericWorkerEventMap<Res>>(
     type: K,
-    listener: (ev: GenericWorkerEventMap<Res>[K]) => undefined,
+    listener: (ev: GenericWorkerEventMap<Res>[K]) => void,
     options?: Readonly<EventListenerOptions> | boolean,
   ) => void
   addEventListener: <K extends keyof GenericWorkerEventMap<Res>>(
     type: K,
-    listener: (ev: GenericWorkerEventMap<Res>[K]) => undefined,
+    listener: (ev: GenericWorkerEventMap<Res>[K]) => void,
     options?: Readonly<AddEventListenerOptions> | boolean,
   ) => void
+  postMessage: {
+    (
+      request: Readonly<Req>,
+
+      options?: Readonly<StructuredSerializeOptions>,
+    ): void
+    (request: Readonly<Req>, transfer: readonly Readonly<Transferable>[]): void
+  }
 }

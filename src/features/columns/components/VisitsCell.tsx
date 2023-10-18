@@ -1,13 +1,14 @@
 import type { DropdownProps } from '@fluentui/react-components'
 import { makeStyles, Dropdown, Option } from '@fluentui/react-components'
 import { type RefObject, useCallback } from 'react'
-import { range, flow, map, zip } from 'lodash/fp'
 import type { AlertRef } from '@/components/AlertDialog'
 
 import { useAppDispatch, useAppSelector } from '@/lib/hooks'
 import { indexDuplicateSearcher } from '@/lib/array'
 
-import { just } from '@/lib/monads'
+import { tap, of } from 'fp-ts/IO'
+import { pipe } from 'fp-ts/function'
+import { mapWithIndex } from 'fp-ts/ReadonlyArray'
 import {
   getMatchColumn,
   getMatchVisit,
@@ -44,7 +45,7 @@ export default function VisitsCell({ alertRef, pos }: Props) {
         const newMatchVisit = parseInt(optionValue ?? '1', 10)
 
         if (newMatchVisit === matchVisit) {
-          return
+          return undefined
         }
 
         if (
@@ -55,10 +56,15 @@ export default function VisitsCell({ alertRef, pos }: Props) {
           )
           alertRef.current?.setTitle('Column Matching Error')
           alertRef.current?.open()
-          return
+          return undefined
         }
 
-        just({ matchVisit: newMatchVisit, pos })(setMatchVisit)(dispatch)
+        return pipe(
+          { matchVisit: newMatchVisit, pos },
+          setMatchVisit,
+          of,
+          tap((x) => of(dispatch(x))),
+        )()
       },
       [alertRef, dispatch, indices, matchColumn, matchVisit, pos],
     )
@@ -70,14 +76,14 @@ export default function VisitsCell({ alertRef, pos }: Props) {
       appearance="filled-darker"
       className={classes.root}
       value={visit}>
-      {flow(
-        zip(range(0)(visits.length)),
-        map<[number, string], JSX.Element>(([i = 0, visitStr = '']) => (
+      {pipe(
+        visits,
+        mapWithIndex((i, visitStr) => (
           <Option value={i.toString()} text={visitStr} key={visitStr}>
             {visitStr}
           </Option>
         )),
-      )(visits)}
+      )}
     </Dropdown>
   )
 }

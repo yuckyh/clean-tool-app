@@ -12,10 +12,14 @@ import {
 } from 'react-router-dom'
 import { useCallback, useEffect, useMemo } from 'react'
 import { Helmet } from 'react-helmet-async'
-import { range, split, flow, map, zip, nth } from 'lodash/fp'
 import { useAppDispatch, useAppSelector } from '@/lib/hooks'
 
-import { just } from '@/lib/monads'
+import { console } from 'fp-ts'
+import { getOrElse } from 'fp-ts/Option'
+import { constant, pipe } from 'fp-ts/function'
+import { mapWithIndex, lookup } from 'fp-ts/ReadonlyArray'
+import { split } from 'fp-ts/string'
+import IO from 'fp-ts/IO'
 import { saveProgressState } from '../reducers'
 import ProgressNavLink from './ProgressNavLink'
 import {
@@ -40,6 +44,7 @@ const useClasses = makeStyles({
   },
 })
 
+// eslint-disable-next-line functional/functional-parameters
 export default function ProgressNav() {
   const classes = useClasses()
 
@@ -71,14 +76,18 @@ export default function ProgressNav() {
   useEffect(() => {
     console.log(allowedPaths)
     if (shouldNavigateToAllowed) {
-      navigate(nth(-1)(allowedPaths) ?? '/')
+      navigate(getOrElse(constant('/'))(lookup(-1)(allowedPaths)))
+      return undefined
     }
+
+    return undefined
   }, [allowedPaths, navigate, shouldNavigateToAllowed])
 
   useEffect(() => {
     const classList = split(' ')(themeClasses)
     document.body.classList.add(...classList)
 
+    // eslint-disable-next-line functional/functional-parameters
     return () => {
       document.body.classList.remove(...classList)
     }
@@ -86,7 +95,11 @@ export default function ProgressNav() {
 
   useBeforeUnload(
     useCallback(() => {
-      just(saveProgressState).pass()(dispatch)
+      return pipe(
+        saveProgressState,
+        IO.of,
+        IO.tap((x) => IO.of(dispatch(x()))),
+      )()
     }, [dispatch]),
   )
 
@@ -97,9 +110,9 @@ export default function ProgressNav() {
       </Helmet>
       <ProgressNavBar />
       <div className={classes.linkContainer}>
-        {flow(
-          zip(range(0)(paths.length)),
-          map<[number, string], JSX.Element>(([pos = -1, path = '']) => (
+        {pipe(
+          paths,
+          mapWithIndex((pos, path) => (
             <ProgressNavLink
               done={position >= pos}
               path={path}
@@ -107,7 +120,7 @@ export default function ProgressNav() {
               pos={pos}
             />
           )),
-        )(paths)}
+        )}
       </div>
     </div>
   )

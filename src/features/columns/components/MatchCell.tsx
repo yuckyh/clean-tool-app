@@ -6,14 +6,17 @@ import {
   Option,
 } from '@fluentui/react-components'
 import { useCallback, useState, useMemo, memo } from 'react'
-import { findIndex, includes, filter, range, flow, map, zip } from 'lodash/fp'
 import type { AlertRef } from '@/components/AlertDialog'
 
 import { useAppDispatch, useAppSelector, useDebounced } from '@/lib/hooks'
 import { indexDuplicateSearcher } from '@/lib/array'
-import { just } from '@/lib/monads'
 import fuse from '@/lib/fuse'
 
+import { findIndex, filter, makeBy, map, zip } from 'fp-ts/ReadonlyArray'
+import { includes } from 'fp-ts/string'
+import { constant, identity, pipe } from 'fp-ts/function'
+import { getOrElse } from 'fp-ts/Option'
+import { tap, of } from 'fp-ts/IO'
 import type { ColumnMatch } from '../reducers'
 
 import {
@@ -37,7 +40,7 @@ const useClasses = makeStyles({
 })
 
 interface FilteredOptionsProps {
-  filteredMatches: ColumnMatch[]
+  filteredMatches: readonly ColumnMatch[]
   value: string
 }
 
@@ -53,9 +56,13 @@ function FilteredOptions({ filteredMatches, value }: FilteredOptionsProps) {
   ) : (
     <Option value={value} text={value}>
       Create column? {value},{' '}
-      {just(value)(search)(([match]) => match?.score ?? 1)(
+      {pipe(
+        value,
+        search,
+        ([match]) => match?.score ?? 1,
         (score) => 1 - score,
-      )().toFixed(2)}
+        (score) => score.toFixed(2),
+      )}
     </Option>
   )
 }
@@ -83,14 +90,15 @@ export default function MatchCell({ alertRef, pos }: Props) {
 
   const filteredMatches = useMemo(
     () =>
-      flow(
-        filter<string>(includes(deferredValue)),
+      pipe(
+        matches,
+        filter(includes(deferredValue)),
         zip(scores),
-        map(([score = 0, match = '']) => ({
+        map(([match, score]) => ({
           match,
           score,
         })),
-      )(matches),
+      ),
     [deferredValue, matches, scores],
   )
 
@@ -113,10 +121,11 @@ export default function MatchCell({ alertRef, pos }: Props) {
         ])
 
         if (duplicates.length) {
-          const newMatchVisit = flow(
-            range(0),
+          const newMatchVisit = pipe(
+            makeBy(visits.length, identity),
             findIndex((visit) => visit !== matchVisit),
-          )(visits.length)
+            getOrElse(constant(-1)),
+          )
 
           if (newMatchVisit === -1) {
             alertRef.current?.setContent(
@@ -128,10 +137,20 @@ export default function MatchCell({ alertRef, pos }: Props) {
             return
           }
 
-          just({ matchVisit: newMatchVisit, pos })(setMatchVisit)(dispatch)
+          pipe(
+            { matchVisit: newMatchVisit, pos },
+            setMatchVisit,
+            of,
+            tap(() => of(dispatch)),
+          )()
         }
 
-        just({ matchColumn: newMatchColumn, pos })(setMatchColumn)(dispatch)
+        pipe(
+          { matchColumn: newMatchColumn, pos },
+          setMatchColumn,
+          of,
+          tap(() => of(dispatch)),
+        )()
 
         setValue(newMatchColumn)
         setComboboxOpen(false)

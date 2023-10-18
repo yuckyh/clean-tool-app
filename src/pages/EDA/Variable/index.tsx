@@ -1,3 +1,5 @@
+/* eslint-disable import/prefer-default-export */
+/* eslint-disable functional/functional-parameters */
 import type {
   DataGridCellFocusMode,
   TableColumnDefinition,
@@ -91,7 +93,6 @@ const cellFocusMode: (
   tableColumnId: TableColumnId,
 ) => DataGridCellFocusMode = () => 'none'
 
-// eslint-disable-next-line import/prefer-default-export
 export function Component() {
   const classes = useClasses()
 
@@ -189,7 +190,6 @@ export function Component() {
     [cleanNumericalSeries, isCategorical, series.length, dataSum],
   )
 
-  // eslint-disable-next-line functional/prefer-immutable-types
   const columnDefinition: TableColumnDefinition<SummaryStats>[] = useMemo(
     () => [
       createTableColumn({

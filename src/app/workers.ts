@@ -24,6 +24,7 @@ export const promisedWorker = <
       (event) => {
         if (event.data.status === 'fail') {
           reject(event)
+          return
         }
 
         resolve(event)

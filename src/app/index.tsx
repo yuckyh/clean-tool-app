@@ -1,3 +1,4 @@
+/* eslint-disable functional/functional-parameters */
 import { FluentProvider } from '@fluentui/react-components'
 import { HelmetProvider, Helmet } from 'react-helmet-async'
 import { useRegisterSW } from 'virtual:pwa-register/react'
@@ -7,12 +8,13 @@ import { description, keywords, author } from '@/../package.json'
 import store from '@/app/store'
 import { useThemePreference, useGlobalStyles, useStorage } from '@/lib/hooks'
 import { console } from 'fp-ts'
+import { constant } from 'fp-ts/function'
 
 export default function App() {
   useGlobalStyles()
   useStorage()
   useRegisterSW({
-    onOfflineReady: () => console.log('offline ready'),
+    onOfflineReady: constant(console.log('offline ready')),
     immediate: true,
   })
 

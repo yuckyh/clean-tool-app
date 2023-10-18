@@ -1,3 +1,5 @@
+/* eslint-disable functional/functional-parameters */
+/* eslint-disable import/prefer-default-export */
 import {
   makeStyles,
   shorthands,
@@ -36,7 +38,6 @@ const MemoizedPreviewDataGrid = createLazyMemo(
   () => import('@/features/sheet/components/PreviewDataGrid'),
 )
 
-// eslint-disable-next-line import/prefer-default-export
 export function Component() {
   const classes = useClasses()
 

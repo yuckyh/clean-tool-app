@@ -4,13 +4,17 @@ import type { RootState } from '@/app/store'
 import { promisedWorker, columnWorker } from '@/app/workers'
 import { getColumns } from '@/app/selectors'
 
-import { pipe } from 'fp-ts/function'
+import { constant, tupled, pipe } from 'fp-ts/function'
 import type { Either } from 'fp-ts/Either'
 import { getOrElse, right, left } from 'fp-ts/Either'
 import { syncVisits } from '../sheet/reducers'
 
-const messagePromise = async () =>
-  (await promisedWorker('message', columnWorker)).data
+const messagePromise = pipe(
+  ['message', columnWorker],
+  tupled(promisedWorker),
+  (p) => p.then(({ data }) => data),
+  constant,
+)
 
 export const sliceName = 'columns' as const
 

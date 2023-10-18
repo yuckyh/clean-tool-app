@@ -2,11 +2,16 @@ import { createAsyncThunk } from '@reduxjs/toolkit'
 import type { RootState } from '@/app/store'
 
 import { promisedWorker, sheetWorker } from '@/app/workers'
+import { constant, tupled, pipe } from 'fp-ts/function'
 
 export const sliceName = 'sheet'
 
-const messagePromise = async () =>
-  (await promisedWorker('message', sheetWorker)).data
+const messagePromise = pipe(
+  ['message', sheetWorker],
+  tupled(promisedWorker),
+  (p) => p.then(({ data }) => data),
+  constant,
+)
 
 export const fetchSheet = createAsyncThunk(
   `${sliceName}/fetchSheet`,

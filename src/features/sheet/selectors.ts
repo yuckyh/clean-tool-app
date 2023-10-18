@@ -1,9 +1,9 @@
 import { createSelector } from '@reduxjs/toolkit'
 
-import { pipe } from 'fp-ts/function'
+import { tupled, flow, hole, pipe } from 'fp-ts/function'
 import { getOrElse } from 'fp-ts/Option'
 import { filter, every, some, map, zip } from 'fp-ts/ReadonlyArray'
-import Str from 'fp-ts/string'
+import Str, { Ord } from 'fp-ts/string'
 import RR from 'fp-ts/ReadonlyRecord'
 import {
   getPosParam,
@@ -13,6 +13,7 @@ import {
   getData,
 } from '@/app/selectors'
 import { stringLookup } from '@/lib/array'
+import { not } from 'fp-ts/Predicate'
 import { getSearchedPos, getIndices } from '../columns/selectors'
 
 export const getColumnsLength = createSelector(
@@ -20,22 +21,21 @@ export const getColumnsLength = createSelector(
   (columns) => columns.length,
 )
 
-export const getColumnComparer = createSelector(
-  [getColumns],
-  (columns) =>
-    (...args: readonly [number, number]) => {
-      const [a, b] = pipe(args, map(stringLookup(columns))) as readonly [
-        string,
-        string,
-      ]
-
-      return a.localeCompare(b)
-    },
-)
-
 export const getColumn = createSelector(
   [getColumns, getPosParam],
   (columns, pos) => stringLookup(columns)(pos),
+)
+
+export const getColumnComparer = createSelector(
+  [getColumns],
+  (columns) => (posA: number, posB: number) => {
+    return pipe(
+      [posA, posB] as const,
+      map(stringLookup(columns)),
+      hole<[string, string]>,
+      tupled(Ord.compare),
+    )
+  },
 )
 
 const getIndexRow = createSelector(
@@ -43,9 +43,8 @@ const getIndexRow = createSelector(
   (data, columns, indices, visits) =>
     pipe(
       data,
-      map((row) =>
-        pipe(
-          row,
+      map(
+        flow(
           RR.lookup(
             stringLookup(columns)(
               searchPos(indices, visits, 'sno', stringLookup(visits)(0)),
@@ -63,9 +62,8 @@ export const getRow = createSelector(
   (data, columns, pos) =>
     pipe(
       data,
-      map((row) =>
-        pipe(
-          row,
+      map(
+        flow(
           RR.lookup(stringLookup(columns)(pos)),
           getOrElse(() => '' as Property<CellItem>),
           toString,
@@ -112,7 +110,7 @@ const getBlanklessRow = createSelector(
 
 const getNumericalRow = createSelector(
   [getBlanklessRow],
-  map((cell) => pipe(cell, Str.replace(/[!,.?]+/, '.'), parseFloat)),
+  map(flow(Str.replace(/[!,.?]+/, '.'), parseFloat)),
 )
 
 const getIndexedCategoricalRow = createSelector(
@@ -127,14 +125,10 @@ const getIndexedNumericalRow = createSelector(
 
 export const getRowIncorrects = createSelector(
   [getIndexedCategoricalRow],
-  (row) => row.filter(([, value]) => Number.isNaN(Number(value))),
+  filter(([, value]) => Number.isNaN(value)),
 )
 
 export const getCleanNumericalRow = createSelector(
   [getIndexedNumericalRow],
-  (row) =>
-    pipe(
-      row,
-      filter(([, value]) => !Number.isNaN(value)),
-    ),
+  filter(not(([, value]) => Number.isNaN(value))),
 )

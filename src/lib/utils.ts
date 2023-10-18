@@ -5,7 +5,7 @@ import Task from 'fp-ts/Task'
 
 export const createMemo = <T>(
   displayName: string,
-  // eslint-disable-next-line functional/prefer-immutable-types
+
   component: ComponentType<T>,
 ) => {
   const memoized = memo(component)

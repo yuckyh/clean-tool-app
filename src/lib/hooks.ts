@@ -18,7 +18,8 @@ import {
 } from '@fluentui/react-components'
 import type { AppDispatch, RootState } from '@/app/store'
 import globalStyles from '@/app/global.css?inline'
-import { flatMap, of } from 'fp-ts/IO'
+import type { IO } from 'fp-ts/IO'
+import { of } from 'fp-ts/IO'
 import { pipe } from 'fp-ts/function'
 import { console } from 'fp-ts'
 import TO from 'fp-ts/TaskOption'
@@ -45,19 +46,13 @@ export const useLoadingTransition = () => {
   const [isPending, startTransition] = useTransition()
 
   const stopLoading = useCallback(() => {
-    return pipe(
-      startTransition,
-      of,
-      flatMap(
-        of(() => {
-          setIsLoading(false)
-          return undefined
-        }),
-      ),
-    )
+    pipe(startTransition, () => {
+      setIsLoading(false)
+      return undefined
+    })
   }, [])
 
-  return [isLoading || isPending, stopLoading] as const
+  return [isLoading || isPending, stopLoading as IO<undefined>] as const
 }
 
 export const useThemePreference = (

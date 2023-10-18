@@ -1,3 +1,6 @@
+/* eslint-disable import/prefer-default-export */
+/* eslint-disable functional/functional-parameters */
+/* eslint-disable functional/immutable-data */
 import {
   CardFooter,
   CardHeader,
@@ -25,7 +28,6 @@ const useClasses = makeStyles({
 // TODO: add download button
 // TODO: make download work
 
-// eslint-disable-next-line import/prefer-default-export
 export function Component() {
   const classes = useClasses()
 

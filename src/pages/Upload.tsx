@@ -34,7 +34,6 @@ import { getColumnsLength } from '@/features/sheet/selectors'
 import { saveSheetState } from '@/features/sheet/reducers'
 import SimpleToaster from '@/components/SimpleToaster'
 import AlertDialog from '@/components/AlertDialog'
-import { noOpIO } from '@/lib/utils'
 import IO from 'fp-ts/IO'
 import { constant, pipe } from 'fp-ts/function'
 import TE from 'fp-ts/TaskEither'
@@ -141,7 +140,7 @@ export function Component() {
     useCallback(() => {
       return pipe(
         [saveSheetState, saveColumnState] as const,
-        IO.traverseArray((x) => () => dispatch(x())),
+        IO.traverseArray((x) => constant(dispatch(x()))),
       )()
     }, [dispatch]),
   )

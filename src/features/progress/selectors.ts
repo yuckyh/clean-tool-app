@@ -1,29 +1,17 @@
 import { createSelector } from '@reduxjs/toolkit'
 import { matchRoutes, resolvePath } from 'react-router-dom'
-import {
-  defaultTo,
-  fromPairs,
-  parseInt,
-  includes,
-  indexOf,
-  replace,
-  toLower,
-  negate,
-  isNaN,
-  split,
-  range,
-  slice,
-  flow,
-  find,
-  some,
-  map,
-  nth,
-  zip,
-} from 'lodash/fp'
 import { getProgress } from '@/app/selectors'
 import { routes } from '@/app/Router'
 import { getPathTitle } from '@/lib/string'
 import type { RootState } from '@/app/store'
+import { includes, isEmpty, replace, split, Eq } from 'fp-ts/string'
+import { getOrElse } from 'fp-ts/Option'
+import { constant, pipe, flow, flip } from 'fp-ts/function'
+import { filter } from 'fp-ts/ReadonlyNonEmptyArray'
+import * as RA from 'fp-ts/ReadonlyArray'
+import { stringLookup } from '@/lib/array'
+import { fromEntries } from 'fp-ts/ReadonlyRecord'
+import { not } from 'fp-ts/Predicate'
 import type { Progress } from './reducers'
 
 const getLocationPathParam = (_: RootState, _1: string, locationPath: string) =>
@@ -36,29 +24,44 @@ const getPosParam = (_: RootState, _1: string, _2: string, pos: number) => pos
 
 const getLocationPathWords = createSelector(
   [getLocationPathParam],
-  (locationPath) => split('/')(locationPath).splice(1),
+  (locationPath) =>
+    pipe(
+      locationPath,
+      split('/'),
+      filter(isEmpty),
+      getOrElse(pipe(locationPath, split('/'), constant)),
+    ),
 )
 
 export const getPaths = createSelector(
   [getComponentPathParam],
   (componentPath) =>
-    flow(
-      find<
-        ArrayElement<
-          NonNullable<
-            ReturnType<typeof matchRoutes<ArrayElement<typeof routes>>>
-          >
-        >
-      >(({ route }) => !route.index),
-      (match) => match?.route.children ?? [],
-      find(({ index }) => !index),
-      (route) => route?.children ?? {},
-      map(({ path = '' }) => toLower(resolvePath(path).pathname)),
-    )(matchRoutes(routes, componentPath) ?? []),
+    pipe(
+      matchRoutes(routes, componentPath) ?? [],
+      RA.findFirst(({ route }) => !route.index),
+      getOrElse(
+        constant({ route: routes[0] } as NonNullable<
+          ReturnType<typeof matchRoutes>
+        >[number]),
+      ),
+      ({ route }) => route.children ?? [],
+      RA.findFirst(({ index }) => !index),
+      getOrElse(
+        constant(
+          routes[0] as NonNullable<
+            NonNullable<
+              ReturnType<typeof matchRoutes>
+            >[number]['route']['children']
+          >[number],
+        ),
+      ),
+      ({ children = [] }) => children,
+      RA.map(({ path = '' }) => resolvePath(path).pathname.toLowerCase()),
+    ),
 )
 
 export const getPath = createSelector([getPaths, getPosParam], (paths, pos) =>
-  flow<[string[]], undefined | string, string>(nth(pos), defaultTo(''))(paths),
+  stringLookup(paths)(pos),
 )
 
 // export const getPathLabel = createSelector([getPath])
@@ -66,27 +69,33 @@ export const getPath = createSelector([getPaths, getPosParam], (paths, pos) =>
 export const getAllowedPaths = createSelector(
   [getPaths, getProgress],
   (paths, progress) =>
-    fromPairs<string[]>(
-      zip(['none', 'uploaded', 'matched', 'explored'] as Progress[])(
-        map<number, string[]>((i) => slice(0)(i + 2)(paths))(range(0)(4)),
-      ) as [Progress, string[]][],
+    fromEntries(
+      pipe(
+        ['none', 'uploaded', 'matched', 'explored'] as Progress[],
+        RA.mapWithIndex((i, p) => [p, RA.takeLeft(i + 2)(paths)]),
+      ),
     )[progress] ?? [],
 )
 
 export const getDisabled = createSelector(
   [getPath, getAllowedPaths],
-  (path, allowedPaths) => negate(includes(path))(allowedPaths),
+  (path, allowedPaths) => pipe(allowedPaths, not(RA.elem(Eq)(path))),
 )
 
 export const getPosition = createSelector(
   [getLocationPathWords, getPaths],
   (locationPathWords, paths) =>
-    flow(map(replace('/')('')), indexOf(locationPathWords[0] ?? ''))(paths),
+    pipe(
+      paths,
+      RA.map(replace('/', '')),
+      RA.findIndex((x) => Eq.equals(x, locationPathWords[0])),
+      getOrElse(constant(-1)),
+    ),
 )
 
 const getLocationHasVisit = createSelector(
   [getLocationPathWords],
-  flow(nth(2), defaultTo(''), parseInt(10), negate(isNaN)),
+  flow(flip(stringLookup)(2), (x) => parseInt(x, 10), not(Number.isNaN)),
 )
 
 const getIsAtEda = createSelector([getPosition], (position) => position === 3)
@@ -105,10 +114,13 @@ export const getProgressValue = createSelector(
 export const getShouldNavigateToAllowed = createSelector(
   [getLocationPathWords, getAllowedPaths],
   (locationPathWords, allowedPaths) =>
-    some<string>(
-      flow(
-        replace('/', ''),
-        negate(includes(flow(nth(0), defaultTo(''))(locationPathWords))),
+    pipe(
+      allowedPaths,
+      RA.some(
+        flow(
+          replace('/', ''),
+          not(includes(stringLookup(locationPathWords)(0))),
+        ),
       ),
-    )(allowedPaths),
+    ),
 )

@@ -12,16 +12,19 @@ import {
   Button,
   Dialog,
 } from '@fluentui/react-components'
+import type { IO } from 'fp-ts/IO'
+import { flatMap, of, as } from 'fp-ts/IO'
+import { pipe } from 'fp-ts/function'
 import { useImperativeHandle, forwardRef, useState } from 'react'
 
 export interface AlertRef {
   setContent: (content: string) => string
   setTitle: (title: string) => string
-  open: () => boolean
+  open: IO<boolean>
 }
 
 interface Props {
-  onConfirm?: () => void
+  onConfirm?: IO<void>
 }
 
 const AlertDialog = forwardRef<AlertRef, Props>(({ onConfirm }, ref) => {
@@ -36,6 +39,16 @@ const AlertDialog = forwardRef<AlertRef, Props>(({ onConfirm }, ref) => {
   useImperativeHandle(
     ref,
     () => ({
+      open: pipe(
+        setOpen,
+        of,
+        flatMap((fn) =>
+          as(true)(() => {
+            fn(true)
+            return true
+          }),
+        ),
+      ),
       setContent: (newContent) => {
         setContent(newContent)
         return newContent
@@ -43,10 +56,6 @@ const AlertDialog = forwardRef<AlertRef, Props>(({ onConfirm }, ref) => {
       setTitle: (newTitle) => {
         setTitle(newTitle)
         return newTitle
-      },
-      open: () => {
-        setOpen(true)
-        return true
       },
     }),
     [],

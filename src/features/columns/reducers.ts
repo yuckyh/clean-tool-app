@@ -104,7 +104,7 @@ const columnsSlice = createSlice({
         [matchColumns, matchVisits] as const,
         RA.zip(keys),
         RA.map(([value, key]) => {
-          setPersisted(key, value.join(','))
+          return setPersisted(key, value.join(','))
         }),
       )
 

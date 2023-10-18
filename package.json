@@ -187,6 +187,7 @@
       "immutable/no-this": 2,
       "import/extensions": 0,
       "import/no-extraneous-dependencies": 0,
+      "import/no-cycle": 0,
       "react/jsx-props-no-spreading": 0,
       "functional/no-expression-statements": 0,
       "functionaya l/functional-parameters": 0,
