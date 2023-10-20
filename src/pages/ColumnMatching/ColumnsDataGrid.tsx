@@ -14,7 +14,7 @@ import { useCallback, useEffect, useState, useMemo } from 'react'
 import { useBeforeUnload } from 'react-router-dom'
 import type { Props as SimpleDataGridProps } from '@/components/SimpleDataGrid'
 import type { AlertRef } from '@/components/AlertDialog'
-import Task from 'fp-ts/Task'
+import * as T from 'fp-ts/Task'
 
 import {
   getVisitsComparer,
@@ -32,13 +32,14 @@ import { saveSheetState } from '@/features/sheet/reducers'
 import { fetchMatches } from '@/features/columns/actions'
 import SimpleDataGrid from '@/components/SimpleDataGrid'
 import { fetchSheet } from '@/features/sheet/actions'
-import { createLazyMemo, createMemo, noOpIO } from '@/lib/utils'
+import { createLazyMemo, createMemo } from '@/lib/utils'
 import Loader from '@/components/Loader'
 
 import { constant, identity, pipe } from 'fp-ts/function'
 import { makeBy } from 'fp-ts/ReadonlyArray'
-import IO from 'fp-ts/IO'
-import TE from 'fp-ts/TaskEither'
+import * as IO from 'fp-ts/IO'
+import * as TE from 'fp-ts/TaskEither'
+import { ioDumpTrace, dumpError } from '@/lib/logger'
 import HeaderCell from './HeaderCell'
 import ValueCell from './ValueCell'
 
@@ -145,20 +146,23 @@ export default function ColumnsDataGrid({ alertRef }: Readonly<Props>) {
   )
 
   useEffect(() => {
-    return pipe(
+    pipe(
       columnsLength,
       (length): TE.TaskEither<typeof fetchSheet, typeof fetchMatches> =>
         length === 0 ? TE.left(fetchSheet) : TE.right(fetchMatches),
-      TE.getOrElse((x) =>
+      TE.getOrElse((action) =>
         pipe(
-          Task.tap(() => Task.of(dispatch(x()))),
-          () => Task.of(fetchMatches),
+          () => dispatch(action()),
+          T.tap((x) => T.of(x)),
+          T.tapIO(ioDumpTrace),
+          () => fetchMatches,
+          T.of,
         ),
       ),
-      Task.tap((x) => IO.of(dispatch(x()))),
-      Task.tapIO(() => stopLoading),
-      () => noOpIO,
-    )()
+      T.tap((x) => IO.of(dispatch(x()))),
+      T.tapIO(() => stopLoading),
+    )().catch(dumpError)
+    return undefined
   }, [dispatch, columnsLength, stopLoading])
 
   useBeforeUnload(

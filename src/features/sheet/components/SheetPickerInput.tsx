@@ -4,9 +4,9 @@ import { makeStyles, Dropdown, Option, Field } from '@fluentui/react-components'
 import { useCallback } from 'react'
 import { useAppDispatch, useAppSelector } from '@/lib/hooks'
 
-import { tap, of } from 'fp-ts/IO'
+import * as IO from 'fp-ts/IO'
 import { pipe } from 'fp-ts/function'
-import { map } from 'fp-ts/ReadonlyArray'
+import * as RA from 'fp-ts/ReadonlyArray'
 import { setSheetName } from '../reducers'
 
 const useClasses = makeStyles({
@@ -31,8 +31,8 @@ export default function SheetPickerInput() {
         pipe(
           optionValue,
           setSheetName,
-          of,
-          tap((x) => of(dispatch(x))),
+          IO.of,
+          IO.tap((x) => IO.of(dispatch(x))),
         ),
       [dispatch],
     )
@@ -47,7 +47,7 @@ export default function SheetPickerInput() {
         value={sheetName}>
         {pipe(
           sheetNames,
-          map((name) => (
+          RA.map((name) => (
             <Option value={name} key={name}>
               {name}
             </Option>

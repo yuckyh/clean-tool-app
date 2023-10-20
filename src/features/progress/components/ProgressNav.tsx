@@ -14,12 +14,11 @@ import { useCallback, useEffect, useMemo } from 'react'
 import { Helmet } from 'react-helmet-async'
 import { useAppDispatch, useAppSelector } from '@/lib/hooks'
 
-import { console } from 'fp-ts'
-import { getOrElse } from 'fp-ts/Option'
+import * as O from 'fp-ts/Option'
 import { constant, pipe } from 'fp-ts/function'
-import { mapWithIndex, lookup } from 'fp-ts/ReadonlyArray'
-import { split } from 'fp-ts/string'
-import IO from 'fp-ts/IO'
+import * as RA from 'fp-ts/ReadonlyArray'
+import * as S from 'fp-ts/string'
+import * as IO from 'fp-ts/IO'
 import { saveProgressState } from '../reducers'
 import ProgressNavLink from './ProgressNavLink'
 import {
@@ -74,17 +73,15 @@ export default function ProgressNav() {
   )
 
   useEffect(() => {
-    console.log(allowedPaths)
-    if (shouldNavigateToAllowed) {
-      navigate(getOrElse(constant('/'))(lookup(-1)(allowedPaths)))
-      return undefined
+    if (!shouldNavigateToAllowed) {
+      return
     }
 
-    return undefined
+    navigate(pipe(allowedPaths, RA.lookup(-1), O.getOrElse(constant('/'))))
   }, [allowedPaths, navigate, shouldNavigateToAllowed])
 
   useEffect(() => {
-    const classList = split(' ')(themeClasses)
+    const classList = S.split(' ')(themeClasses)
     document.body.classList.add(...classList)
 
     // eslint-disable-next-line functional/functional-parameters
@@ -95,11 +92,7 @@ export default function ProgressNav() {
 
   useBeforeUnload(
     useCallback(() => {
-      return pipe(
-        saveProgressState,
-        IO.of,
-        IO.tap((x) => IO.of(dispatch(x()))),
-      )()
+      return pipe(saveProgressState(), (x) => dispatch(x), IO.of)()
     }, [dispatch]),
   )
 
@@ -112,7 +105,7 @@ export default function ProgressNav() {
       <div className={classes.linkContainer}>
         {pipe(
           paths,
-          mapWithIndex((pos, path) => (
+          RA.mapWithIndex((pos, path) => (
             <ProgressNavLink
               done={position >= pos}
               path={path}

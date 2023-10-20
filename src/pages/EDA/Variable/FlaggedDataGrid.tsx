@@ -2,7 +2,6 @@ import type {
   DataGridCellFocusMode,
   DataGridProps,
   InputProps,
-  TableRowId,
 } from '@fluentui/react-components'
 
 import {
@@ -11,26 +10,22 @@ import {
   shorthands,
   tokens,
   Title2,
-  Field,
-  Input,
   Card,
 } from '@fluentui/react-components'
 import { useCallback, useState, useMemo } from 'react'
 import SimpleDataGrid from '@/components/SimpleDataGrid'
 import { useAppDispatch, useAppSelector } from '@/lib/hooks'
 import { constant, identity, pipe } from 'fp-ts/function'
-import { console } from 'fp-ts'
-import {
-  findIndex,
-  fromArray,
-  deleteAt,
-  filter,
-  makeBy,
-  every,
-  some,
-  zip,
-} from 'fp-ts/ReadonlyArray'
-import { getOrElse } from 'fp-ts/Option'
+import * as RA from 'fp-ts/ReadonlyArray'
+import * as O from 'fp-ts/Option'
+import * as S from 'fp-ts/string'
+import * as RS from 'fp-ts/ReadonlySet'
+import * as IO from 'fp-ts/IO'
+import * as N from 'fp-ts/number'
+import type { Flag } from '@/features/sheet/reducers'
+import { syncFlaggedCells, FlagEq } from '@/features/sheet/reducers'
+import { getIndexedIndex } from '@/lib/array'
+import FilterInput from './FilterInput'
 
 type IndexedSeries = readonly (readonly [string, string])[]
 
@@ -65,101 +60,77 @@ export default function FlaggedDataGrid({ series, title }: Readonly<Props>) {
 
   const dispatch = useAppDispatch()
 
-  const [flaggedRows, setFlaggedRows] = useState(new Set<TableRowId>([]))
   const flaggedCells = useAppSelector(({ sheet }) => sheet.flaggedCells)
+
+  const flaggedRows = useMemo(
+    () =>
+      pipe(
+        flaggedCells,
+        RA.filter(
+          ([, flagTitle, , flagReason]) =>
+            flagTitle === title && flagReason === 'outlier',
+        ),
+        RS.fromReadonlyArray(FlagEq),
+        RS.map(N.Eq)(([, , index]) => index),
+      ),
+    [flaggedCells, title],
+  )
 
   const handleSelectionChange: DataGridProps['onSelectionChange'] = (
     _1,
     { selectedItems },
   ) => {
-    const checkedIndex =
-      flaggedRows.size < selectedItems.size
-        ? parseInt(`${Array.from(selectedItems).pop()}`, 10)
-        : pipe(
-            Array.from(flaggedRows),
-            fromArray,
-            findIndex((flagged) => !selectedItems.has(flagged)),
-            getOrElse(constant(-1)),
-          )
+    const subtractor =
+      flaggedRows.size < selectedItems.size ? selectedItems : flaggedRows
 
-    console.log(checkedIndex)
+    const subtractee =
+      flaggedRows.size < selectedItems.size ? flaggedRows : selectedItems
 
-    const payload = series[checkedIndex] ?? []
-
-    setFlaggedRows(selectedItems)
-
-    if (flaggedRows.size < selectedItems.size) {
-      console.log(['checking', flaggedCells.length])
-
-      console.log(
-        pipe(
-          flaggedCells,
-          every((cell) =>
-            pipe(
-              cell,
-              zip(payload),
-              some(([payloadValue, cellValue]) => cellValue !== payloadValue),
-            ),
-          ),
-        ),
-      )
-      // just(addFlaggedCell).pass([...checked, 'outlier'])(dispatch)
-      return undefined
-    }
-    console.log('unchecking')
-    // const checkedIndex = find<TableRowId>(
-    //   (flagged) => !selectedItems.has(flagged),
-    // )(Array.from(flaggedRows))
-
-    console.log([checkedIndex, Array.from(flaggedRows).at(-1)])
-
-    console.log(
-      pipe(
-        flaggedCells,
-        deleteAt(checkedIndex),
-        getOrElse(constant(flaggedCells)),
-      ),
+    const checkedIndex = pipe(
+      subtractor as Readonly<Set<number>>,
+      RS.difference(N.Eq)(subtractee as Readonly<Set<number>>),
+      RS.reduce(N.Ord)(0, N.MonoidSum.concat),
     )
-    return undefined
 
-    // dispatch
+    const payload = pipe(
+      series,
+      RA.map(getIndexedIndex),
+      RA.lookup(checkedIndex),
+      O.getOrElse(constant('')),
+      (x) => [x, title, checkedIndex, 'outlier'] as Flag,
+    )
+
+    pipe(payload, syncFlaggedCells, (x) => dispatch(x), IO.of)()
+
+    return undefined
   }
 
   const [indexFilter, setIndexFilter] = useState('')
   const [valueFilter, setValueFilter] = useState('')
 
-  const handleIndexSearch: Required<InputProps>['onChange'] = useCallback(
-    ({ target }) => {
-      const { value } = target
-      setIndexFilter(value)
-      return undefined
-    },
-    [],
-  )
-
-  const handleValueSearch: Required<InputProps>['onChange'] = useCallback(
-    ({ target }) => {
-      const { value } = target
-      setValueFilter(value)
-      return undefined
-    },
-    [],
-  )
-
   const filteredRows = useMemo(
     () =>
       pipe(
         series,
-        filter(
+        RA.filter(
           ([index, value]) =>
-            index.includes(indexFilter) && value.includes(valueFilter),
+            pipe(
+              indexFilter,
+              S.toLowerCase,
+              S.includes,
+            )(pipe(index, S.toLowerCase)) &&
+            pipe(
+              valueFilter,
+              S.toLowerCase,
+              S.includes,
+            )(pipe(value, S.toLowerCase)),
         ),
       ),
     [indexFilter, series, valueFilter],
   )
 
   const items = useMemo(
-    () => makeBy(filteredRows.length, identity),
+    () => RA.makeBy(filteredRows.length, identity),
     [filteredRows.length],
   )
 
@@ -169,38 +140,52 @@ export default function FlaggedDataGrid({ series, title }: Readonly<Props>) {
         renderHeaderCell: constant(
           <div className={classes.columnHeader}>sno</div>,
         ),
-        renderCell: (row) => filteredRows[row]?.[1],
+        renderCell: (row) => filteredRows[row]?.[0],
         columnId: 'index',
       }),
       createTableColumn<number>({
         renderHeaderCell: constant(
           <div className={classes.columnHeader}>{title}</div>,
         ),
-        renderCell: (row) => filteredRows[row]?.[0],
+        renderCell: (row) => filteredRows[row]?.[1],
         columnId: title,
       }),
     ],
     [classes.columnHeader, filteredRows, title],
   )
 
+  const handleValueFilter: Required<InputProps>['onChange'] = useCallback(
+    ({ target }) => {
+      const { value } = target
+      setValueFilter(value)
+      return undefined
+    },
+    [],
+  )
+
+  const handleIndexFilter: Required<InputProps>['onChange'] = useCallback(
+    ({ target }) => {
+      const { value } = target
+      setIndexFilter(value)
+      return undefined
+    },
+    [],
+  )
+
   return (
     <Card className={classes.card} size="large">
       <Title2>Data Flagging</Title2>
       <div className={classes.columns}>
-        <Field label="Search sno">
-          <Input
-            onChange={handleIndexSearch}
-            appearance="filled-darker"
-            className={classes.input}
-          />
-        </Field>
-        <Field label="Search values">
-          <Input
-            onChange={handleValueSearch}
-            appearance="filled-darker"
-            className={classes.input}
-          />
-        </Field>
+        <FilterInput
+          handleChange={handleIndexFilter}
+          value={indexFilter}
+          label="Search sno"
+        />
+        <FilterInput
+          handleChange={handleValueFilter}
+          label="Search values"
+          value={valueFilter}
+        />
       </div>
       <SimpleDataGrid
         onSelectionChange={handleSelectionChange}

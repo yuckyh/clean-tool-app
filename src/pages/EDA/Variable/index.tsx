@@ -18,8 +18,8 @@ import {
 } from '@fluentui/react-components'
 import { useBeforeUnload, useParams } from 'react-router-dom'
 import { useCallback, useState, useMemo } from 'react'
-import { constant, pipe } from 'fp-ts/function'
-import { reduce, some, map } from 'fp-ts/ReadonlyArray'
+import { constant, flow, pipe } from 'fp-ts/function'
+import * as RA from 'fp-ts/ReadonlyArray'
 import { useAppDispatch, useAppSelector } from '@/lib/hooks'
 import { getCleanNumericalRow, getIndexedRow } from '@/features/sheet/selectors'
 import CategoricalPlot from '@/pages/EDA/Variable/CategoricalPlot'
@@ -29,9 +29,11 @@ import { codebook } from '@/data'
 import SimpleDataGrid from '@/components/SimpleDataGrid'
 import { saveColumnState } from '@/features/columns/reducers'
 import { saveSheetState } from '@/features/sheet/reducers'
-import { includes } from 'fp-ts/string'
+import * as S from 'fp-ts/string'
 import { console } from 'fp-ts'
-import IO from 'fp-ts/IO'
+import * as IO from 'fp-ts/IO'
+import { getIndexedValue } from '@/lib/array'
+import * as N from 'fp-ts/number'
 import IncorrectDataGrid from './IncorrectDataGrid'
 import BlankDataGrid from './BlankDataGrid'
 import FlaggedDataGrid from './FlaggedDataGrid'
@@ -104,7 +106,7 @@ export function Component() {
 
   // const [isLoading, stopLoading] = useLoadingTransition()
 
-  const column = params.column?.replace(/_/g, '-') ?? ''
+  const column = S.replace(/-/g, '_')(params.column ?? '')
   const visit = params.visit ?? firstVisit
 
   const series = useAppSelector((state) => getIndexedRow(state, column, visit))
@@ -129,7 +131,7 @@ export function Component() {
 
   const measurementType: VariableType = pipe(
     ['whole_number', 'interval'] as const,
-    some(includes(type)),
+    RA.some(S.includes(type)),
   )
     ? 'numerical'
     : 'categorical'
@@ -139,22 +141,27 @@ export function Component() {
   useBeforeUnload(
     useCallback(() => {
       return pipe(
-        saveColumnState,
-        (x) => dispatch(x),
-        saveSheetState,
-        (x) => dispatch(x),
-        IO.of,
+        [saveColumnState, saveSheetState] as const,
+        RA.map(
+          flow(
+            (x) => x(),
+            (x) => dispatch(x),
+            IO.of,
+          ),
+        ),
+        IO.sequenceArray,
       )()
     }, [dispatch]),
   )
 
-  const dataSum = useMemo(
-    () =>
-      pipe(
-        cleanNumericalSeries,
-        reduce(0, (sum, [, value]) => sum + value),
-      ),
+  const cleanValues = useMemo(
+    () => RA.map(getIndexedValue)(cleanNumericalSeries),
     [cleanNumericalSeries],
+  )
+
+  const dataSum = useMemo(
+    () => RA.reduce(0, N.MonoidSum.concat)(cleanValues),
+    [cleanValues],
   )
 
   const summaryStatistics: readonly SummaryStats[] = useMemo(
@@ -162,24 +169,17 @@ export function Component() {
       isCategorical
         ? [{ value: series.length, statistic: 'Count' }]
         : [
-            { value: cleanNumericalSeries.length, statistic: 'Count' },
+            { value: cleanValues.length, statistic: 'Count' },
             {
-              value: Math.min(
-                ...cleanNumericalSeries.map(([, value]) => value),
-              ),
+              value: Math.min(...cleanValues),
               statistic: 'Min',
             },
             {
-              value: Math.max(
-                ...pipe(
-                  cleanNumericalSeries,
-                  map(([, value]) => value),
-                ),
-              ),
+              value: Math.max(...cleanValues),
               statistic: 'Max',
             },
             {
-              value: dataSum / cleanNumericalSeries.length,
+              value: dataSum / cleanValues.length,
               statistic: 'Mean',
             },
             {
@@ -187,7 +187,7 @@ export function Component() {
               value: dataSum,
             },
           ],
-    [cleanNumericalSeries, isCategorical, series.length, dataSum],
+    [isCategorical, series.length, cleanValues, dataSum],
   )
 
   const columnDefinition: TableColumnDefinition<SummaryStats>[] = useMemo(

@@ -6,9 +6,9 @@ import type { AlertRef } from '@/components/AlertDialog'
 import { useAppDispatch, useAppSelector } from '@/lib/hooks'
 import { indexDuplicateSearcher } from '@/lib/array'
 
-import { tap, of } from 'fp-ts/IO'
+import * as IO from 'fp-ts/IO'
 import { pipe } from 'fp-ts/function'
-import { mapWithIndex } from 'fp-ts/ReadonlyArray'
+import * as RA from 'fp-ts/ReadonlyArray'
 import {
   getMatchColumn,
   getMatchVisit,
@@ -62,8 +62,8 @@ export default function VisitsCell({ alertRef, pos }: Props) {
         return pipe(
           { matchVisit: newMatchVisit, pos },
           setMatchVisit,
-          of,
-          tap((x) => of(dispatch(x))),
+          IO.of,
+          IO.tap((x) => IO.of(dispatch(x))),
         )()
       },
       [alertRef, dispatch, indices, matchColumn, matchVisit, pos],
@@ -78,7 +78,7 @@ export default function VisitsCell({ alertRef, pos }: Props) {
       value={visit}>
       {pipe(
         visits,
-        mapWithIndex((i, visitStr) => (
+        RA.mapWithIndex((i, visitStr) => (
           <Option value={i.toString()} text={visitStr} key={visitStr}>
             {visitStr}
           </Option>

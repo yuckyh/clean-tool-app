@@ -1,15 +1,16 @@
 import type { Layout, Data } from 'plotly.js-cartesian-dist-min'
 
 import { tokens } from '@fluentui/react-components'
-import { useRef } from 'react'
+import { useCallback, useMemo, useRef } from 'react'
 
 import { console } from 'fp-ts'
 import { multiply, divideBy, add } from '@/lib/number'
 import { useTokenToHex } from '@/lib/hooks'
-import { filter, makeBy, sort, map } from 'fp-ts/ReadonlyArray'
-import { constant, flow, pipe } from 'fp-ts/function'
-import { numberLookup } from '@/lib/array'
-import N from 'fp-ts/number'
+import * as RA from 'fp-ts/ReadonlyArray'
+import { flow, pipe } from 'fp-ts/function'
+import { getIndexedIndex, getIndexedValue, numberLookup } from '@/lib/array'
+import * as N from 'fp-ts/number'
+import * as P from 'fp-ts/Predicate'
 import VariablePlot from './VariablePlot'
 
 type IndexedSeries = readonly (readonly [string, number])[]
@@ -20,44 +21,96 @@ interface NumericalPlotProps {
   unit: string
 }
 
-const jitter = 0.3
+const jitterPower = 0.3
 
-const jitterY = constant(Math.random() * jitter * 2 - jitter)
-const getValue = ([, value]: ArrayElement<IndexedSeries>) => value
-const getIndex = ([index = '']: ArrayElement<IndexedSeries>) => index
+const jitterY = (jitter: number) => Math.random() * jitter * 2 - jitter
 
 export default function NumericalPlot({
   variable,
   series,
   unit,
 }: NumericalPlotProps) {
-  const sorted = pipe(series, map(flow(getValue, Number)), sort(N.Ord))
+  const sorted = pipe(
+    series,
+    RA.map(flow(getIndexedValue, Number)),
+    RA.sort(N.Ord),
+  )
 
-  const [q1, , q3] = makeBy(
-    3,
-    flow(
-      add(1),
-      multiply(series.length),
-      divideBy(4),
-      Math.floor,
-      numberLookup(sorted),
-    ),
-  ) as readonly [number, number, number]
+  const [q1, , q3] = useMemo(
+    () =>
+      RA.makeBy(
+        3,
+        flow(
+          add(1),
+          multiply(series.length),
+          divideBy(4),
+          Math.floor,
+          numberLookup(sorted),
+        ),
+      ) as readonly [number, number, number],
+    [series.length, sorted],
+  )
 
-  const [lower, upper] = [2.5 * q1 - 1.5 * q3, 2.5 * q3 - 1.5 * q1] as const
+  const [lower, upper] = useMemo(
+    () => [2.5 * q1 - 1.5 * q3, 2.5 * q3 - 1.5 * q1] as const,
+    [q1, q3],
+  )
 
-  const isOutlier = ([, value]: ArrayElement<IndexedSeries>) =>
-    value < lower || value > upper
+  const isOutlier = useCallback(
+    ([, value]: ArrayElement<IndexedSeries>) => value < lower || value > upper,
+    [lower, upper],
+  )
 
-  const isNotOutlier = (element: ArrayElement<IndexedSeries>) =>
-    !isOutlier(element)
+  const isNotOutlier = useMemo(() => P.not(isOutlier), [isOutlier])
 
-  const outliers = filter(isOutlier)(series)
+  const values = useMemo(
+    () => RA.map(getIndexedValue)(series) as number[],
+    [series],
+  )
 
-  const notOutliers = filter(isNotOutlier)(series)
+  const outliers = useMemo(
+    () => RA.filter(isOutlier)(series),
+    [isOutlier, series],
+  )
 
-  const notOutlierColor = useTokenToHex(tokens.colorBrandBackground)
-  const outlierColor = useTokenToHex(tokens.colorStatusDangerForeground3)
+  const outlierValues = useMemo(
+    () => RA.map(getIndexedValue)(outliers) as number[],
+    [outliers],
+  )
+
+  const outlierIndices = useMemo(
+    () => RA.map(getIndexedIndex)(outliers) as string[],
+    [outliers],
+  )
+
+  const outlierJitters = useMemo(
+    () => RA.map(() => jitterY(jitterPower))(outliers) as number[],
+    [outliers],
+  )
+
+  const outlierColor = useTokenToHex(tokens.colorBrandBackground)
+
+  const notOutliers = useMemo(
+    () => RA.filter(isNotOutlier)(series),
+    [isNotOutlier, series],
+  )
+
+  const notOutlierValues = useMemo(
+    () => RA.map(getIndexedValue)(notOutliers) as number[],
+    [notOutliers],
+  )
+
+  const notOutlierIndices = useMemo(
+    () => RA.map(getIndexedIndex)(notOutliers) as string[],
+    [notOutliers],
+  )
+
+  const notOutlierJitters = useMemo(
+    () => RA.map(() => jitterY(jitterPower))(notOutliers) as number[],
+    [notOutliers],
+  )
+
+  const notOutlierColor = useTokenToHex(tokens.colorStatusDangerForeground3)
 
   const layout: Partial<Layout> = {
     yaxis2: {
@@ -76,17 +129,16 @@ export default function NumericalPlot({
 
   const data: Partial<Data>[] = [
     {
-      customdata: map(getIndex)(series) as string[],
-      hovertemplate: `%{customdata}: %{x} ${unit}`,
+      // customdata: RA.map(getIndexedIndex)(series) as string[],
+      // hovertemplate: `%{customdata}: %{x} ${unit}`,
       marker: {
         opacity: 0,
       },
-      x: map(getValue)(series) as number[],
       boxpoints: 'outliers',
       boxmean: true,
-      // pointpos: -2,
       type: 'box',
       jitter: 0.3,
+      x: values,
       width: 1,
     },
     {
@@ -95,10 +147,10 @@ export default function NumericalPlot({
         symbol: 'x',
         size: 8,
       },
-      customdata: map(getIndex)(notOutliers) as string[],
       hovertemplate: `%{customdata}: %{x} ${unit}`,
-      x: map(getValue)(notOutliers) as number[],
-      y: map(jitterY)(notOutliers) as number[],
+      customdata: notOutlierIndices,
+      y: notOutlierJitters,
+      x: notOutlierValues,
       type: 'scatter',
       mode: 'markers',
       yaxis: 'y2',
@@ -109,10 +161,10 @@ export default function NumericalPlot({
         symbol: 'x',
         size: 8,
       },
-      customdata: map(getIndex)(outliers) as string[],
       hovertemplate: `%{customdata}: %{x} ${unit}`,
-      x: map(getValue)(outliers) as number[],
-      y: map(jitterY)(outliers) as number[],
+      customdata: outlierIndices,
+      y: outlierJitters,
+      x: outlierValues,
       type: 'scatter',
       mode: 'markers',
       yaxis: 'y2',

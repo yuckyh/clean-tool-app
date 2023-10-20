@@ -9,8 +9,8 @@ import {
   map,
   of,
 } from 'fp-ts/ReadonlyArray'
-import { getOrElse } from 'fp-ts/Option'
-import Str from 'fp-ts/string'
+import * as O from 'fp-ts/Option'
+import * as S from 'fp-ts/string'
 import {
   getMatchColumns,
   getMatchVisits,
@@ -88,7 +88,7 @@ export const getSearchedPos = createSelector(
 export const getMatchIndex = createSelector(
   [getMatches, getMatchColumn],
   (matches, matchColumn) =>
-    pipe(matches, findIndex(strEquals(matchColumn)), getOrElse(constant(-1))),
+    pipe(matches, findIndex(strEquals(matchColumn)), O.getOrElse(constant(-1))),
 )
 
 const search = fuse.search.bind(fuse)
@@ -110,7 +110,7 @@ export const getMatchComparer = createSelector(
       [a, b] as const,
       map(stringLookup(matchColumns)),
       hole<[string, string]>,
-      tupled(Str.Ord.compare),
+      tupled(S.Ord.compare),
     )
   },
 )
@@ -141,15 +141,15 @@ export const getScoreComparer = createSelector(
               lookup(
                 pipe(
                   matches,
-                  findIndex((match) => Str.Eq.equals(matchColumn, match)),
-                  getOrElse(constant(-1)),
+                  findIndex((match) => S.Eq.equals(matchColumn, match)),
+                  O.getOrElse(constant(-1)),
                 ),
               ),
-              getOrElse(constant(1)),
+              O.getOrElse(constant(1)),
             ),
           ),
           lookup(pos),
-          getOrElse(constant(1)),
+          O.getOrElse(constant(1)),
         ),
       ),
       reduce(0, (acc, curr) => acc - curr),

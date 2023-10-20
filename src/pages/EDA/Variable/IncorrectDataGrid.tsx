@@ -13,9 +13,10 @@ import {
 } from '@fluentui/react-components'
 import { useMemo } from 'react'
 import SimpleDataGrid from '@/components/SimpleDataGrid'
-import { getRowIncorrects } from '@/features/sheet/selectors'
+import { getIndexedRowIncorrects } from '@/features/sheet/selectors'
 import { useAppSelector } from '@/lib/hooks'
 import { constant } from 'fp-ts/function'
+import { getIndexedIndex, getIndexedValue } from '@/lib/array'
 
 const cellFocusMode: () => DataGridCellFocusMode = constant('none')
 
@@ -41,7 +42,7 @@ export default function IncorrectDataGrid({ column, visit }: Props) {
   const title = `${column}${visit && visit !== '1' ? `_${visit}` : ''}`
 
   const series = useAppSelector((state) =>
-    getRowIncorrects(state, column, visit),
+    getIndexedRowIncorrects(state, column, visit),
   )
 
   const columnDefinition: TableColumnDefinition<readonly [string, string]>[] =
@@ -51,14 +52,14 @@ export default function IncorrectDataGrid({ column, visit }: Props) {
           renderHeaderCell: constant(
             <div className={classes.columnHeader}>sno</div>,
           ),
-          renderCell: ([, indexValue]) => indexValue,
+          renderCell: getIndexedIndex,
           columnId: 'index',
         }),
         createTableColumn({
           renderHeaderCell: constant(
             <div className={classes.columnHeader}>{title}</div>,
           ),
-          renderCell: ([seriesValue]) => seriesValue,
+          renderCell: getIndexedValue,
           columnId: title,
         }),
       ],

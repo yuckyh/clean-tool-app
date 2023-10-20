@@ -1,7 +1,8 @@
 import type { Layout, Data } from 'plotly.js-cartesian-dist-min'
 
-import { makeBy, reduce } from 'fp-ts/ReadonlyArray'
+import * as RA from 'fp-ts/ReadonlyArray'
 import { identity, pipe } from 'fp-ts/function'
+import { getIndexedValue } from '@/lib/array'
 import VariablePlot from './VariablePlot'
 
 type IndexedSeries = readonly (readonly [string, string])[]
@@ -14,7 +15,8 @@ interface Props {
 export default function CategoricalPlot({ variable, series }: Props) {
   const count = pipe(
     series,
-    reduce({} as Readonly<Record<string, number>>, (acc, [curr]) => ({
+    RA.map(getIndexedValue),
+    RA.reduce({} as Readonly<Record<string, number>>, (acc, curr) => ({
       ...acc,
       [curr]: (acc[curr] ?? 0) + 1,
     })),
@@ -32,7 +34,7 @@ export default function CategoricalPlot({ variable, series }: Props) {
 
   const layout: Partial<Layout> = {
     yaxis: {
-      tickvals: makeBy(maxCount + 1, identity) as number[],
+      tickvals: RA.makeBy(maxCount + 1, identity) as number[],
       range: [0, maxCount],
       tickformat: 'd',
       title: 'count',

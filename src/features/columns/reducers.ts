@@ -2,14 +2,14 @@
 /* eslint-disable functional/immutable-data */
 import type { PayloadAction } from '@reduxjs/toolkit'
 
-import { createSlice } from '@reduxjs/toolkit'
-import RA from 'fp-ts/ReadonlyArray'
-import { constant, flow, pipe } from 'fp-ts/function'
-import Str from 'fp-ts/string'
 import { getPersisted, setPersisted } from '@/lib/localStorage'
+import { createSlice } from '@reduxjs/toolkit'
+import * as RA from 'fp-ts/ReadonlyArray'
+import { constant, tupled, flow, pipe } from 'fp-ts/function'
+import * as S from 'fp-ts/string'
 
-import { makeIndexPair } from '@/lib/array'
-import { getOrElse } from 'fp-ts/Option'
+import * as O from 'fp-ts/Option'
+import * as P from 'fp-ts/Predicate'
 import { fetchMatches, sliceName } from './actions'
 
 export interface ColumnMatch {
@@ -30,17 +30,17 @@ const defaultValue = ''
 const initialState: Readonly<State> = {
   matchVisits: pipe(
     getPersisted(keys[1], defaultValue),
-    Str.split(','),
-    RA.filter(Str.isEmpty),
-    RA.map((value) => parseInt(value, 10)),
+    S.split(','),
+    RA.filter(P.not(S.isEmpty)),
+    RA.map(flow((value) => [value, 10] as [string, number], tupled(parseInt))),
   ),
   matchColumns: pipe(
     getPersisted(keys[0], defaultValue),
-    Str.split(','),
-    RA.filter(Str.isEmpty),
+    S.split(','),
+    RA.filter(P.not(S.isEmpty)),
   ),
-  matchesList: [],
-  scoresList: [],
+  matchesList: RA.empty,
+  scoresList: RA.empty,
 }
 
 // Slice
@@ -64,31 +64,33 @@ const columnsSlice = createSlice({
       if (!matchColumns.length) {
         state.matchColumns = pipe(
           matchesList,
-          RA.map(flow(RA.head, getOrElse(constant('')))),
+          RA.map(flow(RA.head, O.getOrElse(constant('')))),
         ) as string[]
 
         return state
       }
 
       if (!matchVisits.length) {
-        state.matchVisits = state.matchColumns
-          .map(makeIndexPair) // Save the original index
-          .sort(([a], [b]) => a.localeCompare(b)) // Sort by name to detect duplicates
-          .map(([match, i], sortedI, arr) => {
-            const [prevMatch] = arr[sortedI - 1] ?? ['', 0]
+        state.matchVisits =
+          // pipe(matchColumns))
+          state.matchColumns
+            .map((x, i) => [x, i] as const) // Save the original index
+            .sort(([a], [b]) => a.localeCompare(b)) // Sort by name to detect duplicates
+            .map(([match, i], sortedI, arr) => {
+              const [prevMatch] = arr[sortedI - 1] ?? ['', 0]
 
-            return [Number(match === prevMatch), i] as const
-          }) // Mark the duplicates with ones
-          .map(([increment, i], sortedI, arr) => {
-            const [prevIncrement] = arr[sortedI - 1] ?? [0, 0]
+              return [Number(match === prevMatch), i] as const
+            }) // Mark the duplicates with ones
+            .map(([increment, i], sortedI, arr) => {
+              const [prevIncrement] = arr[sortedI - 1] ?? [0, 0]
 
-            return [
-              increment + (increment === 1 ? prevIncrement : 0),
-              i,
-            ] as const
-          }) // Increment the ones to get the visit number
-          .sort(([, a], [, b]) => a - b) // Sort by the original index
-          .map(([match]) => match) // Remove the original index
+              return [
+                increment + (increment === 1 ? prevIncrement : 0),
+                i,
+              ] as const
+            }) // Increment the ones to get the visit number
+            .sort(([, a], [, b]) => a - b) // Sort by the original index
+            .map(([match]) => match) // Remove the original index
 
         return state
       }

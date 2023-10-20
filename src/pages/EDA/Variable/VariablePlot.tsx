@@ -1,6 +1,6 @@
 import type { Layout, Data } from 'plotly.js-cartesian-dist-min'
 
-import { map } from 'fp-ts/ReadonlyArray'
+import * as RA from 'fp-ts/ReadonlyArray'
 import Plot from '@/components/Plot'
 import { pipe } from 'fp-ts/function'
 import { useMemo } from 'react'
@@ -16,15 +16,13 @@ export default function VariablePlot({
   layout,
   data,
 }: Readonly<Props>) {
-  const newData = [
-    ...pipe(
-      data,
-      map((obj) => ({
-        name: '',
-        ...obj,
-      })),
-    ),
-  ]
+  const newData = pipe(
+    data,
+    RA.map((obj) => ({
+      name: '',
+      ...obj,
+    })),
+  )
 
   const newLayout = useMemo(
     () => ({
@@ -35,5 +33,11 @@ export default function VariablePlot({
     [layout, variable],
   )
 
-  return <Plot layout={newLayout} useResizeHandler data={newData} />
+  return (
+    <Plot
+      data={newData as Partial<Data>[]}
+      layout={newLayout}
+      useResizeHandler
+    />
+  )
 }

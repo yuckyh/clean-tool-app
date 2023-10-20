@@ -29,8 +29,8 @@ export default function ScoreCell({ pos }: Props) {
   const score = useAppSelector((state) => getScore(state, pos))
 
   const colorscale = useFluentColorScale(
-    tokens.colorStatusDangerForegroundInverted,
     tokens.colorStatusSuccessForegroundInverted,
+    tokens.colorStatusDangerForegroundInverted,
     16,
   )
 

@@ -8,7 +8,7 @@ import { useAppSelector } from '@/lib/hooks'
 import { createLazyMemo } from '@/lib/utils'
 
 import { constant, identity } from 'fp-ts/function'
-import { makeBy } from 'fp-ts/ReadonlyArray'
+import * as RA from 'fp-ts/ReadonlyArray'
 import PreviewHeaderCell from './PreviewHeaderCell'
 import { getColumnsLength } from '../selectors'
 
@@ -26,7 +26,7 @@ const MemoizedSimpleDataGrid = createLazyMemo<SimpleDataGridProps<number>>(
   () => import('@/components/SimpleDataGrid'),
 )
 
-const items = makeBy(5, identity)
+const items = RA.makeBy(5, identity)
 
 const cellFocusMode: () => DataGridCellFocusMode = constant('none')
 
@@ -35,7 +35,7 @@ function PreviewDataGrid({ isOriginal = false }: Props) {
 
   const columnsDefinition = useMemo(
     () =>
-      makeBy(columnsLength, (pos) =>
+      RA.makeBy(columnsLength, (pos) =>
         createTableColumn<number>({
           renderHeaderCell: constant(
             <PreviewHeaderCell isOriginal={isOriginal} pos={pos} />,

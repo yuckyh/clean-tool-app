@@ -2,7 +2,7 @@ import { constant } from 'fp-ts/function'
 import type { WorkBook } from 'xlsx'
 
 import XLSX from 'xlsx'
-import { console } from 'fp-ts'
+import { dumpError } from '@/lib/logger'
 
 export interface SheetRequest extends WorkerRequest {
   method: 'postFormattedJSON' | 'postFile' | 'remove' | 'get'
@@ -51,10 +51,10 @@ const postFile: Handler = async ({ fileName, file }) => {
     (handle) => handle.createWritable(),
   )
 
-  writableStream
+  await writableStream
     .write(file)
     .then(() => writableStream.close())
-    .catch(console.error)
+    .catch(dumpError)
 
   return { status: 'ok', fileName }
 }
@@ -78,7 +78,7 @@ const postFormattedJSON: Handler = async ({ fileName, workbook }) => {
   writableStream
     .write(file)
     .then(() => writableStream.close())
-    .catch(console.error)
+    .catch(dumpError)
 
   return { status: 'ok', fileName }
 }
@@ -102,7 +102,7 @@ const main = async (data: SheetRequest) => {
     const response = await controller[method](data)
     globalThis.postMessage(response)
   } catch (error) {
-    console.error(error)
+    dumpError(error as Error)
     globalThis.postMessage({ status: 'fail', ...data, error } as SheetResponse)
   }
 }
@@ -110,12 +110,12 @@ const main = async (data: SheetRequest) => {
 globalThis.addEventListener(
   'message',
   ({ data }: MessageEvent<SheetRequest>) => {
-    main(data).catch(console.error)
+    main(data).catch(dumpError)
     return undefined
   },
 )
 
 globalThis.addEventListener('error', ({ error }: ErrorEvent) => {
-  console.error(error)
+  dumpError(error as Error)
   return undefined
 })

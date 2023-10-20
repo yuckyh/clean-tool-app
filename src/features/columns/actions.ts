@@ -5,8 +5,7 @@ import { promisedWorker, columnWorker } from '@/app/workers'
 import { getColumns } from '@/app/selectors'
 
 import { constant, tupled, pipe } from 'fp-ts/function'
-import type { Either } from 'fp-ts/Either'
-import { getOrElse, right, left } from 'fp-ts/Either'
+import * as E from 'fp-ts/Either'
 import { syncVisits } from '../sheet/reducers'
 
 const messagePromise = pipe(
@@ -34,9 +33,9 @@ export const fetchMatches = createAsyncThunk(
 
     return pipe(
       matchVisits,
-      (value): Either<typeof value, typeof result> =>
-        value.length > 0 ? left(value) : right(result),
-      getOrElse((value) =>
+      (value): E.Either<typeof value, typeof result> =>
+        value.length > 0 ? E.left(value) : E.right(result),
+      E.getOrElse((value) =>
         pipe(Math.max(...value) + 1, syncVisits, dispatch, () => result),
       ),
     )

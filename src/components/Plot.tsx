@@ -30,7 +30,7 @@ export default function Plot({ config, layout, ...props }: Props) {
       tokens.colorPaletteYellowBackground3,
     ] as const,
     map(useTokenToHex),
-  )
+  ) as string[]
 
   const defaultLayout: Partial<Layout> = {
     paper_bgcolor: 'rgba(0, 0, 0, 0)',

@@ -1,6 +1,6 @@
 import { stringLookup } from '@/lib/array'
-import { getOrElse } from 'fp-ts/Option'
-import { findIndex } from 'fp-ts/ReadonlyArray'
+import * as O from 'fp-ts/Option'
+import * as RA from 'fp-ts/ReadonlyArray'
 import { constant, pipe } from 'fp-ts/function'
 import type { RootState } from './store'
 
@@ -36,10 +36,10 @@ export const searchPos = (
 ) =>
   pipe(
     indices,
-    findIndex(
+    RA.findIndex(
       ([matchColumn, matchVisit]) =>
         searchColumn === matchColumn &&
         searchVisit === stringLookup(visits)(matchVisit),
     ),
-    getOrElse(constant(-1)),
+    O.getOrElse(constant(-1)),
   )

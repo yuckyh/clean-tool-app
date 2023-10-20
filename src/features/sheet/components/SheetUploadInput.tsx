@@ -19,9 +19,9 @@ import { useAppDispatch, useAppSelector } from '@/lib/hooks'
 import FileToast from '@/components/FileToast'
 import { sheetWorker } from '@/app/workers'
 
-import { console } from 'fp-ts'
-import { constant, pipe } from 'fp-ts/function'
-import * as Task from 'fp-ts/Task'
+import { pipe } from 'fp-ts/function'
+import { dumpError } from '@/lib/logger'
+import * as T from 'fp-ts/Task'
 import { fetchSheet, postFile } from '../actions'
 
 export interface SheetInputRef {
@@ -62,14 +62,9 @@ const SheetUploadInput = forwardRef<SheetInputRef, Props>(
 
           setFileTask('uploaded')
 
-          pipe(
-            file,
-            postFile,
-            Task.of,
-            Task.tap((x) => Task.of(dispatch(x))),
-            constant(Task.of(fetchSheet)),
-            Task.tap((x) => Task.of(dispatch(x()))),
-          )().catch(console.error)
+          pipe(file, postFile, (x) => dispatch(x), T.of)()
+            .then(() => pipe(fetchSheet(), (x) => dispatch(x), T.of))
+            .catch(dumpError)
         },
         accept: {
           'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': [

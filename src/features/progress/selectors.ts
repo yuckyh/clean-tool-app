@@ -4,14 +4,13 @@ import { getProgress } from '@/app/selectors'
 import { routes } from '@/app/Router'
 import { getPathTitle } from '@/lib/string'
 import type { RootState } from '@/app/store'
-import { includes, isEmpty, replace, split, Eq } from 'fp-ts/string'
-import { getOrElse } from 'fp-ts/Option'
+import * as Str from 'fp-ts/string'
+import * as O from 'fp-ts/Option'
 import { constant, pipe, flow, flip } from 'fp-ts/function'
-import { filter } from 'fp-ts/ReadonlyNonEmptyArray'
 import * as RA from 'fp-ts/ReadonlyArray'
 import { stringLookup } from '@/lib/array'
-import { fromEntries } from 'fp-ts/ReadonlyRecord'
-import { not } from 'fp-ts/Predicate'
+import * as RR from 'fp-ts/ReadonlyRecord'
+import * as P from 'fp-ts/Predicate'
 import type { Progress } from './reducers'
 
 const getLocationPathParam = (_: RootState, _1: string, locationPath: string) =>
@@ -25,39 +24,32 @@ const getPosParam = (_: RootState, _1: string, _2: string, pos: number) => pos
 const getLocationPathWords = createSelector(
   [getLocationPathParam],
   (locationPath) =>
-    pipe(
-      locationPath,
-      split('/'),
-      filter(isEmpty),
-      getOrElse(pipe(locationPath, split('/'), constant)),
-    ),
+    pipe(locationPath, Str.split('/'), RA.filter(P.not(Str.isEmpty))),
 )
 
-export const getPaths = createSelector(
-  [getComponentPathParam],
-  (componentPath) =>
-    pipe(
-      matchRoutes(routes, componentPath) ?? [],
-      RA.findFirst(({ route }) => !route.index),
-      getOrElse(
-        constant({ route: routes[0] } as NonNullable<
-          ReturnType<typeof matchRoutes>
-        >[number]),
-      ),
-      ({ route }) => route.children ?? [],
-      RA.findFirst(({ index }) => !index),
-      getOrElse(
-        constant(
-          routes[0] as NonNullable<
-            NonNullable<
-              ReturnType<typeof matchRoutes>
-            >[number]['route']['children']
-          >[number],
-        ),
-      ),
-      ({ children = [] }) => children,
-      RA.map(({ path = '' }) => resolvePath(path).pathname.toLowerCase()),
+export const getPaths = createSelector([getComponentPathParam], (componentPath) =>
+  pipe(
+    matchRoutes(routes, componentPath) ?? [],
+    RA.findFirst(({ route }) => !route.index),
+    O.getOrElse(
+      constant({ route: routes[0] } as NonNullable<
+        ReturnType<typeof matchRoutes>
+      >[number]),
     ),
+    ({ route }) => route.children ?? [],
+    RA.findFirst(({ index }) => !index),
+    O.getOrElse(
+      constant(
+        routes[0] as NonNullable<
+          NonNullable<
+            ReturnType<typeof matchRoutes>
+          >[number]['route']['children']
+        >[number],
+      ),
+    ),
+    ({ children = [] }) => children,
+    RA.map(({ path = '' }) => resolvePath(path).pathname.toLowerCase()),
+  ),
 )
 
 export const getPath = createSelector([getPaths, getPosParam], (paths, pos) =>
@@ -69,7 +61,7 @@ export const getPath = createSelector([getPaths, getPosParam], (paths, pos) =>
 export const getAllowedPaths = createSelector(
   [getPaths, getProgress],
   (paths, progress) =>
-    fromEntries(
+    RR.fromEntries(
       pipe(
         ['none', 'uploaded', 'matched', 'explored'] as Progress[],
         RA.mapWithIndex((i, p) => [p, RA.takeLeft(i + 2)(paths)]),
@@ -79,7 +71,7 @@ export const getAllowedPaths = createSelector(
 
 export const getDisabled = createSelector(
   [getPath, getAllowedPaths],
-  (path, allowedPaths) => pipe(allowedPaths, not(RA.elem(Eq)(path))),
+  (path, allowedPaths) => pipe(allowedPaths, P.not(RA.elem(Str.Eq)(path))),
 )
 
 export const getPosition = createSelector(
@@ -87,15 +79,15 @@ export const getPosition = createSelector(
   (locationPathWords, paths) =>
     pipe(
       paths,
-      RA.map(replace('/', '')),
-      RA.findIndex((x) => Eq.equals(x, locationPathWords[0])),
-      getOrElse(constant(-1)),
+      RA.map(Str.replace('/', '')),
+      RA.findIndex((x) => Str.Eq.equals(x, stringLookup(locationPathWords)(0))),
+      O.getOrElse(constant(-1)),
     ),
 )
 
 const getLocationHasVisit = createSelector(
   [getLocationPathWords],
-  flow(flip(stringLookup)(2), (x) => parseInt(x, 10), not(Number.isNaN)),
+  flow(flip(stringLookup)(2), (x) => parseInt(x, 10), P.not(Number.isNaN)),
 )
 
 const getIsAtEda = createSelector([getPosition], (position) => position === 3)
@@ -116,10 +108,10 @@ export const getShouldNavigateToAllowed = createSelector(
   (locationPathWords, allowedPaths) =>
     pipe(
       allowedPaths,
-      RA.some(
+      RA.every(
         flow(
-          replace('/', ''),
-          not(includes(stringLookup(locationPathWords)(0))),
+          Str.replace('/', ''),
+          pipe(stringLookup(locationPathWords)(0), Str.includes, P.not),
         ),
       ),
     ),

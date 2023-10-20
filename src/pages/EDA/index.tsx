@@ -7,8 +7,10 @@ import { useCallback } from 'react'
 import { useAppDispatch } from '@/lib/hooks'
 import { saveSheetState } from '@/features/sheet/reducers'
 import Nav from '@/pages/EDA/Variable/Nav'
-import IO from 'fp-ts/IO'
-import { pipe } from 'fp-ts/function'
+import * as IO from 'fp-ts/IO'
+import * as RA from 'fp-ts/ReadonlyArray'
+import { pipe, flow } from 'fp-ts/function'
+import { saveColumnState } from '@/features/columns/reducers'
 
 const useClasses = makeStyles({
   root: {
@@ -27,7 +29,17 @@ export function Component() {
 
   useBeforeUnload(
     useCallback(() => {
-      return pipe(saveSheetState(), (x) => dispatch(x), IO.of)()
+      return pipe(
+        [saveColumnState, saveSheetState] as const,
+        RA.map(
+          flow(
+            (x) => x(),
+            (x) => dispatch(x),
+            IO.of,
+          ),
+        ),
+        IO.sequenceArray,
+      )()
     }, [dispatch]),
   )
 

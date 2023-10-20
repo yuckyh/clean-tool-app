@@ -5,7 +5,7 @@ import { useLocation } from 'react-router-dom'
 import { getColumnsLength } from '@/features/sheet/selectors'
 import { useAppSelector } from '@/lib/hooks'
 
-import { makeBy } from 'fp-ts/ReadonlyArray'
+import * as RA from 'fp-ts/ReadonlyArray'
 import NavTab from './Tab'
 
 type Props = TabListProps
@@ -17,7 +17,7 @@ export default function Nav({ vertical }: Props) {
 
   return (
     <TabList selectedValue={pathname} vertical={vertical}>
-      {makeBy(columnsLength, (pos) => (
+      {RA.makeBy(columnsLength, (pos) => (
         <NavTab key={pos} pos={pos} />
       ))}
     </TabList>

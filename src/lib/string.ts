@@ -1,26 +1,29 @@
-import { string } from 'fp-ts'
-import { takeRight, map } from 'fp-ts/ReadonlyArray'
+import * as RA from 'fp-ts/ReadonlyArray'
 import { pipe } from 'fp-ts/function'
-import { split } from 'fp-ts/string'
+import * as S from 'fp-ts/string'
 
 const acronymizedTitleCase = (word: string) =>
-  word.length >= 3
-    ? word.toLocaleUpperCase()
-    : word.replace(/./, (c) => c.toUpperCase())
+  word.length > 3 ? word.replace(/^./, S.toUpperCase) : S.toUpperCase(word)
 
 const kebabToTitle = (slug: string) =>
-  slug.split('-').map(acronymizedTitleCase).join(' ')
+  pipe(
+    slug,
+    S.split('-'),
+    RA.map(acronymizedTitleCase),
+    RA.reduce('', (acc, cur) => S.Monoid.concat(acc, ` ${cur}`)),
+  )
 
 export const getPathTitle = (path: string, depth = 1) => {
   const result = pipe(
     path,
-    split('/'),
-    takeRight(depth),
-    map(kebabToTitle),
-  ).join('')
+    S.split('/'),
+    RA.takeRight(depth),
+    RA.map(kebabToTitle),
+    RA.reduce('', S.Monoid.concat),
+  )
 
-  return result.length ? result : 'Home'
+  return result.length > 1 ? result : 'Home'
 }
 
 export const strEquals = (str: string) => (other: string) =>
-  string.Eq.equals(str, other)
+  S.Eq.equals(str, other)

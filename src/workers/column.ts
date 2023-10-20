@@ -1,9 +1,10 @@
 import type Fuse from 'fuse.js'
-import { map } from 'fp-ts/ReadonlyArray'
+import * as RA from 'fp-ts/ReadonlyArray'
 import type { codebook } from '@/data'
 import { console } from 'fp-ts'
 
 import fuse from '@/lib/fuse'
+import { dumpError } from '@/lib/logger'
 
 const search = fuse.search.bind(fuse)
 
@@ -24,7 +25,7 @@ export interface ColumnResponse extends WorkerResponse {
 type Handler = RequestHandler<ColumnRequest, ColumnResponse>
 
 const get: Handler = ({ columns }) => ({
-  matches: map(search)(columns),
+  matches: RA.map(search)(columns),
   status: 'ok',
 })
 
@@ -40,14 +41,14 @@ const main = async (data: Readonly<ColumnRequest>) => {
 
 globalThis.addEventListener(
   'message',
-  ({ data }: Readonly<MessageEvent<ColumnRequest>>) => {
-    main(data).catch(console.error)
+  ({ data }: MessageEvent<ColumnRequest>) => {
+    main(data).catch(dumpError)
     return undefined
   },
   false,
 )
 
-globalThis.addEventListener('error', ({ error }) => {
-  console.error(error)
+globalThis.addEventListener('error', ({ error }: ErrorEvent) => {
+  dumpError(error as Error)
   return undefined
 })

@@ -6,7 +6,7 @@ import { useAppDispatch, useAppSelector } from '@/lib/hooks'
 
 import * as IO from 'fp-ts/IO'
 import { pipe } from 'fp-ts/function'
-import { mapWithIndex } from 'fp-ts/ReadonlyArray'
+import * as RA from 'fp-ts/ReadonlyArray'
 import { deleteVisits, syncVisits, setVisit } from '../reducers'
 
 const useClasses = makeStyles({
@@ -30,12 +30,7 @@ function VisitInput({ visit, pos }: VisitInputProps) {
     ({ target }) => {
       const { value } = target
 
-      return pipe(
-        { visit: value, pos },
-        IO.of,
-        IO.map(setVisit),
-        IO.tap((x) => IO.of(dispatch(x))),
-      )()
+      return pipe({ visit: value, pos }, setVisit, (x) => dispatch(x), IO.of)()
     },
     [dispatch, pos],
   )
@@ -71,19 +66,10 @@ export default function VisitsInput() {
       }
 
       if (newVisitsLength === 1) {
-        return pipe(
-          deleteVisits,
-          IO.of,
-          IO.tap((x) => IO.of(dispatch(x()))),
-        )()
+        return pipe(deleteVisits(), (x) => dispatch(x), IO.of)()
       }
 
-      return pipe(
-        newVisitsLength,
-        syncVisits,
-        IO.of,
-        IO.tap((x) => IO.of(dispatch(x))),
-      )()
+      return pipe(newVisitsLength, syncVisits, (x) => dispatch(x), IO.of)()
     },
     [dispatch],
   )
@@ -101,7 +87,7 @@ export default function VisitsInput() {
       </Field>
       {pipe(
         visits,
-        mapWithIndex((pos, visit) => (
+        RA.mapWithIndex((pos, visit) => (
           <VisitInput visit={visit} key={visit} pos={pos} />
         )),
       )}

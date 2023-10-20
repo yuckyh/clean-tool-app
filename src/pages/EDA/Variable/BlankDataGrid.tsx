@@ -17,6 +17,7 @@ import SimpleDataGrid from '@/components/SimpleDataGrid'
 import { useAppSelector } from '@/lib/hooks'
 import { getIndexedRowBlanks } from '@/features/sheet/selectors'
 import { constant } from 'fp-ts/function'
+import { getIndexedIndex, getIndexedValue } from '@/lib/array'
 
 const cellFocusMode: () => DataGridCellFocusMode = constant('none')
 
@@ -48,14 +49,14 @@ function BlankDataGrid({ column, visit }: Props) {
           renderHeaderCell: constant(
             <div className={classes.columnHeader}>sno</div>,
           ),
-          renderCell: ([, indexValue]) => indexValue,
+          renderCell: getIndexedIndex,
           columnId: 'index',
         }),
         createTableColumn({
           renderHeaderCell: constant(
             <div className={classes.columnHeader}>{title}</div>,
           ),
-          renderCell: ([seriesValue]) => seriesValue,
+          renderCell: getIndexedValue,
           columnId: title,
         }),
       ],

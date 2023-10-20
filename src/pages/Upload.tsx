@@ -34,11 +34,12 @@ import { getColumnsLength } from '@/features/sheet/selectors'
 import { saveSheetState } from '@/features/sheet/reducers'
 import SimpleToaster from '@/components/SimpleToaster'
 import AlertDialog from '@/components/AlertDialog'
-import IO from 'fp-ts/IO'
-import { constant, pipe } from 'fp-ts/function'
-import TE from 'fp-ts/TaskEither'
-import Task from 'fp-ts/Task'
-import { console } from 'fp-ts'
+import * as IO from 'fp-ts/IO'
+import { constant, flow, pipe } from 'fp-ts/function'
+import * as TE from 'fp-ts/TaskEither'
+import * as T from 'fp-ts/Task'
+import * as RA from 'fp-ts/ReadonlyArray'
+import { dumpError } from '@/lib/logger'
 
 const useClasses = makeStyles({
   root: {
@@ -96,13 +97,21 @@ export function Component() {
   }, [alertRef])
 
   const handleResetConfirm = useCallback(() => {
-    pipe(
+    const ioActions = pipe(
       [deleteProgressState, deleteColumns] as const,
-      IO.traverseArray((x) => constant(dispatch(x()))),
-      IO.tap(() => IO.of(sheetInputRef.current?.setFileTask('deleted'))),
-      () => Task.of(deleteSheet),
-      Task.tap((x) => constant(dispatch(x()))),
-    )().catch(console.error)
+      RA.map(flow((x) => x(), IO.of)),
+    )
+
+    pipe(
+      dispatch,
+      IO.of,
+      IO.sequenceArray(ioActions),
+      () => sheetInputRef.current?.setFileTask('deleted'),
+      IO.of,
+      () => deleteSheet,
+      T.of,
+      T.tap((x) => () => dispatch(x())),
+    )().catch(dumpError)
   }, [dispatch])
 
   const handleSubmit = useCallback(() => {
@@ -111,8 +120,8 @@ export function Component() {
       setProgress,
       (action) => dispatch(action),
       IO.of,
-      IO.tap(() =>
-        IO.of(() => {
+      IO.tap(
+        constant(() => {
           navigate('/column-matching')
           return undefined
         }),
@@ -123,16 +132,16 @@ export function Component() {
   useEffect(() => {
     pipe(
       columnsLength,
-      (length): TE.TaskEither<typeof fetchSheet, undefined> =>
+      (length): TE.TaskEither<typeof fetchSheet, void> =>
         length === 0 ? TE.left(fetchSheet) : TE.fromIO(stopLoading),
       TE.getOrElse((x) =>
         pipe(
           stopLoading,
-          Task.fromIO,
-          Task.tap(() => constant(dispatch(x()))),
+          T.fromIO,
+          T.tap(() => () => dispatch(x())),
         ),
       ),
-    )().catch(console.error)
+    )().catch(dumpError)
     return undefined
   }, [columnsLength, dispatch, stopLoading])
 

@@ -1,7 +1,7 @@
 import type { ComponentType } from 'react'
 import { lazy, memo } from 'react'
-import IO from 'fp-ts/IO'
-import Task from 'fp-ts/Task'
+import * as IO from 'fp-ts/IO'
+import * as T from 'fp-ts/Task'
 
 export const createMemo = <T>(
   displayName: string,
@@ -26,4 +26,4 @@ export const createLazyMemo = <T>(
 
 export const noOpIO: IO.IO<() => void> = IO.of(() => {})
 
-export const noOpTask: Task.Task<() => void> = Task.of(() => {})
+export const noOpTask: T.Task<() => void> = T.of(() => {})

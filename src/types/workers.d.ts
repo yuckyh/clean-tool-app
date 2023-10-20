@@ -20,8 +20,8 @@ interface WorkerResponse {
 }
 
 interface GenericWorkerEventMap<T> extends WorkerEventMap {
-  messageerror: Readonly<MessageEvent<T>>
-  message: Readonly<MessageEvent<T>>
+  messageerror: MessageEvent<T>
+  message: MessageEvent<T>
 }
 
 interface RequestWorker<Req extends WorkerRequest, Res extends WorkerResponse>
@@ -42,6 +42,6 @@ interface RequestWorker<Req extends WorkerRequest, Res extends WorkerResponse>
 
       options?: Readonly<StructuredSerializeOptions>,
     ): void
-    (request: Readonly<Req>, transfer: readonly Readonly<Transferable>[]): void
+    (request: Readonly<Req>, transfer: Transferable[]): void
   }
 }

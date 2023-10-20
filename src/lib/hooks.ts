@@ -18,12 +18,12 @@ import {
 } from '@fluentui/react-components'
 import type { AppDispatch, RootState } from '@/app/store'
 import globalStyles from '@/app/global.css?inline'
-import type { IO } from 'fp-ts/IO'
-import { of } from 'fp-ts/IO'
-import { pipe } from 'fp-ts/function'
-import { console } from 'fp-ts'
-import TO from 'fp-ts/TaskOption'
-import Task from 'fp-ts/Task'
+import * as IO from 'fp-ts/IO'
+import { constant, pipe } from 'fp-ts/function'
+import * as TO from 'fp-ts/TaskOption'
+import * as T from 'fp-ts/Task'
+import { ioDumpTrace, dumpError } from './logger'
+import { asIO } from './fp'
 
 export const useAppDispatch: () => AppDispatch = useDispatch
 export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector
@@ -45,14 +45,19 @@ export const useLoadingTransition = () => {
   const [isLoading, setIsLoading] = useState(true)
   const [isPending, startTransition] = useTransition()
 
-  const stopLoading = useCallback(() => {
-    pipe(startTransition, () => {
-      setIsLoading(false)
-      return undefined
-    })
-  }, [])
+  const stopLoading = useMemo(
+    () =>
+      pipe(
+        startTransition,
+        IO.of,
+        IO.flap(() => {
+          setIsLoading(false)
+        }),
+      ),
+    [],
+  )
 
-  return [isLoading || isPending, stopLoading as IO<undefined>] as const
+  return [isLoading || isPending, stopLoading] as const
 }
 
 export const useThemePreference = (
@@ -67,10 +72,9 @@ export const useThemePreference = (
   const theme = useSyncExternalStore(
     (cb) => {
       themeMedia.addEventListener('change', cb)
-      return of(() => {
+      return asIO(() => {
         themeMedia.removeEventListener('change', cb)
-        return undefined
-      })()
+      })
     },
     () => themeMedia.matches,
   )
@@ -102,12 +106,12 @@ export const useTokenToHex = (token: Property<ColorTokens>) => {
 export const useStorage = () => {
   useEffect(() => {
     pipe(
-      TO.fromTask(() => navigator.storage.persisted()),
-      TO.flatMap((persisted) =>
-        persisted ? TO.none : TO.fromTask(() => navigator.storage.persist()),
+      () => navigator.storage.persisted(),
+      T.flatMap((persisted) =>
+        persisted ? T.of(persisted) : () => navigator.storage.persist(),
       ),
-      TO.getOrElse(() => Task.of(false)),
-    )().catch(console.error)
+      T.flatMapIO(ioDumpTrace),
+    )
   }, [])
 }
 

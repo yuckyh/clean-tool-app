@@ -1,3 +1,4 @@
+import type { AlertRef } from '@/components/AlertDialog'
 import type { ComboboxProps } from '@fluentui/react-components'
 import {
   makeStyles,
@@ -6,27 +7,26 @@ import {
   Option,
 } from '@fluentui/react-components'
 import { useCallback, useState, useMemo, memo } from 'react'
-import type { AlertRef } from '@/components/AlertDialog'
 
-import { useAppDispatch, useAppSelector, useDebounced } from '@/lib/hooks'
 import { indexDuplicateSearcher } from '@/lib/array'
 import fuse from '@/lib/fuse'
+import { useAppDispatch, useAppSelector, useDebounced } from '@/lib/hooks'
 
-import { findIndex, filter, makeBy, map, zip } from 'fp-ts/ReadonlyArray'
-import { includes } from 'fp-ts/string'
+import * as IO from 'fp-ts/IO'
+import * as O from 'fp-ts/Option'
+import * as RA from 'fp-ts/ReadonlyArray'
 import { constant, identity, pipe } from 'fp-ts/function'
-import { getOrElse } from 'fp-ts/Option'
-import { tap, of } from 'fp-ts/IO'
+import * as Str from 'fp-ts/string'
 import type { ColumnMatch } from '../reducers'
 
+import { setMatchColumn, setMatchVisit } from '../reducers'
 import {
   getMatchColumn,
   getMatchVisit,
-  getMatches,
   getIndices,
+  getMatches,
   getScores,
 } from '../selectors'
-import { setMatchColumn, setMatchVisit } from '../reducers'
 
 interface Props {
   alertRef: React.RefObject<AlertRef>
@@ -48,7 +48,7 @@ const search = fuse.search.bind(fuse)
 
 function FilteredOptions({ filteredMatches, value }: FilteredOptionsProps) {
   return filteredMatches.length ? (
-    map<ColumnMatch, JSX.Element>(({ match, score }) => (
+    RA.map<ColumnMatch, JSX.Element>(({ match, score }) => (
       <Option value={match} text={match} key={match}>
         {match}, {(1 - score).toFixed(2)}
       </Option>
@@ -92,9 +92,9 @@ export default function MatchCell({ alertRef, pos }: Props) {
     () =>
       pipe(
         matches,
-        filter(includes(deferredValue)),
-        zip(scores),
-        map(([match, score]) => ({
+        RA.filter(Str.includes(deferredValue)),
+        RA.zip(scores),
+        RA.map(([match, score]) => ({
           match,
           score,
         })),
@@ -122,9 +122,9 @@ export default function MatchCell({ alertRef, pos }: Props) {
 
         if (duplicates.length) {
           const newMatchVisit = pipe(
-            makeBy(visits.length, identity),
-            findIndex((visit) => visit !== matchVisit),
-            getOrElse(constant(-1)),
+            RA.makeBy(visits.length, identity),
+            RA.findIndex((visit) => visit !== matchVisit),
+            O.getOrElse(constant(-1)),
           )
 
           if (newMatchVisit === -1) {
@@ -140,16 +140,16 @@ export default function MatchCell({ alertRef, pos }: Props) {
           pipe(
             { matchVisit: newMatchVisit, pos },
             setMatchVisit,
-            of,
-            tap(() => of(dispatch)),
+            (x) => dispatch(x),
+            IO.of,
           )()
         }
 
         pipe(
           { matchColumn: newMatchColumn, pos },
           setMatchColumn,
-          of,
-          tap(() => of(dispatch)),
+          (x) => dispatch(x),
+          IO.of,
         )()
 
         setValue(newMatchColumn)

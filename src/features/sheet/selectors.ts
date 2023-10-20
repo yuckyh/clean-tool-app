@@ -1,10 +1,10 @@
 import { createSelector } from '@reduxjs/toolkit'
 
-import { tupled, flow, hole, pipe } from 'fp-ts/function'
-import { getOrElse } from 'fp-ts/Option'
-import { filter, every, some, map, zip } from 'fp-ts/ReadonlyArray'
-import Str, { Ord } from 'fp-ts/string'
-import RR from 'fp-ts/ReadonlyRecord'
+import { tupled, flow, hole, pipe, flip } from 'fp-ts/function'
+import * as O from 'fp-ts/Option'
+import * as RA from 'fp-ts/ReadonlyArray'
+import * as S from 'fp-ts/string'
+import * as RR from 'fp-ts/ReadonlyRecord'
 import {
   getPosParam,
   getColumns,
@@ -12,8 +12,8 @@ import {
   getVisits,
   getData,
 } from '@/app/selectors'
-import { stringLookup } from '@/lib/array'
-import { not } from 'fp-ts/Predicate'
+import { getIndexedValue, stringLookup } from '@/lib/array'
+import * as P from 'fp-ts/Predicate'
 import { getSearchedPos, getIndices } from '../columns/selectors'
 
 export const getColumnsLength = createSelector(
@@ -31,9 +31,9 @@ export const getColumnComparer = createSelector(
   (columns) => (posA: number, posB: number) => {
     return pipe(
       [posA, posB] as const,
-      map(stringLookup(columns)),
+      RA.map(stringLookup(columns)),
       hole<[string, string]>,
-      tupled(Ord.compare),
+      tupled(S.Ord.compare),
     )
   },
 )
@@ -43,15 +43,15 @@ const getIndexRow = createSelector(
   (data, columns, indices, visits) =>
     pipe(
       data,
-      map(
+      RA.map(
         flow(
           RR.lookup(
             stringLookup(columns)(
               searchPos(indices, visits, 'sno', stringLookup(visits)(0)),
             ),
           ),
-          getOrElse(() => '' as Property<CellItem>),
-          toString,
+          O.getOrElse(() => '' as Property<CellItem>),
+          (x) => x.toString(),
         ),
       ),
     ),
@@ -62,11 +62,11 @@ export const getRow = createSelector(
   (data, columns, pos) =>
     pipe(
       data,
-      map(
+      RA.map(
         flow(
           RR.lookup(stringLookup(columns)(pos)),
-          getOrElse(() => '' as Property<CellItem>),
-          toString,
+          O.getOrElse(() => '' as Property<CellItem>),
+          (x) => x.toString(),
         ),
       ),
     ),
@@ -74,17 +74,16 @@ export const getRow = createSelector(
 
 export const getIndexedRow = createSelector(
   [getRow, getIndexRow],
-  (row, indexRow) => zip(indexRow)(row),
+  (row, indexRow) => RA.zip(row)(indexRow),
 )
 
 const getRowBlanks = createSelector(
   [getRow],
-  filter((cell) =>
+  RA.filter((cell) =>
     pipe(
       ['', 'na', 'none', 'blank'] as const,
-      some(
-        (marker) =>
-          marker === pipe(cell, Str.replace('/', ''), Str.toLowerCase),
+      RA.some(
+        (marker) => marker === pipe(cell, S.replace('/', ''), S.toLowerCase),
       ),
     ),
   ),
@@ -92,43 +91,45 @@ const getRowBlanks = createSelector(
 
 export const getIndexedRowBlanks = createSelector(
   [getRowBlanks, getIndexRow],
-  (row, indexRow) => zip(indexRow)(row),
+  (row, indexRow) => RA.zip(row)(indexRow),
 )
 
 const getBlanklessRow = createSelector(
   [getRow],
-  filter((cell) =>
+  RA.filter((cell) =>
     pipe(
       ['', 'na', 'none', 'blank'] as const,
-      every(
-        (marker) =>
-          marker !== pipe(cell, Str.replace('/', ''), Str.toLowerCase),
+      RA.every(
+        (marker) => marker !== pipe(cell, S.replace('/', ''), S.toLowerCase),
       ),
     ),
   ),
 )
 
-const getNumericalRow = createSelector(
-  [getBlanklessRow],
-  map(flow(Str.replace(/[!,.?]+/, '.'), parseFloat)),
+export const getIndexedRowIncorrects = createSelector(
+  [getBlanklessRow, getIndexRow],
+  (row, indexRow) =>
+    pipe(
+      row,
+      RA.filter((val) => /[!,.?]{2,}/.test(val)),
+      (filteredRow) => RA.zip(filteredRow)(indexRow),
+    ),
 )
 
-const getIndexedCategoricalRow = createSelector(
-  [getBlanklessRow, getIndexRow],
-  (row, indexRow) => pipe(indexRow, zip(row)),
+const getNumericalRow = createSelector(
+  [getBlanklessRow],
+  flow(
+    RA.filter((val) => !/[!,.?]{2,}/.test(val)),
+    RA.map(parseFloat),
+  ),
 )
 
 const getIndexedNumericalRow = createSelector(
   [getNumericalRow, getIndexRow],
-  (row, indexRow) => pipe(indexRow, zip(row)),
-)
-
-export const getRowIncorrects = createSelector(
-  [getIndexedCategoricalRow],
-  filter(([, value]) => Number.isNaN(value)),
+  (row, indexRow) => RA.zip(row)(indexRow),
 )
 
 export const getCleanNumericalRow = createSelector(
   [getIndexedNumericalRow],
-  filter(not(([, value]) => Number.isNaN(value))),
+  RA.filter(flow(getIndexedValue, P.not(Number.isNaN))),
 )
