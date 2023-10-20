@@ -5,28 +5,21 @@ import type { PayloadAction, AsyncThunk } from '@reduxjs/toolkit'
 import { createSlice } from '@reduxjs/toolkit'
 import { type BookType, utils } from 'xlsx'
 
-import { constant, identity, flow, pipe } from 'fp-ts/function'
+import { constant, identity, flow, pipe, hole } from 'fp-ts/function'
 import * as S from 'fp-ts/string'
 import * as O from 'fp-ts/Option'
 import * as E from 'fp-ts/Either'
 import * as RA from 'fp-ts/ReadonlyArray'
 import * as P from 'fp-ts/Predicate'
-import * as Eq from 'fp-ts/Eq'
 import { getPersisted, setPersisted } from '@/lib/localStorage'
-import { dumpError, dumpTrace } from '@/lib/logger'
+import { dumpError } from '@/lib/logger'
 import type { AppDispatch } from '@/app/store'
 import { deleteSheet, fetchSheet, sliceName, postFile } from './actions'
+import { FlagEq } from './selectors'
 
-type FlagReason = 'incorrect' | 'missing' | 'outlier'
+export type FlagReason = 'incorrect' | 'missing' | 'outlier'
 
 export type Flag = readonly [string, string, number, FlagReason]
-
-export const FlagEq: Eq.Eq<Flag> = pipe(
-  Eq.eqStrict,
-  Eq.contramap(([a, b, c, d]) => [a, b, c, d] as const),
-)
-
-dumpTrace(FlagEq.equals(['a', 'b', 1, 'incorrect'], ['a', 'b', 1, 'incorrect']))
 
 interface State {
   originalColumns: readonly string[]
@@ -50,7 +43,12 @@ const initialState: State = {
     S.split('],['),
     RA.filter(P.not(S.isEmpty)),
     RA.map(flow(S.split(','), RA.filter(P.not(S.isEmpty)))),
-  ) as readonly Flag[],
+    (x) => identity<readonly [string, string, string, string][]>(x),
+    RA.map(
+      ([sheetName, visit, pos, reason]) =>
+        [sheetName, visit, parseInt(pos, 10), reason] as Flag,
+    ),
+  ),
   originalColumns: pipe(
     getPersisted(listKeys[2], defaultValue),
     S.split(','),
@@ -80,28 +78,12 @@ const sheetSlice = createSlice({
         (cells) =>
           pipe(
             cells,
-            RA.some(
-              flow(
-                RA.zip(payload),
-                RA.every(
-                  ([cellValue, payloadValue]) => cellValue === payloadValue,
-                ),
-              ),
-            ),
+            RA.some((cell) => FlagEq.equals(cell, payload)),
           )
             ? E.left(cells)
             : E.right(cells),
         E.match(
-          flow(
-            RA.filter(
-              flow(
-                RA.zip(payload),
-                RA.some(
-                  ([cellValue, payloadValue]) => cellValue !== payloadValue,
-                ),
-              ),
-            ),
-          ),
+          flow(RA.filter((cell) => !FlagEq.equals(cell, payload))),
           flow(RA.append(payload), RA.map(identity)),
         ),
       ) as [string, string, number, FlagReason][]

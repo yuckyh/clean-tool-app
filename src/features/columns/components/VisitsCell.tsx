@@ -62,8 +62,8 @@ export default function VisitsCell({ alertRef, pos }: Props) {
         return pipe(
           { matchVisit: newMatchVisit, pos },
           setMatchVisit,
+          (x) => dispatch(x),
           IO.of,
-          IO.tap((x) => IO.of(dispatch(x))),
         )()
       },
       [alertRef, dispatch, indices, matchColumn, matchVisit, pos],

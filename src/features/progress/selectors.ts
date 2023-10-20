@@ -27,29 +27,31 @@ const getLocationPathWords = createSelector(
     pipe(locationPath, Str.split('/'), RA.filter(P.not(Str.isEmpty))),
 )
 
-export const getPaths = createSelector([getComponentPathParam], (componentPath) =>
-  pipe(
-    matchRoutes(routes, componentPath) ?? [],
-    RA.findFirst(({ route }) => !route.index),
-    O.getOrElse(
-      constant({ route: routes[0] } as NonNullable<
-        ReturnType<typeof matchRoutes>
-      >[number]),
-    ),
-    ({ route }) => route.children ?? [],
-    RA.findFirst(({ index }) => !index),
-    O.getOrElse(
-      constant(
-        routes[0] as NonNullable<
-          NonNullable<
-            ReturnType<typeof matchRoutes>
-          >[number]['route']['children']
-        >[number],
+export const getPaths = createSelector(
+  [getComponentPathParam],
+  (componentPath) =>
+    pipe(
+      matchRoutes(routes, componentPath) ?? [],
+      RA.findFirst(({ route }) => !route.index),
+      O.getOrElse(
+        constant({ route: routes[0] } as NonNullable<
+          ReturnType<typeof matchRoutes>
+        >[number]),
       ),
+      ({ route }) => route.children ?? [],
+      RA.findFirst(({ index }) => !index),
+      O.getOrElse(
+        constant(
+          routes[0] as NonNullable<
+            NonNullable<
+              ReturnType<typeof matchRoutes>
+            >[number]['route']['children']
+          >[number],
+        ),
+      ),
+      ({ children = [] }) => children,
+      RA.map(({ path = '' }) => resolvePath(path).pathname.toLowerCase()),
     ),
-    ({ children = [] }) => children,
-    RA.map(({ path = '' }) => resolvePath(path).pathname.toLowerCase()),
-  ),
 )
 
 export const getPath = createSelector([getPaths, getPosParam], (paths, pos) =>

@@ -1,5 +1,6 @@
 import type {
   DataGridCellFocusMode,
+  TableColumnDefinition,
   DataGridProps,
   InputProps,
 } from '@fluentui/react-components'
@@ -15,7 +16,7 @@ import {
 import { useCallback, useState, useMemo } from 'react'
 import SimpleDataGrid from '@/components/SimpleDataGrid'
 import { useAppDispatch, useAppSelector } from '@/lib/hooks'
-import { constant, identity, pipe } from 'fp-ts/function'
+import { constant, pipe } from 'fp-ts/function'
 import * as RA from 'fp-ts/ReadonlyArray'
 import * as O from 'fp-ts/Option'
 import * as S from 'fp-ts/string'
@@ -23,8 +24,9 @@ import * as RS from 'fp-ts/ReadonlySet'
 import * as IO from 'fp-ts/IO'
 import * as N from 'fp-ts/number'
 import type { Flag } from '@/features/sheet/reducers'
-import { syncFlaggedCells, FlagEq } from '@/features/sheet/reducers'
-import { getIndexedIndex } from '@/lib/array'
+import { syncFlaggedCells } from '@/features/sheet/reducers'
+import { getIndexedIndex, getIndexedValue } from '@/lib/array'
+import { getFilteredFlaggedRows } from '@/features/sheet/selectors'
 import FilterInput from './FilterInput'
 
 type IndexedSeries = readonly (readonly [string, string])[]
@@ -60,20 +62,8 @@ export default function FlaggedDataGrid({ series, title }: Readonly<Props>) {
 
   const dispatch = useAppDispatch()
 
-  const flaggedCells = useAppSelector(({ sheet }) => sheet.flaggedCells)
-
-  const flaggedRows = useMemo(
-    () =>
-      pipe(
-        flaggedCells,
-        RA.filter(
-          ([, flagTitle, , flagReason]) =>
-            flagTitle === title && flagReason === 'outlier',
-        ),
-        RS.fromReadonlyArray(FlagEq),
-        RS.map(N.Eq)(([, , index]) => index),
-      ),
-    [flaggedCells, title],
+  const flaggedRows = useAppSelector((state) =>
+    getFilteredFlaggedRows(state, title, 'outlier'),
   )
 
   const handleSelectionChange: DataGridProps['onSelectionChange'] = (
@@ -100,9 +90,7 @@ export default function FlaggedDataGrid({ series, title }: Readonly<Props>) {
       (x) => [x, title, checkedIndex, 'outlier'] as Flag,
     )
 
-    pipe(payload, syncFlaggedCells, (x) => dispatch(x), IO.of)()
-
-    return undefined
+    return pipe(payload, syncFlaggedCells, (x) => dispatch(x), IO.of)()
   }
 
   const [indexFilter, setIndexFilter] = useState('')
@@ -129,30 +117,26 @@ export default function FlaggedDataGrid({ series, title }: Readonly<Props>) {
     [indexFilter, series, valueFilter],
   )
 
-  const items = useMemo(
-    () => RA.makeBy(filteredRows.length, identity),
-    [filteredRows.length],
-  )
-
-  const columnsDefinition = useMemo(
-    () => [
-      createTableColumn<number>({
-        renderHeaderCell: constant(
-          <div className={classes.columnHeader}>sno</div>,
-        ),
-        renderCell: (row) => filteredRows[row]?.[0],
-        columnId: 'index',
-      }),
-      createTableColumn<number>({
-        renderHeaderCell: constant(
-          <div className={classes.columnHeader}>{title}</div>,
-        ),
-        renderCell: (row) => filteredRows[row]?.[1],
-        columnId: title,
-      }),
-    ],
-    [classes.columnHeader, filteredRows, title],
-  )
+  const columnsDefinition: TableColumnDefinition<readonly [string, string]>[] =
+    useMemo(
+      () => [
+        createTableColumn({
+          renderHeaderCell: constant(
+            <div className={classes.columnHeader}>sno</div>,
+          ),
+          renderCell: getIndexedIndex,
+          columnId: 'index',
+        }),
+        createTableColumn({
+          renderHeaderCell: constant(
+            <div className={classes.columnHeader}>{title}</div>,
+          ),
+          renderCell: getIndexedValue,
+          columnId: title,
+        }),
+      ],
+      [classes.columnHeader, title],
+    )
 
   const handleValueFilter: Required<InputProps>['onChange'] = useCallback(
     ({ target }) => {
@@ -193,7 +177,7 @@ export default function FlaggedDataGrid({ series, title }: Readonly<Props>) {
         selectionMode="multiselect"
         selectedItems={flaggedRows}
         columns={columnsDefinition}
-        items={items as number[]}
+        items={filteredRows}
       />
     </Card>
   )

@@ -28,12 +28,7 @@ export default function SheetPickerInput() {
   const handleSheetSelect: Required<DropdownProps>['onOptionSelect'] =
     useCallback(
       (_event, { optionValue = '' }) =>
-        pipe(
-          optionValue,
-          setSheetName,
-          IO.of,
-          IO.tap((x) => IO.of(dispatch(x))),
-        ),
+        pipe(optionValue, setSheetName, (x) => dispatch(x), IO.of),
       [dispatch],
     )
 

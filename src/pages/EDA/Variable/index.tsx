@@ -21,7 +21,12 @@ import { useCallback, useState, useMemo } from 'react'
 import { constant, flow, pipe } from 'fp-ts/function'
 import * as RA from 'fp-ts/ReadonlyArray'
 import { useAppDispatch, useAppSelector } from '@/lib/hooks'
-import { getCleanNumericalRow, getIndexedRow } from '@/features/sheet/selectors'
+import {
+  getIndexedRowIncorrects,
+  getCleanNumericalRow,
+  getIndexedRow,
+  getRowBlanks,
+} from '@/features/sheet/selectors'
 import CategoricalPlot from '@/pages/EDA/Variable/CategoricalPlot'
 import NumericalPlot from '@/pages/EDA/Variable/NumericalPlot'
 import { codebook } from '@/data'
@@ -109,9 +114,21 @@ export function Component() {
   const column = S.replace(/-/g, '_')(params.column ?? '')
   const visit = params.visit ?? firstVisit
 
-  const series = useAppSelector((state) => getIndexedRow(state, column, visit))
+  const searchParams = useMemo(() => [column, visit] as const, [column, visit])
+
+  const series = useAppSelector((state) =>
+    getIndexedRow(state, ...searchParams),
+  )
   const cleanNumericalSeries = useAppSelector((state) =>
-    getCleanNumericalRow(state, column, visit),
+    getCleanNumericalRow(state, ...searchParams),
+  )
+
+  const incorrectsSeries = useAppSelector((state) =>
+    getIndexedRowIncorrects(state, ...searchParams),
+  )
+
+  const blanksSeries = useAppSelector((state) =>
+    getRowBlanks(state, ...searchParams),
   )
 
   const title = `${column}${visit && visit !== '1' ? `_${visit}` : ''}`
@@ -254,11 +271,11 @@ export function Component() {
           <FlaggedDataGrid series={series} title={title} />
         </div>
         <div className={classes.rows}>
-          <BlankDataGrid column={column} visit={visit} />
+          <BlankDataGrid column={column} visit={visit} title={title} />
         </div>
         <div className={classes.rows}>
           {!isCategorical && (
-            <IncorrectDataGrid column={column} visit={visit} />
+            <IncorrectDataGrid series={incorrectsSeries} title={title} />
           )}
         </div>
       </div>

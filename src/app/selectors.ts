@@ -2,6 +2,7 @@ import { stringLookup } from '@/lib/array'
 import * as O from 'fp-ts/Option'
 import * as RA from 'fp-ts/ReadonlyArray'
 import { constant, pipe } from 'fp-ts/function'
+import type { FlagReason } from '@/features/sheet/reducers'
 import type { RootState } from './store'
 
 // Params selectors
@@ -11,6 +12,11 @@ export const getColumnParam = (_: RootState, column: string) => column
 
 export const getVisitParam = (_: RootState, _1: string, visit: string) => visit
 
+export const getTitleParam = (_: RootState, title: string) => title
+
+export const getReasonParam = (_: RootState, _1: string, reason: FlagReason) =>
+  reason
+
 export const getProgress = ({ progress }: RootState) => progress.progress
 
 // Slice Selectors
@@ -19,6 +25,8 @@ export const getVisits = ({ sheet }: RootState) => sheet.visits
 export const getColumns = ({ sheet }: RootState) => sheet.originalColumns
 
 export const getData = ({ sheet }: RootState) => sheet.data
+
+export const getFlaggedCells = ({ sheet }: RootState) => sheet.flaggedCells
 
 export const getMatchColumns = ({ columns }: RootState) => columns.matchColumns
 

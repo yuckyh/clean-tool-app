@@ -1,11 +1,17 @@
 import { createSelector } from '@reduxjs/toolkit'
 
-import { tupled, flow, hole, pipe, flip } from 'fp-ts/function'
+import { identity, tupled, flow, pipe } from 'fp-ts/function'
 import * as O from 'fp-ts/Option'
 import * as RA from 'fp-ts/ReadonlyArray'
 import * as S from 'fp-ts/string'
 import * as RR from 'fp-ts/ReadonlyRecord'
+import * as Eq from 'fp-ts/Eq'
+import * as RS from 'fp-ts/ReadonlySet'
+import * as N from 'fp-ts/number'
 import {
+  getFlaggedCells,
+  getReasonParam,
+  getTitleParam,
   getPosParam,
   getColumns,
   searchPos,
@@ -15,6 +21,7 @@ import {
 import { getIndexedValue, stringLookup } from '@/lib/array'
 import * as P from 'fp-ts/Predicate'
 import { getSearchedPos, getIndices } from '../columns/selectors'
+import type { Flag } from './reducers'
 
 export const getColumnsLength = createSelector(
   [getColumns],
@@ -32,7 +39,7 @@ export const getColumnComparer = createSelector(
     return pipe(
       [posA, posB] as const,
       RA.map(stringLookup(columns)),
-      hole<[string, string]>,
+      (x) => identity(x) as [string, string],
       tupled(S.Ord.compare),
     )
   },
@@ -77,9 +84,9 @@ export const getIndexedRow = createSelector(
   (row, indexRow) => RA.zip(row)(indexRow),
 )
 
-const getRowBlanks = createSelector(
-  [getRow],
-  RA.filter((cell) =>
+export const getRowBlanks = createSelector(
+  [getIndexedRow],
+  RA.filter(([, cell]) =>
     pipe(
       ['', 'na', 'none', 'blank'] as const,
       RA.some(
@@ -87,11 +94,6 @@ const getRowBlanks = createSelector(
       ),
     ),
   ),
-)
-
-export const getIndexedRowBlanks = createSelector(
-  [getRowBlanks, getIndexRow],
-  (row, indexRow) => RA.zip(row)(indexRow),
 )
 
 const getBlanklessRow = createSelector(
@@ -132,4 +134,31 @@ const getIndexedNumericalRow = createSelector(
 export const getCleanNumericalRow = createSelector(
   [getIndexedNumericalRow],
   RA.filter(flow(getIndexedValue, P.not(Number.isNaN))),
+)
+
+export const FlagEq: Eq.Eq<Flag> = Eq.tuple(S.Eq, S.Eq, N.Eq, S.Eq)
+
+export const getFlaggedRows = createSelector(
+  [getFlaggedCells, getTitleParam],
+  (flaggedCells, title) =>
+    pipe(
+      flaggedCells,
+      RA.filter(([, flagTitle]) => flagTitle === title),
+      RS.fromReadonlyArray(FlagEq),
+      RS.map(N.Eq)(([, , index]) => index),
+    ),
+)
+
+export const getFilteredFlaggedRows = createSelector(
+  [getFlaggedCells, getTitleParam, getReasonParam],
+  (flaggedCells, title, reason) =>
+    pipe(
+      flaggedCells,
+      RA.filter(
+        ([, flagTitle, , flagReason]) =>
+          flagTitle === title && flagReason === reason,
+      ),
+      RS.fromReadonlyArray(FlagEq),
+      RS.map(N.Eq)(([, , index]) => index),
+    ),
 )

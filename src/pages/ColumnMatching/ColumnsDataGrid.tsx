@@ -35,10 +35,11 @@ import { fetchSheet } from '@/features/sheet/actions'
 import { createLazyMemo, createMemo } from '@/lib/utils'
 import Loader from '@/components/Loader'
 
-import { constant, identity, pipe } from 'fp-ts/function'
+import { constant, identity, flow, pipe } from 'fp-ts/function'
 import { makeBy } from 'fp-ts/ReadonlyArray'
 import * as IO from 'fp-ts/IO'
 import * as TE from 'fp-ts/TaskEither'
+import * as RA from 'fp-ts/ReadonlyArray'
 import { ioDumpTrace, dumpError } from '@/lib/logger'
 import HeaderCell from './HeaderCell'
 import ValueCell from './ValueCell'
@@ -159,7 +160,9 @@ export default function ColumnsDataGrid({ alertRef }: Readonly<Props>) {
           T.of,
         ),
       ),
-      T.tap((x) => IO.of(dispatch(x()))),
+      // eslint-disable-next-line functional/functional-parameters
+      T.flatMap((x) => () => dispatch(x())),
+      T.tap((x) => T.of(x)),
       T.tapIO(() => stopLoading),
     )().catch(dumpError)
     return undefined
@@ -169,7 +172,14 @@ export default function ColumnsDataGrid({ alertRef }: Readonly<Props>) {
     useCallback(() => {
       return pipe(
         [saveSheetState, saveColumnState] as const,
-        IO.traverseArray((x) => IO.of(dispatch(x()))),
+        RA.map(
+          flow(
+            (x) => x(),
+            (x) => dispatch(x),
+            IO.of,
+          ),
+        ),
+        IO.traverseArray(identity),
       )()
     }, [dispatch]),
   )
