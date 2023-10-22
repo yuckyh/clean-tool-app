@@ -17,10 +17,10 @@ export const indexDuplicateSearcher = <T extends readonly U[], U>(
   )
 
 export const stringLookup = (arr: readonly string[]) => (pos: number) =>
-  pipe(arr, RA.lookup(pos), O.getOrElse(constant('')))
+  pipe(arr, RA.lookup(pos), pipe('', constant, O.getOrElse))
 
 export const numberLookup = (arr: readonly number[]) => (pos: number) =>
-  pipe(arr, RA.lookup(pos), O.getOrElse(constant(0)))
+  pipe(arr, RA.lookup(pos), pipe(0, constant, O.getOrElse))
 
 export const getIndexedValue = <I, V>([, value]: readonly [I, V]) => value
 

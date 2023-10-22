@@ -38,7 +38,7 @@ export const getColumnComparer = createSelector(
   (columns) => (posA: number, posB: number) => {
     return pipe(
       [posA, posB] as const,
-      RA.map(stringLookup(columns)),
+      pipe(columns, stringLookup, RA.map),
       (x) => identity(x) as [string, string],
       tupled(S.Ord.compare),
     )

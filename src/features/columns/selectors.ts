@@ -84,8 +84,8 @@ export const getMatchIndex = createSelector(
   (matches, matchColumn) =>
     pipe(
       matches,
-      RA.findIndex(strEquals(matchColumn)),
-      O.getOrElse(constant(-1)),
+      pipe(matchColumn, strEquals, RA.findIndex),
+      pipe(-1, constant, O.getOrElse),
     ),
 )
 
@@ -139,15 +139,15 @@ export const getScoreComparer = createSelector(
               RA.lookup(
                 pipe(
                   matches,
-                  RA.findIndex(strEquals(matchColumn)),
-                  O.getOrElse(constant(-1)),
+                  pipe(matchColumn, strEquals, RA.findIndex),
+                  pipe(-1, constant, O.getOrElse),
                 ),
               ),
-              O.getOrElse(constant(1)),
+              pipe(1, constant, O.getOrElse),
             ),
           ),
           RA.lookup(pos),
-          O.getOrElse(constant(1)),
+          pipe(1, constant, O.getOrElse),
         ),
       ),
       RA.reduce(0, (acc, curr) => acc - curr),

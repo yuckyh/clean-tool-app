@@ -96,7 +96,7 @@ export default function IncorrectDataGrid({ series, title }: Props) {
       series,
       RA.map(getIndexedIndex),
       RA.lookup(checkedIndex),
-      O.getOrElse(constant('')),
+      pipe('', constant, O.getOrElse),
       (x) => [x, title, checkedIndex, 'incorrect'] as Flag,
     )
 

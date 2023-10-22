@@ -111,15 +111,15 @@ export function Component() {
       IO.of,
       () => deleteSheet,
       T.of,
-      T.tap((x) => () => dispatch(x())),
+      T.tap((x) => pipe(dispatch(x()), promisedTask)),
     )().catch(dumpError)
   }, [dispatch])
 
-  const handleSubmit = useCallback(() => {
+  const handleUploadSubmit = useCallback(() => {
     return pipe(
       'uploaded' as Progress,
       setProgress,
-      (action) => dispatch(action),
+      (x) => dispatch(x),
       IO.of,
       IO.tap(
         constant(() => {
@@ -139,7 +139,7 @@ export function Component() {
         pipe(
           stopLoading,
           T.fromIO,
-          T.tap(() => promisedTask (dispatch(x()))),
+          T.tap(() => pipe(dispatch(x()), promisedTask)),
         ),
       ),
     )().catch(dumpError)
@@ -150,7 +150,7 @@ export function Component() {
     useCallback(() => {
       return pipe(
         [saveSheetState, saveColumnState] as const,
-        IO.traverseArray((x) => IO.of(dispatch(x()))),
+        IO.traverseArray((x) => pipe(dispatch(x()), IO.of)),
       )()
     }, [dispatch]),
   )
@@ -172,7 +172,7 @@ export function Component() {
                 Reset
               </Button>
               <Button
-                onClick={handleSubmit}
+                onClick={handleUploadSubmit}
                 appearance="primary"
                 disabled={!hasSheet}>
                 Proceed

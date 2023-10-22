@@ -6,9 +6,10 @@ import { useCallback, useMemo, useRef } from 'react'
 import { console } from 'fp-ts'
 import { multiply, divideBy, add } from '@/lib/number'
 import { useTokenToHex } from '@/lib/hooks'
-import * as RA from 'fp-ts/ReadonlyArray'
-import { flow, pipe } from 'fp-ts/function'
+import { identity, flip, flow, pipe } from 'fp-ts/function'
 import { getIndexedIndex, getIndexedValue, numberLookup } from '@/lib/array'
+import * as RA from 'fp-ts/ReadonlyArray'
+import * as E from 'fp-ts/Either'
 import * as N from 'fp-ts/number'
 import * as P from 'fp-ts/Predicate'
 import VariablePlot from './VariablePlot'
@@ -43,9 +44,13 @@ export default function NumericalPlot({
         flow(
           add(1),
           multiply(series.length),
-          divideBy(4),
-          Math.floor,
-          numberLookup(sorted),
+          flip(divideBy)(4),
+          E.fromPredicate((x) => x % 1 === 0, identity),
+          E.getOrElse(Math.ceil),
+          (x) => [x - 1, x] as const,
+          pipe(sorted, numberLookup, RA.map),
+          RA.reduce(0, N.MonoidSum.concat),
+          flip(divideBy)(2),
         ),
       ) as readonly [number, number, number],
     [series.length, sorted],
@@ -88,7 +93,7 @@ export default function NumericalPlot({
     [outliers],
   )
 
-  const outlierColor = useTokenToHex(tokens.colorBrandBackground)
+  const outlierColor = useTokenToHex(tokens.colorStatusDangerForeground3)
 
   const notOutliers = useMemo(
     () => RA.filter(isNotOutlier)(series),
@@ -110,7 +115,7 @@ export default function NumericalPlot({
     [notOutliers],
   )
 
-  const notOutlierColor = useTokenToHex(tokens.colorStatusDangerForeground3)
+  const notOutlierColor = useTokenToHex(tokens.colorBrandBackground)
 
   const layout: Partial<Layout> = {
     yaxis2: {

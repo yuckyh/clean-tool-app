@@ -124,7 +124,7 @@ export default function MatchCell({ alertRef, pos }: Props) {
           const newMatchVisit = pipe(
             RA.makeBy(visits.length, identity),
             RA.findIndex((visit) => visit !== matchVisit),
-            O.getOrElse(constant(-1)),
+            pipe(-1, constant, O.getOrElse),
           )
 
           if (newMatchVisit === -1) {

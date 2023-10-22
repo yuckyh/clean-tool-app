@@ -85,7 +85,7 @@ const sheetSlice = createSlice({
             : E.right(cells),
         E.match(
           flow(RA.filter((cell) => !FlagEq.equals(cell, payload))),
-          flow(RA.append(payload), RA.map(identity)),
+          RA.append(payload),
         ),
       ) as [string, string, number, FlagReason][]
 
@@ -139,7 +139,7 @@ const sheetSlice = createSlice({
       state.visits = pipe(
         visits,
         RA.insertAt(pos, visit),
-        O.getOrElse(constant(visits)),
+        pipe(visits, constant, O.getOrElse),
         RA.uniq(S.Eq),
       ) as string[]
 

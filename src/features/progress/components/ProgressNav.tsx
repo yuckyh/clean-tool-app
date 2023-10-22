@@ -77,7 +77,9 @@ export default function ProgressNav() {
       return
     }
 
-    navigate(pipe(allowedPaths, RA.lookup(-1), O.getOrElse(constant('/'))))
+    navigate(
+      pipe(allowedPaths, RA.lookup(-1), pipe('/', constant, O.getOrElse)),
+    )
   }, [allowedPaths, navigate, shouldNavigateToAllowed])
 
   useEffect(() => {

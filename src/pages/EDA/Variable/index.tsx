@@ -128,7 +128,7 @@ export function Component() {
 
   const measurementType: VariableType = pipe(
     ['whole_number', 'interval'] as const,
-    RA.some(S.includes(type)),
+    pipe(type, S.includes, RA.some),
   )
     ? 'numerical'
     : 'categorical'

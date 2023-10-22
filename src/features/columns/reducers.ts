@@ -64,7 +64,7 @@ const columnsSlice = createSlice({
       if (!matchColumns.length) {
         state.matchColumns = pipe(
           matchesList,
-          RA.map(flow(RA.head, O.getOrElse(constant('')))),
+          RA.map(flow(RA.head, pipe('', constant, O.getOrElse))),
         ) as string[]
 
         return state

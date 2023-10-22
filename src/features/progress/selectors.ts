@@ -83,7 +83,7 @@ export const getPosition = createSelector(
       paths,
       RA.map(Str.replace('/', '')),
       RA.findIndex((x) => Str.Eq.equals(x, stringLookup(locationPathWords)(0))),
-      O.getOrElse(constant(-1)),
+      pipe(-1, constant, O.getOrElse),
     ),
 )
 

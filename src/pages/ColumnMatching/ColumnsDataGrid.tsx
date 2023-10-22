@@ -152,12 +152,14 @@ export default function ColumnsDataGrid({ alertRef }: Readonly<Props>) {
       columnsLength,
       TO.fromPredicate((length) => length === 0),
       TO.flatMap(() => TO.of(fetchSheet)),
-      TO.tap((x) => promisedTaskOption(dispatch(x()))),
+      TO.tap((x) =>
+        pipe(x(), (action) => dispatch(action), promisedTaskOption),
+      ),
       TO.match(
         () => fetchMatches,
         () => fetchMatches,
       ),
-      T.flatMap((x) => promisedTask(dispatch(x()))),
+      T.flatMap((x) => pipe(dispatch(x()), promisedTask)),
       T.tap(T.of),
       T.tapIO(() => stopLoading),
     )().catch(dumpError)

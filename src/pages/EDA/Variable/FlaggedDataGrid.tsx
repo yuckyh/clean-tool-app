@@ -16,7 +16,7 @@ import {
 import { useCallback, useState, useMemo } from 'react'
 import SimpleDataGrid from '@/components/SimpleDataGrid'
 import { useAppDispatch, useAppSelector } from '@/lib/hooks'
-import { constant, pipe } from 'fp-ts/function'
+import { apply, constant, pipe } from 'fp-ts/function'
 import * as RA from 'fp-ts/ReadonlyArray'
 import * as O from 'fp-ts/Option'
 import * as S from 'fp-ts/string'
@@ -86,7 +86,7 @@ export default function FlaggedDataGrid({ series, title }: Readonly<Props>) {
       series,
       RA.map(getIndexedIndex),
       RA.lookup(checkedIndex),
-      O.getOrElse(constant('')),
+      pipe('', constant, O.getOrElse),
       (x) => [x, title, checkedIndex, 'outlier'] as Flag,
     )
 
@@ -106,12 +106,14 @@ export default function FlaggedDataGrid({ series, title }: Readonly<Props>) {
               indexFilter,
               S.toLowerCase,
               S.includes,
-            )(pipe(index, S.toLowerCase)) &&
+              apply(S.toLowerCase(index)),
+            ) &&
             pipe(
               valueFilter,
               S.toLowerCase,
               S.includes,
-            )(pipe(value, S.toLowerCase)),
+              apply(S.toLowerCase(value)),
+            ),
         ),
       ),
     [indexFilter, series, valueFilter],

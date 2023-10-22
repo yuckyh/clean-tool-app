@@ -29,6 +29,11 @@ export const dumpError = <E>(err: E) => {
   ioDumpError(err)()
 }
 
+export const dump = <T extends Parameters<typeof fpConsole.log>[0]>(arg: T) => {
+  fpConsole.log(arg)()
+  return arg
+}
+
 export const dumpName = <T>(obj: Readonly<Record<string, T>>) => {
   return pipe(
     obj,

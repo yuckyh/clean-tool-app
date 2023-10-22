@@ -115,7 +115,7 @@ function BlankDataGrid({ column, visit, title }: Props) {
       RA.findIndex(
         (allIndex) => allIndex === stringLookup(indices)(checkedIndex),
       ),
-      O.getOrElse(constant(0)),
+      pipe(0, constant, O.getOrElse),
     )
 
     const payloadForAll = pipe(

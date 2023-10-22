@@ -45,7 +45,7 @@ export function Component() {
 
   const dispatch = useAppDispatch()
 
-  const handleCommitChanges = useCallback(() => {
+  const handleMatchingSubmit = useCallback(() => {
     pipe(
       'matched' as Progress,
       setProgress,
@@ -70,7 +70,7 @@ export function Component() {
 
       <AlertDialog ref={alertRef} />
       <div>
-        <Button onClick={handleCommitChanges} appearance="primary">
+        <Button onClick={handleMatchingSubmit} appearance="primary">
           Done
         </Button>
       </div>
