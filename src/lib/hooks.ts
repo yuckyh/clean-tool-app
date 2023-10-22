@@ -19,11 +19,12 @@ import {
 import type { AppDispatch, RootState } from '@/app/store'
 import globalStyles from '@/app/global.css?inline'
 import * as IO from 'fp-ts/IO'
-import { constant, pipe } from 'fp-ts/function'
+import { constant, identity, flow, pipe } from 'fp-ts/function'
 import * as TO from 'fp-ts/TaskOption'
+import * as O from 'fp-ts/Option'
 import * as T from 'fp-ts/Task'
-import { ioDumpTrace, dumpError } from './logger'
-import { asIO } from './fp'
+import { ioDumpTrace, dumpError, dumpTrace } from './logger'
+import { promisedTaskOption, promisedTask, asIO } from './fp'
 
 export const useAppDispatch: () => AppDispatch = useDispatch
 export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector
@@ -106,12 +107,12 @@ export const useTokenToHex = (token: Property<ColorTokens>) => {
 export const useStorage = () => {
   useEffect(() => {
     pipe(
-      () => navigator.storage.persisted(),
+      promisedTask(navigator.storage.persisted()),
       T.flatMap((persisted) =>
-        persisted ? T.of(persisted) : () => navigator.storage.persist(),
+        persisted ? TO.none : promisedTaskOption(navigator.storage.persist()),
       ),
-      T.flatMapIO(ioDumpTrace),
-    )
+      TO.flatMapIO(ioDumpTrace),
+    )().catch(dumpError)
   }, [])
 }
 

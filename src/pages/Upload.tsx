@@ -40,6 +40,7 @@ import * as TE from 'fp-ts/TaskEither'
 import * as T from 'fp-ts/Task'
 import * as RA from 'fp-ts/ReadonlyArray'
 import { dumpError } from '@/lib/logger'
+import { promisedTask } from '@/lib/fp'
 
 const useClasses = makeStyles({
   root: {
@@ -138,7 +139,7 @@ export function Component() {
         pipe(
           stopLoading,
           T.fromIO,
-          T.tap(() => () => dispatch(x())),
+          T.tap(() => promisedTask (dispatch(x()))),
         ),
       ),
     )().catch(dumpError)
@@ -149,7 +150,7 @@ export function Component() {
     useCallback(() => {
       return pipe(
         [saveSheetState, saveColumnState] as const,
-        IO.traverseArray((x) => constant(dispatch(x()))),
+        IO.traverseArray((x) => IO.of(dispatch(x()))),
       )()
     }, [dispatch]),
   )

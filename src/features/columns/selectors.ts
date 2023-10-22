@@ -71,7 +71,7 @@ export const getFormattedColumn = createSelector(
 
 export const getIndices = createSelector(
   [getMatchColumns, getMatchVisits],
-  (matchColumns, matchVisits) => pipe(matchColumns, RA.zip(matchVisits)),
+  (matchColumns, matchVisits) => RA.zip(matchVisits)(matchColumns),
 )
 
 export const getSearchedPos = createSelector(
@@ -139,7 +139,7 @@ export const getScoreComparer = createSelector(
               RA.lookup(
                 pipe(
                   matches,
-                  RA.findIndex((match) => S.Eq.equals(matchColumn, match)),
+                  RA.findIndex(strEquals(matchColumn)),
                   O.getOrElse(constant(-1)),
                 ),
               ),

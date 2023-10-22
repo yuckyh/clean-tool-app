@@ -5,7 +5,7 @@ import type { PayloadAction, AsyncThunk } from '@reduxjs/toolkit'
 import { createSlice } from '@reduxjs/toolkit'
 import { type BookType, utils } from 'xlsx'
 
-import { constant, identity, flow, pipe, hole } from 'fp-ts/function'
+import { constant, identity, flow, pipe } from 'fp-ts/function'
 import * as S from 'fp-ts/string'
 import * as O from 'fp-ts/Option'
 import * as E from 'fp-ts/Either'
@@ -43,7 +43,8 @@ const initialState: State = {
     S.split('],['),
     RA.filter(P.not(S.isEmpty)),
     RA.map(flow(S.split(','), RA.filter(P.not(S.isEmpty)))),
-    (x) => identity<readonly [string, string, string, string][]>(x),
+    (x) =>
+      identity(x) as readonly (readonly [string, string, string, string])[],
     RA.map(
       ([sheetName, visit, pos, reason]) =>
         [sheetName, visit, parseInt(pos, 10), reason] as Flag,

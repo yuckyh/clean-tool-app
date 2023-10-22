@@ -58,7 +58,7 @@ function BlankDataGrid({ column, visit, title }: Props) {
   const dispatch = useAppDispatch()
 
   const series = useAppSelector((state) => getRowBlanks(state, column, visit))
-  const allSeries = useAppSelector((state) =>
+  const unfilteredSeries = useAppSelector((state) =>
     getIndexedRow(state, column, visit),
   )
   const flaggedRows = useAppSelector((state) =>
@@ -87,47 +87,46 @@ function BlankDataGrid({ column, visit, title }: Props) {
       [classes.columnHeader, title],
     )
 
+  const indices = useMemo(() => pipe(series, RA.map(getIndexedIndex)), [series])
+
   const handleSelectionChange: DataGridProps['onSelectionChange'] = (
     _1,
     { selectedItems },
   ) => {
-    const subtractor =
-      allFlaggedRows.size < selectedItems.size ? selectedItems : allFlaggedRows
+    const shouldAdd = flaggedRows.size < selectedItems.size
 
-    const subtractee =
-      allFlaggedRows.size < selectedItems.size ? allFlaggedRows : selectedItems
+    const subtractor = (
+      shouldAdd ? selectedItems : flaggedRows
+    ) as ReadonlySet<number>
+
+    const subtractee = (
+      shouldAdd ? flaggedRows : selectedItems
+    ) as ReadonlySet<number>
 
     const checkedIndex = pipe(
-      subtractor as Readonly<Set<string>>,
-      RS.map(N.Eq)(parseInt),
-      RS.difference(N.Eq)(
-        RS.map(N.Eq)(parseInt)(subtractee as Readonly<Set<string>>),
-      ),
+      subtractor,
+      RS.difference(N.Eq)(subtractee),
       RS.reduce(N.Ord)(0, N.MonoidSum.concat),
     )
 
     const checkedIndexForAll = pipe(
-      allSeries,
+      unfilteredSeries,
       RA.map(getIndexedIndex),
       RA.findIndex(
-        (allIndex) =>
-          allIndex ===
-          stringLookup(pipe(series, RA.map(getIndexedIndex)))(checkedIndex),
+        (allIndex) => allIndex === stringLookup(indices)(checkedIndex),
       ),
       O.getOrElse(constant(0)),
     )
 
     const payloadForAll = pipe(
-      series,
-      RA.map(getIndexedIndex),
+      indices,
       flip(stringLookup)(checkedIndex),
       (x) => [x, title, checkedIndex, 'missing'] as Flag,
       dumpTrace,
     )
 
     const payload = pipe(
-      series,
-      RA.map(getIndexedIndex),
+      indices,
       flip(stringLookup)(checkedIndex),
       (x) => [x, title, checkedIndexForAll, 'outlier'] as Flag,
       dumpTrace,

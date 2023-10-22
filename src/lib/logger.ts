@@ -1,7 +1,7 @@
 import type { DependencyList } from 'react'
 import { useEffect } from 'react'
 import { console as fpConsole } from 'fp-ts'
-import { pipe } from 'fp-ts/function'
+import { flow, pipe } from 'fp-ts/function'
 import * as RR from 'fp-ts/ReadonlyRecord'
 import * as IO from 'fp-ts/IO'
 import * as RA from 'fp-ts/ReadonlyArray'
@@ -35,11 +35,7 @@ export const dumpName = <T>(obj: Readonly<Record<string, T>>) => {
     RR.toReadonlyArray,
     RA.map(IO.of),
     IO.traverseArray(IO.tap(ioDumpTrace)),
-    IO.flatMap(
-      // eslint-disable-next-line functional/functional-parameters
-      (entry) => () =>
-        pipe(entry, RA.map<readonly [string, T], T>(getIndexedValue)),
-    ),
+    IO.flatMap(flow(RA.map<readonly [string, T], T>(getIndexedValue), IO.of)),
   )()[0] as T
 }
 

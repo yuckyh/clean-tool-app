@@ -77,8 +77,8 @@ export default function FlaggedDataGrid({ series, title }: Readonly<Props>) {
       flaggedRows.size < selectedItems.size ? flaggedRows : selectedItems
 
     const checkedIndex = pipe(
-      subtractor as Readonly<Set<number>>,
-      RS.difference(N.Eq)(subtractee as Readonly<Set<number>>),
+      subtractor as ReadonlySet<number>,
+      RS.difference(N.Eq)(subtractee as ReadonlySet<number>),
       RS.reduce(N.Ord)(0, N.MonoidSum.concat),
     )
 

@@ -1,4 +1,4 @@
-import { constant, pipe } from 'fp-ts/function'
+import { constant, flow, pipe } from 'fp-ts/function'
 import * as O from 'fp-ts/Option'
 import * as RA from 'fp-ts/ReadonlyArray'
 
@@ -8,9 +8,8 @@ export const indexDuplicateSearcher = <T extends readonly U[], U>(
 ) =>
   pipe(
     indices,
-    RA.filter((index) =>
-      pipe(
-        index,
+    RA.filter(
+      flow(
         RA.zip(filterIndex),
         RA.every(([a, b]) => a === b),
       ),

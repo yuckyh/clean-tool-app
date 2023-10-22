@@ -1,16 +1,8 @@
 /* eslint-disable import/prefer-default-export */
 /* eslint-disable functional/functional-parameters */
-import type {
-  DataGridCellFocusMode,
-  TableColumnDefinition,
-  TableColumnId,
-} from '@fluentui/react-components'
 import {
-  createTableColumn,
-  CardHeader,
   makeStyles,
   shorthands,
-  Title1,
   tokens,
   Switch,
   Field,
@@ -18,37 +10,29 @@ import {
 } from '@fluentui/react-components'
 import { useBeforeUnload, useParams } from 'react-router-dom'
 import { useCallback, useState, useMemo } from 'react'
-import { constant, flow, pipe } from 'fp-ts/function'
+import { flow, pipe } from 'fp-ts/function'
 import * as RA from 'fp-ts/ReadonlyArray'
 import { useAppDispatch, useAppSelector } from '@/lib/hooks'
 import {
   getIndexedRowIncorrects,
   getCleanNumericalRow,
   getIndexedRow,
-  getRowBlanks,
 } from '@/features/sheet/selectors'
 import CategoricalPlot from '@/pages/EDA/Variable/CategoricalPlot'
 import NumericalPlot from '@/pages/EDA/Variable/NumericalPlot'
 import { codebook } from '@/data'
 
-import SimpleDataGrid from '@/components/SimpleDataGrid'
 import { saveColumnState } from '@/features/columns/reducers'
 import { saveSheetState } from '@/features/sheet/reducers'
 import * as S from 'fp-ts/string'
 import { console } from 'fp-ts'
 import * as IO from 'fp-ts/IO'
-import { getIndexedValue } from '@/lib/array'
-import * as N from 'fp-ts/number'
 import IncorrectDataGrid from './IncorrectDataGrid'
 import BlankDataGrid from './BlankDataGrid'
 import FlaggedDataGrid from './FlaggedDataGrid'
+import SummaryTable from './SummaryTable'
 
 type VariableType = Extract<Property<typeof variableType>, string>
-
-interface SummaryStats {
-  statistic: string
-  value: number
-}
 
 const variableType = ['numerical', 'categorical'] as const
 
@@ -76,7 +60,7 @@ const useClasses = makeStyles({
     rowGap: tokens.spacingVerticalXL,
     flexDirection: 'column',
     display: 'flex',
-    width: '100%',
+    width: '80%',
   },
   columns: {
     columnGap: tokens.spacingVerticalXL,
@@ -95,10 +79,6 @@ const useClasses = makeStyles({
     flexGrow: 1,
   },
 })
-
-const cellFocusMode: (
-  tableColumnId: TableColumnId,
-) => DataGridCellFocusMode = () => 'none'
 
 export function Component() {
   const classes = useClasses()
@@ -127,9 +107,9 @@ export function Component() {
     getIndexedRowIncorrects(state, ...searchParams),
   )
 
-  const blanksSeries = useAppSelector((state) =>
-    getRowBlanks(state, ...searchParams),
-  )
+  // const blanksSeries = useAppSelector((state) =>
+  //   getRowBlanks(state, ...searchParams),
+  // )
 
   const title = `${column}${visit && visit !== '1' ? `_${visit}` : ''}`
 
@@ -171,58 +151,6 @@ export function Component() {
     }, [dispatch]),
   )
 
-  const cleanValues = useMemo(
-    () => RA.map(getIndexedValue)(cleanNumericalSeries),
-    [cleanNumericalSeries],
-  )
-
-  const dataSum = useMemo(
-    () => RA.reduce(0, N.MonoidSum.concat)(cleanValues),
-    [cleanValues],
-  )
-
-  const summaryStatistics: readonly SummaryStats[] = useMemo(
-    () =>
-      isCategorical
-        ? [{ value: series.length, statistic: 'Count' }]
-        : [
-            { value: cleanValues.length, statistic: 'Count' },
-            {
-              value: Math.min(...cleanValues),
-              statistic: 'Min',
-            },
-            {
-              value: Math.max(...cleanValues),
-              statistic: 'Max',
-            },
-            {
-              value: dataSum / cleanValues.length,
-              statistic: 'Mean',
-            },
-            {
-              statistic: 'Sum',
-              value: dataSum,
-            },
-          ],
-    [isCategorical, series.length, cleanValues, dataSum],
-  )
-
-  const columnDefinition: TableColumnDefinition<SummaryStats>[] = useMemo(
-    () => [
-      createTableColumn({
-        renderCell: ({ statistic }) => statistic,
-        renderHeaderCell: constant('Statistic'),
-        columnId: 'statistic',
-      }),
-      createTableColumn({
-        renderHeaderCell: constant('Value'),
-        renderCell: ({ value }) => value,
-        columnId: 'value',
-      }),
-    ],
-    [],
-  )
-
   const [isCustomCategorical, setIsCustomCategorical] = useState(false)
 
   return (
@@ -255,15 +183,11 @@ export function Component() {
           </Card>
         </div>
         <div className={classes.options}>
-          {/* Summary Statistics */}
-          <Card className={classes.card} size="large">
-            <CardHeader header={<Title1>Summary Statistics</Title1>} />
-            <SimpleDataGrid
-              cellFocusMode={cellFocusMode}
-              columns={columnDefinition}
-              items={summaryStatistics}
-            />
-          </Card>
+          <SummaryTable
+            numericalSeries={cleanNumericalSeries}
+            isCategorical={isCategorical}
+            categoricalSeries={series}
+          />
         </div>
       </div>
       <div className={classes.columns}>

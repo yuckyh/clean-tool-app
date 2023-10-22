@@ -38,9 +38,10 @@ import Loader from '@/components/Loader'
 import { constant, identity, flow, pipe } from 'fp-ts/function'
 import { makeBy } from 'fp-ts/ReadonlyArray'
 import * as IO from 'fp-ts/IO'
-import * as TE from 'fp-ts/TaskEither'
+import * as TO from 'fp-ts/TaskOption'
 import * as RA from 'fp-ts/ReadonlyArray'
 import { ioDumpTrace, dumpError } from '@/lib/logger'
+import { promisedTask, asLazyTask, promisedTaskOption } from '@/lib/fp'
 import HeaderCell from './HeaderCell'
 import ValueCell from './ValueCell'
 
@@ -149,20 +150,15 @@ export default function ColumnsDataGrid({ alertRef }: Readonly<Props>) {
   useEffect(() => {
     pipe(
       columnsLength,
-      (length): TE.TaskEither<typeof fetchSheet, typeof fetchMatches> =>
-        length === 0 ? TE.left(fetchSheet) : TE.right(fetchMatches),
-      TE.getOrElse((action) =>
-        pipe(
-          () => dispatch(action()),
-          T.tap((x) => T.of(x)),
-          T.tapIO(ioDumpTrace),
-          () => fetchMatches,
-          T.of,
-        ),
+      TO.fromPredicate((length) => length === 0),
+      TO.flatMap(() => TO.of(fetchSheet)),
+      TO.tap((x) => promisedTaskOption(dispatch(x()))),
+      TO.match(
+        () => fetchMatches,
+        () => fetchMatches,
       ),
-      // eslint-disable-next-line functional/functional-parameters
-      T.flatMap((x) => () => dispatch(x())),
-      T.tap((x) => T.of(x)),
+      T.flatMap((x) => promisedTask(dispatch(x()))),
+      T.tap(T.of),
       T.tapIO(() => stopLoading),
     )().catch(dumpError)
     return undefined

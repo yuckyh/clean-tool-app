@@ -1,7 +1,7 @@
 /* eslint-disable import/prefer-default-export */
 /* eslint-disable functional/functional-parameters */
 // import { getFormattedFileName } from '@/features/sheet/selectors'
-import { makeStyles, tokens } from '@fluentui/react-components'
+import { makeStyles, shorthands, tokens } from '@fluentui/react-components'
 import { useBeforeUnload, Outlet } from 'react-router-dom'
 import { useCallback } from 'react'
 import { useAppDispatch } from '@/lib/hooks'
@@ -15,6 +15,7 @@ import { saveColumnState } from '@/features/columns/reducers'
 const useClasses = makeStyles({
   root: {
     columnGap: tokens.spacingVerticalXL,
+    justifyContent: 'flex-end',
     flexDirection: 'row',
     display: 'flex',
   },
@@ -31,13 +32,7 @@ export function Component() {
     useCallback(() => {
       return pipe(
         [saveColumnState, saveSheetState] as const,
-        RA.map(
-          flow(
-            (x) => x(),
-            (x) => dispatch(x),
-            IO.of,
-          ),
-        ),
+        RA.map(flow((x) => dispatch(x()), IO.of)),
         IO.sequenceArray,
       )()
     }, [dispatch]),
