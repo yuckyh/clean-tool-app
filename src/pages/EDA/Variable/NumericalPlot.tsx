@@ -5,20 +5,20 @@ import { useCallback, useMemo, useRef } from 'react'
 
 import { console } from 'fp-ts'
 import { multiply, divideBy, add } from '@/lib/number'
-import { useTokenToHex } from '@/lib/hooks'
+import { useAppSelector, useTokenToHex } from '@/lib/hooks'
 import { identity, flip, flow, pipe } from 'fp-ts/function'
 import { getIndexedIndex, getIndexedValue, numberLookup } from '@/lib/array'
 import * as RA from 'fp-ts/ReadonlyArray'
 import * as E from 'fp-ts/Either'
 import * as N from 'fp-ts/number'
 import * as P from 'fp-ts/Predicate'
+import { getCleanNumericalRow } from '@/features/sheet/selectors'
 import VariablePlot from './VariablePlot'
 
-type IndexedSeries = readonly (readonly [string, number])[]
-
 interface NumericalPlotProps {
-  series: IndexedSeries
   variable: string
+  column: string
+  visit: string
   unit: string
 }
 
@@ -28,9 +28,14 @@ const jitterY = (jitter: number) => Math.random() * jitter * 2 - jitter
 
 export default function NumericalPlot({
   variable,
-  series,
+  column,
+  visit,
   unit,
 }: NumericalPlotProps) {
+  const series = useAppSelector((state) =>
+    getCleanNumericalRow(state, column, visit),
+  )
+
   const sorted = pipe(
     series,
     RA.map(flow(getIndexedValue, Number)),
@@ -62,7 +67,7 @@ export default function NumericalPlot({
   )
 
   const isOutlier = useCallback(
-    ([, value]: ArrayElement<IndexedSeries>) => value < lower || value > upper,
+    ([, value]: ArrayElement<typeof series>) => value < lower || value > upper,
     [lower, upper],
   )
 

@@ -3,16 +3,19 @@ import type { Layout, Data } from 'plotly.js-cartesian-dist-min'
 import * as RA from 'fp-ts/ReadonlyArray'
 import { identity, pipe } from 'fp-ts/function'
 import { getIndexedValue } from '@/lib/array'
+import { getIndexedRow } from '@/features/sheet/selectors'
+import { useAppSelector } from '@/lib/hooks'
 import VariablePlot from './VariablePlot'
 
-type IndexedSeries = readonly (readonly [string, string])[]
-
 interface Props {
-  series: IndexedSeries
   variable: string
+  column: string
+  visit: string
 }
 
-export default function CategoricalPlot({ variable, series }: Props) {
+export default function CategoricalPlot({ variable, column, visit }: Props) {
+  const series = useAppSelector((state) => getIndexedRow(state, column, visit))
+
   const count = pipe(
     series,
     RA.map(getIndexedValue),

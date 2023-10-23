@@ -25,7 +25,6 @@ const useClasses = makeStyles({
   },
 })
 
-// TODO: add download button
 // TODO: make download work
 
 export function Component() {

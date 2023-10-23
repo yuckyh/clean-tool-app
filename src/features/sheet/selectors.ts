@@ -84,7 +84,7 @@ export const getIndexedRow = createSelector(
   (row, indexRow) => RA.zip(row)(indexRow),
 )
 
-export const getRowBlanks = createSelector(
+export const getIndexedRowMissings = createSelector(
   [getIndexedRow],
   RA.filter(([, cell]) =>
     pipe(
@@ -112,9 +112,8 @@ export const getIndexedRowIncorrects = createSelector(
   [getBlanklessRow, getIndexRow],
   (row, indexRow) =>
     pipe(
-      row,
-      RA.filter((val) => /[!,.?]{2,}/.test(val)),
-      (filteredRow) => RA.zip(filteredRow)(indexRow),
+      RA.zip(row)(indexRow),
+      RA.filter(([, val]) => /[!,.?]{2,}/.test(val)),
     ),
 )
 

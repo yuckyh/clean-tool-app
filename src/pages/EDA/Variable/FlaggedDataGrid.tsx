@@ -16,24 +16,29 @@ import {
 import { useCallback, useState, useMemo } from 'react'
 import SimpleDataGrid from '@/components/SimpleDataGrid'
 import { useAppDispatch, useAppSelector } from '@/lib/hooks'
-import { apply, constant, pipe } from 'fp-ts/function'
+import { constant, pipe, flow } from 'fp-ts/function'
 import * as RA from 'fp-ts/ReadonlyArray'
 import * as O from 'fp-ts/Option'
 import * as S from 'fp-ts/string'
 import * as RS from 'fp-ts/ReadonlySet'
 import * as IO from 'fp-ts/IO'
 import * as N from 'fp-ts/number'
-import type { Flag } from '@/features/sheet/reducers'
 import { syncFlaggedCells } from '@/features/sheet/reducers'
-import { getIndexedIndex, getIndexedValue } from '@/lib/array'
-import { getFilteredFlaggedRows } from '@/features/sheet/selectors'
+import { getIndexedIndex, getIndexedValue, stringLookup } from '@/lib/array'
+import {
+  getIndexedRowIncorrects,
+  getFilteredFlaggedRows,
+  getIndexedRowMissings,
+  getIndexedRow,
+} from '@/features/sheet/selectors'
+import { dump } from '@/lib/logger'
+import { strEquals } from '@/lib/string'
 import FilterInput from './FilterInput'
 
-type IndexedSeries = readonly (readonly [string, string])[]
-
 interface Props {
-  series: IndexedSeries
+  column: string
   title: string
+  visit: string
 }
 
 const useClasses = makeStyles({
@@ -57,40 +62,80 @@ const useClasses = makeStyles({
 
 const cellFocusMode: () => DataGridCellFocusMode = constant('none')
 
-export default function FlaggedDataGrid({ series, title }: Readonly<Props>) {
+export default function FlaggedDataGrid({
+  column,
+  visit,
+  title,
+}: Readonly<Props>) {
   const classes = useClasses()
 
   const dispatch = useAppDispatch()
 
+  const series = useAppSelector((state) => getIndexedRow(state, column, visit))
+  const missingSeries = useAppSelector((state) =>
+    getIndexedRowMissings(state, column, visit),
+  )
+  const incorrectSeries = useAppSelector((state) =>
+    getIndexedRowIncorrects(state, column, visit),
+  )
+
   const flaggedRows = useAppSelector((state) =>
     getFilteredFlaggedRows(state, title, 'outlier'),
+  )
+
+  const indices = useMemo(() => RA.map(getIndexedIndex)(series), [series])
+  const missingIndices = useMemo(
+    () => RA.map(getIndexedIndex)(missingSeries),
+    [missingSeries],
+  )
+  const incorrectIndices = useMemo(
+    () => RA.map(getIndexedIndex)(incorrectSeries),
+    [incorrectSeries],
   )
 
   const handleSelectionChange: DataGridProps['onSelectionChange'] = (
     _1,
     { selectedItems },
   ) => {
-    const subtractor =
-      flaggedRows.size < selectedItems.size ? selectedItems : flaggedRows
+    const shouldAdd = flaggedRows.size < selectedItems.size
+    const subtractor = shouldAdd ? selectedItems : flaggedRows
 
-    const subtractee =
-      flaggedRows.size < selectedItems.size ? flaggedRows : selectedItems
+    const subtractee = shouldAdd ? flaggedRows : selectedItems
 
-    const checkedIndex = pipe(
+    const checkedPos = pipe(
       subtractor as ReadonlySet<number>,
       RS.difference(N.Eq)(subtractee as ReadonlySet<number>),
       RS.reduce(N.Ord)(0, N.MonoidSum.concat),
     )
 
-    const payload = pipe(
-      series,
-      RA.map(getIndexedIndex),
-      RA.lookup(checkedIndex),
-      pipe('', constant, O.getOrElse),
-      (x) => [x, title, checkedIndex, 'outlier'] as Flag,
-    )
+    const currentIndex = stringLookup(indices)(checkedPos)
 
-    return pipe(payload, syncFlaggedCells, (x) => dispatch(x), IO.of)()
+    return pipe(
+      [
+        [missingIndices, 'missing'],
+        [incorrectIndices, 'incorrect'],
+        [indices, 'outlier'],
+      ] as const,
+      RA.map(
+        ([checkIndices, reason]) =>
+          [
+            pipe(currentIndex, strEquals, RA.findIndex)(checkIndices),
+            reason,
+          ] as const,
+      ),
+      RA.filter(([pos]) => O.isSome(pos)),
+      RA.map(
+        flow(
+          ([pos, reason]) =>
+            [pipe(-1, constant, O.getOrElse)(pos), reason] as const,
+          (x) => [currentIndex, title, ...x] as const,
+          dump,
+          syncFlaggedCells,
+          (x) => dispatch(x),
+        ),
+      ),
+      IO.of,
+    )()
   }
 
   const [indexFilter, setIndexFilter] = useState('')
@@ -101,19 +146,12 @@ export default function FlaggedDataGrid({ series, title }: Readonly<Props>) {
       pipe(
         series,
         RA.filter(
-          ([index, value]) =>
-            pipe(
-              indexFilter,
-              S.toLowerCase,
-              S.includes,
-              apply(S.toLowerCase(index)),
-            ) &&
-            pipe(
-              valueFilter,
-              S.toLowerCase,
-              S.includes,
-              apply(S.toLowerCase(value)),
+          flow(
+            RA.zip([indexFilter, valueFilter] as const),
+            RA.every(([x, y]) =>
+              pipe(y, S.toLowerCase, S.includes)(S.toLowerCase(x)),
             ),
+          ),
         ),
       ),
     [indexFilter, series, valueFilter],

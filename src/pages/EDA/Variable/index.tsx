@@ -9,23 +9,18 @@ import {
   Card,
 } from '@fluentui/react-components'
 import { useBeforeUnload, useParams } from 'react-router-dom'
-import { useCallback, useState, useMemo } from 'react'
+import { useCallback, useState } from 'react'
 import { flow, pipe } from 'fp-ts/function'
 import * as RA from 'fp-ts/ReadonlyArray'
 import { useAppDispatch, useAppSelector } from '@/lib/hooks'
-import {
-  getIndexedRowIncorrects,
-  getCleanNumericalRow,
-  getIndexedRow,
-} from '@/features/sheet/selectors'
 import CategoricalPlot from '@/pages/EDA/Variable/CategoricalPlot'
 import NumericalPlot from '@/pages/EDA/Variable/NumericalPlot'
 import { codebook } from '@/data'
 
 import { saveColumnState } from '@/features/columns/reducers'
 import { saveSheetState } from '@/features/sheet/reducers'
-import * as S from 'fp-ts/string'
 import { console } from 'fp-ts'
+import * as S from 'fp-ts/string'
 import * as IO from 'fp-ts/IO'
 import IncorrectDataGrid from './IncorrectDataGrid'
 import BlankDataGrid from './BlankDataGrid'
@@ -89,27 +84,8 @@ export function Component() {
 
   const firstVisit = useAppSelector(({ sheet }) => sheet.visits[0] ?? '')
 
-  // const [isLoading, stopLoading] = useLoadingTransition()
-
   const column = S.replace(/-/g, '_')(params.column ?? '')
   const visit = params.visit ?? firstVisit
-
-  const searchParams = useMemo(() => [column, visit] as const, [column, visit])
-
-  const series = useAppSelector((state) =>
-    getIndexedRow(state, ...searchParams),
-  )
-  const cleanNumericalSeries = useAppSelector((state) =>
-    getCleanNumericalRow(state, ...searchParams),
-  )
-
-  const incorrectsSeries = useAppSelector((state) =>
-    getIndexedRowIncorrects(state, ...searchParams),
-  )
-
-  // const blanksSeries = useAppSelector((state) =>
-  //   getRowBlanks(state, ...searchParams),
-  // )
 
   const title = `${column}${visit && visit !== '1' ? `_${visit}` : ''}`
 
@@ -120,9 +96,9 @@ export function Component() {
     type: '',
     unit: '',
   }
-  const isCustom = !codebookVariable.name
+  const isUser = !codebookVariable.name
 
-  console.log(isCustom)
+  console.log(isUser)
 
   const { type, unit } = codebookVariable
 
@@ -133,7 +109,7 @@ export function Component() {
     ? 'numerical'
     : 'categorical'
 
-  const isCategorical = measurementType === 'categorical'
+  const isCodebookCategorical = measurementType === 'categorical'
 
   useBeforeUnload(
     useCallback(() => {
@@ -151,32 +127,35 @@ export function Component() {
     }, [dispatch]),
   )
 
-  const [isCustomCategorical, setIsCustomCategorical] = useState(false)
+  const [isUserCategorical, setIsUserCategorical] = useState(false)
+
+  const isCategorical = isUser ? isUserCategorical : isCodebookCategorical
 
   return (
     <section className={classes.root}>
       <div className={classes.columns}>
         <div className={classes.plot}>
           <Card className={classes.card} size="large">
-            {isCustom && (
+            {isUser && (
               <Field>
                 <Switch
                   onChange={({ target }) => {
-                    setIsCustomCategorical(target.checked)
+                    setIsUserCategorical(target.checked)
                     return undefined
                   }}
-                  label={isCustomCategorical ? 'Categorical' : 'Numerical'}
-                  checked={isCustomCategorical}
+                  label={isUserCategorical ? 'Categorical' : 'Numerical'}
+                  checked={isUserCategorical}
                   labelPosition="after"
                 />
               </Field>
             )}
-            {(isCustom ? isCustomCategorical : isCategorical) ? (
-              <CategoricalPlot variable={title} series={series} />
+            {isCategorical ? (
+              <CategoricalPlot variable={title} column={column} visit={visit} />
             ) : (
               <NumericalPlot
-                series={cleanNumericalSeries}
                 variable={title}
+                column={column}
+                visit={visit}
                 unit={unit}
               />
             )}
@@ -184,22 +163,22 @@ export function Component() {
         </div>
         <div className={classes.options}>
           <SummaryTable
-            numericalSeries={cleanNumericalSeries}
-            isCategorical={isCategorical}
-            categoricalSeries={series}
+            isCategorical={isCodebookCategorical}
+            column={column}
+            visit={visit}
           />
         </div>
       </div>
       <div className={classes.columns}>
         <div className={classes.rows}>
-          <FlaggedDataGrid series={series} title={title} />
+          <FlaggedDataGrid column={column} visit={visit} title={title} />
         </div>
         <div className={classes.rows}>
           <BlankDataGrid column={column} visit={visit} title={title} />
         </div>
         <div className={classes.rows}>
-          {!isCategorical && (
-            <IncorrectDataGrid series={incorrectsSeries} title={title} />
+          {!isCodebookCategorical && (
+            <IncorrectDataGrid column={column} visit={visit} title={title} />
           )}
         </div>
       </div>

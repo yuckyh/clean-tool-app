@@ -18,6 +18,8 @@ import { constant } from 'fp-ts/function'
 import { useMemo } from 'react'
 import * as RA from 'fp-ts/ReadonlyArray'
 import * as N from 'fp-ts/number'
+import { getCleanNumericalRow, getIndexedRow } from '@/features/sheet/selectors'
+import { useAppSelector } from '@/lib/hooks'
 
 interface SummaryStats {
   statistic: string
@@ -25,9 +27,9 @@ interface SummaryStats {
 }
 
 interface Props {
-  categoricalSeries: readonly (readonly [string, string])[]
-  numericalSeries: readonly (readonly [string, number])[]
   isCategorical: boolean
+  column: string
+  visit: string
 }
 
 const cellFocusMode: (tableColumnId: TableColumnId) => DataGridCellFocusMode =
@@ -43,12 +45,16 @@ const useClasses = makeStyles({
 })
 
 // eslint-disable-next-line functional/functional-parameters
-export default function SummaryTable({
-  categoricalSeries,
-  numericalSeries,
-  isCategorical,
-}: Props) {
+export default function SummaryTable({ isCategorical, column, visit }: Props) {
   const classes = useClasses()
+
+  const categoricalSeries = useAppSelector((state) =>
+    getIndexedRow(state, column, visit),
+  )
+  const numericalSeries = useAppSelector((state) =>
+    getCleanNumericalRow(state, column, visit),
+  )
+
   const cleanValues = useMemo(
     () => RA.map(getIndexedValue)(numericalSeries),
     [numericalSeries],

@@ -14,17 +14,22 @@ import {
 } from '@fluentui/react-components'
 import { useMemo } from 'react'
 import SimpleDataGrid from '@/components/SimpleDataGrid'
-import { getFilteredFlaggedRows } from '@/features/sheet/selectors'
+import {
+  getIndexedRowIncorrects,
+  getFilteredFlaggedRows,
+  getIndexedRow,
+} from '@/features/sheet/selectors'
 import { useAppDispatch, useAppSelector } from '@/lib/hooks'
-import { constant, pipe } from 'fp-ts/function'
-import { getIndexedIndex, getIndexedValue } from '@/lib/array'
-import type { Flag } from '@/features/sheet/reducers'
+import { constant, identity, pipe, flow } from 'fp-ts/function'
+import { getIndexedIndex, getIndexedValue, stringLookup } from '@/lib/array'
+import type { FlagReason, Flag } from '@/features/sheet/reducers'
 import { syncFlaggedCells } from '@/features/sheet/reducers'
 import * as RS from 'fp-ts/ReadonlySet'
 import * as RA from 'fp-ts/ReadonlyArray'
 import * as O from 'fp-ts/Option'
 import * as IO from 'fp-ts/IO'
 import * as N from 'fp-ts/number'
+import { strEquals } from '@/lib/string'
 
 const cellFocusMode: () => DataGridCellFocusMode = constant('none')
 
@@ -39,18 +44,23 @@ const useClasses = makeStyles({
   },
 })
 
-type IndexedSeries = readonly (readonly [string, string])[]
-
 interface Props {
-  series: IndexedSeries
+  column: string
+  visit: string
   title: string
 }
 
-export default function IncorrectDataGrid({ series, title }: Props) {
+export default function IncorrectDataGrid({ column, visit, title }: Props) {
   const classes = useClasses()
 
   const dispatch = useAppDispatch()
 
+  const series = useAppSelector((state) =>
+    getIndexedRowIncorrects(state, column, visit),
+  )
+  const unfilteredSeries = useAppSelector((state) =>
+    getIndexedRow(state, column, visit),
+  )
   const flaggedRows = useAppSelector((state) =>
     getFilteredFlaggedRows(state, title, 'incorrect'),
   )
@@ -76,31 +86,55 @@ export default function IncorrectDataGrid({ series, title }: Props) {
       [classes.columnHeader, title],
     )
 
+  const indices = useMemo(() => RA.map(getIndexedIndex)(series), [series])
+  const unfilteredIndices = useMemo(
+    () => RA.map(getIndexedIndex)(unfilteredSeries),
+    [unfilteredSeries],
+  )
+
   const handleSelectionChange: DataGridProps['onSelectionChange'] = (
     _1,
     { selectedItems },
   ) => {
-    const subtractor =
-      flaggedRows.size < selectedItems.size ? selectedItems : flaggedRows
+    const shouldAdd = flaggedRows.size < selectedItems.size
 
-    const subtractee =
-      flaggedRows.size < selectedItems.size ? flaggedRows : selectedItems
+    const subtractor = (
+      shouldAdd ? selectedItems : flaggedRows
+    ) as ReadonlySet<number>
 
-    const checkedIndex = pipe(
-      subtractor as Readonly<Set<number>>,
-      RS.difference(N.Eq)(subtractee as Readonly<Set<number>>),
+    const subtractee = (
+      shouldAdd ? flaggedRows : selectedItems
+    ) as ReadonlySet<number>
+
+    const checkedPos = pipe(
+      subtractor,
+      RS.difference(N.Eq)(subtractee),
       RS.reduce(N.Ord)(0, N.MonoidSum.concat),
     )
 
-    const payload = pipe(
-      series,
-      RA.map(getIndexedIndex),
-      RA.lookup(checkedIndex),
-      pipe('', constant, O.getOrElse),
-      (x) => [x, title, checkedIndex, 'incorrect'] as Flag,
+    const currentIndex = stringLookup(indices)(checkedPos)
+
+    const checkedUnfilteredPos = pipe(
+      unfilteredIndices,
+      pipe(currentIndex, strEquals, RA.findIndex),
+      pipe(0, constant, O.getOrElse),
     )
 
-    return pipe(payload, syncFlaggedCells, (x) => dispatch(x), IO.of)()
+    return pipe(
+      [
+        [checkedPos, 'incorrect'],
+        [checkedUnfilteredPos, 'outlier'],
+      ] as const,
+      RA.map(
+        flow(
+          (x) => [currentIndex, title, ...x] as Flag,
+          syncFlaggedCells,
+          (x) => dispatch(x),
+          IO.of,
+        ),
+      ),
+      IO.traverseArray(identity),
+    )()
   }
 
   return (
