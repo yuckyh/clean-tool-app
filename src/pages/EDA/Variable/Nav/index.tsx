@@ -6,11 +6,16 @@ import {
   TabList,
   Button,
 } from '@fluentui/react-components'
-import { useLocation } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { getColumnsLength } from '@/features/sheet/selectors'
-import { useAppSelector } from '@/lib/hooks'
+import { useAppDispatch, useAppSelector } from '@/lib/hooks'
 
 import * as RA from 'fp-ts/ReadonlyArray'
+import { useCallback } from 'react'
+import type { Progress } from '@/features/progress/reducers'
+import { setProgress } from '@/features/progress/reducers'
+import { pipe } from 'fp-ts/function'
+import * as IO from 'fp-ts/IO'
 import NavTab from './Tab'
 
 type Props = TabListProps
@@ -39,9 +44,24 @@ const useClasses = makeStyles({
 export default function Nav(props: Props) {
   const classes = useClasses()
 
+  const navigate = useNavigate()
   const { pathname } = useLocation()
 
+  const dispatch = useAppDispatch()
+
   const columnsLength = useAppSelector(getColumnsLength)
+
+  const handleDownloadSubmit = useCallback(() => {
+    pipe(
+      'explored' as Progress,
+      setProgress,
+      (x) => dispatch(x),
+      () => {
+        navigate('/download')
+      },
+      IO.of,
+    )()
+  }, [dispatch, navigate])
 
   return (
     <div className={classes.root}>
@@ -51,7 +71,9 @@ export default function Nav(props: Props) {
         ))}
       </TabList>
       <div className={classes.actions}>
-        <Button appearance="primary">Download</Button>
+        <Button onClick={handleDownloadSubmit} appearance="primary">
+          Download
+        </Button>
       </div>
     </div>
   )

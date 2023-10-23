@@ -22,7 +22,7 @@ import {
 import { useAppDispatch, useAppSelector } from '@/lib/hooks'
 import { constant, identity, pipe, flow } from 'fp-ts/function'
 import { getIndexedIndex, getIndexedValue, stringLookup } from '@/lib/array'
-import type { FlagReason, Flag } from '@/features/sheet/reducers'
+import type { Flag } from '@/features/sheet/reducers'
 import { syncFlaggedCells } from '@/features/sheet/reducers'
 import * as RS from 'fp-ts/ReadonlySet'
 import * as RA from 'fp-ts/ReadonlyArray'

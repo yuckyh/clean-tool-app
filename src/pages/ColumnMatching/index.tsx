@@ -14,9 +14,10 @@ import type { AlertRef } from '@/components/AlertDialog'
 import type { Progress } from '@/features/progress/reducers'
 import { setProgress } from '@/features/progress/reducers'
 import AlertDialog from '@/components/AlertDialog'
-import { createLazyMemo, noOpIO } from '@/lib/utils'
+import { createLazyMemo } from '@/lib/utils'
 import { useAppDispatch } from '@/lib/hooks'
 import { pipe } from 'fp-ts/function'
+import * as IO from 'fp-ts/IO'
 
 const useClasses = makeStyles({
   root: {
@@ -49,14 +50,12 @@ export function Component() {
     pipe(
       'matched' as Progress,
       setProgress,
-      dispatch,
+      (x) => dispatch(x),
       () => {
         navigate('/eda')
-        return undefined
       },
-      noOpIO,
+      IO.of,
     )()
-    return undefined
   }, [dispatch, navigate])
 
   const alertRef = useRef<AlertRef>(null)

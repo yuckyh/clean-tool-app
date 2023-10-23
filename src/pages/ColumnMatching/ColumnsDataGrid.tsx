@@ -11,7 +11,6 @@ import {
   Spinner,
 } from '@fluentui/react-components'
 import { useCallback, useEffect, useState, useMemo } from 'react'
-import { useBeforeUnload } from 'react-router-dom'
 import type { Props as SimpleDataGridProps } from '@/components/SimpleDataGrid'
 import type { AlertRef } from '@/components/AlertDialog'
 import * as T from 'fp-ts/Task'
@@ -27,19 +26,15 @@ import {
   useAppSelector,
 } from '@/lib/hooks'
 import { getColumnComparer, getColumnsLength } from '@/features/sheet/selectors'
-import { saveColumnState } from '@/features/columns/reducers'
-import { saveSheetState } from '@/features/sheet/reducers'
 import { fetchMatches } from '@/features/columns/actions'
 import SimpleDataGrid from '@/components/SimpleDataGrid'
 import { fetchSheet } from '@/features/sheet/actions'
 import { createLazyMemo, createMemo } from '@/lib/utils'
 import Loader from '@/components/Loader'
 
-import { constant, identity, flow, pipe } from 'fp-ts/function'
+import { constant, identity, pipe } from 'fp-ts/function'
 import { makeBy } from 'fp-ts/ReadonlyArray'
-import * as IO from 'fp-ts/IO'
 import * as TO from 'fp-ts/TaskOption'
-import * as RA from 'fp-ts/ReadonlyArray'
 import { dumpError } from '@/lib/logger'
 import { promisedTaskOption, promisedTask } from '@/lib/fp'
 import HeaderCell from './HeaderCell'
@@ -165,22 +160,6 @@ export default function ColumnsDataGrid({ alertRef }: Readonly<Props>) {
     )().catch(dumpError)
     return undefined
   }, [dispatch, columnsLength, stopLoading])
-
-  useBeforeUnload(
-    useCallback(() => {
-      return pipe(
-        [saveSheetState, saveColumnState] as const,
-        RA.map(
-          flow(
-            (x) => x(),
-            (x) => dispatch(x),
-            IO.of,
-          ),
-        ),
-        IO.traverseArray(identity),
-      )()
-    }, [dispatch]),
-  )
 
   return !isLoading ? (
     <Loader

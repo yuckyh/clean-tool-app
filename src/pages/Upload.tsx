@@ -11,7 +11,7 @@ import {
   tokens,
   Card,
 } from '@fluentui/react-components'
-import { useBeforeUnload, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { useCallback, useEffect, useRef } from 'react'
 import type { SheetInputRef } from '@/features/sheet/components/SheetUploadInput'
 import type { SimpleToasterRef } from '@/components/SimpleToaster'
@@ -22,7 +22,7 @@ import {
   useAppDispatch,
   useAppSelector,
 } from '@/lib/hooks'
-import { saveColumnState, deleteColumns } from '@/features/columns/reducers'
+import { deleteColumns } from '@/features/columns/reducers'
 import SheetPickerInput from '@/features/sheet/components/SheetPickerInput'
 import SheetUploadInput from '@/features/sheet/components/SheetUploadInput'
 import type { Progress } from '@/features/progress/reducers'
@@ -31,7 +31,6 @@ import PreviewDataGrid from '@/features/sheet/components/PreviewDataGrid'
 import { deleteSheet, fetchSheet } from '@/features/sheet/actions'
 import VisitsInput from '@/features/sheet/components/VisitsInput'
 import { getColumnsLength } from '@/features/sheet/selectors'
-import { saveSheetState } from '@/features/sheet/reducers'
 import SimpleToaster from '@/components/SimpleToaster'
 import AlertDialog from '@/components/AlertDialog'
 import * as IO from 'fp-ts/IO'
@@ -145,15 +144,6 @@ export function Component() {
     )().catch(dumpError)
     return undefined
   }, [columnsLength, dispatch, stopLoading])
-
-  useBeforeUnload(
-    useCallback(() => {
-      return pipe(
-        [saveSheetState, saveColumnState] as const,
-        IO.traverseArray((x) => pipe(dispatch(x()), IO.of)),
-      )()
-    }, [dispatch]),
-  )
 
   return (
     <section className={classes.root}>

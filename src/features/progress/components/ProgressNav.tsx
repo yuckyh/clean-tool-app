@@ -15,10 +15,12 @@ import { Helmet } from 'react-helmet-async'
 import { useAppDispatch, useAppSelector } from '@/lib/hooks'
 
 import * as O from 'fp-ts/Option'
-import { constant, pipe } from 'fp-ts/function'
+import { constant, flow, pipe } from 'fp-ts/function'
 import * as RA from 'fp-ts/ReadonlyArray'
 import * as S from 'fp-ts/string'
 import * as IO from 'fp-ts/IO'
+import { saveColumnState } from '@/features/columns/reducers'
+import { saveSheetState } from '@/features/sheet/reducers'
 import { saveProgressState } from '../reducers'
 import ProgressNavLink from './ProgressNavLink'
 import {
@@ -93,9 +95,15 @@ export default function ProgressNav() {
   }, [themeClasses])
 
   useBeforeUnload(
-    useCallback(() => {
-      return pipe(saveProgressState(), (x) => dispatch(x), IO.of)()
-    }, [dispatch]),
+    useCallback(
+      () =>
+        pipe(
+          [saveSheetState, saveColumnState, saveProgressState] as const,
+          RA.map(flow((x) => dispatch(x()), IO.of)),
+          IO.sequenceArray,
+        )(),
+      [dispatch],
+    ),
   )
 
   return (

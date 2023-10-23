@@ -8,20 +8,17 @@ import {
   Field,
   Card,
 } from '@fluentui/react-components'
-import { useBeforeUnload, useParams } from 'react-router-dom'
-import { useCallback, useState } from 'react'
-import { flow, pipe } from 'fp-ts/function'
+import { useParams } from 'react-router-dom'
+import { useState } from 'react'
+import { pipe } from 'fp-ts/function'
 import * as RA from 'fp-ts/ReadonlyArray'
-import { useAppDispatch, useAppSelector } from '@/lib/hooks'
+import { useAppSelector } from '@/lib/hooks'
 import CategoricalPlot from '@/pages/EDA/Variable/CategoricalPlot'
 import NumericalPlot from '@/pages/EDA/Variable/NumericalPlot'
 import { codebook } from '@/data'
 
-import { saveColumnState } from '@/features/columns/reducers'
-import { saveSheetState } from '@/features/sheet/reducers'
 import { console } from 'fp-ts'
 import * as S from 'fp-ts/string'
-import * as IO from 'fp-ts/IO'
 import IncorrectDataGrid from './IncorrectDataGrid'
 import BlankDataGrid from './BlankDataGrid'
 import FlaggedDataGrid from './FlaggedDataGrid'
@@ -78,8 +75,6 @@ const useClasses = makeStyles({
 export function Component() {
   const classes = useClasses()
 
-  const dispatch = useAppDispatch()
-
   const params = useParams()
 
   const firstVisit = useAppSelector(({ sheet }) => sheet.visits[0] ?? '')
@@ -110,22 +105,6 @@ export function Component() {
     : 'categorical'
 
   const isCodebookCategorical = measurementType === 'categorical'
-
-  useBeforeUnload(
-    useCallback(() => {
-      return pipe(
-        [saveColumnState, saveSheetState] as const,
-        RA.map(
-          flow(
-            (x) => x(),
-            (x) => dispatch(x),
-            IO.of,
-          ),
-        ),
-        IO.sequenceArray,
-      )()
-    }, [dispatch]),
-  )
 
   const [isUserCategorical, setIsUserCategorical] = useState(false)
 
