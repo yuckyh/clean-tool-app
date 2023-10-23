@@ -18,7 +18,7 @@ interface Props {
 const useClasses = makeStyles({
   cell: {
     alignItems: 'center',
-    minHeight: '40px',
+    minHeight: '44px',
     display: 'flex',
     width: '100%',
   },
@@ -54,7 +54,7 @@ export default function DownloadPreviewCell({ col, row }: Props) {
     E.map(
       flow(
         RA.head,
-        O.flatMap(([, , , reason]) => RR.lookup(reason)(classes)),
+        O.flatMap(([, , reason]) => RR.lookup(reason)(classes)),
         pipe('', constant, O.getOrElse),
       ),
     ),
@@ -63,9 +63,9 @@ export default function DownloadPreviewCell({ col, row }: Props) {
         O.fromPredicate((flags) => flags.length > 1),
         O.flatMap(
           flow(
-            RA.filter(([, , , reason]) => reason !== 'outlier'),
+            RA.filter(([, , reason]) => reason !== 'outlier'),
             RA.head,
-            O.flatMap(([, , , reason]) => RR.lookup(reason)(classes)),
+            O.flatMap(([, , reason]) => RR.lookup(reason)(classes)),
           ),
         ),
         pipe('', constant, O.getOrElse),

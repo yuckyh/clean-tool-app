@@ -5,7 +5,15 @@
 import { getFormattedColumns } from '@/features/columns/selectors'
 import { useAppSelector } from '@/lib/hooks'
 import type { TableColumnDefinition } from '@fluentui/react-components'
-import { createTableColumn } from '@fluentui/react-components'
+import {
+  createTableColumn,
+  makeStyles,
+  shorthands,
+  Subtitle2,
+  Button,
+  tokens,
+  Title1,
+} from '@fluentui/react-components'
 import { constant, identity } from 'fp-ts/function'
 import { useMemo } from 'react'
 import * as RA from 'fp-ts/ReadonlyArray'
@@ -14,7 +22,19 @@ import { stringLookup } from '@/lib/array'
 import SimpleDataGrid from '@/components/SimpleDataGrid'
 import PreviewCell from './PreviewCell'
 
+const useClasses = makeStyles({
+  root: {
+    rowGap: tokens.spacingVerticalXL,
+    flexDirection: 'column',
+    display: 'flex',
+    width: '80%',
+    ...shorthands.margin(0, 'auto'),
+  },
+})
+
 export function Component() {
+  const classes = useClasses()
+
   const dataLength = useAppSelector(({ sheet }) => sheet.data.length)
   const columnsLength = useAppSelector(getColumnsLength)
   const formattedColumns = useAppSelector(getFormattedColumns)
@@ -33,12 +53,17 @@ export function Component() {
   )
 
   return (
-    <section>
+    <section className={classes.root}>
+      <Title1>Download</Title1>
+      <Subtitle2>Confirm your changes before downloading your file</Subtitle2>
       <SimpleDataGrid
         cellFocusMode={constant('none')}
         columns={columnDefinitions}
         items={items}
       />
+      <div>
+        <Button appearance="primary">Download</Button>
+      </div>
     </section>
   )
 }

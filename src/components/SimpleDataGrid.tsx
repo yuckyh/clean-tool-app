@@ -15,9 +15,11 @@ import {
   SkeletonItem,
   DataGridRow,
   makeStyles,
+  shorthands,
   Subtitle1,
   DataGrid,
   Skeleton,
+  tokens,
 } from '@fluentui/react-components'
 import { useCallback, Suspense, useMemo } from 'react'
 
@@ -32,6 +34,10 @@ export interface Props<T>
 }
 
 const useClasses = makeStyles({
+  cell: {
+    minWidth: '160px',
+    ...shorthands.padding(0, tokens.spacingHorizontalS),
+  },
   container: {
     minWidth: 'fit-content',
     width: '100%',
@@ -42,9 +48,6 @@ const useClasses = makeStyles({
   },
   skeletonCell: {
     width: '100%',
-  },
-  cell: {
-    minWidth: '160px',
   },
 })
 

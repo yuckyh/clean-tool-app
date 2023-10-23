@@ -9,7 +9,7 @@ import { createLazyMemo } from '@/lib/utils'
 
 import { constant, identity } from 'fp-ts/function'
 import * as RA from 'fp-ts/ReadonlyArray'
-import PreviewHeaderCell from './PreviewHeaderCell'
+import HeaderCell from './HeaderCell'
 import { getColumnsLength } from '../selectors'
 
 interface Props {
@@ -18,7 +18,7 @@ interface Props {
 
 const MemoizedValueCell = createLazyMemo(
   'MemoizedValueCell',
-  () => import('./PreviewValueCell'),
+  () => import('./ValueCell'),
 )
 
 const MemoizedSimpleDataGrid = createLazyMemo<SimpleDataGridProps<number>>(
@@ -38,7 +38,7 @@ function PreviewDataGrid({ isOriginal = false }: Props) {
       RA.makeBy(columnsLength, (pos) =>
         createTableColumn<number>({
           renderHeaderCell: constant(
-            <PreviewHeaderCell isOriginal={isOriginal} pos={pos} />,
+            <HeaderCell isOriginal={isOriginal} pos={pos} />,
           ),
           renderCell: (row) => <MemoizedValueCell row={row} col={pos} />,
           columnId: `${pos}`,

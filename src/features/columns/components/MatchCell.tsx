@@ -5,6 +5,8 @@ import {
   Combobox,
   Spinner,
   Option,
+  shorthands,
+  tokens,
 } from '@fluentui/react-components'
 import { useCallback, useState, useMemo, memo } from 'react'
 
@@ -36,6 +38,7 @@ interface Props {
 const useClasses = makeStyles({
   root: {
     minWidth: '150px',
+    ...shorthands.padding(0, tokens.spacingHorizontalS),
   },
 })
 

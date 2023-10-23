@@ -1,9 +1,16 @@
-import { makeStyles, Subtitle1, Caption1 } from '@fluentui/react-components'
+import {
+  makeStyles,
+  shorthands,
+  Subtitle1,
+  Caption1,
+  tokens,
+} from '@fluentui/react-components'
 
 const useClasses = makeStyles({
   root: {
     flexDirection: 'column',
     display: 'flex',
+    ...shorthands.padding(0, tokens.spacingHorizontalS),
   },
 })
 

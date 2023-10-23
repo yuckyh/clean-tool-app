@@ -1,4 +1,4 @@
-import { makeStyles, tokens } from '@fluentui/react-components'
+import { makeStyles, shorthands, tokens } from '@fluentui/react-components'
 import { useFluentColorScale } from '@/lib/plotly'
 import { useAppSelector } from '@/lib/hooks'
 import Plot from '@/components/Plot'
@@ -6,16 +6,18 @@ import Plot from '@/components/Plot'
 import { getScore } from '../selectors'
 
 const useClasses = makeStyles({
+  root: {
+    alignItems: 'center',
+    display: 'flex',
+    width: '100%',
+    ...shorthands.padding(0, tokens.spacingHorizontalS),
+    columnGap: tokens.spacingHorizontalXS,
+  },
   plot: {
     maxHeight: '44px',
     height: '44px',
     width: '80%',
     flexGrow: 1,
-  },
-  root: {
-    alignItems: 'center',
-    display: 'flex',
-    width: '100%',
   },
 })
 

@@ -43,8 +43,7 @@ const initialState: State = {
     S.split('],['),
     RA.filter(P.not(S.isEmpty)),
     RA.map(flow(S.split(','), RA.filter(P.not(S.isEmpty)))),
-    (x) => identity(x) as readonly (readonly [string, string, string])[],
-    RA.map(([sheetName, visit, reason]) => [sheetName, visit, reason] as Flag),
+    (x) => identity(x) as readonly Flag[],
   ),
   originalColumns: pipe(
     getPersisted(listKeys[2], defaultValue),

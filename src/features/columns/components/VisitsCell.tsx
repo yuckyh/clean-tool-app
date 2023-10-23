@@ -1,5 +1,11 @@
 import type { DropdownProps } from '@fluentui/react-components'
-import { makeStyles, Dropdown, Option } from '@fluentui/react-components'
+import {
+  makeStyles,
+  shorthands,
+  Dropdown,
+  Option,
+  tokens,
+} from '@fluentui/react-components'
 import { type RefObject, useCallback } from 'react'
 import type { AlertRef } from '@/components/AlertDialog'
 
@@ -25,6 +31,7 @@ interface Props {
 const useClasses = makeStyles({
   root: {
     minWidth: '150px',
+    ...shorthands.padding(0, tokens.spacingHorizontalS),
   },
 })
 

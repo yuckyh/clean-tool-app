@@ -1,4 +1,9 @@
-import { mergeClasses, makeStyles, tokens } from '@fluentui/react-components'
+import {
+  mergeClasses,
+  makeStyles,
+  shorthands,
+  tokens,
+} from '@fluentui/react-components'
 import { useAppSelector } from '@/lib/hooks'
 
 import { codebook } from '@/data'
@@ -14,12 +19,14 @@ interface Props {
 }
 
 const useClasses = makeStyles({
-  columnHeader: {
+  root: {
     alignItems: 'center',
+    textAlign: 'center',
     fontWeight: 'bold',
-    minHeight: '40px',
+    minHeight: '44px',
     display: 'flex',
     width: '100%',
+    ...shorthands.padding(0, tokens.spacingHorizontalS),
   },
   categoricalHeader: {
     backgroundColor: tokens.colorPalettePurpleBackground2,
@@ -29,7 +36,7 @@ const useClasses = makeStyles({
   },
 })
 
-export default function PreviewHeaderCell({ isOriginal, pos }: Props) {
+export default function HeaderCell({ isOriginal, pos }: Props) {
   const classes = useClasses()
 
   const column = useAppSelector((state) =>
@@ -51,7 +58,7 @@ export default function PreviewHeaderCell({ isOriginal, pos }: Props) {
     classes[isCodebookCategorical ? 'categoricalHeader' : 'numericalHeader']
 
   return (
-    <div className={mergeClasses(classes.columnHeader, styleClass)}>
+    <div className={mergeClasses(classes.root, !isOriginal ? styleClass : '')}>
       {column}
     </div>
   )

@@ -14,7 +14,7 @@ import {
   tokens,
   Card,
 } from '@fluentui/react-components'
-import { constant } from 'fp-ts/function'
+import { constant, pipe } from 'fp-ts/function'
 import { useMemo } from 'react'
 import * as RA from 'fp-ts/ReadonlyArray'
 import * as N from 'fp-ts/number'
@@ -23,7 +23,7 @@ import { useAppSelector } from '@/lib/hooks'
 
 interface SummaryStats {
   statistic: string
-  value: number
+  value: string
 }
 
 interface Props {
@@ -55,7 +55,7 @@ export default function SummaryTable({ isCategorical, column, visit }: Props) {
     getCleanNumericalRow(state, column, visit),
   )
 
-  const cleanValues = useMemo(
+  const numericalValues = useMemo(
     () => RA.map(getIndexedValue)(numericalSeries),
     [numericalSeries],
   )
@@ -77,34 +77,40 @@ export default function SummaryTable({ isCategorical, column, visit }: Props) {
   )
 
   const dataSum = useMemo(
-    () => RA.reduce(0, N.MonoidSum.concat)(cleanValues),
-    [cleanValues],
+    () => RA.reduce(0, N.MonoidSum.concat)(numericalValues),
+    [numericalValues],
   )
 
   const summaryStatistics: readonly SummaryStats[] = useMemo(
     () =>
-      isCategorical
-        ? [{ value: categoricalSeries.length, statistic: 'Count' }]
-        : [
-            { value: cleanValues.length, statistic: 'Count' },
-            {
-              value: Math.min(...cleanValues),
-              statistic: 'Min',
-            },
-            {
-              value: Math.max(...cleanValues),
-              statistic: 'Max',
-            },
-            {
-              value: dataSum / cleanValues.length,
-              statistic: 'Mean',
-            },
-            {
-              statistic: 'Sum',
-              value: dataSum,
-            },
-          ],
-    [isCategorical, categoricalSeries.length, cleanValues, dataSum],
+      pipe(
+        isCategorical
+          ? [{ value: categoricalSeries.length, statistic: 'count' }]
+          : [
+              { value: numericalValues.length, statistic: 'count' },
+              {
+                value: Math.min(...numericalValues),
+                statistic: 'min',
+              },
+              {
+                value: Math.max(...numericalValues),
+                statistic: 'max',
+              },
+              {
+                value: dataSum / numericalValues.length,
+                statistic: 'mean',
+              },
+              {
+                statistic: 'sum',
+                value: dataSum,
+              },
+            ],
+        RA.map(({ statistic, value }) => ({
+          statistic: statistic.replace(/^./g, (c) => c.toUpperCase()),
+          value: value.toFixed(2),
+        })),
+      ),
+    [isCategorical, categoricalSeries.length, numericalValues, dataSum],
   )
   return (
     <Card className={classes.card} size="large">

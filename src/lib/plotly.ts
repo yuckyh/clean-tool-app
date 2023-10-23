@@ -56,5 +56,5 @@ export const useFluentColorScale = (
     RA.flap(n - 1),
     RA.map(timeToColorStep),
     RA.flap(rgbDiffs),
-  ) as ColorScale[]
+  ) as ColorScale
 }
