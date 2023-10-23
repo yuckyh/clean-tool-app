@@ -19,7 +19,7 @@ import { FlagEq } from './selectors'
 
 export type FlagReason = 'incorrect' | 'missing' | 'outlier'
 
-export type Flag = readonly [string, string, number, FlagReason]
+export type Flag = readonly [string, string, FlagReason]
 
 interface State {
   originalColumns: readonly string[]
@@ -43,12 +43,8 @@ const initialState: State = {
     S.split('],['),
     RA.filter(P.not(S.isEmpty)),
     RA.map(flow(S.split(','), RA.filter(P.not(S.isEmpty)))),
-    (x) =>
-      identity(x) as readonly (readonly [string, string, string, string])[],
-    RA.map(
-      ([sheetName, visit, pos, reason]) =>
-        [sheetName, visit, parseInt(pos, 10), reason] as Flag,
-    ),
+    (x) => identity(x) as readonly (readonly [string, string, string])[],
+    RA.map(([sheetName, visit, reason]) => [sheetName, visit, reason] as Flag),
   ),
   originalColumns: pipe(
     getPersisted(listKeys[2], defaultValue),
@@ -87,7 +83,7 @@ const sheetSlice = createSlice({
           flow(RA.filter((cell) => !FlagEq.equals(cell, payload))),
           RA.append(payload),
         ),
-      ) as [string, string, number, FlagReason][]
+      ) as [string, string, FlagReason][]
 
       return state
     },

@@ -18,21 +18,18 @@ import SimpleDataGrid from '@/components/SimpleDataGrid'
 import { useAppDispatch, useAppSelector } from '@/lib/hooks'
 import { constant, pipe, flow } from 'fp-ts/function'
 import * as RA from 'fp-ts/ReadonlyArray'
-import * as O from 'fp-ts/Option'
 import * as S from 'fp-ts/string'
 import * as RS from 'fp-ts/ReadonlySet'
 import * as IO from 'fp-ts/IO'
-import * as N from 'fp-ts/number'
+import type { Flag } from '@/features/sheet/reducers'
 import { syncFlaggedCells } from '@/features/sheet/reducers'
-import { getIndexedIndex, getIndexedValue, stringLookup } from '@/lib/array'
+import { getIndexedIndex, getIndexedValue } from '@/lib/array'
 import {
   getIndexedRowIncorrects,
-  getFilteredFlaggedRows,
   getIndexedRowMissings,
+  getFlaggedRows,
   getIndexedRow,
 } from '@/features/sheet/selectors'
-import { dump } from '@/lib/logger'
-import { strEquals } from '@/lib/string'
 import FilterInput from './FilterInput'
 
 interface Props {
@@ -80,7 +77,7 @@ export default function FlaggedDataGrid({
   )
 
   const flaggedRows = useAppSelector((state) =>
-    getFilteredFlaggedRows(state, title, 'outlier'),
+    getFlaggedRows(state, title, 'outlier'),
   )
 
   const indices = useMemo(() => RA.map(getIndexedIndex)(series), [series])
@@ -98,43 +95,42 @@ export default function FlaggedDataGrid({
     { selectedItems },
   ) => {
     const shouldAdd = flaggedRows.size < selectedItems.size
-    const subtractor = shouldAdd ? selectedItems : flaggedRows
+    const subtractor = (
+      shouldAdd ? selectedItems : flaggedRows
+    ) as ReadonlySet<string>
 
-    const subtractee = shouldAdd ? flaggedRows : selectedItems
+    const subtractee = (
+      shouldAdd ? flaggedRows : selectedItems
+    ) as ReadonlySet<string>
 
-    const checkedPos = pipe(
-      subtractor as ReadonlySet<number>,
-      RS.difference(N.Eq)(subtractee as ReadonlySet<number>),
-      RS.reduce(N.Ord)(0, N.MonoidSum.concat),
+    const checkedPosList = pipe(
+      subtractor,
+      RS.difference(S.Eq)(subtractee),
+      RS.toReadonlyArray(S.Ord),
+      RA.filter((checkedPos) => RA.elem(S.Eq)(checkedPos)(indices)),
     )
 
-    const currentIndex = stringLookup(indices)(checkedPos)
+    const payloads = pipe(
+      checkedPosList,
+      RA.map((currentIndex) => [currentIndex, title, 'outlier'] as Flag),
+    )
+
+    const missingPayloads = pipe(
+      checkedPosList,
+      RA.filter((checkedPos) => RA.elem(S.Eq)(checkedPos)(missingIndices)),
+      RA.map((currentIndex) => [currentIndex, title, 'missing'] as Flag),
+    )
+
+    const incorrectPayloads = pipe(
+      checkedPosList,
+      RA.filter((checkedPos) => RA.elem(S.Eq)(checkedPos)(incorrectIndices)),
+      RA.map((currentIndex) => [currentIndex, title, 'incorrect'] as Flag),
+    )
 
     return pipe(
-      [
-        [missingIndices, 'missing'],
-        [incorrectIndices, 'incorrect'],
-        [indices, 'outlier'],
-      ] as const,
-      RA.map(
-        ([checkIndices, reason]) =>
-          [
-            pipe(currentIndex, strEquals, RA.findIndex)(checkIndices),
-            reason,
-          ] as const,
-      ),
-      RA.filter(([pos]) => O.isSome(pos)),
-      RA.map(
-        flow(
-          ([pos, reason]) =>
-            [pipe(-1, constant, O.getOrElse)(pos), reason] as const,
-          (x) => [currentIndex, title, ...x] as const,
-          dump,
-          syncFlaggedCells,
-          (x) => dispatch(x),
-        ),
-      ),
-      IO.of,
+      [...payloads, ...missingPayloads, ...incorrectPayloads] as const,
+      RA.map(flow(syncFlaggedCells, (x) => dispatch(x), IO.of)),
+      IO.sequenceArray,
     )()
   }
 
@@ -182,7 +178,6 @@ export default function FlaggedDataGrid({
     ({ target }) => {
       const { value } = target
       setValueFilter(value)
-      return undefined
     },
     [],
   )
@@ -191,7 +186,6 @@ export default function FlaggedDataGrid({
     ({ target }) => {
       const { value } = target
       setIndexFilter(value)
-      return undefined
     },
     [],
   )
@@ -217,6 +211,7 @@ export default function FlaggedDataGrid({
         selectionMode="multiselect"
         selectedItems={flaggedRows}
         columns={columnsDefinition}
+        getRowId={getIndexedIndex}
         items={filteredRows}
       />
     </Card>

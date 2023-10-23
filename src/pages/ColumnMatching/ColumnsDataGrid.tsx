@@ -68,6 +68,9 @@ export default function ColumnsDataGrid({ alertRef }: Readonly<Props>) {
   const dispatch = useAppDispatch()
 
   const columnsLength = useAppSelector(getColumnsLength)
+  const matchVisitsLength = useAppSelector(
+    ({ columns }) => columns.matchVisits.length,
+  )
 
   const columnComparer = useAppSelector(getColumnComparer)
   const matchComparer = useAppSelector(getMatchComparer)
@@ -144,22 +147,18 @@ export default function ColumnsDataGrid({ alertRef }: Readonly<Props>) {
 
   useEffect(() => {
     pipe(
-      columnsLength,
+      matchVisitsLength,
       TO.fromPredicate((length) => length === 0),
-      TO.flatMap(() => TO.of(fetchSheet)),
-      TO.tap((x) =>
-        pipe(x(), (action) => dispatch(action), promisedTaskOption),
-      ),
-      TO.match(
-        () => fetchMatches,
-        () => fetchMatches,
-      ),
+      pipe(fetchSheet, constant, TO.map),
+      TO.tap((x) => pipe(dispatch(x()), promisedTaskOption)),
+      pipe(fetchMatches, constant, TO.map),
+      pipe(fetchMatches, T.of, constant, TO.getOrElse),
       T.flatMap((x) => pipe(dispatch(x()), promisedTask)),
       T.tap(T.of),
-      T.tapIO(() => stopLoading),
+      T.tapIO(constant(stopLoading)),
     )().catch(dumpError)
     return undefined
-  }, [dispatch, columnsLength, stopLoading])
+  }, [dispatch, columnsLength, stopLoading, matchVisitsLength])
 
   return !isLoading ? (
     <Loader

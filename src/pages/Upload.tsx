@@ -97,17 +97,13 @@ export function Component() {
   }, [alertRef])
 
   const handleResetConfirm = useCallback(() => {
-    const ioActions = pipe(
-      [deleteProgressState, deleteColumns] as const,
-      RA.map(flow((x) => x(), IO.of)),
-    )
-
     pipe(
-      dispatch,
+      [deleteProgressState, deleteColumns] as const,
+      RA.map(flow((x) => dispatch(x()), IO.of)),
+      IO.sequenceArray,
+      constant(sheetInputRef.current?.setFileTask('deleted')),
       IO.of,
-      IO.sequenceArray(ioActions),
-      () => sheetInputRef.current?.setFileTask('deleted'),
-      IO.of,
+      IO.tap(IO.of),
       () => deleteSheet,
       T.of,
       T.tap((x) => pipe(dispatch(x()), promisedTask)),

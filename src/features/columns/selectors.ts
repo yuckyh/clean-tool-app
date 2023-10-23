@@ -20,12 +20,12 @@ import { strEquals } from '@/lib/string'
 
 export const getMatchVisit = createSelector(
   [getMatchVisits, getPosParam],
-  (matchVisits, pos) => matchVisits[pos] ?? 0,
+  (matchVisits, pos) => numberLookup(matchVisits)(pos),
 )
 
 export const getMatchColumn = createSelector(
   [getMatchColumns, getPosParam],
-  (matchColumns, pos) => matchColumns[pos] ?? '',
+  (matchColumns, pos) => stringLookup(matchColumns)(pos),
 )
 
 export const getMatches = createSelector(
@@ -40,14 +40,25 @@ export const getScores = createSelector(
 
 export const getVisit = createSelector(
   [getVisits, getMatchVisit],
-  (visits, matchVisit) => visits[matchVisit] ?? '',
+  (visits, matchVisit) => stringLookup(visits)(matchVisit),
 )
 
 export const getColumnDuplicates = createSelector(
   [getMatchColumns, getMatchColumn],
   (matchColumns, matchColumn) =>
-    RA.map(RA.head)(
-      indexDuplicateSearcher(pipe(matchColumns, RA.of), [matchColumn]),
+    indexDuplicateSearcher(pipe(matchColumns, RA.map(RA.of)), [matchColumn]),
+)
+
+export const getColumnDuplicatesList = createSelector(
+  [getMatchColumns],
+  (matchColumns) =>
+    pipe(
+      matchColumns,
+      RA.map((matchColumn) =>
+        indexDuplicateSearcher(pipe(matchColumns, RA.map(RA.of)), [
+          matchColumn,
+        ]),
+      ),
     ),
 )
 
@@ -55,6 +66,19 @@ export const getShouldFormat = createSelector(
   [getMatchVisit, getColumnDuplicates],
   (matchVisit, columnDuplicates) =>
     columnDuplicates.length > 1 || matchVisit !== 0,
+)
+
+const getShouldFormatList = createSelector(
+  [getMatchVisits, getColumnDuplicatesList],
+  (matchVisits, columnDuplicatesList) =>
+    pipe(
+      matchVisits,
+      RA.zip(columnDuplicatesList),
+      RA.map(
+        ([matchVisit, columnDuplicates]) =>
+          columnDuplicates.length > 1 || matchVisit !== 0,
+      ),
+    ),
 )
 
 export const getColumnPath = createSelector(
@@ -67,6 +91,21 @@ export const getFormattedColumn = createSelector(
   [getMatchColumn, getShouldFormat, getVisit],
   (matchColumn, shouldFormat, visit) =>
     shouldFormat ? `${matchColumn}_${visit}` : matchColumn,
+)
+
+export const getFormattedColumns = createSelector(
+  [getMatchColumns, getShouldFormatList, getVisits, getMatchVisits],
+  (matchColumns, shouldFormatList, visits, matchVisits) =>
+    pipe(
+      matchColumns,
+      RA.zip(shouldFormatList),
+      RA.zip(matchVisits),
+      RA.map(([[matchColumn, shouldFormat], matchVisit]) =>
+        shouldFormat
+          ? `${matchColumn}_${stringLookup(visits)(matchVisit)}`
+          : matchColumn,
+      ),
+    ),
 )
 
 export const getIndices = createSelector(

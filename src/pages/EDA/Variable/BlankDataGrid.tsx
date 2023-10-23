@@ -11,6 +11,7 @@ import {
   Subtitle2,
   Title2,
   tokens,
+  Body1,
   Card,
 } from '@fluentui/react-components'
 import { useMemo } from 'react'
@@ -18,19 +19,16 @@ import SimpleDataGrid from '@/components/SimpleDataGrid'
 import { useAppDispatch, useAppSelector } from '@/lib/hooks'
 import {
   getIndexedRowMissings as getIndexedRowBlanks,
-  getFilteredFlaggedRows,
-  getIndexedRow,
+  getFlaggedRows,
 } from '@/features/sheet/selectors'
-import { constant, identity, flow, pipe } from 'fp-ts/function'
-import { getIndexedIndex, getIndexedValue, stringLookup } from '@/lib/array'
-import type { FlagReason, Flag } from '@/features/sheet/reducers'
+import { constant, flow, pipe } from 'fp-ts/function'
+import { getIndexedIndex, getIndexedValue } from '@/lib/array'
+import type { Flag } from '@/features/sheet/reducers'
 import { syncFlaggedCells } from '@/features/sheet/reducers'
 import * as RS from 'fp-ts/ReadonlySet'
 import * as RA from 'fp-ts/ReadonlyArray'
-import * as O from 'fp-ts/Option'
 import * as IO from 'fp-ts/IO'
-import * as N from 'fp-ts/number'
-import { strEquals } from '@/lib/string'
+import * as S from 'fp-ts/string'
 
 const cellFocusMode: () => DataGridCellFocusMode = constant('none')
 
@@ -59,11 +57,8 @@ function BlankDataGrid({ column, visit, title }: Props) {
   const series = useAppSelector((state) =>
     getIndexedRowBlanks(state, column, visit),
   )
-  const unfilteredSeries = useAppSelector((state) =>
-    getIndexedRow(state, column, visit),
-  )
   const flaggedRows = useAppSelector((state) =>
-    getFilteredFlaggedRows(state, title, 'missing'),
+    getFlaggedRows(state, title, 'missing'),
   )
 
   const columnDefinition: TableColumnDefinition<readonly [string, string]>[] =
@@ -88,10 +83,6 @@ function BlankDataGrid({ column, visit, title }: Props) {
     )
 
   const indices = useMemo(() => pipe(series, RA.map(getIndexedIndex)), [series])
-  const unfilteredIndices = useMemo(
-    () => pipe(unfilteredSeries, RA.map(getIndexedIndex)),
-    [unfilteredSeries],
-  )
 
   const handleSelectionChange: DataGridProps['onSelectionChange'] = (
     _1,
@@ -101,40 +92,33 @@ function BlankDataGrid({ column, visit, title }: Props) {
 
     const subtractor = (
       shouldAdd ? selectedItems : flaggedRows
-    ) as ReadonlySet<number>
+    ) as ReadonlySet<string>
 
     const subtractee = (
       shouldAdd ? flaggedRows : selectedItems
-    ) as ReadonlySet<number>
+    ) as ReadonlySet<string>
 
-    const checkedPos = pipe(
+    const checkedPosList = pipe(
       subtractor,
-      RS.difference(N.Eq)(subtractee),
-      RS.reduce(N.Ord)(0, N.MonoidSum.concat),
+      RS.difference(S.Eq)(subtractee),
+      RS.toReadonlyArray(S.Ord),
+      RA.filter((checkedPos) => RA.elem(S.Eq)(checkedPos)(indices)),
     )
 
-    const currentIndex = stringLookup(indices)(checkedPos)
+    const payloads = pipe(
+      checkedPosList,
+      RA.map((currentIndex) => [currentIndex, title, 'missing'] as Flag),
+    )
 
-    const checkedUnfilteredPos = pipe(
-      unfilteredIndices,
-      pipe(currentIndex, strEquals, RA.findIndex),
-      pipe(0, constant, O.getOrElse),
+    const unfilteredPayloads = pipe(
+      checkedPosList,
+      RA.map((currentIndex) => [currentIndex, title, 'outlier'] as Flag),
     )
 
     return pipe(
-      [
-        [checkedPos, 'missing'],
-        [checkedUnfilteredPos, 'outlier'],
-      ] as readonly (readonly [number, FlagReason])[],
-      RA.map(
-        flow(
-          (x) => [currentIndex, title, ...x] as Flag,
-          syncFlaggedCells,
-          (x) => dispatch(x),
-          IO.of,
-        ),
-      ),
-      IO.traverseArray(identity),
+      [...payloads, ...unfilteredPayloads] as const,
+      RA.map(flow(syncFlaggedCells, (x) => dispatch(x), IO.of)),
+      IO.sequenceArray,
     )()
   }
 
@@ -142,15 +126,19 @@ function BlankDataGrid({ column, visit, title }: Props) {
     <Card className={classes.card} size="large">
       <Title2>Blank Data</Title2>
       <Subtitle2>Flag if the data is blank</Subtitle2>
-      <SimpleDataGrid
-        onSelectionChange={handleSelectionChange}
-        cellFocusMode={cellFocusMode}
-        selectionMode="multiselect"
-        selectedItems={flaggedRows}
-        columns={columnDefinition}
-        items={series}
-        // getRowId={}
-      />
+      {series.length ? (
+        <SimpleDataGrid
+          onSelectionChange={handleSelectionChange}
+          cellFocusMode={cellFocusMode}
+          selectionMode="multiselect"
+          selectedItems={flaggedRows}
+          columns={columnDefinition}
+          getRowId={getIndexedIndex}
+          items={series}
+        />
+      ) : (
+        <Body1>No missing data found</Body1>
+      )}
     </Card>
   )
 }

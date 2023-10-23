@@ -61,39 +61,31 @@ const columnsSlice = createSlice({
         RA.map(RA.map(({ score = 0 }) => score)),
       ) as number[][]
 
-      if (!matchColumns.length) {
-        state.matchColumns = pipe(
-          matchesList,
-          RA.map(flow(RA.head, pipe('', constant, O.getOrElse))),
-        ) as string[]
+      state.matchColumns = matchColumns.length
+        ? matchColumns
+        : (pipe(
+            matchesList,
+            RA.map(flow(RA.head, pipe('', constant, O.getOrElse))),
+          ) as string[])
 
-        return state
-      }
-
-      if (!matchVisits.length) {
-        state.matchVisits =
-          // pipe(matchColumns))
-          state.matchColumns
+      state.matchVisits = matchVisits.length
+        ? matchVisits
+        : state.matchColumns
             .map((x, i) => [x, i] as const) // Save the original index
             .sort(([a], [b]) => a.localeCompare(b)) // Sort by name to detect duplicates
             .map(([match, i], sortedI, arr) => {
-              const [prevMatch] = arr[sortedI - 1] ?? ['', 0]
-
-              return [Number(match === prevMatch), i] as const
-            }) // Mark the duplicates with ones
-            .map(([increment, i], sortedI, arr) => {
-              const [prevIncrement] = arr[sortedI - 1] ?? [0, 0]
+              const prevMatch = arr[sortedI - 1]?.[0] ?? ''
+              const prevPrevMatch = arr[sortedI - 2]?.[0] ?? ''
+              const prevIncrement = Number(prevMatch === prevPrevMatch)
+              const increment = Number(match === prevMatch)
 
               return [
                 increment + (increment === 1 ? prevIncrement : 0),
                 i,
               ] as const
-            }) // Increment the ones to get the visit number
+            }) // Mark the duplicates with ones
             .sort(([, a], [, b]) => a - b) // Sort by the original index
             .map(([match]) => match) // Remove the original index
-
-        return state
-      }
 
       return state
     })

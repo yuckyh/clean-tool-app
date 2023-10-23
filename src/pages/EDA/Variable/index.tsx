@@ -29,13 +29,6 @@ type VariableType = Extract<Property<typeof variableType>, string>
 const variableType = ['numerical', 'categorical'] as const
 
 const useClasses = makeStyles({
-  rows: {
-    rowGap: tokens.spacingVerticalXL,
-    // justifyContent: 'space-between',
-    flexDirection: 'column',
-    display: 'flex',
-    width: '100%',
-  },
   card: {
     height: '100%',
     width: '100%',
@@ -45,6 +38,12 @@ const useClasses = makeStyles({
   actions: {
     columnGap: tokens.spacingVerticalS,
     flexDirection: 'row',
+    display: 'flex',
+    width: '100%',
+  },
+  rows: {
+    rowGap: tokens.spacingVerticalXL,
+    flexDirection: 'column',
     display: 'flex',
     width: '100%',
   },
@@ -142,7 +141,7 @@ export function Component() {
         </div>
         <div className={classes.options}>
           <SummaryTable
-            isCategorical={isCodebookCategorical}
+            isCategorical={isCategorical}
             column={column}
             visit={visit}
           />
@@ -156,7 +155,7 @@ export function Component() {
           <BlankDataGrid column={column} visit={visit} title={title} />
         </div>
         <div className={classes.rows}>
-          {!isCodebookCategorical && (
+          {!isCategorical && (
             <IncorrectDataGrid column={column} visit={visit} title={title} />
           )}
         </div>

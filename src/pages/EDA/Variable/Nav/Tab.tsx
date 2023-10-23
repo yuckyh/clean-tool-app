@@ -1,6 +1,6 @@
 import { makeStyles, Link, Tab } from '@fluentui/react-components'
 import { useLinkClickHandler, useHref } from 'react-router-dom'
-import { getColumnPath } from '@/features/columns/selectors'
+import { getFormattedColumn, getColumnPath } from '@/features/columns/selectors'
 import { useAppSelector } from '@/lib/hooks'
 
 interface Props {
@@ -18,7 +18,7 @@ export default function NavTab({ pos }: Props) {
   const classes = useClasses()
   const path = useAppSelector((state) => getColumnPath(state, pos))
 
-  const label = path.split('/').slice(2).join('_').replace(/-/g, '_')
+  const label = useAppSelector((state) => getFormattedColumn(state, pos))
   const href = useHref(path)
 
   const handleLinkClick = useLinkClickHandler(path)

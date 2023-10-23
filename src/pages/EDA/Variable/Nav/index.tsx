@@ -72,7 +72,7 @@ export default function Nav(props: Props) {
       </TabList>
       <div className={classes.actions}>
         <Button onClick={handleDownloadSubmit} appearance="primary">
-          Download
+          Done
         </Button>
       </div>
     </div>

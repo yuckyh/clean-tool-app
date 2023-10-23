@@ -6,7 +6,5 @@ interface Props {
 }
 
 export default function ValueCell({ pos }: Props) {
-  const column = useAppSelector((state) => getColumn(state, pos))
-
-  return <div>{column}</div>
+  return useAppSelector((state) => getColumn(state, pos))
 }

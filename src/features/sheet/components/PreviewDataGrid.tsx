@@ -47,18 +47,16 @@ function PreviewDataGrid({ isOriginal = false }: Props) {
     [columnsLength, isOriginal],
   )
 
-  // useLoggerEffect({ columnsLength })
-
   return (
     columnsLength > 0 && (
-      <div>
+      <>
         <Title2>Data Preview</Title2>
         <MemoizedSimpleDataGrid
           cellFocusMode={cellFocusMode}
           columns={columnsDefinition}
           items={items}
         />
-      </div>
+      </>
     )
   )
 }

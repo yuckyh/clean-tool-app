@@ -33,7 +33,7 @@ export default function Layout() {
   )
 
   return (
-    <div>
+    <>
       <header className={classes.header}>
         <ProgressNav />
       </header>
@@ -53,6 +53,6 @@ export default function Layout() {
           )}
         </Loader>
       </main>
-    </div>
+    </>
   )
 }

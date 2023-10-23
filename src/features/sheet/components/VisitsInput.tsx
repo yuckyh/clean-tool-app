@@ -75,7 +75,7 @@ export default function VisitsInput() {
   )
 
   return (
-    <div>
+    <>
       <Field label="Number of visits" required>
         <Input
           onChange={handleNoOfVisitChange}
@@ -91,6 +91,6 @@ export default function VisitsInput() {
           <VisitInput visit={visit} key={visit} pos={pos} />
         )),
       )}
-    </div>
+    </>
   )
 }

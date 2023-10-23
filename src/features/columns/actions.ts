@@ -4,8 +4,9 @@ import type { RootState } from '@/app/store'
 import { promisedWorker, columnWorker } from '@/app/workers'
 import { getColumns } from '@/app/selectors'
 
-import { constant, tupled, pipe } from 'fp-ts/function'
-import * as E from 'fp-ts/Either'
+import { constant, tupled, pipe, flow } from 'fp-ts/function'
+import * as O from 'fp-ts/Option'
+import { add } from '@/lib/number'
 import { syncVisits } from '../sheet/reducers'
 
 const messagePromise = pipe(
@@ -32,12 +33,12 @@ export const fetchMatches = createAsyncThunk(
     const { matchVisits } = (getState() as RootState).columns
 
     return pipe(
-      matchVisits,
-      (value): E.Either<typeof value, typeof result> =>
-        value.length > 0 ? E.left(value) : E.right(result),
-      E.getOrElse((value) =>
-        pipe(Math.max(...value) + 1, syncVisits, dispatch, () => result),
+      matchVisits as number[],
+      O.fromPredicate((value) => value.length > 0),
+      O.map(
+        flow(tupled(Math.max), add(1), syncVisits, dispatch, constant(result)),
       ),
+      pipe(result, constant, O.getOrElse),
     )
   },
 )
