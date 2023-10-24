@@ -8,6 +8,8 @@ import * as IO from 'fp-ts/IO'
 import { pipe } from 'fp-ts/function'
 import * as RA from 'fp-ts/ReadonlyArray'
 import { deleteVisits, syncVisits, setVisit } from '../reducers'
+import { dump, dumpName } from '@/lib/logger'
+import { getVisit } from '../selectors'
 
 const useClasses = makeStyles({
   input: {
@@ -17,20 +19,21 @@ const useClasses = makeStyles({
 })
 
 interface VisitInputProps {
-  visit: string
   pos: number
 }
 
-function VisitInput({ visit, pos }: VisitInputProps) {
+function VisitInput({ pos }: VisitInputProps) {
   const classes = useClasses()
 
   const dispatch = useAppDispatch()
+
+  const visit = useAppSelector((state) => getVisit(state, pos))
 
   const handleVisitChange: Required<InputProps>['onChange'] = useCallback(
     ({ target }) => {
       const { value } = target
 
-      return pipe({ visit: value, pos }, setVisit, (x) => dispatch(x), IO.of)()
+      pipe({ visit: value, pos }, setVisit, (x) => dispatch(x), IO.of)()
     },
     [dispatch, pos],
   )
@@ -53,9 +56,9 @@ export default function VisitsInput() {
 
   const dispatch = useAppDispatch()
 
-  const visits = useAppSelector(({ sheet }) => sheet.visits)
+  const visitsLength = useAppSelector(({ sheet }) => sheet.visits.length)
 
-  const [visitsValue, setVisitsValue] = useState(visits.length || 1)
+  const [visitsValue, setVisitsValue] = useState(visitsLength || 1)
 
   const handleNoOfVisitChange: Required<InputProps>['onChange'] = useCallback(
     (_event, { value }) => {
@@ -85,12 +88,9 @@ export default function VisitsInput() {
           type="number"
         />
       </Field>
-      {pipe(
-        visits,
-        RA.mapWithIndex((pos, visit) => (
-          <VisitInput visit={visit} key={visit} pos={pos} />
-        )),
-      )}
+      {RA.makeBy(visitsLength, (pos) => (
+        <VisitInput key={pos} pos={dump(pos)} />
+      ))}
     </>
   )
 }

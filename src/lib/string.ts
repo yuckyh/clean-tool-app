@@ -13,6 +13,7 @@ const kebabToTitle = (slug: string) =>
     RA.reduce('', (acc, cur) => S.Monoid.concat(acc, ` ${cur}`)),
   )
 
+// eslint-disable-next-line import/prefer-default-export
 export const getPathTitle = (path: string, depth = 1) => {
   const result = pipe(
     path,
@@ -24,6 +25,3 @@ export const getPathTitle = (path: string, depth = 1) => {
 
   return result.length > 1 ? result : 'Home'
 }
-
-export const strEquals = (str: string) => (other: string) =>
-  S.Eq.equals(str, other)

@@ -1,8 +1,9 @@
 /// <reference lib="webworker" />
 
 type RequestHandler<
-  Request extends WorkerRequest,
+  Request extends WorkerRequest & { method: Method },
   Response extends WorkerResponse,
+  Method extends Request['method'] = Request['method'],
 > = (request: Request) => Promise<Response> | Response
 
 type Controller<
@@ -14,10 +15,14 @@ interface WorkerRequest {
   method: string
 }
 
-interface WorkerResponse {
-  status: 'fail' | 'ok'
-  error?: Error
-}
+type WorkerResponse =
+  | {
+      status: 'fail'
+      error: Error
+    }
+  | {
+      status: 'ok'
+    }
 
 interface GenericWorkerEventMap<T> extends WorkerEventMap {
   messageerror: MessageEvent<T>

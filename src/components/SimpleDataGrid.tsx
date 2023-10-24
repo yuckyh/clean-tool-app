@@ -19,7 +19,6 @@ import {
   Subtitle1,
   DataGrid,
   Skeleton,
-  tokens,
 } from '@fluentui/react-components'
 import { useCallback, Suspense, useMemo } from 'react'
 
@@ -36,7 +35,7 @@ export interface Props<T>
 const useClasses = makeStyles({
   cell: {
     minWidth: '160px',
-    ...shorthands.padding(0, tokens.spacingHorizontalS),
+    ...shorthands.padding(0),
   },
   container: {
     minWidth: 'fit-content',
@@ -46,7 +45,7 @@ const useClasses = makeStyles({
     overflowX: 'auto',
     width: '100%',
   },
-  skeletonCell: {
+  skeleton: {
     width: '100%',
   },
 })
@@ -85,7 +84,7 @@ export default function SimpleDataGrid<T>({
             key={columnId}>
             <Suspense
               fallback={
-                <Skeleton className={classes.skeletonCell}>
+                <Skeleton className={classes.skeleton}>
                   <SkeletonItem size={40} />
                 </Skeleton>
               }>
@@ -95,7 +94,7 @@ export default function SimpleDataGrid<T>({
         )}
       </DataGridRow>
     ),
-    [cellFocusMode, classes.cell, classes.skeletonCell],
+    [cellFocusMode, classes.cell, classes.skeleton],
   )
 
   return (

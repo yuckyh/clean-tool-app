@@ -9,6 +9,7 @@
     "resolveJsonModule": true,
     "allowSyntheticDefaultImports": true,
     "noEmit": true,
+    "skipLibCheck": true,
     "outDir": "dist",
 
     /* Linting */

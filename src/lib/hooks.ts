@@ -91,7 +91,7 @@ export const useTokenToHex = (token: Property<ColorTokens>) => {
   const tokenToHex = useCallback(
     () =>
       getComputedStyle(document.body).getPropertyValue(
-        token.substring(4, token.length - 1),
+        token.slice(4, token.length - 1),
       ),
     [token],
   )

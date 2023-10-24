@@ -14,12 +14,28 @@ import {
   tokens,
   Title1,
 } from '@fluentui/react-components'
-import { constant, identity } from 'fp-ts/function'
+import { constant, identity, flow, pipe } from 'fp-ts/function'
 import { useMemo } from 'react'
 import * as RA from 'fp-ts/ReadonlyArray'
-import { getColumnsLength } from '@/features/sheet/selectors'
+import * as O from 'fp-ts/Option'
+import * as RR from 'fp-ts/ReadonlyRecord'
+import * as RS from 'fp-ts/ReadonlySet'
+import {
+  getColumnsLength,
+  getFormattedData,
+  getIndexRow,
+  FlagOrd,
+  FlagEq,
+} from '@/features/sheet/selectors'
 import { stringLookup } from '@/lib/array'
 import SimpleDataGrid from '@/components/SimpleDataGrid'
+import { getFlaggedCells, getColumns, getData } from '@/app/selectors'
+import { dumpName, dump } from '@/lib/logger'
+import { utils } from 'xlsx'
+import { writeFile } from 'xlsx-js-style'
+import { strEquals } from '@/lib/fp'
+import type { Flag } from '@/features/sheet/reducers'
+import * as S from 'fp-ts/string'
 import PreviewCell from './PreviewCell'
 
 const useClasses = makeStyles({
@@ -30,7 +46,21 @@ const useClasses = makeStyles({
     width: '80%',
     ...shorthands.margin(0, 'auto'),
   },
+  actions: {
+    justifyContent: 'center',
+    display: 'flex',
+    width: '100%',
+  },
 })
+
+const colorMap = pipe(
+  {
+    incorrect: 'FF00FFFF', // RRGGBBAA
+    missing: 'FFFF00FF',
+    outlier: 'FF0000FF',
+  } as const,
+  RR.map(flow(S.slice(1, 7), S.toUpperCase)),
+)
 
 export function Component() {
   const classes = useClasses()
@@ -52,6 +82,113 @@ export function Component() {
     [columnsLength, formattedColumns],
   )
 
+  const fileName = useAppSelector(({ sheet }) => sheet.fileName)
+  const sheetName = useAppSelector(({ sheet }) => sheet.sheetName)
+  const flaggedCells = useAppSelector(getFlaggedCells)
+  const formattedData = useAppSelector(getFormattedData)
+  const dataTypes = useAppSelector(({ columns }) => columns.dataTypes)
+  const indexRow = useAppSelector(getIndexRow)
+
+  dumpName({ formattedData })
+
+  const sheet = useMemo(
+    () => utils.json_to_sheet(formattedData as CellItem[]),
+    [formattedData],
+  )
+
+  const flaggedCellsAddr = useMemo(
+    () =>
+      pipe(
+        flaggedCells,
+        RA.map(([firstIndex, firstColumn]) =>
+          pipe(
+            flaggedCells,
+            RA.filter(
+              ([secondIndex, secondColumn]) =>
+                strEquals(firstIndex)(secondIndex) &&
+                strEquals(firstColumn)(secondColumn),
+            ),
+            (x) =>
+              x.length > 1
+                ? x.filter(([, , reason]) => reason !== 'outlier')
+                : x,
+            RA.head,
+            pipe(['', '', 'outlier'] as Flag, constant, O.getOrElse),
+          ),
+        ),
+        RS.fromReadonlyArray(FlagEq),
+        RS.toReadonlyArray(FlagOrd),
+        RA.mapWithIndex(
+          (i, [flaggedIndex, flaggedCol, flagReason]) =>
+            [
+              {
+                ...pipe(
+                  sheet,
+                  RR.lookup(
+                    utils.encode_cell({
+                      c: pipe(
+                        formattedColumns,
+                        RA.findIndex(strEquals(flaggedCol)),
+                        pipe(Infinity, constant, O.getOrElse),
+                      ),
+                      r: pipe(
+                        indexRow,
+                        RA.findIndex(strEquals(flaggedIndex)),
+                        pipe(Infinity, constant, O.getOrElse),
+                      ),
+                    }),
+                  ),
+                  pipe(
+                    { t: dataTypes[i] === 'categorical' ? 's' : 'n', v: '' },
+                    constant,
+                    O.getOrElse,
+                  ),
+                ),
+                s: {
+                  fill: {
+                    fgColor: {
+                      rgb: colorMap[flagReason],
+                    },
+                    patternType: 'solid',
+                  },
+                },
+              },
+              utils.encode_cell({
+                c: pipe(
+                  formattedColumns,
+                  RA.findIndex(strEquals(flaggedCol)),
+                  pipe(Infinity, constant, O.getOrElse),
+                ),
+                r: pipe(
+                  indexRow,
+                  RA.findIndex(strEquals(flaggedIndex)),
+                  pipe(Infinity, constant, O.getOrElse),
+                ),
+              }),
+            ] as const,
+        ),
+      ),
+    [dataTypes, flaggedCells, formattedColumns, indexRow, sheet],
+  )
+
+  const writtenSheet = useMemo(() => {
+    const newSheet = { ...sheet }
+    flaggedCellsAddr.forEach(([cell, addr]) => {
+      newSheet[addr] = cell
+    })
+    return newSheet
+  }, [flaggedCellsAddr, sheet])
+
+  const workbook = useMemo(() => {
+    const newWorkbook = utils.book_new()
+    utils.book_append_sheet(newWorkbook, writtenSheet, sheetName)
+    return newWorkbook
+  }, [sheetName, writtenSheet])
+
+  const handleFileDownload = () => {
+    writeFile(workbook, `flagged-${fileName}`, { type: 'file' }) as File
+  }
+
   return (
     <section className={classes.root}>
       <Title1>Download</Title1>
@@ -61,8 +198,10 @@ export function Component() {
         columns={columnDefinitions}
         items={items}
       />
-      <div>
-        <Button appearance="primary">Download</Button>
+      <div className={classes.actions}>
+        <Button onClick={handleFileDownload} appearance="primary">
+          Download
+        </Button>
       </div>
     </section>
   )

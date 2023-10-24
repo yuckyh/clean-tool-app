@@ -16,7 +16,9 @@ import {
 } from '@/app/selectors'
 import { indexDuplicateSearcher, numberLookup, stringLookup } from '@/lib/array'
 import fuse from '@/lib/fuse'
-import { strEquals } from '@/lib/string'
+import { strEquals } from '@/lib/fp'
+
+const search = fuse.search.bind(fuse)
 
 export const getMatchVisit = createSelector(
   [getMatchVisits, getPosParam],
@@ -38,7 +40,7 @@ export const getScores = createSelector(
   (scoresList, pos) => scoresList[pos] ?? [],
 )
 
-export const getVisit = createSelector(
+export const getVisitByMatchVisit = createSelector(
   [getVisits, getMatchVisit],
   (visits, matchVisit) => stringLookup(visits)(matchVisit),
 )
@@ -82,13 +84,13 @@ const getShouldFormatList = createSelector(
 )
 
 export const getColumnPath = createSelector(
-  [getMatchColumn, getShouldFormat, getVisit],
+  [getMatchColumn, getShouldFormat, getVisitByMatchVisit],
   (matchColumn, shouldFormat, visit) =>
     `/eda/${matchColumn.replace(/_/g, '-')}${shouldFormat ? `/${visit}` : ''}`,
 )
 
 export const getFormattedColumn = createSelector(
-  [getMatchColumn, getShouldFormat, getVisit],
+  [getMatchColumn, getShouldFormat, getVisitByMatchVisit],
   (matchColumn, shouldFormat, visit) =>
     shouldFormat ? `${matchColumn}_${visit}` : matchColumn,
 )
@@ -127,8 +129,6 @@ export const getMatchIndex = createSelector(
       pipe(-1, constant, O.getOrElse),
     ),
 )
-
-const search = fuse.search.bind(fuse)
 
 export const getScore = createSelector(
   [getMatchIndex, getMatchColumn, getScores],

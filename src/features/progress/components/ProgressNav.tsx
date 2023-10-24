@@ -7,6 +7,7 @@ import {
 import {
   useResolvedPath,
   useBeforeUnload,
+  useNavigation,
   useLocation,
   useNavigate,
 } from 'react-router-dom'
@@ -50,6 +51,7 @@ export default function ProgressNav() {
   const classes = useClasses()
 
   const navigate = useNavigate()
+  const { state: navState } = useNavigation()
 
   const dispatch = useAppDispatch()
 
@@ -80,7 +82,11 @@ export default function ProgressNav() {
     }
 
     navigate(
-      pipe(allowedPaths, RA.lookup(-1), pipe('/', constant, O.getOrElse)),
+      pipe(
+        allowedPaths,
+        RA.lookup(allowedPaths.length - 1),
+        pipe('/', constant, O.getOrElse),
+      ),
     )
   }, [allowedPaths, navigate, shouldNavigateToAllowed])
 
@@ -93,6 +99,18 @@ export default function ProgressNav() {
       document.body.classList.remove(...classList)
     }
   }, [themeClasses])
+
+  useEffect(() => {
+    if (navState === 'loading') {
+      pipe(
+        [saveSheetState, saveColumnState, saveProgressState] as const,
+        RA.map(flow((x) => dispatch(x()), IO.of)),
+        IO.sequenceArray,
+      )()
+      return undefined
+    }
+    return undefined
+  }, [dispatch, navState])
 
   useBeforeUnload(
     useCallback(

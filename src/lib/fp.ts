@@ -4,6 +4,8 @@ import * as TO from 'fp-ts/TaskOption'
 import * as IO from 'fp-ts/IO'
 import * as E from 'fp-ts/Either'
 import * as O from 'fp-ts/Option'
+import * as S from 'fp-ts/string'
+import * as N from 'fp-ts/number'
 
 export const promisedTask =
   <V>(promise: Promise<V>) =>
@@ -45,3 +47,9 @@ export const asMaybe = <E, V>(value: V, condition: boolean, error?: E) => {
   const maybe = getMaybe(value, error)
   return condition ? maybe[1] : maybe[0]
 }
+
+export const strEquals = (str: string) => (other: string) =>
+  S.Eq.equals(str, other)
+
+export const numEquals = (num: number) => (other: number) =>
+  N.Eq.equals(num, other)

@@ -1,12 +1,11 @@
 import type { DependencyList } from 'react'
 import { useEffect } from 'react'
 import { console as fpConsole } from 'fp-ts'
-import { flow, pipe } from 'fp-ts/function'
+import { pipe } from 'fp-ts/function'
 import * as RR from 'fp-ts/ReadonlyRecord'
 import * as IO from 'fp-ts/IO'
 import * as RA from 'fp-ts/ReadonlyArray'
 import { asIO } from './fp'
-import { getIndexedValue } from './array'
 
 export const ioDumpTrace = <T extends Parameters<typeof fpConsole.log>[0]>(
   arg: T,
@@ -38,9 +37,15 @@ export const dumpName = <T>(obj: Readonly<Record<string, T>>) => {
   return pipe(
     obj,
     RR.toReadonlyArray,
-    RA.map(IO.of),
-    IO.traverseArray(IO.tap(ioDumpTrace)),
-    IO.flatMap(flow(RA.map<readonly [string, T], T>(getIndexedValue), IO.of)),
+    RA.map(([name, value]) =>
+      pipe(
+        value,
+        IO.of,
+        IO.tap(() => fpConsole.log(name)),
+        IO.flatMap(ioDumpTrace),
+      ),
+    ),
+    IO.sequenceArray,
   )()[0] as T
 }
 

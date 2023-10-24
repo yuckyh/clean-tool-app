@@ -2,7 +2,7 @@ import { createAsyncThunk } from '@reduxjs/toolkit'
 import type { RootState } from '@/app/store'
 
 import { promisedWorker, sheetWorker } from '@/app/workers'
-import { dumpError } from '@/lib/logger'
+import { dumpError, dumpName } from '@/lib/logger'
 import { pipe } from 'fp-ts/function'
 import * as T from 'fp-ts/Task'
 import * as TE from 'fp-ts/TaskEither'
@@ -31,6 +31,8 @@ export const fetchSheet = createAsyncThunk(
 
     const { workbook } = await messagePromise()
 
+    dumpName({ workbook })
+
     return {
       SheetNames: workbook?.SheetNames,
       bookType: workbook?.bookType,
@@ -47,7 +49,6 @@ export const postFile = createAsyncThunk(
 
     sheetWorker.postMessage(
       {
-        fileName: file.name,
         method: 'postFile',
         file,
       },

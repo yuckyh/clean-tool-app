@@ -1,18 +1,20 @@
-import type { Config, Layout, Data } from 'plotly.js-cartesian-dist-min'
+import type { Config, Layout, Data } from 'plotly.js'
 import type { PlotParams } from 'react-plotly.js'
 
 import createPlotlyComponent from 'react-plotly.js/factory'
 import { tokens } from '@fluentui/react-components'
-import Plotly from 'plotly.js-cartesian-dist-min'
+import Plotly from 'plotly.js-cartesian-dist'
 import { useTokenToHex } from '@/lib/hooks'
 import { pipe } from 'fp-ts/function'
-import { map } from 'fp-ts/ReadonlyArray'
+import * as RA from 'fp-ts/ReadonlyArray'
 
 interface Props extends Partial<PlotParams> {
   data: Data[]
 }
 
 const PlotlyPlot = createPlotlyComponent(Plotly)
+
+// Plotly.register([Bar, Box])
 
 const defaultConfig: Partial<Config> = {
   responsive: true,
@@ -29,7 +31,7 @@ export default function Plot({ config, layout, ...props }: Props) {
       tokens.colorPaletteRedBackground3,
       tokens.colorPaletteYellowBackground3,
     ] as const,
-    map(useTokenToHex),
+    RA.map(useTokenToHex),
   ) as string[]
 
   const defaultLayout: Partial<Layout> = {

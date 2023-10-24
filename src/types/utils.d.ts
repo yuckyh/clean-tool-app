@@ -26,5 +26,5 @@ type ExcludeFirst<A> = A extends [unknown, ...infer U] ? U : never
 
 // XLSX support
 
-type CellItem = Record<Column, boolean | number | string>
+type CellItem = Record<Column, string>
 type Column = number | string

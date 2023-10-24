@@ -4,19 +4,29 @@ import type { WorkBook } from 'xlsx'
 import XLSX from 'xlsx'
 import { dumpError } from '@/lib/logger'
 
-export interface SheetRequest extends WorkerRequest {
-  method: 'postFormattedJSON' | 'postFile' | 'remove' | 'get'
+export type SheetRequest = (
+  | {
+      method: 'remove'
+      fileName: string
+    }
+  | {
+      fileName: string
+      method: 'get'
+    }
+  | {
+      method: 'postFile'
+      file: File
+    }
+) &
+  WorkerRequest
+
+export type SheetResponse = WorkerResponse & {
   workbook?: WorkBook
   fileName: string
-  file?: File
 }
 
-export interface SheetResponse extends WorkerResponse {
-  workbook?: WorkBook
-  fileName: string
-}
-
-type Handler = RequestHandler<SheetRequest, SheetResponse>
+type Handler<Method extends SheetRequest['method'] = SheetRequest['method']> =
+  RequestHandler<SheetRequest & { method: Method }, SheetResponse, Method>
 
 const getRootHandle = constant(navigator.storage.getDirectory())
 
@@ -27,7 +37,7 @@ const getRootFileHandle = (fileName: string, create?: boolean) =>
     }),
   )
 
-const get: Handler = async ({ fileName }) => {
+const get: Handler<'get'> = async ({ fileName }) => {
   const fileHandle = await getRootFileHandle(fileName)
 
   const workbook = await fileHandle
@@ -42,12 +52,8 @@ const get: Handler = async ({ fileName }) => {
   }
 }
 
-const postFile: Handler = async ({ fileName, file }) => {
-  if (!file) {
-    throw new Error('No file uploaded')
-  }
-
-  const writableStream = await getRootFileHandle(fileName, true).then(
+const postFile: Handler<'postFile'> = async ({ file }) => {
+  const writableStream = await getRootFileHandle(file.name, true).then(
     (handle) => handle.createWritable(),
   )
 
@@ -56,44 +62,20 @@ const postFile: Handler = async ({ fileName, file }) => {
     .then(() => writableStream.close())
     .catch(dumpError)
 
-  return { status: 'ok', fileName }
+  return { fileName: file.name, status: 'ok' }
 }
 
-const postFormattedJSON: Handler = async ({ fileName, workbook }) => {
-  if (!workbook) {
-    throw new Error('No workbook provided')
-  }
-
-  const buffer = XLSX.write(workbook, {
-    bookType: workbook.bookType,
-    type: 'array',
-  }) as ArrayBuffer
-
-  const file = new File([buffer], fileName)
-
-  const writableStream = await getRootFileHandle(fileName, true).then(
-    (handle) => handle.createWritable(),
-  )
-
-  writableStream
-    .write(file)
-    .then(() => writableStream.close())
-    .catch(dumpError)
-
-  return { status: 'ok', fileName }
-}
-
-const remove: Handler = async ({ fileName }) => {
+const remove: Handler<'remove'> = async ({ fileName }) => {
   await getRootHandle().then((root) => root.removeEntry(fileName))
 
   return { status: 'ok', fileName }
 }
 
 const controller: Controller<SheetRequest, SheetResponse> = {
-  postFormattedJSON,
-  postFile,
-  remove,
-  get,
+  // postFormattedJSON,
+  postFile: postFile as Handler,
+  remove: remove as Handler,
+  get: get as Handler,
 }
 
 const main = async (data: SheetRequest) => {

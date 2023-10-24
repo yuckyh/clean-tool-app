@@ -2,10 +2,10 @@ import type { AlertRef } from '@/components/AlertDialog'
 import type { ComboboxProps } from '@fluentui/react-components'
 import {
   makeStyles,
+  shorthands,
   Combobox,
   Spinner,
   Option,
-  shorthands,
   tokens,
 } from '@fluentui/react-components'
 import { useCallback, useState, useMemo, memo } from 'react'
@@ -17,18 +17,23 @@ import { useAppDispatch, useAppSelector, useDebounced } from '@/lib/hooks'
 import * as IO from 'fp-ts/IO'
 import * as O from 'fp-ts/Option'
 import * as RA from 'fp-ts/ReadonlyArray'
-import { constant, identity, pipe } from 'fp-ts/function'
-import * as Str from 'fp-ts/string'
-import type { ColumnMatch } from '../reducers'
+import { constant, identity, apply, flow, pipe } from 'fp-ts/function'
+import * as S from 'fp-ts/string'
+import * as P from 'fp-ts/Predicate'
 
-import { setMatchColumn, setMatchVisit } from '../reducers'
+import { codebook } from '@/data'
+import { numEquals, strEquals } from '@/lib/fp'
+import { getRow } from '@/features/sheet/selectors'
 import {
   getMatchColumn,
   getMatchVisit,
   getIndices,
   getMatches,
   getScores,
+  getVisitByMatchVisit,
 } from '../selectors'
+import { setMatchColumn, setMatchVisit, setDataType } from '../reducers'
+import type { ColumnMatch, DataType } from '../reducers'
 
 interface Props {
   alertRef: React.RefObject<AlertRef>
@@ -38,7 +43,7 @@ interface Props {
 const useClasses = makeStyles({
   root: {
     minWidth: '150px',
-    ...shorthands.padding(0, tokens.spacingHorizontalS),
+    ...shorthands.margin(0, tokens.spacingHorizontalS),
   },
 })
 
@@ -82,6 +87,8 @@ export default function MatchCell({ alertRef, pos }: Props) {
   const matchVisit = useAppSelector((state) => getMatchVisit(state, pos))
   const matches = useAppSelector((state) => getMatches(state, pos))
   const scores = useAppSelector((state) => getScores(state, pos))
+  const visit = useAppSelector((state) => getVisitByMatchVisit(state, pos))
+  const row = useAppSelector((state) => getRow(state, matchColumn, visit))
   const indices = useAppSelector(getIndices)
 
   const [comboboxOpen, setComboboxOpen] = useState(false)
@@ -95,7 +102,7 @@ export default function MatchCell({ alertRef, pos }: Props) {
     () =>
       pipe(
         matches,
-        RA.filter(Str.includes(deferredValue)),
+        RA.filter(S.includes(deferredValue)),
         RA.zip(scores),
         RA.map(([match, score]) => ({
           match,
@@ -126,7 +133,7 @@ export default function MatchCell({ alertRef, pos }: Props) {
         if (duplicates.length) {
           const newMatchVisit = pipe(
             RA.makeBy(visits.length, identity),
-            RA.findIndex((visit) => visit !== matchVisit),
+            RA.findIndex(P.not(numEquals(matchVisit))),
             pipe(-1, constant, O.getOrElse),
           )
 
@@ -155,6 +162,33 @@ export default function MatchCell({ alertRef, pos }: Props) {
           IO.of,
         )()
 
+        const newDataType: DataType = pipe(
+          codebook,
+          RA.findFirst(({ name }) => strEquals(name)(matchColumn)),
+          O.map(({ type }) =>
+            pipe(
+              type,
+              S.includes,
+              RA.some,
+              apply(['whole_number', 'interval'] as const),
+            ),
+          ),
+          O.getOrElse(
+            () =>
+              0.8 * row.length >
+              pipe(row, RA.filter(flow(parseFloat, P.not(Number.isNaN))))
+                .length,
+          ),
+          (isCategorical) => (isCategorical ? 'categorical' : 'numerical'),
+        )
+
+        pipe(
+          { dataType: newDataType, pos },
+          setDataType,
+          (x) => dispatch(x),
+          IO.of,
+        )()
+
         setValue(newMatchColumn)
         setComboboxOpen(false)
       },
@@ -165,6 +199,7 @@ export default function MatchCell({ alertRef, pos }: Props) {
         matchColumn,
         matchVisit,
         pos,
+        row,
         visits.length,
       ],
     )

@@ -19,7 +19,7 @@ import {
   getMatchColumn,
   getMatchVisit,
   getIndices,
-  getVisit,
+  getVisitByMatchVisit,
 } from '../selectors'
 import { setMatchVisit } from '../reducers'
 
@@ -31,7 +31,7 @@ interface Props {
 const useClasses = makeStyles({
   root: {
     minWidth: '150px',
-    ...shorthands.padding(0, tokens.spacingHorizontalS),
+    ...shorthands.margin(0, tokens.spacingHorizontalS),
   },
 })
 
@@ -43,7 +43,7 @@ export default function VisitsCell({ alertRef, pos }: Props) {
   const visits = useAppSelector(({ sheet }) => sheet.visits)
   const matchColumn = useAppSelector((state) => getMatchColumn(state, pos))
   const matchVisit = useAppSelector((state) => getMatchVisit(state, pos))
-  const visit = useAppSelector((state) => getVisit(state, pos))
+  const visit = useAppSelector((state) => getVisitByMatchVisit(state, pos))
   const indices = useAppSelector(getIndices)
 
   const handleOptionSelect: Required<DropdownProps>['onOptionSelect'] =
@@ -52,7 +52,7 @@ export default function VisitsCell({ alertRef, pos }: Props) {
         const newMatchVisit = parseInt(optionValue ?? '1', 10)
 
         if (newMatchVisit === matchVisit) {
-          return undefined
+          return
         }
 
         if (
@@ -63,7 +63,7 @@ export default function VisitsCell({ alertRef, pos }: Props) {
           )
           alertRef.current?.setTitle('Column Matching Error')
           alertRef.current?.open()
-          return undefined
+          return
         }
 
         return pipe(

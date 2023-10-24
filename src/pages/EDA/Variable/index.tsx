@@ -9,24 +9,20 @@ import {
   Card,
 } from '@fluentui/react-components'
 import { useParams } from 'react-router-dom'
-import { useState } from 'react'
 import { pipe } from 'fp-ts/function'
-import * as RA from 'fp-ts/ReadonlyArray'
-import { useAppSelector } from '@/lib/hooks'
+import { useAppDispatch, useAppSelector } from '@/lib/hooks'
 import CategoricalPlot from '@/pages/EDA/Variable/CategoricalPlot'
 import NumericalPlot from '@/pages/EDA/Variable/NumericalPlot'
 import { codebook } from '@/data'
 
-import { console } from 'fp-ts'
 import * as S from 'fp-ts/string'
+import * as IO from 'fp-ts/IO'
+import { getSearchedPos } from '@/features/columns/selectors'
+import { setDataType } from '@/features/columns/reducers'
 import IncorrectDataGrid from './IncorrectDataGrid'
 import BlankDataGrid from './BlankDataGrid'
 import FlaggedDataGrid from './FlaggedDataGrid'
 import SummaryTable from './SummaryTable'
-
-type VariableType = Extract<Property<typeof variableType>, string>
-
-const variableType = ['numerical', 'categorical'] as const
 
 const useClasses = makeStyles({
   card: {
@@ -76,10 +72,15 @@ export function Component() {
 
   const params = useParams()
 
+  const dispatch = useAppDispatch()
+
   const firstVisit = useAppSelector(({ sheet }) => sheet.visits[0] ?? '')
 
   const column = S.replace(/-/g, '_')(params.column ?? '')
   const visit = params.visit ?? firstVisit
+
+  const pos = useAppSelector((state) => getSearchedPos(state, column, visit))
+  const dataType = useAppSelector(({ columns }) => columns.dataTypes[pos] ?? '')
 
   const title = `${column}${visit && visit !== '1' ? `_${visit}` : ''}`
 
@@ -92,22 +93,9 @@ export function Component() {
   }
   const isUser = !codebookVariable.name
 
-  console.log(isUser)
+  const { unit } = codebookVariable
 
-  const { type, unit } = codebookVariable
-
-  const measurementType: VariableType = pipe(
-    ['whole_number', 'interval'] as const,
-    pipe(type, S.includes, RA.some),
-  )
-    ? 'numerical'
-    : 'categorical'
-
-  const isCodebookCategorical = measurementType === 'categorical'
-
-  const [isUserCategorical, setIsUserCategorical] = useState(false)
-
-  const isCategorical = isUser ? isUserCategorical : isCodebookCategorical
+  const isCategorical = dataType === 'categorical'
 
   return (
     <section className={classes.root}>
@@ -118,11 +106,19 @@ export function Component() {
               <Field>
                 <Switch
                   onChange={({ target }) => {
-                    setIsUserCategorical(target.checked)
+                    pipe(
+                      {
+                        dataType: target.checked ? 'categorical' : 'numerical',
+                        pos,
+                      } as const,
+                      setDataType,
+                      (x) => dispatch(x),
+                      IO.of,
+                    )()
                     return undefined
                   }}
-                  label={isUserCategorical ? 'Categorical' : 'Numerical'}
-                  checked={isUserCategorical}
+                  label={isCategorical ? 'Categorical' : 'Numerical'}
+                  checked={isCategorical}
                   labelPosition="after"
                 />
               </Field>

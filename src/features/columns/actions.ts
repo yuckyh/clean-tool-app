@@ -2,7 +2,7 @@ import { createAsyncThunk } from '@reduxjs/toolkit'
 import type { RootState } from '@/app/store'
 
 import { promisedWorker, columnWorker } from '@/app/workers'
-import { getColumns } from '@/app/selectors'
+import { getColumns, getData } from '@/app/selectors'
 
 import { constant, tupled, pipe, flow } from 'fp-ts/function'
 import * as O from 'fp-ts/Option'
@@ -27,6 +27,8 @@ export const fetchMatches = createAsyncThunk(
       method: 'get',
       columns,
     })
+
+    const data = getData(getState() as RootState)
 
     const result = (await messagePromise()).matches
 

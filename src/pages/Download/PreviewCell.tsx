@@ -8,7 +8,7 @@ import * as E from 'fp-ts/Either'
 import * as RR from 'fp-ts/ReadonlyRecord'
 import { getIndexRow, getColumn } from '@/features/sheet/selectors'
 import { stringLookup } from '@/lib/array'
-import { strEquals } from '@/lib/string'
+import { strEquals } from '@/lib/fp'
 
 interface Props {
   col: number

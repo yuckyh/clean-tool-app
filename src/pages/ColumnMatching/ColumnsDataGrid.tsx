@@ -86,8 +86,6 @@ export default function ColumnsDataGrid({ alertRef }: Readonly<Props>) {
   const handleSortChange: Required<DataGridProps>['onSortChange'] = useCallback(
     (_event, nextSortState) => {
       setSortState(nextSortState)
-
-      return undefined
     },
     [],
   )

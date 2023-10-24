@@ -1,21 +1,20 @@
 import type Fuse from 'fuse.js'
 import * as RA from 'fp-ts/ReadonlyArray'
 import type { codebook } from '@/data'
-import { console } from 'fp-ts'
 
 import fuse from '@/lib/fuse'
 import { dumpError } from '@/lib/logger'
 
 const search = fuse.search.bind(fuse)
 
-export type CodebookEntry = (typeof codebook)[0]
+export type CodebookEntry = ArrayElement<typeof codebook>
 
 export interface ColumnRequest extends WorkerRequest {
   columns: readonly string[]
   method: 'get'
 }
 
-export interface ColumnResponse extends WorkerResponse {
+export type ColumnResponse = WorkerResponse & {
   matches: readonly (readonly Omit<
     Fuse.FuseResult<CodebookEntry>,
     'matches'
