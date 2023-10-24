@@ -110,7 +110,7 @@ export default function IncorrectDataGrid({ column, visit, title }: Props) {
 
     const unfilteredPayloads = pipe(
       checkedPosList,
-      RA.map((currentIndex) => [currentIndex, title, 'outlier'] as Flag),
+      RA.map((currentIndex) => [currentIndex, title, 'general'] as Flag),
     )
 
     return pipe(

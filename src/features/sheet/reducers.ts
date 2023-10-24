@@ -12,13 +12,13 @@ import * as E from 'fp-ts/Either'
 import * as RA from 'fp-ts/ReadonlyArray'
 import * as P from 'fp-ts/Predicate'
 import { getPersisted, setPersisted } from '@/lib/localStorage'
-import { dump, dumpError } from '@/lib/logger'
+import { dumpError, dump } from '@/lib/logger'
 import type { AppDispatch } from '@/app/store'
 import type { Refinement } from 'fp-ts/Refinement'
 import { deleteSheet, fetchSheet, sliceName, postFile } from './actions'
 import { FlagEq } from './selectors'
 
-export type FlagReason = 'incorrect' | 'missing' | 'outlier'
+export type FlagReason = 'incorrect' | 'missing' | 'general'
 
 export type Flag = readonly [string, string, FlagReason]
 
@@ -39,7 +39,7 @@ const fileNameKey = 'fileName'
 
 const isFlagReason: Refinement<undefined | string, FlagReason> = (
   x,
-): x is FlagReason => x === 'incorrect' || x === 'missing' || x === 'outlier'
+): x is FlagReason => x === 'incorrect' || x === 'missing' || x === 'general'
 
 const isFlag: Refinement<readonly string[], Flag> = (x): x is Flag =>
   x.length === 3 && isFlagReason(x[2])
@@ -76,6 +76,24 @@ const initialState: State = {
 
 const sheetSlice = createSlice({
   reducers: {
+    syncVisits: (state, { payload }: PayloadAction<number>) => {
+      const visitsLengthDiff = payload - state.visits.length
+
+      RA.makeBy(Math.abs(visitsLengthDiff), () => {
+        state.visits = pipe(
+          [...state.visits] as const,
+          visitsLengthDiff > 0
+            ? RA.insertAt(
+                state.visits.length,
+                (state.visits.length + 1).toString(),
+              )
+            : RA.deleteAt(state.visits.length - 1),
+          pipe([...state.visits] as const, constant, O.getOrElse),
+        ) as string[]
+      })
+
+      return state
+    },
     syncFlaggedCells: (state, { payload }: PayloadAction<Flag>) => {
       const flaggedCells = state.flaggedCells as readonly Flag[]
       state.flaggedCells = pipe(
@@ -114,24 +132,6 @@ const sheetSlice = createSlice({
       })
 
       setPersisted('flaggedCells', `[${flaggedCells.join('],[')}]`)
-
-      return state
-    },
-    syncVisits: (state, { payload }: PayloadAction<number>) => {
-      const visitsLengthDiff = payload - state.visits.length
-
-      RA.makeBy(Math.abs(visitsLengthDiff), () => {
-        state.visits = pipe(
-          [...state.visits] as const,
-          visitsLengthDiff > 0
-            ? RA.insertAt(
-                state.visits.length,
-                (state.visits.length + 1).toString(),
-              )
-            : RA.deleteAt(state.visits.length - 1),
-          pipe([...state.visits] as const, constant, O.getOrElse),
-        ) as string[]
-      })
 
       return state
     },

@@ -8,7 +8,7 @@ import {
   tokens,
 } from '@fluentui/react-components'
 import { useNavigate } from 'react-router-dom'
-import { useCallback, useRef } from 'react'
+import { useCallback, useEffect, useRef } from 'react'
 import type { AlertRef } from '@/components/AlertDialog'
 
 import type { Progress } from '@/features/progress/reducers'
@@ -58,16 +58,32 @@ export function Component() {
     )()
   }, [dispatch, navigate])
 
-  const alertRef = useRef<AlertRef>(null)
+  const errorAlertRef = useRef<AlertRef>(null)
+  const infoAlertRef = useRef<AlertRef>(null)
+
+  useEffect(() => {
+    errorAlertRef.current?.setContent(
+      'You have selected the same column multiple times. Changes will not be made. Please select a different match and visit first if this was your intention',
+    )
+    errorAlertRef.current?.setTitle('Column Matching Error')
+    infoAlertRef.current?.setContent(
+      'We have automatically set the visit based on duplicating matches, if this was a mistake please edit accordingly.',
+    )
+    infoAlertRef.current?.setTitle('Visits Inferred')
+  }, [errorAlertRef])
 
   return (
     <section className={classes.root}>
       <Title1>Column Matching</Title1>
 
-      <MemoizedColumnsDataGrid alertRef={alertRef} />
+      <MemoizedColumnsDataGrid
+        errorAlertRef={errorAlertRef}
+        infoAlertRef={infoAlertRef}
+      />
       <MemoizedPreviewDataGrid />
 
-      <AlertDialog ref={alertRef} />
+      <AlertDialog ref={errorAlertRef} />
+      <AlertDialog ref={infoAlertRef} noCancel />
       <div>
         <Button onClick={handleMatchingSubmit} appearance="primary">
           Done

@@ -16,10 +16,10 @@ import * as IO from 'fp-ts/IO'
 import { pipe } from 'fp-ts/function'
 import * as RA from 'fp-ts/ReadonlyArray'
 import {
+  getVisitByMatchVisit,
   getMatchColumn,
   getMatchVisit,
   getIndices,
-  getVisitByMatchVisit,
 } from '../selectors'
 import { setMatchVisit } from '../reducers'
 
@@ -58,15 +58,11 @@ export default function VisitsCell({ alertRef, pos }: Props) {
         if (
           indexDuplicateSearcher(indices, [matchColumn, newMatchVisit]).length
         ) {
-          alertRef.current?.setContent(
-            'You have selected the same column multiple times. Changes will not be made.',
-          )
-          alertRef.current?.setTitle('Column Matching Error')
           alertRef.current?.open()
           return
         }
 
-        return pipe(
+        pipe(
           { matchVisit: newMatchVisit, pos },
           setMatchVisit,
           (x) => dispatch(x),

@@ -63,7 +63,7 @@ export default function DownloadPreviewCell({ col, row }: Props) {
         O.fromPredicate((flags) => flags.length > 1),
         O.flatMap(
           flow(
-            RA.filter(([, , reason]) => reason !== 'outlier'),
+            RA.filter(([, , reason]) => reason !== 'general'),
             RA.head,
             O.flatMap(([, , reason]) => RR.lookup(reason)(classes)),
           ),

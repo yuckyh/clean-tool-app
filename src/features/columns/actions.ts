@@ -28,15 +28,16 @@ export const fetchMatches = createAsyncThunk(
       columns,
     })
 
-    const data = getData(getState() as RootState)
-
     const result = (await messagePromise()).matches
 
     const { matchVisits } = (getState() as RootState).columns
+    const { visits } = (getState() as RootState).sheet
 
     return pipe(
       matchVisits as number[],
-      O.fromPredicate((value) => value.length > 0),
+      O.fromPredicate(
+        (value) => value.length > 0 && Math.max(...value) > visits.length,
+      ),
       O.map(
         flow(tupled(Math.max), add(1), syncVisits, dispatch, constant(result)),
       ),

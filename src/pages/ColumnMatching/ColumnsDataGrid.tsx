@@ -37,11 +37,13 @@ import { makeBy } from 'fp-ts/ReadonlyArray'
 import * as TO from 'fp-ts/TaskOption'
 import { dumpError } from '@/lib/logger'
 import { promisedTaskOption, promisedTask } from '@/lib/fp'
+import { getMatchVisits, getVisits } from '@/app/selectors'
 import HeaderCell from './HeaderCell'
 import ValueCell from './ValueCell'
 
 interface Props {
-  alertRef: RefObject<AlertRef>
+  errorAlertRef: RefObject<AlertRef>
+  infoAlertRef: RefObject<AlertRef>
 }
 
 const MemoizedMatchCell = createLazyMemo(
@@ -64,13 +66,15 @@ const MemoizedDataGrid = createMemo<SimpleDataGridProps<number>>(
 const cellFocusMode: () => DataGridCellFocusMode = constant('none')
 const focusMode: DataGridFocusMode = 'composite'
 
-export default function ColumnsDataGrid({ alertRef }: Readonly<Props>) {
+export default function ColumnsDataGrid({
+  errorAlertRef,
+  infoAlertRef,
+}: Readonly<Props>) {
   const dispatch = useAppDispatch()
 
   const columnsLength = useAppSelector(getColumnsLength)
-  const matchVisitsLength = useAppSelector(
-    ({ columns }) => columns.matchVisits.length,
-  )
+  const matchVisits = useAppSelector(getMatchVisits)
+  const visits = useAppSelector(getVisits)
 
   const columnComparer = useAppSelector(getColumnComparer)
   const matchComparer = useAppSelector(getMatchComparer)
@@ -92,71 +96,104 @@ export default function ColumnsDataGrid({ alertRef }: Readonly<Props>) {
 
   const items = useMemo(() => makeBy(columnsLength, identity), [columnsLength])
 
-  const columnsDefinition: readonly TableColumnDefinition<number>[] = useMemo(
-    () => [
-      createTableColumn({
-        renderHeaderCell: constant(
-          <HeaderCell
-            subtitle="The loaded column names (raw)"
-            header="Original"
-          />,
-        ),
-        renderCell: (pos) => <ValueCell pos={pos} />,
-        compare: columnComparer,
-        columnId: 'original',
-      }),
-      createTableColumn({
-        renderHeaderCell: constant(
-          <HeaderCell
-            subtitle="List of possible replacements (sorted by score)"
-            header="Replacement"
-          />,
-        ),
-        renderCell: (pos) => (
-          <MemoizedMatchCell alertRef={alertRef} pos={pos} />
-        ),
-        compare: matchComparer,
-        columnId: 'matches',
-      }),
-      createTableColumn({
-        renderHeaderCell: constant(
-          <HeaderCell subtitle="The matching visit number" header="Visit" />,
-        ),
-        renderCell: (pos) => (
-          <MemoizedVisitsCell alertRef={alertRef} pos={pos} />
-        ),
-        compare: visitsComparer,
-        columnId: 'visit',
-      }),
-      createTableColumn({
-        renderHeaderCell: constant(
-          <HeaderCell
-            subtitle="The fuzzy search score (1 indicates a perfect match)"
-            header="Score"
-          />,
-        ),
-        renderCell: (pos) => <MemoizedScoreCell pos={pos} />,
-        compare: scoreComparer,
-        columnId: 'score',
-      }),
-    ],
-    [alertRef, columnComparer, matchComparer, scoreComparer, visitsComparer],
-  )
+  const columnsDefinition: readonly TableColumnDefinition<number>[] =
+    useMemo(() => {
+      const initial = [
+        createTableColumn({
+          renderHeaderCell: constant(
+            <HeaderCell
+              subtitle="The loaded column names (raw)"
+              header="Original"
+            />,
+          ),
+          renderCell: (pos) => <ValueCell pos={pos} />,
+          compare: columnComparer,
+          columnId: 'original',
+        }),
+        createTableColumn({
+          renderHeaderCell: constant(
+            <HeaderCell
+              subtitle="List of possible replacements (sorted by score)"
+              header="Replacement"
+            />,
+          ),
+          renderCell: (pos) => (
+            <MemoizedMatchCell alertRef={errorAlertRef} pos={pos} />
+          ),
+          compare: matchComparer,
+          columnId: 'matches',
+        }),
+      ]
+      const withVisits =
+        visits.length > 1
+          ? [
+              ...initial,
+              createTableColumn({
+                renderHeaderCell: constant(
+                  <HeaderCell
+                    subtitle="The matching visit number"
+                    header="Visit"
+                  />,
+                ),
+                renderCell: (pos) => (
+                  <MemoizedVisitsCell alertRef={errorAlertRef} pos={pos} />
+                ),
+                compare: visitsComparer,
+                columnId: 'visit',
+              }),
+            ]
+          : initial
+
+      return [
+        ...withVisits,
+        createTableColumn({
+          renderHeaderCell: constant(
+            <HeaderCell
+              subtitle="The fuzzy search score (1 indicates a perfect match)"
+              header="Score"
+            />,
+          ),
+          renderCell: (pos) => <MemoizedScoreCell pos={pos} />,
+          compare: scoreComparer,
+          columnId: 'score',
+        }),
+      ]
+    }, [
+      columnComparer,
+      matchComparer,
+      visits.length,
+      visitsComparer,
+      scoreComparer,
+      errorAlertRef,
+    ])
 
   useEffect(() => {
     pipe(
-      matchVisitsLength,
+      matchVisits.length,
       TO.fromPredicate((length) => length === 0),
       pipe(fetchSheet, constant, TO.map),
       TO.tap((x) => pipe(dispatch(x()), promisedTaskOption)),
       pipe(fetchMatches, constant, TO.map),
       pipe(fetchMatches, T.of, constant, TO.getOrElse),
       T.flatMap((x) => pipe(dispatch(x()), promisedTask)),
-      T.tap(T.of),
+      T.tap(() =>
+        T.of(
+          Math.max(...matchVisits) > visits.length && visits.length > 0
+            ? infoAlertRef.current?.open()
+            : undefined,
+        ),
+      ),
       T.tapIO(constant(stopLoading)),
     )().catch(dumpError)
     return undefined
-  }, [dispatch, columnsLength, stopLoading, matchVisitsLength])
+  }, [
+    dispatch,
+    columnsLength,
+    stopLoading,
+    matchVisits,
+    visits.length,
+    infoAlertRef,
+  ])
 
   return !isLoading ? (
     <Loader

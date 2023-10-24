@@ -25,12 +25,12 @@ import { codebook } from '@/data'
 import { numEquals, strEquals } from '@/lib/fp'
 import { getRow } from '@/features/sheet/selectors'
 import {
+  getVisitByMatchVisit,
   getMatchColumn,
   getMatchVisit,
   getIndices,
   getMatches,
   getScores,
-  getVisitByMatchVisit,
 } from '../selectors'
 import { setMatchColumn, setMatchVisit, setDataType } from '../reducers'
 import type { ColumnMatch, DataType } from '../reducers'
@@ -138,10 +138,6 @@ export default function MatchCell({ alertRef, pos }: Props) {
           )
 
           if (newMatchVisit === -1) {
-            alertRef.current?.setContent(
-              'You have selected the same column multiple times. Changes will not be made.',
-            )
-            alertRef.current?.setTitle('Column Matching Error')
             alertRef.current?.open()
             setValue(matchColumn)
             return

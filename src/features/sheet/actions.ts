@@ -31,8 +31,6 @@ export const fetchSheet = createAsyncThunk(
 
     const { workbook } = await messagePromise()
 
-    dumpName({ workbook })
-
     return {
       SheetNames: workbook?.SheetNames,
       bookType: workbook?.bookType,

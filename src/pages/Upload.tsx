@@ -87,13 +87,15 @@ export function Component() {
   const toasterRef = useRef<SimpleToasterRef>(null)
   const sheetInputRef = useRef<SheetInputRef>(null)
 
-  const handleResetClick = useCallback(() => {
+  useEffect(() => {
     alertRef.current?.setContent(
       'Are you sure you want to reset the file? This will delete all progress.',
     )
     alertRef.current?.setTitle('Confirm Reset')
+  }, [alertRef])
+
+  const handleResetClick = useCallback(() => {
     alertRef.current?.open()
-    return true
   }, [alertRef])
 
   const handleResetConfirm = useCallback(() => {
@@ -107,6 +109,11 @@ export function Component() {
       () => deleteSheet,
       T.of,
       T.tap((x) => pipe(dispatch(x()), promisedTask)),
+      T.tapIO(
+        IO.of(() => {
+          localStorage.clear()
+        }),
+      ),
     )().catch(dumpError)
   }, [dispatch])
 
@@ -117,9 +124,8 @@ export function Component() {
       (x) => dispatch(x),
       IO.of,
       IO.tap(
-        constant(() => {
+        IO.of(() => {
           navigate('/column-matching')
-          return undefined
         }),
       ),
     )()

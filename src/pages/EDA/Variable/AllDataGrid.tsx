@@ -68,16 +68,15 @@ export default function FlaggedDataGrid({
 
   const dispatch = useAppDispatch()
 
+  const flaggedRows = useAppSelector((state) =>
+    getFlaggedRows(state, title, 'general'),
+  )
   const series = useAppSelector((state) => getIndexedRow(state, column, visit))
   const missingSeries = useAppSelector((state) =>
     getIndexedRowMissings(state, column, visit),
   )
   const incorrectSeries = useAppSelector((state) =>
     getIndexedRowIncorrects(state, column, visit),
-  )
-
-  const flaggedRows = useAppSelector((state) =>
-    getFlaggedRows(state, title, 'outlier'),
   )
 
   const indices = useMemo(() => RA.map(getIndexedIndex)(series), [series])
@@ -112,7 +111,7 @@ export default function FlaggedDataGrid({
 
     const payloads = pipe(
       checkedPosList,
-      RA.map((currentIndex) => [currentIndex, title, 'outlier'] as Flag),
+      RA.map((currentIndex) => [currentIndex, title, 'general'] as Flag),
     )
 
     const missingPayloads = pipe(

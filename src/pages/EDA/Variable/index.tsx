@@ -21,7 +21,7 @@ import { getSearchedPos } from '@/features/columns/selectors'
 import { setDataType } from '@/features/columns/reducers'
 import IncorrectDataGrid from './IncorrectDataGrid'
 import BlankDataGrid from './BlankDataGrid'
-import FlaggedDataGrid from './FlaggedDataGrid'
+import FlaggedDataGrid from './AllDataGrid'
 import SummaryTable from './SummaryTable'
 
 const useClasses = makeStyles({

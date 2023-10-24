@@ -9,11 +9,12 @@ import * as Eq from 'fp-ts/Eq'
 import * as RS from 'fp-ts/ReadonlySet'
 import * as Ord from 'fp-ts/Ord'
 import * as P from 'fp-ts/Predicate'
-import * as N from 'fp-ts/number'
 import {
   getFlaggedCells,
   getReasonParam,
   getTitleParam,
+  getDataTypes,
+  getSheetName,
   getPosParam,
   getColumns,
   searchPos,
@@ -23,6 +24,7 @@ import {
 import { getIndexedValue, stringLookup } from '@/lib/array'
 import { strEquals } from '@/lib/fp'
 import { dump } from '@/lib/logger'
+import { utils } from 'xlsx'
 import {
   getFormattedColumns,
   getSearchedPos,
@@ -50,45 +52,6 @@ const getEmptyColumns = createSelector([getData, getColumns], (data, columns) =>
     ),
     RS.toReadonlyArray(S.Ord),
   ),
-)
-
-export const getFormattedData = createSelector(
-  [getFormattedColumns, getColumns, getData, getEmptyColumns],
-  (formattedColumns, columns, data, emptyColumns) =>
-    pipe(
-      data,
-      dump,
-      RA.map(
-        flow(
-          RR.toEntries,
-          RA.map(
-            ([key, value]) =>
-              [pipe(columns, RA.findIndex(strEquals(key))), value] as const,
-          ),
-          RA.sort(Ord.tuple(O.getOrd(N.Ord), S.Ord)),
-          RA.map(
-            ([key, value]) =>
-              [
-                pipe(
-                  formattedColumns,
-                  stringLookup,
-                  O.map,
-                  apply(key),
-                  pipe('', constant, O.getOrElse),
-                ),
-                value,
-              ] as const,
-          ),
-          RR.fromEntries,
-        ),
-      ),
-      RA.map((entry) =>
-        pipe(
-          emptyColumns,
-          RA.reduce(entry, (acc, curr) => RR.upsertAt(curr, '')(acc)),
-        ),
-      ),
-    ),
 )
 
 export const getColumn = createSelector(
@@ -208,4 +171,141 @@ export const getFlaggedRows = createSelector(
       RS.fromReadonlyArray(FlagEq),
       RS.map(S.Eq)(([index]) => index),
     ),
+)
+
+const getFormattedData = createSelector(
+  [getFormattedColumns, getColumns, getData, getEmptyColumns, getDataTypes],
+  (
+    formattedColumns,
+    columns,
+    data,
+    emptyColumns,
+    dataTypes,
+  ): readonly CellItem[] =>
+    pipe(
+      data,
+      RA.map(
+        flow(
+          Object.entries<string>,
+          RA.zip(dataTypes),
+          RA.map(
+            ([[key, value], dataType]) =>
+              [
+                pipe(
+                  formattedColumns,
+                  stringLookup,
+                  O.map,
+                  apply(pipe(key, strEquals, RA.findIndex)(columns)),
+                  pipe('', constant, O.getOrElse),
+                ),
+                value &&
+                !Number.isNaN(parseFloat(value)) &&
+                !/[!,.?]{2,}/.test(value) &&
+                dataType === 'numerical'
+                  ? parseFloat(value)
+                  : value,
+              ] as const,
+          ),
+          RR.fromEntries,
+        ),
+      ),
+      RA.map((entry) =>
+        pipe(
+          emptyColumns,
+          RA.reduce(entry, (acc, curr) =>
+            RR.upsertAt(curr, '' as string | number)(acc),
+          ),
+        ),
+      ),
+      dump,
+    ) as readonly CellItem[],
+)
+
+const getFormattedSheet = createSelector([getFormattedData], (formattedData) =>
+  utils.json_to_sheet(formattedData as CellItem[]),
+)
+
+const getFlaggedCellsAddresses = createSelector(
+  [getFlaggedCells, getFormattedColumns, getIndexRow],
+  (flaggedCells, formattedColumns, indexRow) =>
+    pipe(
+      flaggedCells,
+      RA.map(([firstIndex, firstColumn]) =>
+        pipe(
+          flaggedCells,
+          RA.filter(
+            ([secondIndex, secondColumn]) =>
+              strEquals(firstIndex)(secondIndex) &&
+              strEquals(firstColumn)(secondColumn),
+          ),
+          (x) =>
+            x.length > 1 ? x.filter(([, , reason]) => reason !== 'general') : x,
+          RA.head,
+          pipe(['', '', 'general'] as Flag, constant, O.getOrElse),
+        ),
+      ),
+      RS.fromReadonlyArray(FlagEq),
+      RS.toReadonlyArray(FlagOrd),
+      RA.map(
+        ([flaggedIndex, flaggedCol, flagReason]) =>
+          [
+            utils.encode_cell({
+              c: pipe(
+                formattedColumns,
+                RA.findIndex(strEquals(flaggedCol)),
+                pipe(Infinity, constant, O.getOrElse),
+              ),
+              r: pipe(
+                indexRow,
+                RA.findIndex(strEquals(flaggedIndex)),
+                pipe(Infinity, constant, O.getOrElse),
+              ),
+            }),
+            flagReason,
+          ] as const,
+      ),
+    ),
+)
+
+const colorMap = pipe(
+  {
+    incorrect: 'FF00FFFF', // RRGGBBAA
+    missing: 'FFFF00FF',
+    general: 'FF0000FF',
+  } as const,
+  RR.map(flow(S.slice(1, 7), S.toUpperCase)),
+)
+
+export const getWrittenSheet = createSelector(
+  [getFormattedSheet, getFlaggedCellsAddresses],
+  (formattedSheet, flaggedCellsAddresses) =>
+    pipe(
+      flaggedCellsAddresses,
+      RA.reduce(formattedSheet, (acc, [addr, reason]) =>
+        RR.upsertAt(addr, {
+          ...pipe(
+            formattedSheet,
+            RR.lookup(addr),
+            pipe({ t: 's', v: '' }, constant, O.getOrElse),
+          ),
+          s: {
+            fill: {
+              fgColor: {
+                rgb: colorMap[reason],
+              },
+              patternType: 'solid',
+            },
+          },
+        })(acc),
+      ),
+    ),
+)
+
+export const getWrittenWorkbook = createSelector(
+  [getWrittenSheet, getSheetName],
+  (writtenSheet, sheetName) => {
+    const newWorkbook = utils.book_new()
+    utils.book_append_sheet(newWorkbook, writtenSheet, sheetName)
+    return newWorkbook
+  },
 )

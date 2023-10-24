@@ -65,14 +65,15 @@ export default function VisitsInput() {
       const newVisitsLength = parseInt(value, 10)
       setVisitsValue(newVisitsLength)
       if (Number.isNaN(newVisitsLength)) {
-        return undefined
+        return
       }
 
       if (newVisitsLength === 1) {
-        return pipe(deleteVisits(), (x) => dispatch(x), IO.of)()
+        pipe(deleteVisits(), (x) => dispatch(x), IO.of)()
+        return
       }
 
-      return pipe(newVisitsLength, syncVisits, (x) => dispatch(x), IO.of)()
+      pipe(newVisitsLength, syncVisits, (x) => dispatch(x), IO.of)()
     },
     [dispatch],
   )
@@ -88,9 +89,8 @@ export default function VisitsInput() {
           type="number"
         />
       </Field>
-      {RA.makeBy(visitsLength, (pos) => (
-        <VisitInput key={pos} pos={dump(pos)} />
-      ))}
+      {visitsLength > 1 &&
+        RA.makeBy(visitsLength, (pos) => <VisitInput key={pos} pos={pos} />)}
     </>
   )
 }
