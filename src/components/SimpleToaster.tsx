@@ -1,6 +1,6 @@
 /* eslint-disable functional/immutable-data */
-import { useToastController, Toaster, useId } from '@fluentui/react-components'
-import { useImperativeHandle, forwardRef } from 'react'
+import { Toaster, useId, useToastController } from '@fluentui/react-components'
+import { forwardRef, useImperativeHandle } from 'react'
 
 export type SimpleToasterRef = ReturnType<typeof useToastController>
 

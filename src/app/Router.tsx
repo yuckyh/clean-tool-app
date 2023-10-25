@@ -1,16 +1,16 @@
-import {
-  createRoutesFromElements,
-  createBrowserRouter,
-  Route,
-} from 'react-router-dom'
-import { constant } from 'fp-ts/function'
-import Layout from '@/pages/Layout'
 import App from '@/app'
+import Layout from '@/pages/Layout'
+import { constant } from 'fp-ts/function'
+import {
+  Route,
+  createBrowserRouter,
+  createRoutesFromElements,
+} from 'react-router-dom'
 
 export const routes = createRoutesFromElements(
   <Route element={<App />}>
     <Route element={<Layout />}>
-      <Route lazy={constant(import('@/pages'))} index />
+      <Route index lazy={constant(import('@/pages'))} />
       <Route lazy={constant(import('@/pages/Upload'))} path="upload" />
       <Route
         lazy={constant(import('@/pages/ColumnMatching'))}
@@ -18,7 +18,7 @@ export const routes = createRoutesFromElements(
       />
       <Route lazy={constant(import('@/pages/EDA'))} path="EDA">
         <Route path=":column">
-          <Route lazy={constant(import('@/pages/EDA/Variable'))} index />
+          <Route index lazy={constant(import('@/pages/EDA/Variable'))} />
           <Route
             lazy={constant(import('@/pages/EDA/Variable'))}
             path=":visit"

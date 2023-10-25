@@ -1,23 +1,23 @@
-import { makeStyles, shorthands, tokens } from '@fluentui/react-components'
-import { useFluentColorScale } from '@/lib/plotly'
-import { useAppSelector } from '@/lib/hooks'
 import Plot from '@/components/Plot'
+import { useAppSelector } from '@/lib/hooks'
+import { useFluentColorScale } from '@/lib/plotly'
+import { makeStyles, shorthands, tokens } from '@fluentui/react-components'
 
 import { getScore } from '../selectors'
 
 const useClasses = makeStyles({
+  plot: {
+    flexGrow: 1,
+    height: '44px',
+    maxHeight: '44px',
+    width: '80%',
+  },
   root: {
     alignItems: 'center',
     display: 'flex',
     width: '100%',
     ...shorthands.padding(0, tokens.spacingHorizontalS),
     columnGap: tokens.spacingHorizontalXS,
-  },
-  plot: {
-    maxHeight: '44px',
-    height: '44px',
-    width: '80%',
-    flexGrow: 1,
   },
 })
 
@@ -39,54 +39,54 @@ export default function ScoreCell({ pos }: Props) {
   return (
     <div className={classes.root}>
       <Plot
+        className={classes.plot}
+        config={{
+          displayModeBar: false,
+          scrollZoom: false,
+        }}
+        data={[
+          {
+            hovertemplate: 'score: %{x}',
+            marker: {
+              cmax: 1,
+              cmin: 0,
+              color: [score],
+              colorscale,
+            },
+            name: '',
+            type: 'bar',
+            x: [score],
+          },
+        ]}
         layout={{
-          xaxis: {
-            showticklabels: false,
-            fixedrange: true,
-            showgrid: false,
-            zeroline: false,
-            range: [0, 1],
-            nticks: 0,
-            ticks: '',
-          },
+          autosize: true,
 
-          yaxis: {
-            showticklabels: false,
-            fixedrange: true,
-            nticks: 0,
-            ticks: '',
-          },
+          clickmode: 'none',
+          datarevision: score,
+          dragmode: false,
+
           margin: {
             b: 0,
             l: 0,
             r: 0,
             t: 0,
           },
-          datarevision: score,
-
-          clickmode: 'none',
-          dragmode: false,
-          autosize: true,
-        }}
-        data={[
-          {
-            marker: {
-              color: [score],
-              colorscale,
-              cmax: 1,
-              cmin: 0,
-            },
-            hovertemplate: 'score: %{x}',
-            type: 'bar',
-            x: [score],
-            name: '',
+          xaxis: {
+            fixedrange: true,
+            nticks: 0,
+            range: [0, 1],
+            showgrid: false,
+            showticklabels: false,
+            ticks: '',
+            zeroline: false,
           },
-        ]}
-        config={{
-          displayModeBar: false,
-          scrollZoom: false,
+          yaxis: {
+            fixedrange: true,
+            nticks: 0,
+            showticklabels: false,
+            ticks: '',
+          },
         }}
-        className={classes.plot}
       />
       {score}
     </div>

@@ -1,21 +1,22 @@
-import {
-  Subtitle2Stronger,
-  mergeClasses,
-  makeStyles,
-  shorthands,
-  Subtitle2,
-  tokens,
-  Link,
-} from '@fluentui/react-components'
-import {
-  useLinkClickHandler,
-  useResolvedPath,
-  useLocation,
-  useHref,
-} from 'react-router-dom'
-import { useMemo } from 'react'
-import { getPathTitle } from '@/lib/string'
 import { useAppSelector } from '@/lib/hooks'
+import { getPathTitle } from '@/lib/string'
+import {
+  Link,
+  Subtitle2,
+  Subtitle2Stronger,
+  makeStyles,
+  mergeClasses,
+  shorthands,
+  tokens,
+} from '@fluentui/react-components'
+import { useMemo } from 'react'
+import {
+  useHref,
+  useLinkClickHandler,
+  useLocation,
+  useResolvedPath,
+} from 'react-router-dom'
+
 import { getDisabled } from '../selectors'
 
 interface Props {
@@ -25,30 +26,30 @@ interface Props {
 }
 
 const useClasses = makeStyles({
-  stepThumb: {
-    backgroundColor: tokens.colorNeutralBackground6,
-    position: 'relative',
-    height: '20px',
-    width: '20px',
-    top: '-12px',
-    ...shorthands.borderRadius(tokens.borderRadiusCircular),
-    ...shorthands.transition('background-color', '0.2s', '0s', 'ease-in-out'),
-  },
-  root: {
-    justifyContent: 'center',
-    display: 'flex',
-    ...shorthands.flex(1),
-  },
-  link: {
-    flexDirection: 'column',
-    alignItems: 'center',
-    display: 'flex',
-  },
   activeStepThumb: {
     backgroundColor: tokens.colorCompoundBrandBackground,
   },
+  link: {
+    alignItems: 'center',
+    display: 'flex',
+    flexDirection: 'column',
+  },
   linkText: {
     textAlign: 'center',
+  },
+  root: {
+    display: 'flex',
+    justifyContent: 'center',
+    ...shorthands.flex(1),
+  },
+  stepThumb: {
+    backgroundColor: tokens.colorNeutralBackground6,
+    height: '20px',
+    position: 'relative',
+    top: '-12px',
+    width: '20px',
+    ...shorthands.borderRadius(tokens.borderRadiusCircular),
+    ...shorthands.transition('background-color', '0.2s', '0s', 'ease-in-out'),
   },
 })
 
@@ -75,11 +76,11 @@ export default function ProgressNavLink({ done, path, pos }: Props) {
   return (
     <div className={classes.root}>
       <Link
-        onClick={handleLinkClick}
-        className={classes.link}
         appearance="subtle"
+        className={classes.link}
         disabled={disabled}
-        href={href}>
+        href={href}
+        onClick={handleLinkClick}>
         <div
           className={mergeClasses(
             classes.stepThumb,

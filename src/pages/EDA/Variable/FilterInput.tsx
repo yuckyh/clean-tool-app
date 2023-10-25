@@ -1,5 +1,6 @@
 import type { InputProps } from '@fluentui/react-components'
-import { makeStyles, Field, Input } from '@fluentui/react-components'
+
+import { Field, Input, makeStyles } from '@fluentui/react-components'
 
 interface FilterInputProps {
   handleChange: InputProps['onChange']

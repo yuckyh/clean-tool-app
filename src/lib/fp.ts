@@ -1,11 +1,11 @@
-import { identity, pipe } from 'fp-ts/function'
+import * as E from 'fp-ts/Either'
+import * as IO from 'fp-ts/IO'
+import * as O from 'fp-ts/Option'
 import * as T from 'fp-ts/Task'
 import * as TO from 'fp-ts/TaskOption'
-import * as IO from 'fp-ts/IO'
-import * as E from 'fp-ts/Either'
-import * as O from 'fp-ts/Option'
-import * as S from 'fp-ts/string'
+import { identity, pipe } from 'fp-ts/function'
 import * as N from 'fp-ts/number'
+import * as S from 'fp-ts/string'
 
 export const promisedTask =
   <V>(promise: Promise<V>) =>

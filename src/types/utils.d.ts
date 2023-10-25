@@ -12,7 +12,7 @@ type IsArray<T> = T extends unknown[]
   ? T
   : never
 
-type AsArray<T> = T extends readonly unknown[] ? T : readonly T[] | T[]
+type AsArray<T> = T extends readonly unknown[] ? T : T[] | readonly T[]
 
 type AnyArray = readonly unknown[]
 

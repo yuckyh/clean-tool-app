@@ -2,26 +2,26 @@
 /* eslint-disable functional/functional-parameters */
 /* eslint-disable functional/immutable-data */
 import {
+  Button,
+  Card,
   CardFooter,
   CardHeader,
+  Title1,
   makeStyles,
   shorthands,
-  Button,
-  Title1,
   tokens,
-  Card,
 } from '@fluentui/react-components'
-import { useLinkClickHandler, useHref } from 'react-router-dom'
+import { useHref, useLinkClickHandler } from 'react-router-dom'
 
 const useClasses = makeStyles({
-  root: {
-    flexDirection: 'column',
-    display: 'flex',
-    width: '40%',
-    ...shorthands.margin(0, 'auto'),
-  },
   card: {
     ...shorthands.padding(tokens.spacingHorizontalXXXL, '20%'),
+  },
+  root: {
+    display: 'flex',
+    flexDirection: 'column',
+    width: '40%',
+    ...shorthands.margin(0, 'auto'),
   },
 })
 
@@ -41,10 +41,10 @@ export function Component() {
         <CardFooter
           action={
             <Button
-              onClick={handleClick}
               appearance="primary"
+              as="a"
               href={uploadHref}
-              as="a">
+              onClick={handleClick}>
               Upload
             </Button>
           }

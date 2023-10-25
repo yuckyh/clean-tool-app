@@ -1,16 +1,18 @@
-import { createSelector } from '@reduxjs/toolkit'
-import { matchRoutes, resolvePath } from 'react-router-dom'
-import { getProgress } from '@/app/selectors'
-import { routes } from '@/app/Router'
-import { getPathTitle } from '@/lib/string'
 import type { RootState } from '@/app/store'
-import * as Str from 'fp-ts/string'
-import * as O from 'fp-ts/Option'
-import { constant, pipe, flow, flip } from 'fp-ts/function'
-import * as RA from 'fp-ts/ReadonlyArray'
+
+import { routes } from '@/app/Router'
+import { getProgress } from '@/app/selectors'
 import { stringLookup } from '@/lib/array'
-import * as RR from 'fp-ts/ReadonlyRecord'
+import { getPathTitle } from '@/lib/string'
+import { createSelector } from '@reduxjs/toolkit'
+import * as O from 'fp-ts/Option'
 import * as P from 'fp-ts/Predicate'
+import * as RA from 'fp-ts/ReadonlyArray'
+import * as RR from 'fp-ts/ReadonlyRecord'
+import * as f from 'fp-ts/function'
+import * as S from 'fp-ts/string'
+import { matchRoutes, resolvePath } from 'react-router-dom'
+
 import type { Progress } from './reducers'
 
 const getLocationPathParam = (_: RootState, _1: string, locationPath: string) =>
@@ -24,24 +26,24 @@ const getPosParam = (_: RootState, _1: string, _2: string, pos: number) => pos
 const getLocationPathWords = createSelector(
   [getLocationPathParam],
   (locationPath) =>
-    pipe(locationPath, Str.split('/'), RA.filter(P.not(Str.isEmpty))),
+    f.pipe(locationPath, S.split('/'), RA.filter(P.not(S.isEmpty))),
 )
 
 export const getPaths = createSelector(
   [getComponentPathParam],
   (componentPath) =>
-    pipe(
+    f.pipe(
       matchRoutes(routes, componentPath) ?? [],
       RA.findFirst(({ route }) => !route.index),
       O.getOrElse(
-        constant({ route: routes[0] } as NonNullable<
+        f.constant({ route: routes[0] } as NonNullable<
           ReturnType<typeof matchRoutes>
         >[number]),
       ),
       ({ route }) => route.children ?? [],
       RA.findFirst(({ index }) => !index),
       O.getOrElse(
-        constant(
+        f.constant(
           routes[0] as NonNullable<
             NonNullable<
               ReturnType<typeof matchRoutes>
@@ -64,7 +66,7 @@ export const getAllowedPaths = createSelector(
   [getPaths, getProgress],
   (paths, progress) =>
     RR.fromEntries(
-      pipe(
+      f.pipe(
         ['none', 'uploaded', 'matched', 'explored'] as Progress[],
         RA.mapWithIndex((i, p) => [p, RA.takeLeft(i + 2)(paths)]),
       ),
@@ -73,23 +75,23 @@ export const getAllowedPaths = createSelector(
 
 export const getDisabled = createSelector(
   [getPath, getAllowedPaths],
-  (path, allowedPaths) => pipe(allowedPaths, P.not(RA.elem(Str.Eq)(path))),
+  (path, allowedPaths) => f.pipe(allowedPaths, P.not(RA.elem(S.Eq)(path))),
 )
 
 export const getPosition = createSelector(
   [getLocationPathWords, getPaths],
   (locationPathWords, paths) =>
-    pipe(
+    f.pipe(
       paths,
-      RA.map(Str.replace('/', '')),
-      RA.findIndex((x) => Str.Eq.equals(x, stringLookup(locationPathWords)(0))),
-      pipe(-1, constant, O.getOrElse),
+      RA.map(S.replace('/', '')),
+      RA.findIndex((x) => S.Eq.equals(x, stringLookup(locationPathWords)(0))),
+      f.pipe(-1, f.constant, O.getOrElse),
     ),
 )
 
 const getLocationHasVisit = createSelector(
   [getLocationPathWords],
-  flow(flip(stringLookup)(2), (x) => parseInt(x, 10), P.not(Number.isNaN)),
+  f.flow(f.flip(stringLookup)(2), (x) => parseInt(x, 10), P.not(Number.isNaN)),
 )
 
 const getIsAtEda = createSelector([getPosition], (position) => position === 3)
@@ -108,12 +110,12 @@ export const getProgressValue = createSelector(
 export const getShouldNavigateToAllowed = createSelector(
   [getLocationPathWords, getAllowedPaths],
   (locationPathWords, allowedPaths) =>
-    pipe(
+    f.pipe(
       allowedPaths,
       RA.every(
-        flow(
-          Str.replace('/', ''),
-          pipe(stringLookup(locationPathWords)(0), Str.includes, P.not),
+        f.flow(
+          S.replace('/', ''),
+          f.pipe(stringLookup(locationPathWords)(0), S.includes, P.not),
         ),
       ),
     ),

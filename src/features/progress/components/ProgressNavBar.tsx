@@ -1,21 +1,22 @@
 /* eslint-disable functional/functional-parameters */
+import { useAppSelector } from '@/lib/hooks'
 import {
-  mergeClasses,
   ProgressBar,
   makeStyles,
+  mergeClasses,
   shorthands,
 } from '@fluentui/react-components'
-import { useResolvedPath, useLocation } from 'react-router-dom'
-import { useAppSelector } from '@/lib/hooks'
-import { getProgressValue, getPosition } from '../selectors'
+import { useLocation, useResolvedPath } from 'react-router-dom'
+
+import { getPosition, getProgressValue } from '../selectors'
 
 const useClasses = makeStyles({
+  initialRoot: {
+    width: '81%',
+  },
   root: {
     width: '80%',
     ...shorthands.margin(0, 'auto'),
-  },
-  initialRoot: {
-    width: '81%',
   },
 })
 export default function ProgressNavBar() {
@@ -37,10 +38,10 @@ export default function ProgressNavBar() {
         classes.root,
         position === 0 && classes.initialRoot,
       )}
+      max={1}
+      thickness="large"
       title="Progress Bar Navigation"
       value={progressValue}
-      thickness="large"
-      max={1}
     />
   )
 }

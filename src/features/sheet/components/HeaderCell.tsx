@@ -1,17 +1,17 @@
+import { codebook } from '@/data'
+import { useAppSelector } from '@/lib/hooks'
 import {
-  mergeClasses,
   makeStyles,
+  mergeClasses,
   shorthands,
   tokens,
 } from '@fluentui/react-components'
-import { useAppSelector } from '@/lib/hooks'
-
-import { codebook } from '@/data'
 import * as RA from 'fp-ts/ReadonlyArray'
-import * as S from 'fp-ts/string'
 import { pipe } from 'fp-ts/function'
-import { getColumn } from '../selectors'
+import * as S from 'fp-ts/string'
+
 import { getFormattedColumn } from '../../columns/selectors'
+import { getColumn } from '../selectors'
 
 interface Props {
   isOriginal: boolean
@@ -19,20 +19,20 @@ interface Props {
 }
 
 const useClasses = makeStyles({
-  root: {
-    alignItems: 'center',
-    textAlign: 'center',
-    fontWeight: 'bold',
-    minHeight: '44px',
-    display: 'flex',
-    width: '100%',
-    ...shorthands.padding(0, tokens.spacingHorizontalS),
-  },
   categoricalHeader: {
     backgroundColor: tokens.colorPalettePurpleBackground2,
   },
   numericalHeader: {
     backgroundColor: tokens.colorPaletteBerryBackground2,
+  },
+  root: {
+    alignItems: 'center',
+    display: 'flex',
+    fontWeight: 'bold',
+    minHeight: '44px',
+    textAlign: 'center',
+    width: '100%',
+    ...shorthands.padding(0, tokens.spacingHorizontalS),
   },
 })
 

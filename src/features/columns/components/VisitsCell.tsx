@@ -1,27 +1,27 @@
+import type { AlertRef } from '@/components/AlertDialog'
 import type { DropdownProps } from '@fluentui/react-components'
+
+import { indexDuplicateSearcher } from '@/lib/array'
+import { useAppDispatch, useAppSelector } from '@/lib/hooks'
 import {
-  makeStyles,
-  shorthands,
   Dropdown,
   Option,
+  makeStyles,
+  shorthands,
   tokens,
 } from '@fluentui/react-components'
-import { type RefObject, useCallback } from 'react'
-import type { AlertRef } from '@/components/AlertDialog'
-
-import { useAppDispatch, useAppSelector } from '@/lib/hooks'
-import { indexDuplicateSearcher } from '@/lib/array'
-
 import * as IO from 'fp-ts/IO'
-import { pipe } from 'fp-ts/function'
 import * as RA from 'fp-ts/ReadonlyArray'
+import * as f from 'fp-ts/function'
+import { type RefObject, useCallback } from 'react'
+
+import { setMatchVisit } from '../reducers'
 import {
-  getVisitByMatchVisit,
+  getIndices,
   getMatchColumn,
   getMatchVisit,
-  getIndices,
+  getVisitByMatchVisit,
 } from '../selectors'
-import { setMatchVisit } from '../reducers'
 
 interface Props {
   alertRef: RefObject<AlertRef>
@@ -62,7 +62,7 @@ export default function VisitsCell({ alertRef, pos }: Props) {
           return
         }
 
-        pipe(
+        f.pipe(
           { matchVisit: newMatchVisit, pos },
           setMatchVisit,
           (x) => dispatch(x),
@@ -74,15 +74,15 @@ export default function VisitsCell({ alertRef, pos }: Props) {
 
   return (
     <Dropdown
-      selectedOptions={[matchVisit.toString()]}
-      onOptionSelect={handleOptionSelect}
       appearance="filled-darker"
       className={classes.root}
+      onOptionSelect={handleOptionSelect}
+      selectedOptions={[matchVisit.toString()]}
       value={visit}>
-      {pipe(
+      {f.pipe(
         visits,
         RA.mapWithIndex((i, visitStr) => (
-          <Option value={i.toString()} text={visitStr} key={visitStr}>
+          <Option key={visitStr} text={visitStr} value={i.toString()}>
             {visitStr}
           </Option>
         )),

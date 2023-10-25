@@ -1,12 +1,12 @@
-import type { Config, Layout, Data } from 'plotly.js'
+import type { Config, Data, Layout } from 'plotly.js-cartesian-dist'
 import type { PlotParams } from 'react-plotly.js'
 
-import createPlotlyComponent from 'react-plotly.js/factory'
-import { tokens } from '@fluentui/react-components'
-import Plotly from 'plotly.js-cartesian-dist'
 import { useTokenToHex } from '@/lib/hooks'
-import { pipe } from 'fp-ts/function'
+import { tokens } from '@fluentui/react-components'
 import * as RA from 'fp-ts/ReadonlyArray'
+import { pipe } from 'fp-ts/function'
+import Plotly from 'plotly.js-cartesian-dist'
+import createPlotlyComponent from 'react-plotly.js/factory'
 
 interface Props extends Partial<PlotParams> {
   data: Data[]
@@ -35,12 +35,12 @@ export default function Plot({ config, layout, ...props }: Props) {
   ) as string[]
 
   const defaultLayout: Partial<Layout> = {
-    paper_bgcolor: 'rgba(0, 0, 0, 0)',
-    plot_bgcolor: 'rgba(0, 0, 0, 0)',
+    colorway,
     font: {
       color,
     },
-    colorway,
+    paper_bgcolor: 'rgba(0, 0, 0, 0)',
+    plot_bgcolor: 'rgba(0, 0, 0, 0)',
   }
 
   // console.log('rendering', colorway, color, config, layout, props)

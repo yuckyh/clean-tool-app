@@ -1,14 +1,14 @@
 import { getFormattedColumn } from '@/features/columns/selectors'
-import { useAppSelector } from '@/lib/hooks'
-import { mergeClasses, makeStyles, tokens } from '@fluentui/react-components'
-import { constant, identity, flow, pipe } from 'fp-ts/function'
-import * as RA from 'fp-ts/ReadonlyArray'
-import * as O from 'fp-ts/Option'
-import * as E from 'fp-ts/Either'
-import * as RR from 'fp-ts/ReadonlyRecord'
-import { getIndexRow, getColumn } from '@/features/sheet/selectors'
+import { getColumn, getIndexRow } from '@/features/sheet/selectors'
 import { stringLookup } from '@/lib/array'
 import { strEquals } from '@/lib/fp'
+import { useAppSelector } from '@/lib/hooks'
+import { makeStyles, mergeClasses, tokens } from '@fluentui/react-components'
+import * as E from 'fp-ts/Either'
+import * as O from 'fp-ts/Option'
+import * as RA from 'fp-ts/ReadonlyArray'
+import * as RR from 'fp-ts/ReadonlyRecord'
+import { constant, flow, identity, pipe } from 'fp-ts/function'
 
 interface Props {
   col: number
@@ -18,8 +18,8 @@ interface Props {
 const useClasses = makeStyles({
   cell: {
     alignItems: 'center',
-    minHeight: '44px',
     display: 'flex',
+    minHeight: '44px',
     width: '100%',
   },
   incorrect: {
@@ -63,7 +63,7 @@ export default function DownloadPreviewCell({ col, row }: Props) {
         O.fromPredicate((flags) => flags.length > 1),
         O.flatMap(
           flow(
-            RA.filter(([, , reason]) => reason !== 'general'),
+            RA.filter(([, , reason]) => reason !== 'outlier'),
             RA.head,
             O.flatMap(([, , reason]) => RR.lookup(reason)(classes)),
           ),

@@ -1,7 +1,6 @@
-import { constant, flow, pipe } from 'fp-ts/function'
 import * as O from 'fp-ts/Option'
 import * as RA from 'fp-ts/ReadonlyArray'
-import { dump } from './logger'
+import { constant, flow, pipe } from 'fp-ts/function'
 
 export const indexDuplicateSearcher = <T extends readonly U[], U>(
   indices: readonly T[],

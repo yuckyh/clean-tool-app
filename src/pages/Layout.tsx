@@ -1,24 +1,24 @@
 /* eslint-disable functional/functional-parameters */
+import Loader from '@/components/Loader'
+import ProgressNav from '@/features/progress/components/ProgressNav'
 import {
+  Spinner,
+  Subtitle1,
   makeStyles,
   shorthands,
-  Subtitle1,
-  Spinner,
   tokens,
 } from '@fluentui/react-components'
-import { useNavigation, Outlet } from 'react-router-dom'
 import { useMemo } from 'react'
-import ProgressNav from '@/features/progress/components/ProgressNav'
-import Loader from '@/components/Loader'
+import { Outlet, useNavigation } from 'react-router-dom'
 
 const useClasses = makeStyles({
-  main: {
-    flexDirection: 'column',
-    display: 'flex',
-    ...shorthands.padding(tokens.spacingVerticalXXXL),
-  },
   header: {
     ...shorthands.padding(tokens.spacingVerticalXXL),
+  },
+  main: {
+    display: 'flex',
+    flexDirection: 'column',
+    ...shorthands.padding(tokens.spacingVerticalXXXL),
   },
 })
 

@@ -1,36 +1,39 @@
+import type { Flag } from '@/features/sheet/reducers'
 import type {
   DataGridCellFocusMode,
-  TableColumnDefinition,
   DataGridProps,
   InputProps,
+  TableColumnDefinition,
 } from '@fluentui/react-components'
 
+import SimpleDataGrid from '@/components/SimpleDataGrid'
+import { getDataType } from '@/features/columns/selectors'
+import { syncFlaggedCells } from '@/features/sheet/reducers'
 import {
+  getFlaggedRows,
+  getIndexedRow,
+  getIndexedRowIncorrects,
+  getIndexedRowMissings,
+} from '@/features/sheet/selectors'
+import { getIndexedIndex, getIndexedValue } from '@/lib/array'
+import { useAppDispatch, useAppSelector } from '@/lib/hooks'
+import {
+  Body2,
+  Card,
+  Title2,
   createTableColumn,
   makeStyles,
   shorthands,
   tokens,
-  Title2,
-  Card,
 } from '@fluentui/react-components'
-import { useCallback, useState, useMemo } from 'react'
-import SimpleDataGrid from '@/components/SimpleDataGrid'
-import { useAppDispatch, useAppSelector } from '@/lib/hooks'
-import { constant, pipe, flow } from 'fp-ts/function'
-import * as RA from 'fp-ts/ReadonlyArray'
-import * as S from 'fp-ts/string'
-import * as RS from 'fp-ts/ReadonlySet'
 import * as IO from 'fp-ts/IO'
-import type { Flag } from '@/features/sheet/reducers'
-import { syncFlaggedCells } from '@/features/sheet/reducers'
-import { getIndexedIndex, getIndexedValue } from '@/lib/array'
-import {
-  getIndexedRowIncorrects,
-  getIndexedRowMissings,
-  getFlaggedRows,
-  getIndexedRow,
-} from '@/features/sheet/selectors'
-import FilterInput from './FilterInput'
+import * as RA from 'fp-ts/ReadonlyArray'
+import * as RS from 'fp-ts/ReadonlySet'
+import { constant, flow, pipe } from 'fp-ts/function'
+import * as S from 'fp-ts/string'
+import { useCallback, useMemo, useState } from 'react'
+
+import FilterInput from '../FilterInput'
 
 interface Props {
   column: string
@@ -44,32 +47,34 @@ const useClasses = makeStyles({
     ...shorthands.margin(0, 'auto'),
     ...shorthands.padding(tokens.spacingHorizontalXXXL, '5%'),
   },
+  columnHeader: {
+    fontWeight: 'bold',
+  },
   columns: {
     columnGap: tokens.spacingVerticalXL,
     display: 'flex',
     width: '100%',
   },
-  columnHeader: {
-    fontWeight: 'bold',
-  },
   input: {
     minWidth: '150px',
+  },
+  rows: {
+    display: 'flex',
+    flexDirection: 'column',
+    rowGap: tokens.spacingVerticalXL,
+    width: '100%',
   },
 })
 
 const cellFocusMode: () => DataGridCellFocusMode = constant('none')
 
-export default function FlaggedDataGrid({
-  column,
-  visit,
-  title,
-}: Readonly<Props>) {
+export default function AllDataGrid({ column, title, visit }: Readonly<Props>) {
   const classes = useClasses()
 
   const dispatch = useAppDispatch()
 
   const flaggedRows = useAppSelector((state) =>
-    getFlaggedRows(state, title, 'general'),
+    getFlaggedRows(state, title, 'outlier'),
   )
   const series = useAppSelector((state) => getIndexedRow(state, column, visit))
   const missingSeries = useAppSelector((state) =>
@@ -78,6 +83,7 @@ export default function FlaggedDataGrid({
   const incorrectSeries = useAppSelector((state) =>
     getIndexedRowIncorrects(state, column, visit),
   )
+  const dataType = useAppSelector((state) => getDataType(state, column, visit))
 
   const indices = useMemo(() => RA.map(getIndexedIndex)(series), [series])
   const missingIndices = useMemo(
@@ -111,7 +117,7 @@ export default function FlaggedDataGrid({
 
     const payloads = pipe(
       checkedPosList,
-      RA.map((currentIndex) => [currentIndex, title, 'general'] as Flag),
+      RA.map((currentIndex) => [currentIndex, title, 'outlier'] as Flag),
     )
 
     const missingPayloads = pipe(
@@ -156,18 +162,18 @@ export default function FlaggedDataGrid({
     useMemo(
       () => [
         createTableColumn({
+          columnId: 'index',
+          renderCell: getIndexedIndex,
           renderHeaderCell: constant(
             <div className={classes.columnHeader}>sno</div>,
           ),
-          renderCell: getIndexedIndex,
-          columnId: 'index',
         }),
         createTableColumn({
+          columnId: title,
+          renderCell: getIndexedValue,
           renderHeaderCell: constant(
             <div className={classes.columnHeader}>{title}</div>,
           ),
-          renderCell: getIndexedValue,
-          columnId: title,
         }),
       ],
       [classes.columnHeader, title],
@@ -191,27 +197,32 @@ export default function FlaggedDataGrid({
 
   return (
     <Card className={classes.card} size="large">
-      <Title2>Data Flagging</Title2>
+      <Title2>All Data</Title2>
+      <Body2>Filter and sort your data to flag them here</Body2>
       <div className={classes.columns}>
-        <FilterInput
-          handleChange={handleIndexFilter}
-          value={indexFilter}
-          label="Search sno"
-        />
-        <FilterInput
-          handleChange={handleValueFilter}
-          label="Search values"
-          value={valueFilter}
-        />
+        <div className={classes.rows}>
+          <FilterInput
+            handleChange={handleIndexFilter}
+            label="Search sno"
+            value={indexFilter}
+          />
+        </div>
+        <div className={classes.rows}>
+          <FilterInput
+            handleChange={handleValueFilter}
+            label="Search values"
+            value={valueFilter}
+          />
+        </div>
       </div>
       <SimpleDataGrid
-        onSelectionChange={handleSelectionChange}
         cellFocusMode={cellFocusMode}
-        selectionMode="multiselect"
-        selectedItems={flaggedRows}
         columns={columnsDefinition}
         getRowId={getIndexedIndex}
         items={filteredRows}
+        onSelectionChange={handleSelectionChange}
+        selectedItems={flaggedRows}
+        selectionMode="multiselect"
       />
     </Card>
   )

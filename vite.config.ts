@@ -1,9 +1,9 @@
-import { defineConfig, loadEnv } from 'vite'
 import react from '@vitejs/plugin-react-swc'
-import { VitePWA } from 'vite-plugin-pwa'
-import mkcert from 'vite-plugin-mkcert'
-import lightningcss from 'vite-plugin-lightningcss'
 import { resolve } from 'path'
+import { defineConfig, loadEnv } from 'vite'
+import lightningcss from 'vite-plugin-lightningcss'
+import mkcert from 'vite-plugin-mkcert'
+import { VitePWA } from 'vite-plugin-pwa'
 
 const resolveDir = (dir: TemplateStringsArray) => resolve(__dirname, ...dir)
 
@@ -13,9 +13,15 @@ export default defineConfig(({ mode }) => {
 
   return {
     build: {
+      cssMinify: isDev ? false : 'lightningcss',
+      // don't minify for debug builds
+      minify: isDev ? false : 'esbuild',
       rollupOptions: {
         output: {
           manualChunks: {
+            fluentui: ['@fluentui/react-components'],
+            plotly: ['plotly.js-cartesian-dist-min'],
+            react: ['react', 'react-dom'],
             reactHelpers: [
               'react-helmet-async',
               'react-router-dom',
@@ -23,78 +29,72 @@ export default defineConfig(({ mode }) => {
               'react-redux',
             ],
             reactPlotly: ['react-plotly.js'],
-            plotly: ['plotly.js-cartesian-dist-min'],
-            fluentui: ['@fluentui/react-components'],
-            react: ['react', 'react-dom'],
             tauri: ['@tauri-apps/api'],
           },
         },
       },
-      // Tauri uses Chromium on Windows and WebKit on macOS and Linux
-      target: env.TAURI_PLATFORM === 'windows' ? 'chrome105' : 'safari13',
-      cssMinify: isDev ? false : 'lightningcss',
-      // don't minify for debug builds
-      minify: isDev ? false : 'esbuild',
       // produce sourcemaps for debug builds
       sourcemap: isDev,
+      // Tauri uses Chromium on Windows and WebKit on macOS and Linux
+      target: env.TAURI_PLATFORM === 'windows' ? 'chrome105' : 'safari13',
     },
+    // prevent vite from obscuring rust errors
+    clearScreen: false,
+    // `TAURI_PLATFORM_VERSION`, `TAURI_PLATFORM_TYPE` and `TAURI_DEBUG`
+    commonjsOptions: {
+      esmExternals: true,
+    },
+    define: {
+      __APP_ENV__: JSON.stringify(env),
+    },
+    // env variables
+    envPrefix: ['VITE_', 'TAURI_'],
+    // esbuild: {
+    jsxInject: `import React from 'react'`,
+    // },
+    // to make use of `TAURI_PLATFORM`, `TAURI_ARCH`, `TAURI_FAMILY`,
     plugins: [
       react(),
       VitePWA({
+        injectRegister: 'auto',
         manifest: {
           description: 'A clean tool app for Essilor',
-          short_name: 'CleanToolApp',
-          orientation: 'landscape',
-          name: 'CLEaN Tool App',
-          theme_color: '#0F6CBD',
           id: '/',
+          name: 'CLEaN Tool App',
+          orientation: 'landscape',
+          short_name: 'CleanToolApp',
+          theme_color: '#0F6CBD',
         },
+        registerType: 'autoUpdate',
         workbox: {
           globPatterns: [
             '**/*.{js,html,webmanifest}',
             '**/*.{svg,png,jpg,gif}',
           ],
         },
-        registerType: 'autoUpdate',
-        injectRegister: 'auto',
       }),
       lightningcss({
         browserslist: 'last 2 versions, not dead, >0.2%, ie 11',
-        sourceMap: isDev,
         minify: !isDev,
+        sourceMap: isDev,
       }),
       mkcert(),
     ],
     preview: {
-      strictPort: true,
       cors: false,
       https: true,
-    },
-    // Tauri expects a fixed port, fail if that port is not available
-    server: {
       strictPort: true,
-      cors: false,
-      https: true,
     },
     resolve: {
       alias: {
         '@': resolveDir`src`,
       },
     },
-    define: {
-      __APP_ENV__: JSON.stringify(env),
+    // Tauri expects a fixed port, fail if that port is not available
+    server: {
+      cors: false,
+      https: true,
+      strictPort: true,
     },
-    // },
-    // to make use of `TAURI_PLATFORM`, `TAURI_ARCH`, `TAURI_FAMILY`,
-    // `TAURI_PLATFORM_VERSION`, `TAURI_PLATFORM_TYPE` and `TAURI_DEBUG`
-    commonjsOptions: {
-      esmExternals: true,
-    },
-    // esbuild: {
-    jsxInject: `import React from 'react'`,
-    // env variables
-    envPrefix: ['VITE_', 'TAURI_'],
-    // prevent vite from obscuring rust errors
-    clearScreen: false,
   }
 })

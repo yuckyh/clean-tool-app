@@ -1,28 +1,28 @@
-import { constant } from 'fp-ts/function'
 import type { WorkBook } from 'xlsx'
 
-import XLSX from 'xlsx'
 import { dumpError } from '@/lib/logger'
+import { constant } from 'fp-ts/function'
+import XLSX from 'xlsx'
 
 export type SheetRequest = (
   | {
-      method: 'remove'
-      fileName: string
+      file: File
+      method: 'postFile'
     }
   | {
       fileName: string
       method: 'get'
     }
   | {
-      method: 'postFile'
-      file: File
+      fileName: string
+      method: 'remove'
     }
 ) &
   WorkerRequest
 
 export type SheetResponse = WorkerResponse & {
-  workbook?: WorkBook
   fileName: string
+  workbook?: WorkBook
 }
 
 type Handler<Method extends SheetRequest['method'] = SheetRequest['method']> =
@@ -46,8 +46,8 @@ const get: Handler<'get'> = async ({ fileName }) => {
     .then(XLSX.read)
 
   return {
-    status: 'ok',
     fileName,
+    status: 'ok',
     workbook,
   }
 }
@@ -68,14 +68,14 @@ const postFile: Handler<'postFile'> = async ({ file }) => {
 const remove: Handler<'remove'> = async ({ fileName }) => {
   await getRootHandle().then((root) => root.removeEntry(fileName))
 
-  return { status: 'ok', fileName }
+  return { fileName, status: 'ok' }
 }
 
 const controller: Controller<SheetRequest, SheetResponse> = {
+  get: get as Handler,
   // postFormattedJSON,
   postFile: postFile as Handler,
   remove: remove as Handler,
-  get: get as Handler,
 }
 
 const main = async (data: SheetRequest) => {

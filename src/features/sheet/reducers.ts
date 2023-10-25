@@ -1,50 +1,52 @@
 /* eslint-disable no-param-reassign */
+import type { AppDispatch } from '@/app/store'
 /* eslint-disable functional/immutable-data */
-import type { PayloadAction, AsyncThunk } from '@reduxjs/toolkit'
+import type { AsyncThunk, PayloadAction } from '@reduxjs/toolkit'
+import type { Refinement } from 'fp-ts/Refinement'
 
+import { getPersisted, setPersisted } from '@/lib/localStorage'
+import { dump, dumpError } from '@/lib/logger'
 import { createSlice } from '@reduxjs/toolkit'
-import { type BookType, utils } from 'xlsx'
-
+import * as E from 'fp-ts/Either'
+import * as O from 'fp-ts/Option'
+import * as P from 'fp-ts/Predicate'
+import * as RA from 'fp-ts/ReadonlyArray'
 import { constant, flow, pipe } from 'fp-ts/function'
 import * as S from 'fp-ts/string'
-import * as O from 'fp-ts/Option'
-import * as E from 'fp-ts/Either'
-import * as RA from 'fp-ts/ReadonlyArray'
-import * as P from 'fp-ts/Predicate'
-import { getPersisted, setPersisted } from '@/lib/localStorage'
-import { dumpError, dump } from '@/lib/logger'
-import type { AppDispatch } from '@/app/store'
-import type { Refinement } from 'fp-ts/Refinement'
-import { deleteSheet, fetchSheet, sliceName, postFile } from './actions'
+import { type BookType, utils } from 'xlsx'
+
+import { deleteSheet, fetchSheet, postFile, sliceName } from './actions'
 import { FlagEq } from './selectors'
 
-export type FlagReason = 'incorrect' | 'missing' | 'general'
+export type FlagReason = 'incorrect' | 'missing' | 'outlier' | 'suspected'
 
 export type Flag = readonly [string, string, FlagReason]
 
 interface State {
-  originalColumns: readonly string[]
+  bookType?: BookType
+  data: readonly CellItem[]
+  fileName: string
   flaggedCells: readonly Flag[]
+  originalColumns: readonly string[]
+  sheetName: string
   sheetNames: readonly string[]
   visits: readonly string[]
-  data: readonly CellItem[]
-  bookType?: BookType
-  sheetName: string
-  fileName: string
 }
 
 const defaultValue = ''
 const listKeys = ['sheetNames', 'visits', 'originalColumns'] as const
 const fileNameKey = 'fileName'
 
-const isFlagReason: Refinement<undefined | string, FlagReason> = (
+const isFlagReason: Refinement<string | undefined, FlagReason> = (
   x,
-): x is FlagReason => x === 'incorrect' || x === 'missing' || x === 'general'
+): x is FlagReason => x === 'incorrect' || x === 'missing' || x === 'outlier'
 
 const isFlag: Refinement<readonly string[], Flag> = (x): x is Flag =>
   x.length === 3 && isFlagReason(x[2])
 
 const initialState: State = {
+  data: JSON.parse(getPersisted('data', '[]')) as readonly CellItem[],
+  fileName: getPersisted(fileNameKey, defaultValue),
   flaggedCells: pipe(
     getPersisted('flaggedCells', defaultValue),
     S.slice(1, -1),
@@ -59,6 +61,7 @@ const initialState: State = {
     S.split(','),
     RA.filter(P.not(S.isEmpty)),
   ),
+  sheetName: getPersisted(sliceName, defaultValue),
   sheetNames: pipe(
     getPersisted(listKeys[0], defaultValue),
     S.split(','),
@@ -69,103 +72,13 @@ const initialState: State = {
     S.split(','),
     RA.filter(P.not(S.isEmpty)),
   ),
-  data: JSON.parse(getPersisted('data', '[]')) as readonly CellItem[],
-  fileName: getPersisted(fileNameKey, defaultValue),
-  sheetName: getPersisted(sliceName, defaultValue),
 }
 
 const sheetSlice = createSlice({
-  reducers: {
-    syncVisits: (state, { payload }: PayloadAction<number>) => {
-      const visitsLengthDiff = payload - state.visits.length
-
-      RA.makeBy(Math.abs(visitsLengthDiff), () => {
-        state.visits = pipe(
-          [...state.visits] as const,
-          visitsLengthDiff > 0
-            ? RA.insertAt(
-                state.visits.length,
-                (state.visits.length + 1).toString(),
-              )
-            : RA.deleteAt(state.visits.length - 1),
-          pipe([...state.visits] as const, constant, O.getOrElse),
-        ) as string[]
-      })
-
-      return state
-    },
-    syncFlaggedCells: (state, { payload }: PayloadAction<Flag>) => {
-      const flaggedCells = state.flaggedCells as readonly Flag[]
-      state.flaggedCells = pipe(
-        [...flaggedCells],
-        (cells) =>
-          pipe(
-            cells,
-            RA.some((cell) => FlagEq.equals(cell, payload)),
-          )
-            ? E.left(cells)
-            : E.right(cells),
-        E.match(
-          flow(RA.filter((cell) => !FlagEq.equals(cell, payload))),
-          RA.append(payload),
-        ),
-      ) as [string, string, FlagReason][]
-
-      return state
-    },
-    saveSheetState: (state) => {
-      const {
-        originalColumns,
-        flaggedCells,
-        sheetNames,
-        sheetName,
-        fileName,
-        visits,
-        data,
-      } = state
-
-      setPersisted(sliceName, sheetName)
-      setPersisted(fileNameKey, fileName)
-      setPersisted('data', JSON.stringify(data))
-      ;([sheetNames, visits, originalColumns] as const).forEach((value, i) => {
-        setPersisted(listKeys[i] ?? '', value.join(','))
-      })
-
-      setPersisted('flaggedCells', `[${flaggedCells.join('],[')}]`)
-
-      return state
-    },
-    setVisit: (
-      state,
-      { payload }: PayloadAction<{ visit: string; pos: number }>,
-    ) => {
-      const { visit, pos } = payload
-      const visits = state.visits as readonly string[]
-
-      state.visits = pipe(
-        visits,
-        RA.modifyAt(pos, constant(visit)),
-        pipe(visits, constant, O.getOrElse),
-        dump,
-      ) as string[]
-
-      return state
-    },
-    setSheetName: (state, { payload }: PayloadAction<string>) => {
-      state.sheetName = payload
-
-      return state
-    },
-    deleteVisits: (state) => {
-      state.visits = []
-
-      return state
-    },
-  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchSheet.fulfilled, (state, { payload }) => {
-        const { SheetNames, bookType, Sheets } = payload
+        const { SheetNames, Sheets, bookType } = payload
 
         if (
           pipe(
@@ -214,30 +127,117 @@ const sheetSlice = createSlice({
         },
       )
   },
-  name: sliceName,
   initialState,
+  name: sliceName,
+  reducers: {
+    deleteVisits: (state) => {
+      state.visits = []
+
+      return state
+    },
+    saveSheetState: (state) => {
+      const {
+        data,
+        fileName,
+        flaggedCells,
+        originalColumns,
+        sheetName,
+        sheetNames,
+        visits,
+      } = state
+
+      setPersisted(sliceName, sheetName)
+      setPersisted(fileNameKey, fileName)
+      setPersisted('data', JSON.stringify(data))
+      ;([sheetNames, visits, originalColumns] as const).forEach((value, i) => {
+        setPersisted(listKeys[i] ?? '', value.join(','))
+      })
+
+      setPersisted('flaggedCells', `[${flaggedCells.join('],[')}]`)
+
+      return state
+    },
+    setSheetName: (state, { payload }: PayloadAction<string>) => {
+      state.sheetName = payload
+
+      return state
+    },
+    setVisit: (
+      state,
+      { payload }: PayloadAction<{ pos: number; visit: string }>,
+    ) => {
+      const { pos, visit } = payload
+      const visits = state.visits as readonly string[]
+
+      state.visits = pipe(
+        visits,
+        RA.modifyAt(pos, constant(visit)),
+        pipe(visits, constant, O.getOrElse),
+        dump,
+      ) as string[]
+
+      return state
+    },
+    syncFlaggedCells: (state, { payload }: PayloadAction<Flag>) => {
+      const flaggedCells = state.flaggedCells as readonly Flag[]
+      state.flaggedCells = pipe(
+        [...flaggedCells],
+        (cells) =>
+          pipe(
+            cells,
+            RA.some((cell) => FlagEq.equals(cell, payload)),
+          )
+            ? E.left(cells)
+            : E.right(cells),
+        E.match(
+          flow(RA.filter((cell) => !FlagEq.equals(cell, payload))),
+          RA.append(payload),
+        ),
+      ) as [string, string, FlagReason][]
+
+      return state
+    },
+    syncVisits: (state, { payload }: PayloadAction<number>) => {
+      const visitsLengthDiff = payload - state.visits.length
+
+      RA.makeBy(Math.abs(visitsLengthDiff), () => {
+        state.visits = pipe(
+          [...state.visits] as const,
+          visitsLengthDiff > 0
+            ? RA.insertAt(
+                state.visits.length,
+                (state.visits.length + 1).toString(),
+              )
+            : RA.deleteAt(state.visits.length - 1),
+          pipe([...state.visits] as const, constant, O.getOrElse),
+        ) as string[]
+      })
+
+      return state
+    },
+  },
 })
 
 interface AsyncThunkConfig {
-  serializedErrorType?: unknown
-  fulfilledMeta?: unknown
-  rejectedMeta?: unknown
   dispatch?: AppDispatch
-  rejectValue?: unknown
-  pendingMeta?: unknown
-  state?: unknown
   extra?: unknown
+  fulfilledMeta?: unknown
+  pendingMeta?: unknown
+  rejectValue?: unknown
+  rejectedMeta?: unknown
+  serializedErrorType?: unknown
+  state?: unknown
 }
 
 type GenericAsyncThunk = AsyncThunk<unknown, unknown, AsyncThunkConfig>
 type RejectedAction = ReturnType<GenericAsyncThunk['rejected']>
 
 export const {
-  syncFlaggedCells,
-  saveSheetState,
   deleteVisits,
+  saveSheetState,
   setSheetName,
-  syncVisits,
   setVisit,
+  syncFlaggedCells,
+  syncVisits,
 } = sheetSlice.actions
 export default sheetSlice.reducer

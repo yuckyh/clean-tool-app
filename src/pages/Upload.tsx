@@ -1,71 +1,71 @@
-import {
-  CardFooter,
-  CardHeader,
-  makeStyles,
-  shorthands,
-  Subtitle1,
-  Spinner,
-  Button,
-  Title1,
-  Title2,
-  tokens,
-  Card,
-} from '@fluentui/react-components'
-import { useNavigate } from 'react-router-dom'
-import { useCallback, useEffect, useRef } from 'react'
-import type { SheetInputRef } from '@/features/sheet/components/SheetUploadInput'
-import type { SimpleToasterRef } from '@/components/SimpleToaster'
 import type { AlertRef } from '@/components/AlertDialog'
+import type { SimpleToasterRef } from '@/components/SimpleToaster'
+import type { Progress } from '@/features/progress/reducers'
+import type { SheetInputRef } from '@/features/sheet/components/SheetUploadInput'
 
-import {
-  useLoadingTransition,
-  useAppDispatch,
-  useAppSelector,
-} from '@/lib/hooks'
+import AlertDialog from '@/components/AlertDialog'
+import SimpleToaster from '@/components/SimpleToaster'
 import { deleteColumns } from '@/features/columns/reducers'
+import { deleteProgressState, setProgress } from '@/features/progress/reducers'
+import { deleteSheet, fetchSheet } from '@/features/sheet/actions'
+import PreviewDataGrid from '@/features/sheet/components/PreviewDataGrid'
 import SheetPickerInput from '@/features/sheet/components/SheetPickerInput'
 import SheetUploadInput from '@/features/sheet/components/SheetUploadInput'
-import type { Progress } from '@/features/progress/reducers'
-import { deleteProgressState, setProgress } from '@/features/progress/reducers'
-import PreviewDataGrid from '@/features/sheet/components/PreviewDataGrid'
-import { deleteSheet, fetchSheet } from '@/features/sheet/actions'
 import VisitsInput from '@/features/sheet/components/VisitsInput'
 import { getColumnsLength } from '@/features/sheet/selectors'
-import SimpleToaster from '@/components/SimpleToaster'
-import AlertDialog from '@/components/AlertDialog'
-import * as IO from 'fp-ts/IO'
-import { constant, flow, pipe } from 'fp-ts/function'
-import * as TE from 'fp-ts/TaskEither'
-import * as T from 'fp-ts/Task'
-import * as RA from 'fp-ts/ReadonlyArray'
-import { dumpError } from '@/lib/logger'
 import { promisedTask } from '@/lib/fp'
+import {
+  useAppDispatch,
+  useAppSelector,
+  useLoadingTransition,
+} from '@/lib/hooks'
+import { dumpError } from '@/lib/logger'
+import {
+  Button,
+  Card,
+  CardFooter,
+  CardHeader,
+  Spinner,
+  Subtitle1,
+  Title1,
+  Title2,
+  makeStyles,
+  shorthands,
+  tokens,
+} from '@fluentui/react-components'
+import * as IO from 'fp-ts/IO'
+import * as RA from 'fp-ts/ReadonlyArray'
+import * as T from 'fp-ts/Task'
+import * as TE from 'fp-ts/TaskEither'
+import { constant, flow, pipe } from 'fp-ts/function'
+import { useCallback, useEffect, useRef } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 const useClasses = makeStyles({
-  root: {
-    rowGap: tokens.spacingVerticalXL,
-    flexDirection: 'column',
-    display: 'flex',
-    width: '70%',
-    ...shorthands.margin(0, 'auto'),
-  },
-  card: {
-    width: '50%',
-    ...shorthands.margin(0, 'auto'),
-    ...shorthands.padding(tokens.spacingHorizontalXXXL, '5%'),
-  },
   actions: {
     columnGap: tokens.spacingVerticalS,
     display: 'flex',
     width: '100%',
   },
   body: {
-    rowGap: tokens.spacingVerticalS,
     display: 'flex',
+    rowGap: tokens.spacingVerticalS,
+  },
+  card: {
+    width: '50%',
+    ...shorthands.margin(0, 'auto'),
+    ...shorthands.padding(tokens.spacingHorizontalXXXL, '5%'),
   },
   input: {
     minWidth: 'initial',
     width: '100%',
+  },
+  root: {
+    display: 'flex',
+    flexDirection: 'column',
+    rowGap: tokens.spacingVerticalXL,
+    width: '70%',
+    ...shorthands.margin(0, 'auto'),
   },
 })
 
@@ -153,20 +153,20 @@ export function Component() {
       <Card className={classes.card}>
         <CardHeader header={<Title2>Options</Title2>} />
 
-        <SheetUploadInput toasterRef={toasterRef} ref={sheetInputRef} />
+        <SheetUploadInput ref={sheetInputRef} toasterRef={toasterRef} />
 
         {hasSheet && !hasMultipleSheets && <SheetPickerInput />}
         {hasSheet && <VisitsInput />}
         <CardFooter
           action={
             <div className={classes.actions}>
-              <Button onClick={handleResetClick} disabled={!hasSheet}>
+              <Button disabled={!hasSheet} onClick={handleResetClick}>
                 Reset
               </Button>
               <Button
-                onClick={handleUploadSubmit}
                 appearance="primary"
-                disabled={!hasSheet}>
+                disabled={!hasSheet}
+                onClick={handleUploadSubmit}>
                 Proceed
               </Button>
             </div>

@@ -1,10 +1,12 @@
 import type { DependencyList } from 'react'
-import { useEffect } from 'react'
+
 import { console as fpConsole } from 'fp-ts'
-import { pipe } from 'fp-ts/function'
-import * as RR from 'fp-ts/ReadonlyRecord'
 import * as IO from 'fp-ts/IO'
 import * as RA from 'fp-ts/ReadonlyArray'
+import * as RR from 'fp-ts/ReadonlyRecord'
+import { pipe } from 'fp-ts/function'
+import { useEffect } from 'react'
+
 import { asIO } from './fp'
 
 export const ioDumpTrace = <T extends Parameters<typeof fpConsole.log>[0]>(

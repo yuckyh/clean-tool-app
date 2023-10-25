@@ -1,7 +1,8 @@
 import type { ComponentType } from 'react'
-import { lazy, memo } from 'react'
+
 import * as IO from 'fp-ts/IO'
 import * as T from 'fp-ts/Task'
+import { lazy, memo } from 'react'
 
 export const createMemo = <T>(
   displayName: string,

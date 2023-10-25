@@ -1,36 +1,37 @@
-import { createSelector } from '@reduxjs/toolkit'
-
-import { identity, constant, tupled, apply, flow, pipe } from 'fp-ts/function'
-import * as O from 'fp-ts/Option'
-import * as RA from 'fp-ts/ReadonlyArray'
-import * as S from 'fp-ts/string'
-import * as RR from 'fp-ts/ReadonlyRecord'
-import * as Eq from 'fp-ts/Eq'
-import * as RS from 'fp-ts/ReadonlySet'
-import * as Ord from 'fp-ts/Ord'
-import * as P from 'fp-ts/Predicate'
 import {
-  getFlaggedCells,
-  getReasonParam,
-  getTitleParam,
-  getDataTypes,
-  getSheetName,
-  getPosParam,
   getColumns,
-  searchPos,
-  getVisits,
   getData,
+  getDataTypes,
+  getFlaggedCells,
+  getPosParam,
+  getReasonParam,
+  getSheetName,
+  getTitleParam,
+  getVisits,
+  searchPos,
 } from '@/app/selectors'
 import { getIndexedValue, stringLookup } from '@/lib/array'
 import { strEquals } from '@/lib/fp'
 import { dump } from '@/lib/logger'
+import { createSelector } from '@reduxjs/toolkit'
+import * as Eq from 'fp-ts/Eq'
+import * as O from 'fp-ts/Option'
+import * as Ord from 'fp-ts/Ord'
+import * as P from 'fp-ts/Predicate'
+import * as RA from 'fp-ts/ReadonlyArray'
+import * as RR from 'fp-ts/ReadonlyRecord'
+import * as RS from 'fp-ts/ReadonlySet'
+import { apply, constant, flow, identity, pipe, tupled } from 'fp-ts/function'
+import * as S from 'fp-ts/string'
 import { utils } from 'xlsx'
+
+import type { Flag } from './reducers'
+
 import {
   getFormattedColumns,
-  getSearchedPos,
   getIndices,
+  getSearchedPos,
 } from '../columns/selectors'
-import type { Flag } from './reducers'
 
 export const getColumnsLength = createSelector(
   [getColumns],
@@ -213,7 +214,7 @@ const getFormattedData = createSelector(
         pipe(
           emptyColumns,
           RA.reduce(entry, (acc, curr) =>
-            RR.upsertAt(curr, '' as string | number)(acc),
+            RR.upsertAt(curr, '' as number | string)(acc),
           ),
         ),
       ),
@@ -239,9 +240,9 @@ const getFlaggedCellsAddresses = createSelector(
               strEquals(firstColumn)(secondColumn),
           ),
           (x) =>
-            x.length > 1 ? x.filter(([, , reason]) => reason !== 'general') : x,
+            x.length > 1 ? x.filter(([, , reason]) => reason !== 'outlier') : x,
           RA.head,
-          pipe(['', '', 'general'] as Flag, constant, O.getOrElse),
+          pipe(['', '', 'outlier'] as Flag, constant, O.getOrElse),
         ),
       ),
       RS.fromReadonlyArray(FlagEq),
@@ -271,7 +272,7 @@ const colorMap = pipe(
   {
     incorrect: 'FF00FFFF', // RRGGBBAA
     missing: 'FFFF00FF',
-    general: 'FF0000FF',
+    outlier: 'FF0000FF',
   } as const,
   RR.map(flow(S.slice(1, 7), S.toUpperCase)),
 )

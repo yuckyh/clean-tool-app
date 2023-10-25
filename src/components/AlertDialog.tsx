@@ -1,34 +1,34 @@
 /* eslint-disable functional/immutable-data */
-import { noOpIO } from '@/lib/utils'
 import type { DialogProps } from '@fluentui/react-components'
 
+import { noOpIO } from '@/lib/utils'
 import {
-  DialogActions,
-  DialogContent,
-  DialogSurface,
-  DialogTrigger,
-  DialogTitle,
-  DialogBody,
   Button,
   Dialog,
+  DialogActions,
+  DialogBody,
+  DialogContent,
+  DialogSurface,
+  DialogTitle,
+  DialogTrigger,
 } from '@fluentui/react-components'
 import * as IO from 'fp-ts/IO'
 import { pipe } from 'fp-ts/function'
-import { useImperativeHandle, forwardRef, useState } from 'react'
+import { forwardRef, useImperativeHandle, useState } from 'react'
 
 export interface AlertRef {
+  open: IO.IO<boolean>
   setContent: (content: string) => string
   setTitle: (title: string) => string
-  open: IO.IO<boolean>
 }
 
 interface Props {
-  onConfirm?: IO.IO<void>
   noCancel?: boolean
+  onConfirm?: IO.IO<void>
 }
 
 const AlertDialog = forwardRef<AlertRef, Props>(
-  ({ onConfirm, noCancel }, ref) => {
+  ({ noCancel, onConfirm }, ref) => {
     const [open, setOpen] = useState(false)
     const [content, setContent] = useState('')
     const [title, setTitle] = useState('')
@@ -63,7 +63,7 @@ const AlertDialog = forwardRef<AlertRef, Props>(
     )
 
     return (
-      <Dialog onOpenChange={handleOpen} modalType="alert" open={open}>
+      <Dialog modalType="alert" onOpenChange={handleOpen} open={open}>
         <DialogSurface>
           <DialogBody>
             <DialogTitle>{title}</DialogTitle>
@@ -89,8 +89,8 @@ const AlertDialog = forwardRef<AlertRef, Props>(
 
 AlertDialog.displayName = 'AlertDialog'
 AlertDialog.defaultProps = {
-  onConfirm: noOpIO(),
   noCancel: false,
+  onConfirm: noOpIO(),
 }
 
 export default AlertDialog

@@ -1,25 +1,25 @@
-import type { Layout, Data } from 'plotly.js-cartesian-dist-min'
+import type { Data, Layout } from 'plotly.js-cartesian-dist-min'
 
+import { getCleanNumericalRow } from '@/features/sheet/selectors'
+import { getIndexedIndex, getIndexedValue, numberLookup } from '@/lib/array'
+import { useAppSelector, useTokenToHex } from '@/lib/hooks'
+import { add, divideBy, multiply } from '@/lib/number'
 import { tokens } from '@fluentui/react-components'
+import { console } from 'fp-ts'
+import * as E from 'fp-ts/Either'
+import * as P from 'fp-ts/Predicate'
+import * as RA from 'fp-ts/ReadonlyArray'
+import { flip, flow, identity, pipe } from 'fp-ts/function'
+import * as N from 'fp-ts/number'
 import { useCallback, useMemo, useRef } from 'react'
 
-import { console } from 'fp-ts'
-import { multiply, divideBy, add } from '@/lib/number'
-import { useAppSelector, useTokenToHex } from '@/lib/hooks'
-import { identity, flip, flow, pipe } from 'fp-ts/function'
-import { getIndexedIndex, getIndexedValue, numberLookup } from '@/lib/array'
-import * as RA from 'fp-ts/ReadonlyArray'
-import * as E from 'fp-ts/Either'
-import * as N from 'fp-ts/number'
-import * as P from 'fp-ts/Predicate'
-import { getCleanNumericalRow } from '@/features/sheet/selectors'
-import VariablePlot from './VariablePlot'
+import VariablePlot from '.'
 
 interface NumericalPlotProps {
-  variable: string
   column: string
-  visit: string
   unit: string
+  variable: string
+  visit: string
 }
 
 const jitterPower = 0.3
@@ -27,10 +27,10 @@ const jitterPower = 0.3
 const jitterY = (jitter: number) => Math.random() * jitter * 2 - jitter
 
 export default function NumericalPlot({
-  variable,
   column,
-  visit,
   unit,
+  variable,
+  visit,
 }: NumericalPlotProps) {
   const series = useAppSelector((state) =>
     getCleanNumericalRow(state, column, visit),
@@ -123,60 +123,60 @@ export default function NumericalPlot({
   const notOutlierColor = useTokenToHex(tokens.colorBrandBackground)
 
   const layout: Partial<Layout> = {
-    yaxis2: {
-      zeroline: false,
-      range: [-1, 5],
-      tickvals: [],
+    xaxis: {
+      title: unit,
     },
     yaxis: {
       range: [-1, 1],
       tickvals: [],
     },
-    xaxis: {
-      title: unit,
+    yaxis2: {
+      range: [-1, 5],
+      tickvals: [],
+      zeroline: false,
     },
   }
 
   const data: Partial<Data>[] = [
     {
       // customdata: RA.map(getIndexedIndex)(series) as string[],
+      boxmean: true,
+      boxpoints: 'outliers',
+      jitter: 0.3,
       // hovertemplate: `%{customdata}: %{x} ${unit}`,
       marker: {
         opacity: 0,
       },
-      boxpoints: 'outliers',
-      boxmean: true,
       type: 'box',
-      jitter: 0.3,
-      x: values,
       width: 1,
+      x: values,
     },
     {
+      customdata: notOutlierIndices,
+      hovertemplate: `%{customdata}: %{x} ${unit}`,
       marker: {
         color: notOutlierColor,
-        symbol: 'x',
         size: 8,
+        symbol: 'x',
       },
-      hovertemplate: `%{customdata}: %{x} ${unit}`,
-      customdata: notOutlierIndices,
-      y: notOutlierJitters,
-      x: notOutlierValues,
-      type: 'scatter',
       mode: 'markers',
+      type: 'scatter',
+      x: notOutlierValues,
+      y: notOutlierJitters,
       yaxis: 'y2',
     },
     {
+      customdata: outlierIndices,
+      hovertemplate: `%{customdata}: %{x} ${unit}`,
       marker: {
         color: outlierColor,
-        symbol: 'x',
         size: 8,
+        symbol: 'x',
       },
-      hovertemplate: `%{customdata}: %{x} ${unit}`,
-      customdata: outlierIndices,
-      y: outlierJitters,
-      x: outlierValues,
-      type: 'scatter',
       mode: 'markers',
+      type: 'scatter',
+      x: outlierValues,
+      y: outlierJitters,
       yaxis: 'y2',
     },
   ]
@@ -185,5 +185,5 @@ export default function NumericalPlot({
 
   console.log(ref.current)
 
-  return <VariablePlot variable={variable} layout={layout} data={data} />
+  return <VariablePlot data={data} layout={layout} variable={variable} />
 }

@@ -1,30 +1,40 @@
+import type { AppDispatch, RootState } from '@/app/store'
+import type { Flag, FlagReason } from '@/features/sheet/reducers'
+import type { ColorTokens, DataGridProps } from '@fluentui/react-components'
 import type { TypedUseSelectorHook } from 'react-redux'
 
+import globalStyles from '@/app/global.css?inline'
+import { syncFlaggedCells } from '@/features/sheet/reducers'
 import {
-  useSyncExternalStore,
-  useTransition,
+  getFlaggedRows,
+  getIndexedRowMissings,
+} from '@/features/sheet/selectors'
+import { getIndexedIndex } from '@/lib/array'
+import {
+  makeStaticStyles,
+  useThemeClassName,
+  webDarkTheme,
+  webLightTheme,
+} from '@fluentui/react-components'
+import * as IO from 'fp-ts/IO'
+import * as RA from 'fp-ts/ReadonlyArray'
+import * as RS from 'fp-ts/ReadonlySet'
+import * as T from 'fp-ts/Task'
+import * as TO from 'fp-ts/TaskOption'
+import * as f from 'fp-ts/function'
+import * as S from 'fp-ts/string'
+import {
   useCallback,
   useEffect,
-  useState,
   useMemo,
+  useState,
+  useSyncExternalStore,
+  useTransition,
 } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import type { ColorTokens } from '@fluentui/react-components'
-import {
-  useThemeClassName,
-  makeStaticStyles,
-  webLightTheme,
-  webDarkTheme,
-} from '@fluentui/react-components'
-import type { AppDispatch, RootState } from '@/app/store'
-import globalStyles from '@/app/global.css?inline'
-import * as IO from 'fp-ts/IO'
-import { constant, identity, flow, pipe } from 'fp-ts/function'
-import * as TO from 'fp-ts/TaskOption'
-import * as O from 'fp-ts/Option'
-import * as T from 'fp-ts/Task'
-import { ioDumpTrace, dumpError, dumpTrace } from './logger'
-import { promisedTaskOption, promisedTask, asIO } from './fp'
+
+import { asIO, promisedTask, promisedTaskOption } from './fp'
+import { dumpError, ioDumpTrace } from './logger'
 
 export const useAppDispatch: () => AppDispatch = useDispatch
 export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector
@@ -48,7 +58,7 @@ export const useLoadingTransition = () => {
 
   const stopLoading = useMemo(
     () =>
-      pipe(
+      f.pipe(
         startTransition,
         IO.of,
         IO.flap(() => {
@@ -106,7 +116,7 @@ export const useTokenToHex = (token: Property<ColorTokens>) => {
 // eslint-disable-next-line functional/functional-parameters
 export const useStorage = () => {
   useEffect(() => {
-    pipe(
+    f.pipe(
       promisedTask(navigator.storage.persisted()),
       T.flatMap((persisted) =>
         persisted ? TO.none : promisedTaskOption(navigator.storage.persist()),
@@ -117,3 +127,63 @@ export const useStorage = () => {
 }
 
 export const useGlobalStyles = makeStaticStyles(globalStyles)
+
+export const useSyncedSelectionHandler = (
+  reason: FlagReason,
+  title: string,
+  column: string,
+  visit: string,
+) => {
+  const dispatch = useAppDispatch()
+
+  const flaggedRows = useAppSelector((state) =>
+    getFlaggedRows(state, title, reason),
+  )
+
+  const series = useAppSelector((state) =>
+    getIndexedRowMissings(state, column, visit),
+  )
+
+  const indices = useMemo(
+    () => f.pipe(series, RA.map(getIndexedIndex)),
+    [series],
+  )
+
+  return useCallback<Required<DataGridProps>['onSelectionChange']>(
+    (_1, { selectedItems }) => {
+      const shouldAdd = flaggedRows.size < selectedItems.size
+
+      const subtractor = (
+        shouldAdd ? selectedItems : flaggedRows
+      ) as ReadonlySet<string>
+
+      const subtractee = (
+        shouldAdd ? flaggedRows : selectedItems
+      ) as ReadonlySet<string>
+
+      const checkedPosList = f.pipe(
+        subtractor,
+        RS.difference(S.Eq)(subtractee),
+        RS.toReadonlyArray(S.Ord),
+        RA.filter((checkedPos) => RA.elem(S.Eq)(checkedPos)(indices)),
+      )
+
+      const payloads = f.pipe(
+        checkedPosList,
+        RA.map((currentIndex) => [currentIndex, title, reason] as Flag),
+      )
+
+      const unfilteredPayloads = f.pipe(
+        checkedPosList,
+        RA.map((currentIndex) => [currentIndex, title, 'outlier'] as Flag),
+      )
+
+      return f.pipe(
+        [...payloads, ...unfilteredPayloads] as const,
+        RA.map(f.flow(syncFlaggedCells, (x) => dispatch(x), IO.of)),
+        IO.sequenceArray,
+      )()
+    },
+    [dispatch, flaggedRows, indices, reason, title],
+  )
+}

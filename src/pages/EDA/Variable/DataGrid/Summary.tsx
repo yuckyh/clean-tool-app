@@ -1,25 +1,26 @@
-import SimpleDataGrid from '@/components/SimpleDataGrid'
-import { getIndexedValue } from '@/lib/array'
 import type {
   DataGridCellFocusMode,
   TableColumnDefinition,
   TableColumnId,
 } from '@fluentui/react-components'
+
+import SimpleDataGrid from '@/components/SimpleDataGrid'
+import { getCleanNumericalRow, getIndexedRow } from '@/features/sheet/selectors'
+import { getIndexedValue } from '@/lib/array'
+import { useAppSelector } from '@/lib/hooks'
 import {
-  createTableColumn,
+  Card,
   CardHeader,
+  Title1,
+  createTableColumn,
   makeStyles,
   shorthands,
-  Title1,
   tokens,
-  Card,
 } from '@fluentui/react-components'
-import { constant, pipe } from 'fp-ts/function'
-import { useMemo } from 'react'
 import * as RA from 'fp-ts/ReadonlyArray'
+import { constant, pipe } from 'fp-ts/function'
 import * as N from 'fp-ts/number'
-import { getCleanNumericalRow, getIndexedRow } from '@/features/sheet/selectors'
-import { useAppSelector } from '@/lib/hooks'
+import { useMemo } from 'react'
 
 interface SummaryStats {
   statistic: string
@@ -27,8 +28,8 @@ interface SummaryStats {
 }
 
 interface Props {
-  isCategorical: boolean
   column: string
+  isCategorical: boolean
   visit: string
 }
 
@@ -45,7 +46,11 @@ const useClasses = makeStyles({
 })
 
 // eslint-disable-next-line functional/functional-parameters
-export default function SummaryTable({ isCategorical, column, visit }: Props) {
+export default function SummaryDataGrid({
+  column,
+  isCategorical,
+  visit,
+}: Props) {
   const classes = useClasses()
 
   const categoricalSeries = useAppSelector((state) =>
@@ -63,14 +68,14 @@ export default function SummaryTable({ isCategorical, column, visit }: Props) {
   const columnDefinition: TableColumnDefinition<SummaryStats>[] = useMemo(
     () => [
       createTableColumn({
+        columnId: 'statistic',
         renderCell: ({ statistic }) => statistic,
         renderHeaderCell: constant('Statistic'),
-        columnId: 'statistic',
       }),
       createTableColumn({
-        renderHeaderCell: constant('Value'),
-        renderCell: ({ value }) => value,
         columnId: 'value',
+        renderCell: ({ value }) => value,
+        renderHeaderCell: constant('Value'),
       }),
     ],
     [],
@@ -85,20 +90,20 @@ export default function SummaryTable({ isCategorical, column, visit }: Props) {
     () =>
       pipe(
         isCategorical
-          ? [{ value: categoricalSeries.length, statistic: 'count' }]
+          ? [{ statistic: 'count', value: categoricalSeries.length }]
           : [
-              { value: numericalValues.length, statistic: 'count' },
+              { statistic: 'count', value: numericalValues.length },
               {
-                value: Math.min(...numericalValues),
                 statistic: 'min',
+                value: Math.min(...numericalValues),
               },
               {
-                value: Math.max(...numericalValues),
                 statistic: 'max',
+                value: Math.max(...numericalValues),
               },
               {
-                value: dataSum / numericalValues.length,
                 statistic: 'mean',
+                value: dataSum / numericalValues.length,
               },
               {
                 statistic: 'sum',

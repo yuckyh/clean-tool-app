@@ -1,43 +1,43 @@
+import type { AlertRef } from '@/components/AlertDialog'
+import type { Props as SimpleDataGridProps } from '@/components/SimpleDataGrid'
 import type {
   DataGridCellFocusMode,
-  TableColumnDefinition,
   DataGridFocusMode,
   DataGridProps,
+  TableColumnDefinition,
 } from '@fluentui/react-components'
 import type { RefObject } from 'react'
-import {
-  createTableColumn,
-  Subtitle1,
-  Spinner,
-} from '@fluentui/react-components'
-import { useCallback, useEffect, useState, useMemo } from 'react'
-import type { Props as SimpleDataGridProps } from '@/components/SimpleDataGrid'
-import type { AlertRef } from '@/components/AlertDialog'
-import * as T from 'fp-ts/Task'
 
+import { getMatchVisits, getVisits } from '@/app/selectors'
+import Loader from '@/components/Loader'
+import SimpleDataGrid from '@/components/SimpleDataGrid'
+import { fetchMatches } from '@/features/columns/actions'
 import {
-  getVisitsComparer,
   getMatchComparer,
   getScoreComparer,
+  getVisitsComparer,
 } from '@/features/columns/selectors'
+import { fetchSheet } from '@/features/sheet/actions'
+import { getColumnComparer, getColumnsLength } from '@/features/sheet/selectors'
+import { promisedTask, promisedTaskOption } from '@/lib/fp'
 import {
-  useLoadingTransition,
   useAppDispatch,
   useAppSelector,
+  useLoadingTransition,
 } from '@/lib/hooks'
-import { getColumnComparer, getColumnsLength } from '@/features/sheet/selectors'
-import { fetchMatches } from '@/features/columns/actions'
-import SimpleDataGrid from '@/components/SimpleDataGrid'
-import { fetchSheet } from '@/features/sheet/actions'
-import { createLazyMemo, createMemo } from '@/lib/utils'
-import Loader from '@/components/Loader'
-
-import { constant, identity, pipe } from 'fp-ts/function'
-import { makeBy } from 'fp-ts/ReadonlyArray'
-import * as TO from 'fp-ts/TaskOption'
 import { dumpError } from '@/lib/logger'
-import { promisedTaskOption, promisedTask } from '@/lib/fp'
-import { getMatchVisits, getVisits } from '@/app/selectors'
+import { createLazyMemo, createMemo } from '@/lib/utils'
+import {
+  Spinner,
+  Subtitle1,
+  createTableColumn,
+} from '@fluentui/react-components'
+import { makeBy } from 'fp-ts/ReadonlyArray'
+import * as T from 'fp-ts/Task'
+import * as TO from 'fp-ts/TaskOption'
+import { constant, identity, pipe } from 'fp-ts/function'
+import { useCallback, useEffect, useMemo, useState } from 'react'
+
 import HeaderCell from './HeaderCell'
 import ValueCell from './ValueCell'
 
@@ -85,7 +85,7 @@ export default function ColumnsDataGrid({
 
   const [sortState, setSortState] = useState<
     Parameters<NonNullable<DataGridProps['onSortChange']>>[1]
-  >({ sortDirection: 'ascending', sortColumn: '' })
+  >({ sortColumn: '', sortDirection: 'ascending' })
 
   const handleSortChange: Required<DataGridProps>['onSortChange'] = useCallback(
     (_event, nextSortState) => {
@@ -100,28 +100,28 @@ export default function ColumnsDataGrid({
     useMemo(() => {
       const initial = [
         createTableColumn({
+          columnId: 'original',
+          compare: columnComparer,
+          renderCell: (pos) => <ValueCell pos={pos} />,
           renderHeaderCell: constant(
             <HeaderCell
-              subtitle="The loaded column names (raw)"
               header="Original"
+              subtitle="The loaded column names (raw)"
             />,
           ),
-          renderCell: (pos) => <ValueCell pos={pos} />,
-          compare: columnComparer,
-          columnId: 'original',
         }),
         createTableColumn({
-          renderHeaderCell: constant(
-            <HeaderCell
-              subtitle="List of possible replacements (sorted by score)"
-              header="Replacement"
-            />,
-          ),
+          columnId: 'matches',
+          compare: matchComparer,
           renderCell: (pos) => (
             <MemoizedMatchCell alertRef={errorAlertRef} pos={pos} />
           ),
-          compare: matchComparer,
-          columnId: 'matches',
+          renderHeaderCell: constant(
+            <HeaderCell
+              header="Replacement"
+              subtitle="List of possible replacements (sorted by score)"
+            />,
+          ),
         }),
       ]
       const withVisits =
@@ -129,17 +129,17 @@ export default function ColumnsDataGrid({
           ? [
               ...initial,
               createTableColumn({
-                renderHeaderCell: constant(
-                  <HeaderCell
-                    subtitle="The matching visit number"
-                    header="Visit"
-                  />,
-                ),
+                columnId: 'visit',
+                compare: visitsComparer,
                 renderCell: (pos) => (
                   <MemoizedVisitsCell alertRef={errorAlertRef} pos={pos} />
                 ),
-                compare: visitsComparer,
-                columnId: 'visit',
+                renderHeaderCell: constant(
+                  <HeaderCell
+                    header="Visit"
+                    subtitle="The matching visit number"
+                  />,
+                ),
               }),
             ]
           : initial
@@ -147,15 +147,15 @@ export default function ColumnsDataGrid({
       return [
         ...withVisits,
         createTableColumn({
+          columnId: 'score',
+          compare: scoreComparer,
+          renderCell: (pos) => <MemoizedScoreCell pos={pos} />,
           renderHeaderCell: constant(
             <HeaderCell
-              subtitle="The fuzzy search score (1 indicates a perfect match)"
               header="Score"
+              subtitle="The fuzzy search score (1 indicates a perfect match)"
             />,
           ),
-          renderCell: (pos) => <MemoizedScoreCell pos={pos} />,
-          compare: scoreComparer,
-          columnId: 'score',
         }),
       ]
     }, [
@@ -201,12 +201,12 @@ export default function ColumnsDataGrid({
       labelPosition="below"
       size="huge">
       <MemoizedDataGrid
-        onSortChange={handleSortChange}
         cellFocusMode={cellFocusMode}
         columns={columnsDefinition}
         focusMode={focusMode}
-        sortState={sortState}
         items={items}
+        onSortChange={handleSortChange}
+        sortState={sortState}
         sortable
       />
     </Loader>

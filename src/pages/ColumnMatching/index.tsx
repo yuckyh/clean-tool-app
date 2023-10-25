@@ -1,29 +1,29 @@
 /* eslint-disable functional/functional-parameters */
+import type { AlertRef } from '@/components/AlertDialog'
+import type { Progress } from '@/features/progress/reducers'
+
+import AlertDialog from '@/components/AlertDialog'
+import { setProgress } from '@/features/progress/reducers'
+import { useAppDispatch } from '@/lib/hooks'
+import { createLazyMemo } from '@/lib/utils'
 /* eslint-disable import/prefer-default-export */
 import {
-  makeStyles,
-  shorthands,
   Button,
   Title1,
+  makeStyles,
+  shorthands,
   tokens,
 } from '@fluentui/react-components'
-import { useNavigate } from 'react-router-dom'
-import { useCallback, useEffect, useRef } from 'react'
-import type { AlertRef } from '@/components/AlertDialog'
-
-import type { Progress } from '@/features/progress/reducers'
-import { setProgress } from '@/features/progress/reducers'
-import AlertDialog from '@/components/AlertDialog'
-import { createLazyMemo } from '@/lib/utils'
-import { useAppDispatch } from '@/lib/hooks'
-import { pipe } from 'fp-ts/function'
 import * as IO from 'fp-ts/IO'
+import { pipe } from 'fp-ts/function'
+import { useCallback, useEffect, useRef } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 const useClasses = makeStyles({
   root: {
-    rowGap: tokens.spacingVerticalXL,
-    flexDirection: 'column',
     display: 'flex',
+    flexDirection: 'column',
+    rowGap: tokens.spacingVerticalXL,
     width: '70%',
     ...shorthands.margin(0, 'auto'),
   },
@@ -83,9 +83,9 @@ export function Component() {
       <MemoizedPreviewDataGrid />
 
       <AlertDialog ref={errorAlertRef} />
-      <AlertDialog ref={infoAlertRef} noCancel />
+      <AlertDialog noCancel ref={infoAlertRef} />
       <div>
-        <Button onClick={handleMatchingSubmit} appearance="primary">
+        <Button appearance="primary" onClick={handleMatchingSubmit}>
           Done
         </Button>
       </div>

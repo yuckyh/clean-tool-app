@@ -1,10 +1,10 @@
-import { configureStore } from '@reduxjs/toolkit'
-import progress from '@/features/progress/reducers'
 import columns from '@/features/columns/reducers'
+import progress from '@/features/progress/reducers'
 import sheet from '@/features/sheet/reducers'
+import { configureStore } from '@reduxjs/toolkit'
 
 const store = configureStore({
-  reducer: { progress, columns, sheet },
+  reducer: { columns, progress, sheet },
 } as const)
 
 export type RootState = ReturnType<typeof store.getState>

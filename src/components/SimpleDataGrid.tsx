@@ -1,28 +1,28 @@
 import type {
-  DataGridCellFocusMode,
-  TableColumnDefinition,
   DataGridBodyProps,
+  DataGridCellFocusMode,
   DataGridProps,
+  TableColumnDefinition,
   TableColumnId,
   TableRowData,
 } from '@fluentui/react-components'
 
+import { createMemo } from '@/lib/utils'
 import {
-  DataGridHeaderCell,
-  DataGridHeader,
+  DataGrid,
   DataGridBody,
   DataGridCell,
-  SkeletonItem,
+  DataGridHeader,
+  DataGridHeaderCell,
   DataGridRow,
+  Skeleton,
+  SkeletonItem,
+  Subtitle1,
   makeStyles,
   shorthands,
-  Subtitle1,
-  DataGrid,
-  Skeleton,
 } from '@fluentui/react-components'
-import { useCallback, Suspense, useMemo } from 'react'
+import { Suspense, useCallback, useMemo } from 'react'
 
-import { createMemo } from '@/lib/utils'
 import Loader from './Loader'
 
 export interface Props<T>
@@ -66,7 +66,7 @@ export default function SimpleDataGrid<T>({
   )
 
   const renderHeaderCellFn = useCallback(
-    ({ renderHeaderCell, columnId }: Readonly<TableColumnDefinition<T>>) => (
+    ({ columnId, renderHeaderCell }: Readonly<TableColumnDefinition<T>>) => (
       <DataGridHeaderCell className={classes.cell} key={columnId}>
         {renderHeaderCell()}
       </DataGridHeaderCell>
@@ -75,12 +75,12 @@ export default function SimpleDataGrid<T>({
   )
 
   const renderCellFn = useCallback(
-    ({ rowId, item }: Readonly<TableRowData<T>>) => (
+    ({ item, rowId }: Readonly<TableRowData<T>>) => (
       <DataGridRow key={rowId}>
-        {({ renderCell, columnId }) => (
+        {({ columnId, renderCell }) => (
           <DataGridCell
-            focusMode={cellFocusMode(columnId)}
             className={classes.cell}
+            focusMode={cellFocusMode(columnId)}
             key={columnId}>
             <Suspense
               fallback={
@@ -104,8 +104,8 @@ export default function SimpleDataGrid<T>({
       size="huge">
       <MemoizedGrid
         {...props}
-        columns={columns as TableColumnDefinition<T>[]}
         className={classes.grid}
+        columns={columns as TableColumnDefinition<T>[]}
         items={items as T[]}>
         <DataGridHeader className={classes.container}>
           <DataGridRow>{renderHeaderCellFn}</DataGridRow>

@@ -1,11 +1,12 @@
-import type { ColorScale } from 'plotly.js-cartesian-dist-min'
 import type { ColorTokens } from '@fluentui/react-components'
+import type { ColorScale } from 'plotly.js-cartesian-dist-min'
 
-import { identity, flow, pipe } from 'fp-ts/function'
 import * as RA from 'fp-ts/ReadonlyArray'
+import { flow, identity, pipe } from 'fp-ts/function'
 import * as S from 'fp-ts/string'
-import { divideBy } from './number'
+
 import { useTokenToHex } from './hooks'
+import { divideBy } from './number'
 
 type ColorToken = Property<ColorTokens>
 type Rgb = readonly [number, number, number]

@@ -1,27 +1,7 @@
 {
-  "name": "clean-tool-app",
   "author": {
-    "name": "Yucky Hito",
-    "email": "yucky.hito@essilor.com.sg"
-  },
-  "description": "A clean tool app for Essilor",
-  "keywords": [
-    "clean",
-    "tool",
-    "app",
-    "essilor",
-    "data"
-  ],
-  "license": "AGPL-3.0-or-later",
-  "private": true,
-  "version": "0.0.0",
-  "type": "module",
-  "scripts": {
-    "dev": "vite",
-    "build": "tsc && vite build",
-    "lint": "eslint . --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview",
-    "preview:clean": "tsc && vite build && vite preview"
+    "email": "yucky.hito@essilor.com.sg",
+    "name": "Yucky Hito"
   },
   "dependencies": {
     "@fluentui/react-components": "^9.36.0",
@@ -43,13 +23,14 @@
     "xlsx": "https://cdn.sheetjs.com/xlsx-0.20.0/xlsx-0.20.0.tgz",
     "xlsx-js-style": "^1.2.0"
   },
+  "description": "A data cleaning tool for Essilor",
   "devDependencies": {
     "@rollup/plugin-terser": "^0.4.4",
     "@tauri-apps/cli": "^1.5.6",
     "@types/eslint": "^8.44.6",
     "@types/node": "^20.8.8",
-    "@types/plotly.js-cartesian-dist-min": "npm:@types/plotly.js@*",
     "@types/react": "^18.2.31",
+    "@types/plotly.js-cartesian-dist": "npm:@types/plotly.js@*",
     "@types/react-dom": "^18.2.14",
     "@types/react-plotly.js": "^2.6.2",
     "@types/scheduler": "^0.16.5",
@@ -88,20 +69,12 @@
     "vite-plugin-pwa": "^0.16.5",
     "workbox-window": "^7.0.0"
   },
-  "overrides": {
-    "rollup-plugin-terser": "@rollup/plugin-terser"
-  },
   "engines": {
     "node": ">=18",
     "pnpm": ">=8",
     "yarn": ">=4"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/yuckyh/clean-tool-app.git"
-  },
   "eslintConfig": {
-    "root": true,
     "env": {
       "browser": true,
       "es2020": true
@@ -120,7 +93,7 @@
       "plugin:react-hooks/recommended",
       "plugin:prettier/recommended",
       "plugin:json/recommended",
-      "plugin:perfectionist/recommended-line-length",
+      "plugin:perfectionist/recommended-natural",
       "plugin:optimize-regex/all",
       "plugin:immutable/recommended",
       "plugin:fp-ts/recommended",
@@ -135,36 +108,16 @@
     ],
     "parser": "@typescript-eslint/parser",
     "parserOptions": {
+      "ecmaFeatures": {
+        "jsx": true
+      },
       "ecmaVersion": "latest",
-      "sourceType": "module",
       "project": [
         "./tsconfig.json",
         "./src/tsconfig.json"
       ],
-      "tsconfigRootDir": ".",
-      "ecmaFeatures": {
-        "jsx": true
-      }
-    },
-    "settings": {
-      "react": {
-        "version": "detect"
-      },
-      "import/parsers": {
-        "@typescript-eslint/parser": [
-          ".ts",
-          ".tsx"
-        ]
-      },
-      "import/resolver": {
-        "typescript": {
-          "alwaysTryTypes": true,
-          "project": [
-            ".tsconfig.json",
-            "src/tsconfig.json"
-          ]
-        }
-      }
+      "sourceType": "module",
+      "tsconfigRootDir": "."
     },
     "plugins": [
       "react",
@@ -180,21 +133,14 @@
       "fp-ts",
       "functional"
     ],
+    "root": true,
     "rules": {
-      "@typescript-eslint/semi": 0,
       "@typescript-eslint/consistent-type-exports": 2,
       "@typescript-eslint/consistent-type-imports": 2,
-      "perfectionist/sort-imports": 0,
-      "immutable/no-let": 2,
-      "immutable/no-this": 2,
-      "import/extensions": 0,
-      "import/no-extraneous-dependencies": 0,
-      "import/no-cycle": 0,
-      "react/jsx-props-no-spreading": 0,
+      "@typescript-eslint/semi": 0,
       "functional/no-expression-statements": 0,
-      "functionaya l/functional-parameters": 0,
-      "functional/no-return-void": 0,
       "functional/no-mixed-types": 0,
+      "functional/no-return-void": 0,
       "functional/prefer-immutable-types": [
         0,
         {
@@ -202,16 +148,70 @@
           "ignoreInferredTypes": true
         }
       ],
+      "functionaya l/functional-parameters": 0,
+      "immutable/no-let": 2,
+      "immutable/no-this": 2,
+      "import/extensions": 0,
+      "import/no-cycle": 0,
+      "import/no-extraneous-dependencies": 0,
+      "import/sort-imports": 0,
+      "react/jsx-props-no-spreading": 0,
       "redux/no-let": 0,
-      "redux/no-this": 0,
-      "redux/no-mutation": 0
+      "redux/no-mutation": 0,
+      "redux/no-this": 0
+    },
+    "settings": {
+      "import/parsers": {
+        "@typescript-eslint/parser": [
+          ".ts",
+          ".tsx"
+        ]
+      },
+      "import/resolver": {
+        "typescript": {
+          "alwaysTryTypes": true,
+          "project": [
+            ".tsconfig.json",
+            "src/tsconfig.json"
+          ]
+        }
+      },
+      "react": {
+        "version": "detect"
+      }
     }
   },
-  "prettier": {
-    "singleQuote": true,
-    "trailingComma": "all",
-    "semi": false,
-    "bracketSameLine": true
+  "keywords": [
+    "clean",
+    "tool",
+    "app",
+    "essilor",
+    "data"
+  ],
+  "license": "AGPL-3.0-or-later",
+  "name": "clean-tool-app",
+  "overrides": {
+    "rollup-plugin-terser": "@rollup/plugin-terser"
   },
-  "packageManager": "yarn@4.0.0-rc.53"
+  "packageManager": "yarn@4.0.0-rc.53",
+  "prettier": {
+    "bracketSameLine": true,
+    "semi": false,
+    "singleQuote": true,
+    "trailingComma": "all"
+  },
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yuckyh/clean-tool-app.git"
+  },
+  "scripts": {
+    "build": "tsc && vite build",
+    "dev": "vite",
+    "lint": "eslint . --report-unused-disable-directives --max-warnings 0",
+    "preview": "vite preview",
+    "preview:clean": "tsc && vite build && vite preview"
+  },
+  "type": "module",
+  "version": "0.0.0"
 }

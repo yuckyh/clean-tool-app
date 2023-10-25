@@ -1,39 +1,39 @@
 import type { AlertRef } from '@/components/AlertDialog'
 import type { ComboboxProps } from '@fluentui/react-components'
-import {
-  makeStyles,
-  shorthands,
-  Combobox,
-  Spinner,
-  Option,
-  tokens,
-} from '@fluentui/react-components'
-import { useCallback, useState, useMemo, memo } from 'react'
-
-import { indexDuplicateSearcher } from '@/lib/array'
-import fuse from '@/lib/fuse'
-import { useAppDispatch, useAppSelector, useDebounced } from '@/lib/hooks'
-
-import * as IO from 'fp-ts/IO'
-import * as O from 'fp-ts/Option'
-import * as RA from 'fp-ts/ReadonlyArray'
-import { constant, identity, apply, flow, pipe } from 'fp-ts/function'
-import * as S from 'fp-ts/string'
-import * as P from 'fp-ts/Predicate'
 
 import { codebook } from '@/data'
-import { numEquals, strEquals } from '@/lib/fp'
 import { getRow } from '@/features/sheet/selectors'
+import { indexDuplicateSearcher } from '@/lib/array'
+import { numEquals, strEquals } from '@/lib/fp'
+import fuse from '@/lib/fuse'
+import { useAppDispatch, useAppSelector, useDebounced } from '@/lib/hooks'
 import {
-  getVisitByMatchVisit,
+  Combobox,
+  Option,
+  Spinner,
+  makeStyles,
+  shorthands,
+  tokens,
+} from '@fluentui/react-components'
+import * as IO from 'fp-ts/IO'
+import * as O from 'fp-ts/Option'
+import * as P from 'fp-ts/Predicate'
+import * as RA from 'fp-ts/ReadonlyArray'
+import * as f from 'fp-ts/function'
+import * as S from 'fp-ts/string'
+import { memo, useCallback, useMemo, useState } from 'react'
+
+import type { ColumnMatch, DataType } from '../reducers'
+
+import { setDataType, setMatchColumn, setMatchVisit } from '../reducers'
+import {
+  getIndices,
   getMatchColumn,
   getMatchVisit,
-  getIndices,
   getMatches,
   getScores,
+  getVisitByMatchVisit,
 } from '../selectors'
-import { setMatchColumn, setMatchVisit, setDataType } from '../reducers'
-import type { ColumnMatch, DataType } from '../reducers'
 
 interface Props {
   alertRef: React.RefObject<AlertRef>
@@ -57,14 +57,14 @@ const search = fuse.search.bind(fuse)
 function FilteredOptions({ filteredMatches, value }: FilteredOptionsProps) {
   return filteredMatches.length ? (
     RA.map<ColumnMatch, JSX.Element>(({ match, score }) => (
-      <Option value={match} text={match} key={match}>
+      <Option key={match} text={match} value={match}>
         {match}, {(1 - score).toFixed(2)}
       </Option>
     ))(filteredMatches)
   ) : (
-    <Option value={value} text={value}>
+    <Option text={value} value={value}>
       Create column? {value},{' '}
-      {pipe(
+      {f.pipe(
         value,
         search,
         ([match]) => match?.score ?? 1,
@@ -100,7 +100,7 @@ export default function MatchCell({ alertRef, pos }: Props) {
 
   const filteredMatches = useMemo(
     () =>
-      pipe(
+      f.pipe(
         matches,
         RA.filter(S.includes(deferredValue)),
         RA.zip(scores),
@@ -131,10 +131,10 @@ export default function MatchCell({ alertRef, pos }: Props) {
         ])
 
         if (duplicates.length) {
-          const newMatchVisit = pipe(
-            RA.makeBy(visits.length, identity),
+          const newMatchVisit = f.pipe(
+            RA.makeBy(visits.length, f.identity),
             RA.findIndex(P.not(numEquals(matchVisit))),
-            pipe(-1, constant, O.getOrElse),
+            f.pipe(-1, f.constant, O.getOrElse),
           )
 
           if (newMatchVisit === -1) {
@@ -143,7 +143,7 @@ export default function MatchCell({ alertRef, pos }: Props) {
             return
           }
 
-          pipe(
+          f.pipe(
             { matchVisit: newMatchVisit, pos },
             setMatchVisit,
             (x) => dispatch(x),
@@ -151,34 +151,34 @@ export default function MatchCell({ alertRef, pos }: Props) {
           )()
         }
 
-        pipe(
+        f.pipe(
           { matchColumn: newMatchColumn, pos },
           setMatchColumn,
           (x) => dispatch(x),
           IO.of,
         )()
 
-        const newDataType: DataType = pipe(
+        const newDataType: DataType = f.pipe(
           codebook,
           RA.findFirst(({ name }) => strEquals(name)(matchColumn)),
           O.map(({ type }) =>
-            pipe(
+            f.pipe(
               type,
               S.includes,
               RA.some,
-              apply(['whole_number', 'interval'] as const),
+              f.apply(['whole_number', 'interval'] as const),
             ),
           ),
           O.getOrElse(
             () =>
-              0.8 * row.length >
-              pipe(row, RA.filter(flow(parseFloat, P.not(Number.isNaN))))
+              0.6 * row.length >
+              f.pipe(row, RA.filter(f.flow(parseFloat, P.not(Number.isNaN))))
                 .length,
           ),
           (isCategorical) => (isCategorical ? 'categorical' : 'numerical'),
         )
 
-        pipe(
+        f.pipe(
           { dataType: newDataType, pos },
           setDataType,
           (x) => dispatch(x),
@@ -211,15 +211,15 @@ export default function MatchCell({ alertRef, pos }: Props) {
 
   return (
     <Combobox
-      onOptionSelect={handleOptionSelect}
-      onChange={handleComboboxChange}
-      onOpenChange={handleOpenChange}
-      selectedOptions={[matchColumn]}
       appearance="filled-darker"
       className={classes.root}
+      freeform
+      onChange={handleComboboxChange}
+      onOpenChange={handleOpenChange}
+      onOptionSelect={handleOptionSelect}
       open={comboboxOpen}
-      value={value}
-      freeform>
+      selectedOptions={[matchColumn]}
+      value={value}>
       {isDebouncing ? (
         <Option text="loading">
           <Spinner label="Loading options..." />

@@ -1,27 +1,27 @@
 /* eslint-disable functional/immutable-data */
-import type { SetStateAction, Dispatch } from 'react'
-import type { DropzoneOptions } from 'react-dropzone'
-import {
-  useImperativeHandle,
-  useCallback,
-  forwardRef,
-  useEffect,
-  useState,
-  useMemo,
-} from 'react'
-import { makeStyles, Field, Input } from '@fluentui/react-components'
-import { useDropzone } from 'react-dropzone'
-import type { SimpleToasterRef } from '@/components/SimpleToaster'
 import type { FileTaskType } from '@/components/FileToast'
+import type { SimpleToasterRef } from '@/components/SimpleToaster'
 import type { SheetResponse } from '@/workers/sheet'
+import type { Dispatch, SetStateAction } from 'react'
+import type { DropzoneOptions } from 'react-dropzone'
 
-import { useAppDispatch, useAppSelector } from '@/lib/hooks'
-import FileToast from '@/components/FileToast'
 import { sheetWorker } from '@/app/workers'
-
-import { pipe } from 'fp-ts/function'
+import FileToast from '@/components/FileToast'
+import { useAppDispatch, useAppSelector } from '@/lib/hooks'
 import { dumpError } from '@/lib/logger'
+import { Field, Input, makeStyles } from '@fluentui/react-components'
 import * as T from 'fp-ts/Task'
+import { pipe } from 'fp-ts/function'
+import {
+  forwardRef,
+  useCallback,
+  useEffect,
+  useImperativeHandle,
+  useMemo,
+  useState,
+} from 'react'
+import { useDropzone } from 'react-dropzone'
+
 import { fetchSheet, postFile } from '../actions'
 
 export interface SheetInputRef {
@@ -33,11 +33,11 @@ interface Props {
 }
 
 const useClasses = makeStyles({
-  root: {
-    cursor: 'pointer',
-  },
   input: {
     width: '100%',
+  },
+  root: {
+    cursor: 'pointer',
   },
 })
 
@@ -54,6 +54,16 @@ const SheetUploadInput = forwardRef<SheetInputRef, Props>(
 
     const zoneOptions: DropzoneOptions = useMemo(
       () => ({
+        accept: {
+          'application/vnd.ms-excel': ['.xls'],
+          'application/vnd.oasis.opendocument.spreadsheet': ['.ods'],
+          'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': [
+            '.xlsx',
+          ],
+          'text/csv': ['.csv'],
+        },
+        disabled: !!dataLength,
+        maxFiles: 1,
         onDrop: (acceptedFiles: File[]) => {
           const [file] = acceptedFiles
           if (!file) {
@@ -66,16 +76,6 @@ const SheetUploadInput = forwardRef<SheetInputRef, Props>(
             .then(() => pipe(fetchSheet(), (x) => dispatch(x), T.of))
             .catch(dumpError)
         },
-        accept: {
-          'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': [
-            '.xlsx',
-          ],
-          'application/vnd.oasis.opendocument.spreadsheet': ['.ods'],
-          'application/vnd.ms-excel': ['.xls'],
-          'text/csv': ['.csv'],
-        },
-        disabled: !!dataLength,
-        maxFiles: 1,
       }),
       [dispatch, dataLength],
     )
@@ -124,10 +124,10 @@ const SheetUploadInput = forwardRef<SheetInputRef, Props>(
         <div {...getRootProps({ className: classes.root })}>
           <input {...getInputProps()} />
           <Input
-            placeholder="Drag and drop or click to upload"
-            disabled={zoneOptions.disabled}
             appearance="filled-darker"
             className={classes.input}
+            disabled={zoneOptions.disabled}
+            placeholder="Drag and drop or click to upload"
             value={fileName}
           />
         </div>

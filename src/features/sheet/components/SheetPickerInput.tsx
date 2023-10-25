@@ -1,12 +1,12 @@
 import type { DropdownProps } from '@fluentui/react-components'
 
-import { makeStyles, Dropdown, Option, Field } from '@fluentui/react-components'
-import { useCallback } from 'react'
 import { useAppDispatch, useAppSelector } from '@/lib/hooks'
-
+import { Dropdown, Field, Option, makeStyles } from '@fluentui/react-components'
 import * as IO from 'fp-ts/IO'
-import { pipe } from 'fp-ts/function'
 import * as RA from 'fp-ts/ReadonlyArray'
+import { pipe } from 'fp-ts/function'
+import { useCallback } from 'react'
+
 import { setSheetName } from '../reducers'
 
 const useClasses = makeStyles({
@@ -35,15 +35,15 @@ export default function SheetPickerInput() {
   return (
     <Field label="Sheet" required>
       <Dropdown
-        onOptionSelect={handleSheetSelect}
-        selectedOptions={[sheetName]}
         appearance="filled-darker"
         className={classes.input}
+        onOptionSelect={handleSheetSelect}
+        selectedOptions={[sheetName]}
         value={sheetName}>
         {pipe(
           sheetNames,
           RA.map((name) => (
-            <Option value={name} key={name}>
+            <Option key={name} value={name}>
               {name}
             </Option>
           )),

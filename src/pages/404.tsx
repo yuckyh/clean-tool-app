@@ -1,16 +1,16 @@
 /* eslint-disable functional/immutable-data */
 /* eslint-disable functional/functional-parameters */
 /* eslint-disable import/prefer-default-export */
-import { makeStyles, Title1, Body1, Link } from '@fluentui/react-components'
+import { Body1, Link, Title1, makeStyles } from '@fluentui/react-components'
 import { useHref } from 'react-router-dom'
 
 const useClasses = makeStyles({
   root: {
-    justifyContent: 'center',
-    flexDirection: 'column',
     alignItems: 'center',
-    minHeight: '100vh',
     display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    minHeight: '100vh',
   },
 })
 

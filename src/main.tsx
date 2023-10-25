@@ -1,8 +1,8 @@
-import { Spinner } from '@fluentui/react-components'
-import { RouterProvider } from 'react-router-dom'
-import { createRoot } from 'react-dom/client'
-import { StrictMode } from 'react'
 import { router } from '@/app/Router'
+import { Spinner } from '@fluentui/react-components'
+import { StrictMode } from 'react'
+import { createRoot } from 'react-dom/client'
+import { RouterProvider } from 'react-router-dom'
 
 const id = 'root'
 const rootDOM =

@@ -17,25 +17,20 @@ interface WorkerRequest {
 
 type WorkerResponse =
   | {
-      status: 'fail'
       error: Error
+      status: 'fail'
     }
   | {
       status: 'ok'
     }
 
 interface GenericWorkerEventMap<T> extends WorkerEventMap {
-  messageerror: MessageEvent<T>
   message: MessageEvent<T>
+  messageerror: MessageEvent<T>
 }
 
 interface RequestWorker<Req extends WorkerRequest, Res extends WorkerResponse>
   extends Worker {
-  removeEventListener: <K extends keyof GenericWorkerEventMap<Res>>(
-    type: K,
-    listener: (ev: GenericWorkerEventMap<Res>[K]) => void,
-    options?: Readonly<EventListenerOptions> | boolean,
-  ) => void
   addEventListener: <K extends keyof GenericWorkerEventMap<Res>>(
     type: K,
     listener: (ev: GenericWorkerEventMap<Res>[K]) => void,
@@ -49,4 +44,9 @@ interface RequestWorker<Req extends WorkerRequest, Res extends WorkerResponse>
     ): void
     (request: Readonly<Req>, transfer: Transferable[]): void
   }
+  removeEventListener: <K extends keyof GenericWorkerEventMap<Res>>(
+    type: K,
+    listener: (ev: GenericWorkerEventMap<Res>[K]) => void,
+    options?: Readonly<EventListenerOptions> | boolean,
+  ) => void
 }

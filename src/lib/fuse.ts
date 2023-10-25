@@ -1,5 +1,5 @@
-import Fuse from 'fuse.js'
 import { codebook } from '@/data'
+import Fuse from 'fuse.js'
 
 const fuse = new Fuse(codebook, {
   includeScore: true,

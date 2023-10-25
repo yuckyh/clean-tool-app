@@ -2,10 +2,10 @@
 /* eslint-disable functional/immutable-data */
 import type { PayloadAction } from '@reduxjs/toolkit'
 
-import { createSlice } from '@reduxjs/toolkit'
 import { getPersisted, setPersisted } from '@/lib/localStorage'
+import { createSlice } from '@reduxjs/toolkit'
 
-export type Progress = 'explored' | 'uploaded' | 'matched' | 'none'
+export type Progress = 'explored' | 'matched' | 'none' | 'uploaded'
 
 interface State {
   progress: Progress
@@ -20,7 +20,14 @@ const initialState: State = {
 
 // Slice
 const progressSlice = createSlice({
+  initialState,
+  name: sliceName,
   reducers: {
+    deleteProgressState: (state) => {
+      state.progress = defaultValue
+
+      return state
+    },
     saveProgressState: (state) => {
       const { progress } = state
 
@@ -33,14 +40,7 @@ const progressSlice = createSlice({
 
       return state
     },
-    deleteProgressState: (state) => {
-      state.progress = defaultValue
-
-      return state
-    },
   },
-  name: sliceName,
-  initialState,
 })
 
 const { actions, reducer } = progressSlice

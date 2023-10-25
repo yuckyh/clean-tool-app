@@ -2,42 +2,44 @@
 /* eslint-disable functional/immutable-data */
 /* eslint-disable functional/functional-parameters */
 
-import { getFormattedColumns } from '@/features/columns/selectors'
-import { useAppSelector } from '@/lib/hooks'
 import type { TableColumnDefinition } from '@fluentui/react-components'
+
+import SimpleDataGrid from '@/components/SimpleDataGrid'
+import { getFormattedColumns } from '@/features/columns/selectors'
 import {
+  getColumnsLength,
+  getWrittenWorkbook,
+} from '@/features/sheet/selectors'
+import { stringLookup } from '@/lib/array'
+import { useAppSelector } from '@/lib/hooks'
+import {
+  Button,
+  Subtitle2,
+  Title1,
   createTableColumn,
   makeStyles,
   shorthands,
-  Subtitle2,
-  Button,
   tokens,
-  Title1,
 } from '@fluentui/react-components'
+import * as RA from 'fp-ts/ReadonlyArray'
 import { constant, identity } from 'fp-ts/function'
 import { useMemo } from 'react'
-import * as RA from 'fp-ts/ReadonlyArray'
-import {
-  getWrittenWorkbook,
-  getColumnsLength,
-} from '@/features/sheet/selectors'
-import { stringLookup } from '@/lib/array'
-import SimpleDataGrid from '@/components/SimpleDataGrid'
 import { writeFile } from 'xlsx-js-style'
+
 import PreviewCell from './PreviewCell'
 
 const useClasses = makeStyles({
-  root: {
-    rowGap: tokens.spacingVerticalXL,
-    flexDirection: 'column',
+  actions: {
     display: 'flex',
+    justifyContent: 'center',
+    width: '100%',
+  },
+  root: {
+    display: 'flex',
+    flexDirection: 'column',
+    rowGap: tokens.spacingVerticalXL,
     width: '80%',
     ...shorthands.margin(0, 'auto'),
-  },
-  actions: {
-    justifyContent: 'center',
-    display: 'flex',
-    width: '100%',
   },
 })
 
@@ -53,9 +55,9 @@ export function Component() {
     () =>
       RA.makeBy(columnsLength, (col) =>
         createTableColumn({
-          renderHeaderCell: () => stringLookup(formattedColumns)(col),
-          renderCell: (row) => <PreviewCell col={col} row={row} />,
           columnId: stringLookup(formattedColumns)(col),
+          renderCell: (row) => <PreviewCell col={col} row={row} />,
+          renderHeaderCell: () => stringLookup(formattedColumns)(col),
         }),
       ),
     [columnsLength, formattedColumns],
@@ -78,7 +80,7 @@ export function Component() {
         items={items}
       />
       <div className={classes.actions}>
-        <Button onClick={handleFileDownload} appearance="primary">
+        <Button appearance="primary" onClick={handleFileDownload}>
           Download
         </Button>
       </div>

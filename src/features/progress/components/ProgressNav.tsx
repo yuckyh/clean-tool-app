@@ -1,48 +1,48 @@
+import { saveColumnState } from '@/features/columns/reducers'
+import { saveSheetState } from '@/features/sheet/reducers'
+import { useAppDispatch, useAppSelector } from '@/lib/hooks'
 import {
-  useThemeClassName,
   makeStyles,
   shorthands,
   tokens,
+  useThemeClassName,
 } from '@fluentui/react-components'
-import {
-  useResolvedPath,
-  useBeforeUnload,
-  useNavigation,
-  useLocation,
-  useNavigate,
-} from 'react-router-dom'
+import * as IO from 'fp-ts/IO'
+import * as O from 'fp-ts/Option'
+import * as RA from 'fp-ts/ReadonlyArray'
+import * as f from 'fp-ts/function'
+import * as S from 'fp-ts/string'
 import { useCallback, useEffect, useMemo } from 'react'
 import { Helmet } from 'react-helmet-async'
-import { useAppDispatch, useAppSelector } from '@/lib/hooks'
-
-import * as O from 'fp-ts/Option'
-import { constant, flow, pipe } from 'fp-ts/function'
-import * as RA from 'fp-ts/ReadonlyArray'
-import * as S from 'fp-ts/string'
-import * as IO from 'fp-ts/IO'
-import { saveColumnState } from '@/features/columns/reducers'
-import { saveSheetState } from '@/features/sheet/reducers'
-import { saveProgressState } from '../reducers'
-import ProgressNavLink from './ProgressNavLink'
 import {
-  getShouldNavigateToAllowed,
+  useBeforeUnload,
+  useLocation,
+  useNavigate,
+  useNavigation,
+  useResolvedPath,
+} from 'react-router-dom'
+
+import { saveProgressState } from '../reducers'
+import {
   getAllowedPaths,
-  getPosition,
   getPaths,
+  getPosition,
+  getShouldNavigateToAllowed,
   getTitle,
 } from '../selectors'
 import ProgressNavBar from './ProgressNavBar'
+import ProgressNavLink from './ProgressNavLink'
 
 const useClasses = makeStyles({
-  root: {
-    flexDirection: 'column',
-    display: 'flex',
-    ...shorthands.padding(tokens.spacingVerticalS, 0),
-  },
   linkContainer: {
-    justifyContent: 'space-between',
     display: 'flex',
+    justifyContent: 'space-between',
     width: '100%',
+  },
+  root: {
+    display: 'flex',
+    flexDirection: 'column',
+    ...shorthands.padding(tokens.spacingVerticalS, 0),
   },
 })
 
@@ -82,10 +82,10 @@ export default function ProgressNav() {
     }
 
     navigate(
-      pipe(
+      f.pipe(
         allowedPaths,
         RA.lookup(allowedPaths.length - 1),
-        pipe('/', constant, O.getOrElse),
+        f.pipe('/', f.constant, O.getOrElse),
       ),
     )
   }, [allowedPaths, navigate, shouldNavigateToAllowed])
@@ -102,9 +102,9 @@ export default function ProgressNav() {
 
   useEffect(() => {
     if (navState === 'loading') {
-      pipe(
+      f.pipe(
         [saveSheetState, saveColumnState, saveProgressState] as const,
-        RA.map(flow((x) => dispatch(x()), IO.of)),
+        RA.map(f.flow((x) => dispatch(x()), IO.of)),
         IO.sequenceArray,
       )()
       return undefined
@@ -115,9 +115,9 @@ export default function ProgressNav() {
   useBeforeUnload(
     useCallback(
       () =>
-        pipe(
+        f.pipe(
           [saveSheetState, saveColumnState, saveProgressState] as const,
-          RA.map(flow((x) => dispatch(x()), IO.of)),
+          RA.map(f.flow((x) => dispatch(x()), IO.of)),
           IO.sequenceArray,
         )(),
       [dispatch],
@@ -131,13 +131,13 @@ export default function ProgressNav() {
       </Helmet>
       <ProgressNavBar />
       <div className={classes.linkContainer}>
-        {pipe(
+        {f.pipe(
           paths,
           RA.mapWithIndex((pos, path) => (
             <ProgressNavLink
               done={position >= pos}
-              path={path}
               key={path}
+              path={path}
               pos={pos}
             />
           )),

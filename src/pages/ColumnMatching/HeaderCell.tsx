@@ -1,25 +1,25 @@
 import {
+  Caption1,
+  Subtitle1,
   makeStyles,
   shorthands,
-  Subtitle1,
-  Caption1,
   tokens,
 } from '@fluentui/react-components'
 
 const useClasses = makeStyles({
   root: {
-    flexDirection: 'column',
     display: 'flex',
+    flexDirection: 'column',
     ...shorthands.padding(0, tokens.spacingHorizontalS),
   },
 })
 
 interface Props {
-  subtitle: string
   header: string
+  subtitle: string
 }
 
-export default function HeaderCell({ subtitle, header }: Props) {
+export default function HeaderCell({ header, subtitle }: Props) {
   const classes = useClasses()
 
   return (

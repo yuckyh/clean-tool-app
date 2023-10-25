@@ -1,7 +1,7 @@
-import { makeStyles, Link, Tab } from '@fluentui/react-components'
-import { useLinkClickHandler, useHref } from 'react-router-dom'
-import { getFormattedColumn, getColumnPath } from '@/features/columns/selectors'
+import { getColumnPath, getFormattedColumn } from '@/features/columns/selectors'
 import { useAppSelector } from '@/lib/hooks'
+import { Link, Tab, makeStyles } from '@fluentui/react-components'
+import { useHref, useLinkClickHandler } from 'react-router-dom'
 
 interface Props {
   pos: number
@@ -9,8 +9,8 @@ interface Props {
 
 const useClasses = makeStyles({
   root: {
-    overflowY: 'visible',
     minHeight: '32px',
+    overflowY: 'visible',
   },
 })
 
@@ -25,10 +25,10 @@ export default function NavTab({ pos }: Props) {
 
   return (
     <Link
-      onClick={handleLinkClick}
-      className={classes.root}
       appearance="subtle"
-      href={href}>
+      className={classes.root}
+      href={href}
+      onClick={handleLinkClick}>
       <Tab value={path}>{label}</Tab>
     </Link>
   )
