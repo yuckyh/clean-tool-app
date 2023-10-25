@@ -314,10 +314,10 @@ const getFlaggedCellsAddresses = createSelector(
 
 const colorMap = f.pipe(
   {
-    incorrect: 'FF00FFFF', // RRGGBBAA
+    incorrect: 'FF8800FF', // RRGGBBAA
     missing: 'FFFF00FF',
-    outlier: 'FF0000FF',
-    suspected: 'FF0000FF',
+    outlier: '0000FFFF',
+    suspected: '0000FFFF',
   } as const,
   RR.map(f.flow(S.slice(1, 7), S.toUpperCase)),
 )

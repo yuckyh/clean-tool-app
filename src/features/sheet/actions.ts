@@ -59,31 +59,6 @@ export const postFile = createAsyncThunk(
   },
 )
 
-// export const postFormattedJSON = createAsyncThunk(
-//   'sheet/postFormattedJSON',
-//   async (_, { getState }) => {
-//     const state = getState() as RootState
-//     const { formattedColumns, sheetName, data } = state.sheet
-//     const formattedFileName = getFormattedFileName(state)
-
-//     const formattedData = data.map((item) =>
-//       toObject(formattedColumns, (i) => item[i] ?? ''),
-//     )
-
-//     const formattedSheet = utils.json_to_sheet(formattedData)
-//     const workbook = utils.book_new()
-//     utils.book_append_sheet(workbook, formattedSheet, sheetName)
-
-//     sheetWorker.postMessage({
-//       method: 'postFormattedJSON',
-//       fileName: formattedFileName,
-//       workbook,
-//     })
-
-//     return (await messagePromise()).fileName
-//   },
-// )
-
 export const deleteSheet = createAsyncThunk(
   `${sliceName}/deleteSheet`,
   async (_, { getState }) => {

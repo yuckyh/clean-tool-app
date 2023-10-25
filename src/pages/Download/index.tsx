@@ -28,14 +28,26 @@ import * as f from 'fp-ts/function'
 import { useMemo } from 'react'
 import { writeFile } from 'xlsx-js-style'
 
-import PreviewCell from './PreviewCell'
 import HeaderCell from './HeaderCell'
+import PreviewCell from './PreviewCell'
 
 const useClasses = makeStyles({
   actions: {
     display: 'flex',
     justifyContent: 'center',
     width: '100%',
+  },
+  incorrectColumn: {
+    backgroundColor: tokens.colorPaletteYellowBackground2,
+    color: tokens.colorPaletteYellowForeground2,
+  },
+  missingColumn: {
+    backgroundColor: tokens.colorPaletteDarkOrangeBackground2,
+    color: tokens.colorPaletteDarkOrangeForeground2,
+  },
+  outlierColumn: {
+    backgroundColor: tokens.colorPaletteRedBackground2,
+    color: tokens.colorPaletteRedForeground2,
   },
   root: {
     display: 'flex',
@@ -80,9 +92,15 @@ export function Component() {
       <Title1>Download</Title1>
       <Subtitle2>Confirm your changes before downloading your file</Subtitle2>
       <TagGroup role="list">
-        <Tag role="listitem">Outlier</Tag>
-        <Tag role="listitem">Blank Data</Tag>
-        <Tag role="listitem">Incorrect Data</Tag>
+        <Tag className={classes.outlierColumn} role="listitem">
+          Outlier
+        </Tag>
+        <Tag className={classes.missingColumn} role="listitem">
+          Blank Data
+        </Tag>
+        <Tag className={classes.incorrectColumn} role="listitem">
+          Incorrect Data
+        </Tag>
       </TagGroup>
       <SimpleDataGrid
         cellFocusMode={f.constant('none')}

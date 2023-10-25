@@ -23,13 +23,13 @@ interface Props {
 
 const useClasses = makeStyles({
   incorrect: {
-    backgroundColor: tokens.colorPaletteBerryBackground3,
+    backgroundColor: tokens.colorPaletteDarkOrangeBackground2,
   },
   missing: {
-    backgroundColor: tokens.colorPaletteYellowBackground3,
+    backgroundColor: tokens.colorPaletteYellowBackground2,
   },
   outlier: {
-    backgroundColor: tokens.colorPaletteRedBackground3,
+    backgroundColor: tokens.colorPaletteRedBackground2,
   },
   root: {
     alignItems: 'center',
@@ -38,6 +38,9 @@ const useClasses = makeStyles({
     width: '100%',
     ...shorthands.padding(0, tokens.spacingHorizontalS),
     justifyContent: 'center',
+  },
+  suspected: {
+    backgroundColor: tokens.colorPaletteRedBackground2,
   },
 })
 
