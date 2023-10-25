@@ -7,7 +7,9 @@ interface Props {
 }
 
 const useClasses = makeStyles({
-  root: { ...shorthands.padding(0, tokens.spacingHorizontalS) },
+  root: {
+    ...shorthands.padding(0, tokens.spacingHorizontalS),
+  },
 })
 
 export default function ValueCell({ pos }: Props) {

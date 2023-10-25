@@ -1,7 +1,7 @@
 import type { WorkBook } from 'xlsx'
 
 import { dumpError } from '@/lib/logger'
-import { constant } from 'fp-ts/function'
+import * as f from 'fp-ts/function'
 import XLSX from 'xlsx'
 
 export type SheetRequest = (
@@ -28,7 +28,7 @@ export type SheetResponse = WorkerResponse & {
 type Handler<Method extends SheetRequest['method'] = SheetRequest['method']> =
   RequestHandler<SheetRequest & { method: Method }, SheetResponse, Method>
 
-const getRootHandle = constant(navigator.storage.getDirectory())
+const getRootHandle = f.constant(navigator.storage.getDirectory())
 
 const getRootFileHandle = (fileName: string, create?: boolean) =>
   getRootHandle().then((dir) =>

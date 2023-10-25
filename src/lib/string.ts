@@ -1,12 +1,12 @@
 import * as RA from 'fp-ts/ReadonlyArray'
-import { pipe } from 'fp-ts/function'
+import * as f from 'fp-ts/function'
 import * as S from 'fp-ts/string'
 
 const acronymizedTitleCase = (word: string) =>
   word.length > 3 ? word.replace(/^./, S.toUpperCase) : S.toUpperCase(word)
 
 const kebabToTitle = (slug: string) =>
-  pipe(
+  f.pipe(
     slug,
     S.split('-'),
     RA.map(acronymizedTitleCase),
@@ -15,7 +15,7 @@ const kebabToTitle = (slug: string) =>
 
 // eslint-disable-next-line import/prefer-default-export
 export const getPathTitle = (path: string, depth = 1) => {
-  const result = pipe(
+  const result = f.pipe(
     path,
     S.split('/'),
     RA.takeRight(depth),

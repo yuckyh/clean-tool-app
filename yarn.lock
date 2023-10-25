@@ -4470,6 +4470,9 @@ __metadata:
     workbox-window: "npm:^7.0.0"
     xlsx: "https://cdn.sheetjs.com/xlsx-0.20.0/xlsx-0.20.0.tgz"
     xlsx-js-style: "npm:^1.2.0"
+  dependenciesMeta:
+    "@tauri-apps/cli@1.5.6":
+      unplugged: true
   languageName: unknown
   linkType: soft
 

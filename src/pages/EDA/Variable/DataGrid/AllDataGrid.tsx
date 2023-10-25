@@ -7,7 +7,7 @@ import type {
 } from '@fluentui/react-components'
 
 import SimpleDataGrid from '@/components/SimpleDataGrid'
-import { getDataType } from '@/features/columns/selectors'
+import { getSearchedDataType } from '@/features/columns/selectors'
 import { syncFlaggedCells } from '@/features/sheet/reducers'
 import {
   getFlaggedRows,
@@ -15,8 +15,9 @@ import {
   getIndexedRowIncorrects,
   getIndexedRowMissings,
 } from '@/features/sheet/selectors'
-import { getIndexedIndex, getIndexedValue } from '@/lib/array'
+import { getIndexedIndex } from '@/lib/array'
 import { useAppDispatch, useAppSelector } from '@/lib/hooks'
+import { dump } from '@/lib/logger'
 import {
   Body2,
   Card,
@@ -29,11 +30,13 @@ import {
 import * as IO from 'fp-ts/IO'
 import * as RA from 'fp-ts/ReadonlyArray'
 import * as RS from 'fp-ts/ReadonlySet'
-import { constant, flow, pipe } from 'fp-ts/function'
+import * as f from 'fp-ts/function'
+import * as N from 'fp-ts/number'
 import * as S from 'fp-ts/string'
 import { useCallback, useMemo, useState } from 'react'
 
 import FilterInput from '../FilterInput'
+import ValueCell from './ValueCell'
 
 interface Props {
   column: string
@@ -48,7 +51,11 @@ const useClasses = makeStyles({
     ...shorthands.padding(tokens.spacingHorizontalXXXL, '5%'),
   },
   columnHeader: {
+    display: 'flex',
     fontWeight: 'bold',
+    justifyContent: 'center',
+    width: '100%',
+    ...shorthands.padding(0, tokens.spacingHorizontalS),
   },
   columns: {
     columnGap: tokens.spacingVerticalXL,
@@ -66,7 +73,7 @@ const useClasses = makeStyles({
   },
 })
 
-const cellFocusMode: () => DataGridCellFocusMode = constant('none')
+const cellFocusMode: () => DataGridCellFocusMode = f.constant('none')
 
 export default function AllDataGrid({ column, title, visit }: Readonly<Props>) {
   const classes = useClasses()
@@ -83,7 +90,9 @@ export default function AllDataGrid({ column, title, visit }: Readonly<Props>) {
   const incorrectSeries = useAppSelector((state) =>
     getIndexedRowIncorrects(state, column, visit),
   )
-  const dataType = useAppSelector((state) => getDataType(state, column, visit))
+  const dataType = useAppSelector((state) =>
+    getSearchedDataType(state, column, visit),
+  )
 
   const indices = useMemo(() => RA.map(getIndexedIndex)(series), [series])
   const missingIndices = useMemo(
@@ -108,33 +117,33 @@ export default function AllDataGrid({ column, title, visit }: Readonly<Props>) {
       shouldAdd ? flaggedRows : selectedItems
     ) as ReadonlySet<string>
 
-    const checkedPosList = pipe(
+    const checkedPosList = f.pipe(
       subtractor,
       RS.difference(S.Eq)(subtractee),
       RS.toReadonlyArray(S.Ord),
       RA.filter((checkedPos) => RA.elem(S.Eq)(checkedPos)(indices)),
     )
 
-    const payloads = pipe(
+    const payloads = f.pipe(
       checkedPosList,
       RA.map((currentIndex) => [currentIndex, title, 'outlier'] as Flag),
     )
 
-    const missingPayloads = pipe(
+    const missingPayloads = f.pipe(
       checkedPosList,
       RA.filter((checkedPos) => RA.elem(S.Eq)(checkedPos)(missingIndices)),
       RA.map((currentIndex) => [currentIndex, title, 'missing'] as Flag),
     )
 
-    const incorrectPayloads = pipe(
+    const incorrectPayloads = f.pipe(
       checkedPosList,
       RA.filter((checkedPos) => RA.elem(S.Eq)(checkedPos)(incorrectIndices)),
       RA.map((currentIndex) => [currentIndex, title, 'incorrect'] as Flag),
     )
 
-    return pipe(
+    return f.pipe(
       [...payloads, ...missingPayloads, ...incorrectPayloads] as const,
-      RA.map(flow(syncFlaggedCells, (x) => dispatch(x), IO.of)),
+      RA.map(f.flow(syncFlaggedCells, (x) => dispatch(x), IO.of)),
       IO.sequenceArray,
     )()
   }
@@ -144,13 +153,13 @@ export default function AllDataGrid({ column, title, visit }: Readonly<Props>) {
 
   const filteredRows = useMemo(
     () =>
-      pipe(
+      f.pipe(
         series,
         RA.filter(
-          flow(
+          f.flow(
             RA.zip([indexFilter, valueFilter] as const),
             RA.every(([x, y]) =>
-              pipe(y, S.toLowerCase, S.includes)(S.toLowerCase(x)),
+              f.pipe(y, S.toLowerCase, S.includes)(S.toLowerCase(x)),
             ),
           ),
         ),
@@ -158,25 +167,60 @@ export default function AllDataGrid({ column, title, visit }: Readonly<Props>) {
     [indexFilter, series, valueFilter],
   )
 
+  const [sortState, setSortState] = useState<
+    Parameters<Required<DataGridProps>['onSortChange']>[1]
+  >({ sortColumn: '', sortDirection: 'ascending' })
+
+  const handleSortChange: Required<DataGridProps>['onSortChange'] = useCallback(
+    (_event, nextSortState) => {
+      setSortState(nextSortState)
+    },
+    [],
+  )
+
   const columnsDefinition: TableColumnDefinition<readonly [string, string]>[] =
     useMemo(
       () => [
         createTableColumn({
           columnId: 'index',
-          renderCell: getIndexedIndex,
-          renderHeaderCell: constant(
+          compare: ([indexA], [indexB]) => dump(indexA).localeCompare(indexB),
+          renderCell: ([index]) => <ValueCell value={index} />,
+          renderHeaderCell: f.constant(
             <div className={classes.columnHeader}>sno</div>,
           ),
         }),
         createTableColumn({
           columnId: title,
-          renderCell: getIndexedValue,
-          renderHeaderCell: constant(
+          compare: ([, valueA], [, valueB]) => {
+            const values = [valueA, valueB] as const
+            const isBothNum = f.pipe(
+              values,
+              RA.every(
+                (value) =>
+                  !!value &&
+                  !Number.isNaN(parseFloat(value)) &&
+                  !/[!,.?]{2,}/.test(value),
+              ),
+            )
+
+            if (dataType === 'numerical' && isBothNum) {
+              return f.pipe(
+                RA.map(parseFloat)(values) as [number, number],
+                f.tupled(N.Ord.compare),
+              )
+            }
+            if (dataType === 'categorical') {
+              return f.pipe(values as [string, string], f.tupled(S.Ord.compare))
+            }
+            return 0
+          },
+          renderCell: ([, value]) => <ValueCell value={value} />,
+          renderHeaderCell: f.constant(
             <div className={classes.columnHeader}>{title}</div>,
           ),
         }),
       ],
-      [classes.columnHeader, title],
+      [classes.columnHeader, dataType, title],
     )
 
   const handleValueFilter: Required<InputProps>['onChange'] = useCallback(
@@ -218,11 +262,15 @@ export default function AllDataGrid({ column, title, visit }: Readonly<Props>) {
       <SimpleDataGrid
         cellFocusMode={cellFocusMode}
         columns={columnsDefinition}
+        focusMode="composite"
         getRowId={getIndexedIndex}
         items={filteredRows}
         onSelectionChange={handleSelectionChange}
+        onSortChange={handleSortChange}
         selectedItems={flaggedRows}
         selectionMode="multiselect"
+        sortState={sortState}
+        sortable
       />
     </Card>
   )

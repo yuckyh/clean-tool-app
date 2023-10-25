@@ -4,7 +4,7 @@ import { console as fpConsole } from 'fp-ts'
 import * as IO from 'fp-ts/IO'
 import * as RA from 'fp-ts/ReadonlyArray'
 import * as RR from 'fp-ts/ReadonlyRecord'
-import { pipe } from 'fp-ts/function'
+import * as f from 'fp-ts/function'
 import { useEffect } from 'react'
 
 import { asIO } from './fp'
@@ -30,17 +30,19 @@ export const dumpError = <E>(err: E) => {
   ioDumpError(err)()
 }
 
+export const ioDump = fpConsole.log
+
 export const dump = <T extends Parameters<typeof fpConsole.log>[0]>(arg: T) => {
-  fpConsole.log(arg)()
+  ioDump(arg)()
   return arg
 }
 
-export const dumpName = <T>(obj: Readonly<Record<string, T>>) => {
-  return pipe(
+export const ioDumpName = <T>(obj: Readonly<Record<string, T>>) =>
+  f.pipe(
     obj,
     RR.toReadonlyArray,
     RA.map(([name, value]) =>
-      pipe(
+      f.pipe(
         value,
         IO.of,
         IO.tap(() => fpConsole.log(name)),
@@ -48,7 +50,10 @@ export const dumpName = <T>(obj: Readonly<Record<string, T>>) => {
       ),
     ),
     IO.sequenceArray,
-  )()[0] as T
+  )
+
+export const dumpName = <T>(obj: Readonly<Record<string, T>>) => {
+  return ioDumpName(obj)()[0] as T
 }
 
 export const useLoggerEffect = <T extends ArrayElement<DependencyList>>(

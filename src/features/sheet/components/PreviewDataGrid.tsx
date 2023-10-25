@@ -4,9 +4,16 @@ import type { DataGridCellFocusMode } from '@fluentui/react-components'
 
 import { useAppSelector } from '@/lib/hooks'
 import { createLazyMemo } from '@/lib/utils'
-import { Title2, createTableColumn } from '@fluentui/react-components'
+import {
+  Tag,
+  TagGroup,
+  Title2,
+  createTableColumn,
+  makeStyles,
+  tokens,
+} from '@fluentui/react-components'
 import * as RA from 'fp-ts/ReadonlyArray'
-import { constant, identity } from 'fp-ts/function'
+import * as f from 'fp-ts/function'
 import { useMemo } from 'react'
 
 import { getColumnsLength } from '../selectors'
@@ -26,11 +33,20 @@ const MemoizedSimpleDataGrid = createLazyMemo<SimpleDataGridProps<number>>(
   () => import('@/components/SimpleDataGrid'),
 )
 
-const items = RA.makeBy(5, identity)
+const items = RA.makeBy(5, f.identity)
 
-const cellFocusMode: () => DataGridCellFocusMode = constant('none')
+const cellFocusMode: () => DataGridCellFocusMode = f.constant('none')
+
+const useClasses = makeStyles({
+  categoricalTag: {
+    backgroundColor: tokens.colorPaletteRedBackground2,
+    color: tokens.colorPaletteRedForeground2,
+  },
+})
 
 function PreviewDataGrid({ isOriginal = false }: Props) {
+  const classes = useClasses()
+
   const columnsLength = useAppSelector(getColumnsLength)
 
   const columnsDefinition = useMemo(
@@ -39,7 +55,7 @@ function PreviewDataGrid({ isOriginal = false }: Props) {
         createTableColumn<number>({
           columnId: `${pos}`,
           renderCell: (row) => <MemoizedValueCell col={pos} row={row} />,
-          renderHeaderCell: constant(
+          renderHeaderCell: f.constant(
             <HeaderCell isOriginal={isOriginal} pos={pos} />,
           ),
         }),
@@ -51,6 +67,19 @@ function PreviewDataGrid({ isOriginal = false }: Props) {
     columnsLength > 0 && (
       <>
         <Title2>Data Preview</Title2>
+        {!isOriginal && (
+          <TagGroup aria-label="Legends" role="list">
+            <Tag appearance="brand" role="listitem">
+              Numerical Column
+            </Tag>
+            <Tag
+              appearance="brand"
+              className={classes.categoricalTag}
+              role="listitem">
+              Categorical Column
+            </Tag>
+          </TagGroup>
+        )}
         <MemoizedSimpleDataGrid
           cellFocusMode={cellFocusMode}
           columns={columnsDefinition}

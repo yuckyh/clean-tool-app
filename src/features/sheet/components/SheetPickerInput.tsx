@@ -4,7 +4,7 @@ import { useAppDispatch, useAppSelector } from '@/lib/hooks'
 import { Dropdown, Field, Option, makeStyles } from '@fluentui/react-components'
 import * as IO from 'fp-ts/IO'
 import * as RA from 'fp-ts/ReadonlyArray'
-import { pipe } from 'fp-ts/function'
+import * as f from 'fp-ts/function'
 import { useCallback } from 'react'
 
 import { setSheetName } from '../reducers'
@@ -28,7 +28,7 @@ export default function SheetPickerInput() {
   const handleSheetSelect: Required<DropdownProps>['onOptionSelect'] =
     useCallback(
       (_event, { optionValue = '' }) =>
-        pipe(optionValue, setSheetName, (x) => dispatch(x), IO.of),
+        f.pipe(optionValue, setSheetName, (x) => dispatch(x), IO.of),
       [dispatch],
     )
 
@@ -40,7 +40,7 @@ export default function SheetPickerInput() {
         onOptionSelect={handleSheetSelect}
         selectedOptions={[sheetName]}
         value={sheetName}>
-        {pipe(
+        {f.pipe(
           sheetNames,
           RA.map((name) => (
             <Option key={name} value={name}>

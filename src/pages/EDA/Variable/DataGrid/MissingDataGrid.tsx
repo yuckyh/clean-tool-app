@@ -8,10 +8,9 @@ import {
   getFlaggedRows,
   getIndexedRowMissings as getIndexedRowBlanks,
 } from '@/features/sheet/selectors'
-import { getIndexedIndex, getIndexedValue } from '@/lib/array'
+import { getIndexedIndex } from '@/lib/array'
 import { useAppSelector, useSyncedSelectionHandler } from '@/lib/hooks'
 import {
-  Body1,
   Body2,
   Card,
   Title2,
@@ -23,6 +22,8 @@ import {
 import * as f from 'fp-ts/function'
 import { useMemo } from 'react'
 
+import ValueCell from './ValueCell'
+
 const cellFocusMode: () => DataGridCellFocusMode = f.constant('none')
 
 const useClasses = makeStyles({
@@ -32,7 +33,11 @@ const useClasses = makeStyles({
     ...shorthands.padding(tokens.spacingHorizontalXXXL, '5%'),
   },
   columnHeader: {
+    display: 'flex',
     fontWeight: 'bold',
+    justifyContent: 'center',
+    width: '100%',
+    ...shorthands.padding(0, tokens.spacingHorizontalS),
   },
 })
 
@@ -57,14 +62,14 @@ export default function BlankDataGrid({ column, title, visit }: Props) {
       () => [
         createTableColumn({
           columnId: 'index',
-          renderCell: getIndexedIndex,
+          renderCell: ([index]) => <ValueCell value={index} />,
           renderHeaderCell: f.constant(
             <div className={classes.columnHeader}>sno</div>,
           ),
         }),
         createTableColumn({
           columnId: title,
-          renderCell: getIndexedValue,
+          renderCell: ([, value]) => <ValueCell value={value} />,
           renderHeaderCell: f.constant(
             <div className={classes.columnHeader}>{title}</div>,
           ),
@@ -76,8 +81,7 @@ export default function BlankDataGrid({ column, title, visit }: Props) {
   const handleSelectionChange = useSyncedSelectionHandler(
     'missing',
     title,
-    column,
-    visit,
+    series,
   )
 
   return (
@@ -98,7 +102,7 @@ export default function BlankDataGrid({ column, title, visit }: Props) {
           selectionMode="multiselect"
         />
       ) : (
-        <Body1>No missing data found</Body1>
+        <Body2>There are no blank data found</Body2>
       )}
     </Card>
   )

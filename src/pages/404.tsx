@@ -1,7 +1,7 @@
 /* eslint-disable functional/immutable-data */
 /* eslint-disable functional/functional-parameters */
 /* eslint-disable import/prefer-default-export */
-import { Body1, Link, Title1, makeStyles } from '@fluentui/react-components'
+import { Link, Subtitle1, Title1, makeStyles } from '@fluentui/react-components'
 import { useHref } from 'react-router-dom'
 
 const useClasses = makeStyles({
@@ -22,7 +22,7 @@ export function Component() {
   return (
     <div className={classes.root}>
       <Title1>404 Not Found</Title1>
-      <Body1>The page you are looking for does not exist.</Body1>
+      <Subtitle1>The page you are looking for does not exist.</Subtitle1>
       <Link href={href}>Return to home</Link>
     </div>
   )

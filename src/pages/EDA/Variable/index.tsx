@@ -15,7 +15,7 @@ import {
   tokens,
 } from '@fluentui/react-components'
 import * as IO from 'fp-ts/IO'
-import { pipe } from 'fp-ts/function'
+import * as f from 'fp-ts/function'
 import * as S from 'fp-ts/string'
 import { useParams } from 'react-router-dom'
 
@@ -110,7 +110,7 @@ export function Component() {
                   label={isCategorical ? 'Categorical' : 'Numerical'}
                   labelPosition="after"
                   onChange={({ target }) => {
-                    pipe(
+                    f.pipe(
                       {
                         dataType: target.checked ? 'categorical' : 'numerical',
                         pos,

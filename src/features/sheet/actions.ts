@@ -6,11 +6,11 @@ import { dumpError } from '@/lib/logger'
 import { createAsyncThunk } from '@reduxjs/toolkit'
 import * as T from 'fp-ts/Task'
 import * as TE from 'fp-ts/TaskEither'
-import { pipe } from 'fp-ts/function'
+import * as f from 'fp-ts/function'
 
 export const sliceName = 'sheet'
 
-const messagePromise = pipe(
+const messagePromise = f.pipe(
   TE.tryCatch(() => promisedWorker('message', sheetWorker), dumpError),
   TE.map(({ data }) => data),
   TE.getOrElse(() =>

@@ -4,14 +4,11 @@ import type {
 } from '@fluentui/react-components'
 
 import SimpleDataGrid from '@/components/SimpleDataGrid'
-import {
-  getFlaggedRows,
-  getIndexedRowIncorrects,
-} from '@/features/sheet/selectors'
-import { getIndexedIndex, getIndexedValue } from '@/lib/array'
+import { getFlaggedRows, getOutliers } from '@/features/sheet/selectors'
+import { getIndexedIndex } from '@/lib/array'
 import { useAppSelector, useSyncedSelectionHandler } from '@/lib/hooks'
 import {
-  Body1,
+  Body2,
   Card,
   Title2,
   createTableColumn,
@@ -22,6 +19,8 @@ import {
 import * as f from 'fp-ts/function'
 import { useMemo } from 'react'
 
+import ValueCell from './ValueCell'
+
 const cellFocusMode: () => DataGridCellFocusMode = f.constant('none')
 
 const useClasses = makeStyles({
@@ -31,7 +30,11 @@ const useClasses = makeStyles({
     ...shorthands.padding(tokens.spacingHorizontalXXXL, '5%'),
   },
   columnHeader: {
+    display: 'flex',
     fontWeight: 'bold',
+    justifyContent: 'center',
+    width: '100%',
+    ...shorthands.padding(0, tokens.spacingHorizontalS),
   },
 })
 
@@ -44,26 +47,24 @@ interface Props {
 export default function OutlierDataGrid({ column, title, visit }: Props) {
   const classes = useClasses()
 
-  const series = useAppSelector((state) =>
-    getIndexedRowIncorrects(state, column, visit),
-  )
+  const series = useAppSelector((state) => getOutliers(state, column, visit))
   const flaggedRows = useAppSelector((state) =>
     getFlaggedRows(state, title, 'suspected'),
   )
 
-  const columnDefinition: TableColumnDefinition<readonly [string, string]>[] =
+  const columnDefinition: TableColumnDefinition<readonly [string, number]>[] =
     useMemo(
       () => [
         createTableColumn({
           columnId: 'index',
-          renderCell: getIndexedIndex,
+          renderCell: ([index]) => <ValueCell value={index} />,
           renderHeaderCell: f.constant(
             <div className={classes.columnHeader}>sno</div>,
           ),
         }),
         createTableColumn({
           columnId: title,
-          renderCell: getIndexedValue,
+          renderCell: ([, value]) => <ValueCell value={value} />,
           renderHeaderCell: f.constant(
             <div className={classes.columnHeader}>{title}</div>,
           ),
@@ -75,13 +76,16 @@ export default function OutlierDataGrid({ column, title, visit }: Props) {
   const handleSelectionChange = useSyncedSelectionHandler(
     'suspected',
     title,
-    column,
-    visit,
+    series,
   )
 
   return (
     <Card className={classes.card} size="large">
-      <Title2>Incorrect Data</Title2>
+      <Title2>Suspected Outliers</Title2>
+      <Body2>
+        The data shown here are suspected outliers based on the bell curve
+        distribution.
+      </Body2>
       {series.length ? (
         <SimpleDataGrid
           cellFocusMode={cellFocusMode}
@@ -93,7 +97,7 @@ export default function OutlierDataGrid({ column, title, visit }: Props) {
           selectionMode="multiselect"
         />
       ) : (
-        <Body1>No incorrect data found</Body1>
+        <Body2>There are no suspected outliers.</Body2>
       )}
     </Card>
   )

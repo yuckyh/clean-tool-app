@@ -3,7 +3,7 @@ import * as IO from 'fp-ts/IO'
 import * as O from 'fp-ts/Option'
 import * as T from 'fp-ts/Task'
 import * as TO from 'fp-ts/TaskOption'
-import { identity, pipe } from 'fp-ts/function'
+import * as f from 'fp-ts/function'
 import * as N from 'fp-ts/number'
 import * as S from 'fp-ts/string'
 
@@ -19,19 +19,19 @@ export const promisedTaskOption = <V>(promise: Promise<V>): TO.TaskOption<V> =>
 
 export const asTask = <As extends readonly unknown[], V>(
   fn: (...args: As) => Promise<V>,
-) => T.map(identity)(fn)
+) => T.map(f.identity)(fn)
 
 export const asIO = <As extends readonly unknown[], V>(
   fn: (...args: As) => V,
-) => IO.map(identity)(fn)
+) => IO.map(f.identity)(fn)
 
 export const asLazyTask = <As extends readonly unknown[], V>(
   fn: (...args: As) => Promise<V>,
-) => pipe(fn, T.map(identity))
+) => f.pipe(fn, T.map(f.identity))
 
 export const asLazyIO = <As extends readonly unknown[], V>(
   fn: (...args: As) => V,
-) => pipe(fn, IO.map(identity))
+) => f.pipe(fn, IO.map(f.identity))
 
 const getMaybe = <E, V>(
   value: V,

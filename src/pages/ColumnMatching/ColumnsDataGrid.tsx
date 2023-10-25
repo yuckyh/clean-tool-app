@@ -32,10 +32,10 @@ import {
   Subtitle1,
   createTableColumn,
 } from '@fluentui/react-components'
-import { makeBy } from 'fp-ts/ReadonlyArray'
+import * as RA from 'fp-ts/ReadonlyArray'
 import * as T from 'fp-ts/Task'
 import * as TO from 'fp-ts/TaskOption'
-import { constant, identity, pipe } from 'fp-ts/function'
+import * as f from 'fp-ts/function'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 
 import HeaderCell from './HeaderCell'
@@ -63,7 +63,7 @@ const MemoizedDataGrid = createMemo<SimpleDataGridProps<number>>(
   SimpleDataGrid,
 )
 
-const cellFocusMode: () => DataGridCellFocusMode = constant('none')
+const cellFocusMode: () => DataGridCellFocusMode = f.constant('none')
 const focusMode: DataGridFocusMode = 'composite'
 
 export default function ColumnsDataGrid({
@@ -94,7 +94,10 @@ export default function ColumnsDataGrid({
     [],
   )
 
-  const items = useMemo(() => makeBy(columnsLength, identity), [columnsLength])
+  const items = useMemo(
+    () => RA.makeBy(columnsLength, f.identity),
+    [columnsLength],
+  )
 
   const columnsDefinition: readonly TableColumnDefinition<number>[] =
     useMemo(() => {
@@ -103,7 +106,7 @@ export default function ColumnsDataGrid({
           columnId: 'original',
           compare: columnComparer,
           renderCell: (pos) => <ValueCell pos={pos} />,
-          renderHeaderCell: constant(
+          renderHeaderCell: f.constant(
             <HeaderCell
               header="Original"
               subtitle="The loaded column names (raw)"
@@ -116,7 +119,7 @@ export default function ColumnsDataGrid({
           renderCell: (pos) => (
             <MemoizedMatchCell alertRef={errorAlertRef} pos={pos} />
           ),
-          renderHeaderCell: constant(
+          renderHeaderCell: f.constant(
             <HeaderCell
               header="Replacement"
               subtitle="List of possible replacements (sorted by score)"
@@ -134,7 +137,7 @@ export default function ColumnsDataGrid({
                 renderCell: (pos) => (
                   <MemoizedVisitsCell alertRef={errorAlertRef} pos={pos} />
                 ),
-                renderHeaderCell: constant(
+                renderHeaderCell: f.constant(
                   <HeaderCell
                     header="Visit"
                     subtitle="The matching visit number"
@@ -150,7 +153,7 @@ export default function ColumnsDataGrid({
           columnId: 'score',
           compare: scoreComparer,
           renderCell: (pos) => <MemoizedScoreCell pos={pos} />,
-          renderHeaderCell: constant(
+          renderHeaderCell: f.constant(
             <HeaderCell
               header="Score"
               subtitle="The fuzzy search score (1 indicates a perfect match)"
@@ -168,14 +171,14 @@ export default function ColumnsDataGrid({
     ])
 
   useEffect(() => {
-    pipe(
+    f.pipe(
       matchVisits.length,
       TO.fromPredicate((length) => length === 0),
-      pipe(fetchSheet, constant, TO.map),
-      TO.tap((x) => pipe(dispatch(x()), promisedTaskOption)),
-      pipe(fetchMatches, constant, TO.map),
-      pipe(fetchMatches, T.of, constant, TO.getOrElse),
-      T.flatMap((x) => pipe(dispatch(x()), promisedTask)),
+      f.pipe(fetchSheet, f.constant, TO.map),
+      TO.tap((x) => f.pipe(dispatch(x()), promisedTaskOption)),
+      f.pipe(fetchMatches, f.constant, TO.map),
+      f.pipe(fetchMatches, T.of, f.constant, TO.getOrElse),
+      T.flatMap((x) => f.pipe(dispatch(x()), promisedTask)),
       T.tap(() =>
         T.of(
           Math.max(...matchVisits) > visits.length && visits.length > 0
@@ -183,7 +186,7 @@ export default function ColumnsDataGrid({
             : undefined,
         ),
       ),
-      T.tapIO(constant(stopLoading)),
+      T.tapIO(f.constant(stopLoading)),
     )().catch(dumpError)
     return undefined
   }, [

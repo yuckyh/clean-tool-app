@@ -131,17 +131,12 @@ export const useGlobalStyles = makeStaticStyles(globalStyles)
 export const useSyncedSelectionHandler = (
   reason: FlagReason,
   title: string,
-  column: string,
-  visit: string,
+  series: readonly (readonly [string, number | string])[],
 ) => {
   const dispatch = useAppDispatch()
 
   const flaggedRows = useAppSelector((state) =>
     getFlaggedRows(state, title, reason),
-  )
-
-  const series = useAppSelector((state) =>
-    getIndexedRowMissings(state, column, visit),
   )
 
   const indices = useMemo(

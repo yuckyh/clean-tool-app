@@ -19,6 +19,8 @@ import * as RA from 'fp-ts/ReadonlyArray'
 import * as f from 'fp-ts/function'
 import * as S from 'fp-ts/string'
 
+import type { DataType } from './reducers'
+
 const search = fuse.search.bind(fuse)
 
 export const getMatchVisit = createSelector(
@@ -84,10 +86,28 @@ const getShouldFormatList = createSelector(
     ),
 )
 
+export const getColumnPaths = createSelector(
+  [getMatchColumns, getShouldFormatList, getVisits, getMatchVisits],
+  (matchColumns, shouldFormatList, visits, matchVisits) =>
+    f.pipe(
+      matchColumns,
+      RA.zip(shouldFormatList),
+      RA.zip(matchVisits),
+      RA.map(
+        ([[matchColumn, shouldFormat], matchVisit]) =>
+          `/eda/${matchColumn.replace(/_/g, '-')}${
+            shouldFormat ? `/${stringLookup(visits)(matchVisit)}` : ''
+          }`,
+      ),
+    ),
+)
+
 export const getColumnPath = createSelector(
   [getMatchColumn, getShouldFormat, getVisitByMatchVisit],
   (matchColumn, shouldFormat, visit) =>
-    `/eda/${matchColumn.replace(/_/g, '-')}${shouldFormat ? `/${visit}` : ''}`,
+    `/eda/${S.replace(/_/g, '-')(matchColumn)}${
+      shouldFormat ? `/${visit}` : ''
+    }`,
 )
 
 export const getFormattedColumn = createSelector(
@@ -132,8 +152,18 @@ export const getMatchIndex = createSelector(
 )
 
 export const getDataType = createSelector(
-  [getDataTypes, getSearchedPos],
+  [getDataTypes, getPosParam],
   (dataTypes, pos) => stringLookup(dataTypes)(pos),
+)
+
+export const getSearchedDataType = createSelector(
+  [getDataTypes, getSearchedPos],
+  (dataTypes, pos) =>
+    f.pipe(
+      dataTypes,
+      RA.lookup(pos),
+      f.pipe('' as DataType, f.constant, O.getOrElse),
+    ),
 )
 
 export const getScore = createSelector(

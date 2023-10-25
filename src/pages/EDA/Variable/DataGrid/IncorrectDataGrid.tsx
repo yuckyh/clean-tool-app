@@ -11,7 +11,7 @@ import {
 import { getIndexedIndex, getIndexedValue } from '@/lib/array'
 import { useAppSelector, useSyncedSelectionHandler } from '@/lib/hooks'
 import {
-  Body1,
+  Body2,
   Card,
   Title2,
   createTableColumn,
@@ -19,10 +19,12 @@ import {
   shorthands,
   tokens,
 } from '@fluentui/react-components'
-import { constant } from 'fp-ts/function'
+import * as f from 'fp-ts/function'
 import { useMemo } from 'react'
 
-const cellFocusMode: () => DataGridCellFocusMode = constant('none')
+import ValueCell from './ValueCell'
+
+const cellFocusMode: () => DataGridCellFocusMode = f.constant('none')
 
 const useClasses = makeStyles({
   card: {
@@ -31,7 +33,11 @@ const useClasses = makeStyles({
     ...shorthands.padding(tokens.spacingHorizontalXXXL, '5%'),
   },
   columnHeader: {
+    display: 'flex',
     fontWeight: 'bold',
+    justifyContent: 'center',
+    width: '100%',
+    ...shorthands.padding(0, tokens.spacingHorizontalS),
   },
 })
 
@@ -56,15 +62,15 @@ export default function IncorrectDataGrid({ column, title, visit }: Props) {
       () => [
         createTableColumn({
           columnId: 'index',
-          renderCell: getIndexedIndex,
-          renderHeaderCell: constant(
+          renderCell: ([index]) => <ValueCell value={index} />,
+          renderHeaderCell: f.constant(
             <div className={classes.columnHeader}>sno</div>,
           ),
         }),
         createTableColumn({
           columnId: title,
-          renderCell: getIndexedValue,
-          renderHeaderCell: constant(
+          renderCell: ([, value]) => <ValueCell value={value} />,
+          renderHeaderCell: f.constant(
             <div className={classes.columnHeader}>{title}</div>,
           ),
         }),
@@ -75,13 +81,15 @@ export default function IncorrectDataGrid({ column, title, visit }: Props) {
   const handleSelectionChange = useSyncedSelectionHandler(
     'incorrect',
     title,
-    column,
-    visit,
+    series,
   )
 
   return (
     <Card className={classes.card} size="large">
       <Title2>Incorrect Data</Title2>
+      <Body2>
+        The data shown here are data that might be incorrectly formatted.
+      </Body2>
       {series.length ? (
         <SimpleDataGrid
           cellFocusMode={cellFocusMode}
@@ -93,7 +101,7 @@ export default function IncorrectDataGrid({ column, title, visit }: Props) {
           selectionMode="multiselect"
         />
       ) : (
-        <Body1>No incorrect data found</Body1>
+        <Body2>There are no incorrectly formatted data found</Body2>
       )}
     </Card>
   )

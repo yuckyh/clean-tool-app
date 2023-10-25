@@ -15,6 +15,8 @@ import { useAppSelector } from '@/lib/hooks'
 import {
   Button,
   Subtitle2,
+  Tag,
+  TagGroup,
   Title1,
   createTableColumn,
   makeStyles,
@@ -22,11 +24,12 @@ import {
   tokens,
 } from '@fluentui/react-components'
 import * as RA from 'fp-ts/ReadonlyArray'
-import { constant, identity } from 'fp-ts/function'
+import * as f from 'fp-ts/function'
 import { useMemo } from 'react'
 import { writeFile } from 'xlsx-js-style'
 
 import PreviewCell from './PreviewCell'
+import HeaderCell from './HeaderCell'
 
 const useClasses = makeStyles({
   actions: {
@@ -50,14 +53,16 @@ export function Component() {
   const columnsLength = useAppSelector(getColumnsLength)
   const formattedColumns = useAppSelector(getFormattedColumns)
 
-  const items = useMemo(() => RA.makeBy(dataLength, identity), [dataLength])
+  const items = useMemo(() => RA.makeBy(dataLength, f.identity), [dataLength])
   const columnDefinitions: readonly TableColumnDefinition<number>[] = useMemo(
     () =>
       RA.makeBy(columnsLength, (col) =>
         createTableColumn({
           columnId: stringLookup(formattedColumns)(col),
           renderCell: (row) => <PreviewCell col={col} row={row} />,
-          renderHeaderCell: () => stringLookup(formattedColumns)(col),
+          renderHeaderCell: () => (
+            <HeaderCell header={stringLookup(formattedColumns)(col)} />
+          ),
         }),
       ),
     [columnsLength, formattedColumns],
@@ -74,8 +79,13 @@ export function Component() {
     <section className={classes.root}>
       <Title1>Download</Title1>
       <Subtitle2>Confirm your changes before downloading your file</Subtitle2>
+      <TagGroup role="list">
+        <Tag role="listitem">Outlier</Tag>
+        <Tag role="listitem">Blank Data</Tag>
+        <Tag role="listitem">Incorrect Data</Tag>
+      </TagGroup>
       <SimpleDataGrid
-        cellFocusMode={constant('none')}
+        cellFocusMode={f.constant('none')}
         columns={columnDefinitions}
         items={items}
       />

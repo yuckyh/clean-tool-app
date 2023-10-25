@@ -15,7 +15,7 @@ import {
   tokens,
 } from '@fluentui/react-components'
 import * as IO from 'fp-ts/IO'
-import { pipe } from 'fp-ts/function'
+import * as f from 'fp-ts/function'
 import { useCallback, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 
@@ -47,7 +47,7 @@ export function Component() {
   const dispatch = useAppDispatch()
 
   const handleMatchingSubmit = useCallback(() => {
-    pipe(
+    f.pipe(
       'matched' as Progress,
       setProgress,
       (x) => dispatch(x),

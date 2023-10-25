@@ -2,9 +2,8 @@
 import { author, description, keywords } from '@/../package.json'
 import store from '@/app/store'
 import { useGlobalStyles, useStorage, useThemePreference } from '@/lib/hooks'
+import { ioDump } from '@/lib/logger'
 import { FluentProvider } from '@fluentui/react-components'
-import { console } from 'fp-ts'
-import { constant } from 'fp-ts/function'
 import { Helmet, HelmetProvider } from 'react-helmet-async'
 import { Provider } from 'react-redux'
 import { Outlet } from 'react-router-dom'
@@ -15,7 +14,7 @@ export default function App() {
   useStorage()
   useRegisterSW({
     immediate: true,
-    onOfflineReady: constant(console.log('offline ready')),
+    onOfflineReady: ioDump('offline ready'),
   })
 
   return (

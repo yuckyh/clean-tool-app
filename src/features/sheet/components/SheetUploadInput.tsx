@@ -11,7 +11,7 @@ import { useAppDispatch, useAppSelector } from '@/lib/hooks'
 import { dumpError } from '@/lib/logger'
 import { Field, Input, makeStyles } from '@fluentui/react-components'
 import * as T from 'fp-ts/Task'
-import { pipe } from 'fp-ts/function'
+import * as f from 'fp-ts/function'
 import {
   forwardRef,
   useCallback,
@@ -72,8 +72,8 @@ const SheetUploadInput = forwardRef<SheetInputRef, Props>(
 
           setFileTask('uploaded')
 
-          pipe(file, postFile, (x) => dispatch(x), T.of)()
-            .then(() => pipe(fetchSheet(), (x) => dispatch(x), T.of))
+          f.pipe(file, postFile, (x) => dispatch(x), T.of)()
+            .then(() => f.pipe(fetchSheet(), (x) => dispatch(x), T.of))
             .catch(dumpError)
         },
       }),

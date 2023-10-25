@@ -1,15 +1,15 @@
 import * as O from 'fp-ts/Option'
 import * as RA from 'fp-ts/ReadonlyArray'
-import { constant, flow, pipe } from 'fp-ts/function'
+import * as f from 'fp-ts/function'
 
 export const indexDuplicateSearcher = <T extends readonly U[], U>(
   indices: readonly T[],
   filterIndex: T,
 ) =>
-  pipe(
+  f.pipe(
     indices,
     RA.filter(
-      flow(
+      f.flow(
         RA.zip(filterIndex),
         RA.every(([a, b]) => a === b),
       ),
@@ -17,10 +17,10 @@ export const indexDuplicateSearcher = <T extends readonly U[], U>(
   )
 
 export const stringLookup = (arr: readonly string[]) => (pos: number) =>
-  pipe(arr, RA.lookup(pos), pipe('', constant, O.getOrElse))
+  f.pipe(arr, RA.lookup(pos), f.pipe('', f.constant, O.getOrElse))
 
 export const numberLookup = (arr: readonly number[]) => (pos: number) =>
-  pipe(arr, RA.lookup(pos), pipe(0, constant, O.getOrElse))
+  f.pipe(arr, RA.lookup(pos), f.pipe(0, f.constant, O.getOrElse))
 
 export const getIndexedValue = <I, V>([, value]: readonly [I, V]) => value
 

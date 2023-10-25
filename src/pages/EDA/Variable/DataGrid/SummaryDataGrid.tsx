@@ -8,6 +8,7 @@ import SimpleDataGrid from '@/components/SimpleDataGrid'
 import { getCleanNumericalRow, getIndexedRow } from '@/features/sheet/selectors'
 import { getIndexedValue } from '@/lib/array'
 import { useAppSelector } from '@/lib/hooks'
+import { add, divideBy } from '@/lib/number'
 import {
   Card,
   CardHeader,
@@ -18,7 +19,7 @@ import {
   tokens,
 } from '@fluentui/react-components'
 import * as RA from 'fp-ts/ReadonlyArray'
-import { constant, pipe } from 'fp-ts/function'
+import * as f from 'fp-ts/function'
 import * as N from 'fp-ts/number'
 import { useMemo } from 'react'
 
@@ -34,7 +35,7 @@ interface Props {
 }
 
 const cellFocusMode: (tableColumnId: TableColumnId) => DataGridCellFocusMode =
-  constant('none')
+  f.constant('none')
 
 const useClasses = makeStyles({
   card: {
@@ -70,12 +71,12 @@ export default function SummaryDataGrid({
       createTableColumn({
         columnId: 'statistic',
         renderCell: ({ statistic }) => statistic,
-        renderHeaderCell: constant('Statistic'),
+        renderHeaderCell: f.constant('Statistic'),
       }),
       createTableColumn({
         columnId: 'value',
         renderCell: ({ value }) => value,
-        renderHeaderCell: constant('Value'),
+        renderHeaderCell: f.constant('Value'),
       }),
     ],
     [],
@@ -86,9 +87,26 @@ export default function SummaryDataGrid({
     [numericalValues],
   )
 
+  const dataMean = useMemo(
+    () => dataSum / numericalValues.length,
+    [dataSum, numericalValues.length],
+  )
+
+  const dataStd = useMemo(
+    () =>
+      f.pipe(
+        numericalValues,
+        RA.map(f.flow(add(-1 * dataMean), (x) => x * x)),
+        RA.reduce(0, N.MonoidSum.concat),
+        f.flip(divideBy)(numericalValues.length),
+        Math.sqrt,
+      ),
+    [dataMean, numericalValues],
+  )
+
   const summaryStatistics: readonly SummaryStats[] = useMemo(
     () =>
-      pipe(
+      f.pipe(
         isCategorical
           ? [{ statistic: 'count', value: categoricalSeries.length }]
           : [
@@ -103,19 +121,27 @@ export default function SummaryDataGrid({
               },
               {
                 statistic: 'mean',
-                value: dataSum / numericalValues.length,
+                value: dataMean,
               },
               {
                 statistic: 'sum',
                 value: dataSum,
               },
+              { statistic: 'std', value: dataStd },
             ],
         RA.map(({ statistic, value }) => ({
           statistic: statistic.replace(/^./g, (c) => c.toUpperCase()),
           value: value.toFixed(2),
         })),
       ),
-    [isCategorical, categoricalSeries.length, numericalValues, dataSum],
+    [
+      isCategorical,
+      categoricalSeries.length,
+      numericalValues,
+      dataMean,
+      dataSum,
+      dataStd,
+    ],
   )
   return (
     <Card className={classes.card} size="large">

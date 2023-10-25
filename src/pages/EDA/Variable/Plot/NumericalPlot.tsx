@@ -1,17 +1,15 @@
 import type { Data, Layout } from 'plotly.js-cartesian-dist'
 
-import { getCleanNumericalRow } from '@/features/sheet/selectors'
-import { getIndexedIndex, getIndexedValue, numberLookup } from '@/lib/array'
+import {
+  getCleanNumericalRow,
+  getNotOutliers,
+  getOutliers,
+} from '@/features/sheet/selectors'
+import { getIndexedIndex, getIndexedValue } from '@/lib/array'
 import { useAppSelector, useTokenToHex } from '@/lib/hooks'
-import { add, divideBy, multiply } from '@/lib/number'
 import { tokens } from '@fluentui/react-components'
-import { console } from 'fp-ts'
-import * as E from 'fp-ts/Either'
-import * as P from 'fp-ts/Predicate'
 import * as RA from 'fp-ts/ReadonlyArray'
-import { flip, flow, identity, pipe } from 'fp-ts/function'
-import * as N from 'fp-ts/number'
-import { useCallback, useMemo, useRef } from 'react'
+import { useMemo } from 'react'
 
 import VariablePlot from '.'
 
@@ -36,51 +34,15 @@ export default function NumericalPlot({
     getCleanNumericalRow(state, column, visit),
   )
 
-  const sorted = pipe(
-    series,
-    RA.map(flow(getIndexedValue, Number)),
-    RA.sort(N.Ord),
-  )
+  const outliers = useAppSelector((state) => getOutliers(state, column, visit))
 
-  const [q1, , q3] = useMemo(
-    () =>
-      RA.makeBy(
-        3,
-        flow(
-          add(1),
-          multiply(series.length),
-          flip(divideBy)(4),
-          E.fromPredicate((x) => x % 1 === 0, identity),
-          E.getOrElse(Math.ceil),
-          (x) => [x - 1, x] as const,
-          pipe(sorted, numberLookup, RA.map),
-          RA.reduce(0, N.MonoidSum.concat),
-          flip(divideBy)(2),
-        ),
-      ) as readonly [number, number, number],
-    [series.length, sorted],
+  const notOutliers = useAppSelector((state) =>
+    getNotOutliers(state, column, visit),
   )
-
-  const [lower, upper] = useMemo(
-    () => [2.5 * q1 - 1.5 * q3, 2.5 * q3 - 1.5 * q1] as const,
-    [q1, q3],
-  )
-
-  const isOutlier = useCallback(
-    ([, value]: ArrayElement<typeof series>) => value < lower || value > upper,
-    [lower, upper],
-  )
-
-  const isNotOutlier = useMemo(() => P.not(isOutlier), [isOutlier])
 
   const values = useMemo(
     () => RA.map(getIndexedValue)(series) as number[],
     [series],
-  )
-
-  const outliers = useMemo(
-    () => RA.filter(isOutlier)(series),
-    [isOutlier, series],
   )
 
   const outlierValues = useMemo(
@@ -99,11 +61,6 @@ export default function NumericalPlot({
   )
 
   const outlierColor = useTokenToHex(tokens.colorStatusDangerForeground3)
-
-  const notOutliers = useMemo(
-    () => RA.filter(isNotOutlier)(series),
-    [isNotOutlier, series],
-  )
 
   const notOutlierValues = useMemo(
     () => RA.map(getIndexedValue)(notOutliers) as number[],
@@ -180,10 +137,6 @@ export default function NumericalPlot({
       yaxis: 'y2',
     },
   ]
-
-  const ref = useRef()
-
-  console.log(ref.current)
 
   return <VariablePlot data={data} layout={layout} variable={variable} />
 }

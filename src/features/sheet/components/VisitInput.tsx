@@ -3,7 +3,7 @@ import type { InputProps } from '@fluentui/react-components'
 import { useAppDispatch, useAppSelector } from '@/lib/hooks'
 import { Field, Input, makeStyles } from '@fluentui/react-components'
 import * as IO from 'fp-ts/IO'
-import { pipe } from 'fp-ts/function'
+import * as f from 'fp-ts/function'
 import { useCallback } from 'react'
 
 import { setVisit } from '../reducers'
@@ -31,7 +31,7 @@ export default function VisitInput({ pos }: Props) {
     ({ target }) => {
       const { value } = target
 
-      pipe({ pos, visit: value }, setVisit, (x) => dispatch(x), IO.of)()
+      f.pipe({ pos, visit: value }, setVisit, (x) => dispatch(x), IO.of)()
     },
     [dispatch, pos],
   )

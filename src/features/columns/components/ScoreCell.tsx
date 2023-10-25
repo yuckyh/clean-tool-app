@@ -18,6 +18,7 @@ const useClasses = makeStyles({
     width: '100%',
     ...shorthands.padding(0, tokens.spacingHorizontalS),
     columnGap: tokens.spacingHorizontalXS,
+    justifyContent: 'center',
   },
 })
 
@@ -31,8 +32,8 @@ export default function ScoreCell({ pos }: Props) {
   const score = useAppSelector((state) => getScore(state, pos))
 
   const colorscale = useFluentColorScale(
-    tokens.colorStatusSuccessForegroundInverted,
     tokens.colorStatusDangerForegroundInverted,
+    tokens.colorStatusSuccessForegroundInverted,
     16,
   )
 

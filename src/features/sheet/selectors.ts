@@ -10,9 +10,11 @@ import {
   getVisits,
   searchPos,
 } from '@/app/selectors'
-import { getIndexedValue, stringLookup } from '@/lib/array'
+import { getIndexedValue, numberLookup, stringLookup } from '@/lib/array'
 import { strEquals } from '@/lib/fp'
+import { add, divideBy, multiply } from '@/lib/number'
 import { createSelector } from '@reduxjs/toolkit'
+import * as E from 'fp-ts/Either'
 import * as Eq from 'fp-ts/Eq'
 import * as O from 'fp-ts/Option'
 import * as Ord from 'fp-ts/Ord'
@@ -20,7 +22,8 @@ import * as P from 'fp-ts/Predicate'
 import * as RA from 'fp-ts/ReadonlyArray'
 import * as RR from 'fp-ts/ReadonlyRecord'
 import * as RS from 'fp-ts/ReadonlySet'
-import { apply, constant, flow, identity, pipe, tupled } from 'fp-ts/function'
+import * as f from 'fp-ts/function'
+import * as N from 'fp-ts/number'
 import * as S from 'fp-ts/string'
 import { utils } from 'xlsx'
 
@@ -38,15 +41,15 @@ export const getColumnsLength = createSelector(
 )
 
 const getEmptyColumns = createSelector([getData, getColumns], (data, columns) =>
-  pipe(
+  f.pipe(
     RS.fromReadonlyArray(S.Eq)(columns),
     RS.difference(S.Eq)(
       RS.fromReadonlyArray(S.Eq)(
-        pipe(
+        f.pipe(
           data,
           RA.map(RR.keys),
           RA.head,
-          pipe([] as readonly string[], constant, O.getOrElse),
+          f.pipe([] as readonly string[], f.constant, O.getOrElse),
         ),
       ),
     ),
@@ -67,27 +70,27 @@ export const getVisit = createSelector(
 export const getColumnComparer = createSelector(
   [getColumns],
   (columns) => (posA: number, posB: number) =>
-    pipe(
+    f.pipe(
       [posA, posB] as const,
-      pipe(columns, stringLookup, RA.map),
-      (x) => identity(x) as [string, string],
-      tupled(S.Ord.compare),
+      f.pipe(columns, stringLookup, RA.map),
+      (x) => f.identity(x) as [string, string],
+      f.tupled(S.Ord.compare),
     ),
 )
 
 export const getIndexRow = createSelector(
   [getData, getColumns, getIndices, getVisits],
   (data, columns, indices, visits) =>
-    pipe(
+    f.pipe(
       data,
       RA.map(
-        flow(
+        f.flow(
           RR.lookup(
             stringLookup(columns)(
               searchPos(indices, visits, 'sno', stringLookup(visits)(0)),
             ),
           ),
-          pipe('' as Property<CellItem>, constant, O.getOrElse),
+          f.pipe('' as Property<CellItem>, f.constant, O.getOrElse),
           (x) => x.toString(),
         ),
       ),
@@ -97,12 +100,12 @@ export const getIndexRow = createSelector(
 export const getRow = createSelector(
   [getData, getColumns, getSearchedPos],
   (data, columns, pos) =>
-    pipe(
+    f.pipe(
       data,
       RA.map(
-        flow(
+        f.flow(
           RR.lookup(stringLookup(columns)(pos)),
-          pipe('' as Property<CellItem>, constant, O.getOrElse),
+          f.pipe('' as Property<CellItem>, f.constant, O.getOrElse),
           (x) => x.toString(),
         ),
       ),
@@ -117,10 +120,10 @@ export const getIndexedRow = createSelector(
 export const getIndexedRowMissings = createSelector(
   [getIndexedRow],
   RA.filter(([, cell]) =>
-    pipe(
+    f.pipe(
       ['', 'na', 'none', 'blank'] as const,
       RA.some(
-        (marker) => marker === pipe(cell, S.replace('/', ''), S.toLowerCase),
+        (marker) => marker === f.pipe(cell, S.replace('/', ''), S.toLowerCase),
       ),
     ),
   ),
@@ -129,10 +132,10 @@ export const getIndexedRowMissings = createSelector(
 const getBlanklessRow = createSelector(
   [getIndexedRow],
   RA.filter(([, cell]) =>
-    pipe(
+    f.pipe(
       ['', 'na', 'none', 'blank'] as const,
       RA.every(
-        (marker) => marker !== pipe(cell, S.replace('/', ''), S.toLowerCase),
+        (marker) => marker !== f.pipe(cell, S.replace('/', ''), S.toLowerCase),
       ),
     ),
   ),
@@ -140,20 +143,63 @@ const getBlanklessRow = createSelector(
 
 export const getIndexedRowIncorrects = createSelector(
   [getBlanklessRow],
-  RA.filter(flow(getIndexedValue, (val) => /[!,.?]{2,}/.test(val))),
+  RA.filter(f.flow(getIndexedValue, (val) => /[!,.?]{2,}/.test(val))),
 )
 
 const getIndexedNumericalRow = createSelector(
   [getBlanklessRow],
-  flow(
-    RA.filter(flow(getIndexedValue, (val) => !/[!,.?]{2,}/.test(val))),
+  f.flow(
+    RA.filter(f.flow(getIndexedValue, (val) => !/[!,.?]{2,}/.test(val))),
     RA.map(([index, val]) => [index, parseFloat(val)] as const),
   ),
 )
 
 export const getCleanNumericalRow = createSelector(
   [getIndexedNumericalRow],
-  RA.filter(flow(getIndexedValue, P.not(Number.isNaN))),
+  RA.filter(f.flow(getIndexedValue, P.not(Number.isNaN))),
+)
+
+const getSortedNumericalRow = createSelector(
+  [getCleanNumericalRow],
+  f.flow(RA.map(f.flow(getIndexedValue, Number)), RA.sort(N.Ord)),
+)
+
+const getFences = createSelector([getSortedNumericalRow], (row) =>
+  f.pipe(
+    RA.makeBy(
+      3,
+      f.flow(
+        add(1),
+        multiply(row.length),
+        f.flip(divideBy)(4),
+        E.fromPredicate((x) => x % 1 === 0, f.identity),
+        E.getOrElse(Math.ceil),
+        (x) => [x - 1, x] as const,
+        f.pipe(row, numberLookup, RA.map),
+        RA.reduce(0, N.MonoidSum.concat),
+        f.flip(divideBy)(2),
+      ),
+    ) as readonly [number, number, number],
+    ([q1, , q3]) => [2.5 * q1 - 1.5 * q3, 2.5 * q3 - 1.5 * q1] as const,
+  ),
+)
+
+export const getOutliers = createSelector(
+  [getCleanNumericalRow, getFences],
+  (row, [lower, upper]) =>
+    f.pipe(
+      row,
+      RA.filter(([, value]) => value < lower || value > upper),
+    ),
+)
+
+export const getNotOutliers = createSelector(
+  [getCleanNumericalRow, getFences],
+  (row, [lower, upper]) =>
+    f.pipe(
+      row,
+      RA.filter(([, value]) => value > lower && value < upper),
+    ),
 )
 
 export const FlagEq: Eq.Eq<Flag> = Eq.tuple(S.Eq, S.Eq, S.Eq)
@@ -162,7 +208,7 @@ export const FlagOrd: Ord.Ord<Flag> = Ord.tuple(S.Ord, S.Ord, S.Ord)
 export const getFlaggedRows = createSelector(
   [getFlaggedCells, getTitleParam, getReasonParam],
   (flaggedCells, title, reason) =>
-    pipe(
+    f.pipe(
       flaggedCells,
       RA.filter(
         ([, flagTitle, flagReason]) =>
@@ -182,21 +228,21 @@ const getFormattedData = createSelector(
     emptyColumns,
     dataTypes,
   ): readonly CellItem[] =>
-    pipe(
+    f.pipe(
       data,
       RA.map(
-        flow(
+        f.flow(
           Object.entries<string>,
           RA.zip(dataTypes),
           RA.map(
             ([[key, value], dataType]) =>
               [
-                pipe(
+                f.pipe(
                   formattedColumns,
                   stringLookup,
                   O.map,
-                  apply(pipe(key, strEquals, RA.findIndex)(columns)),
-                  pipe('', constant, O.getOrElse),
+                  f.apply(f.pipe(key, strEquals, RA.findIndex)(columns)),
+                  f.pipe('', f.constant, O.getOrElse),
                 ),
                 value &&
                 !Number.isNaN(parseFloat(value)) &&
@@ -210,7 +256,7 @@ const getFormattedData = createSelector(
         ),
       ),
       RA.map((entry) =>
-        pipe(
+        f.pipe(
           emptyColumns,
           RA.reduce(entry, (acc, curr) =>
             RR.upsertAt(curr, '' as number | string)(acc),
@@ -227,10 +273,10 @@ const getFormattedSheet = createSelector([getFormattedData], (formattedData) =>
 const getFlaggedCellsAddresses = createSelector(
   [getFlaggedCells, getFormattedColumns, getIndexRow],
   (flaggedCells, formattedColumns, indexRow) =>
-    pipe(
+    f.pipe(
       flaggedCells,
       RA.map(([firstIndex, firstColumn]) =>
-        pipe(
+        f.pipe(
           flaggedCells,
           RA.filter(
             ([secondIndex, secondColumn]) =>
@@ -240,7 +286,7 @@ const getFlaggedCellsAddresses = createSelector(
           (x) =>
             x.length > 1 ? x.filter(([, , reason]) => reason !== 'outlier') : x,
           RA.head,
-          pipe(['', '', 'outlier'] as Flag, constant, O.getOrElse),
+          f.pipe(['', '', 'outlier'] as Flag, f.constant, O.getOrElse),
         ),
       ),
       RS.fromReadonlyArray(FlagEq),
@@ -249,15 +295,15 @@ const getFlaggedCellsAddresses = createSelector(
         ([flaggedIndex, flaggedCol, flagReason]) =>
           [
             utils.encode_cell({
-              c: pipe(
+              c: f.pipe(
                 formattedColumns,
                 RA.findIndex(strEquals(flaggedCol)),
-                pipe(Infinity, constant, O.getOrElse),
+                f.pipe(Infinity, f.constant, O.getOrElse),
               ),
-              r: pipe(
+              r: f.pipe(
                 indexRow,
                 RA.findIndex(strEquals(flaggedIndex)),
-                pipe(Infinity, constant, O.getOrElse),
+                f.pipe(Infinity, f.constant, O.getOrElse),
               ),
             }),
             flagReason,
@@ -266,27 +312,27 @@ const getFlaggedCellsAddresses = createSelector(
     ),
 )
 
-const colorMap = pipe(
+const colorMap = f.pipe(
   {
     incorrect: 'FF00FFFF', // RRGGBBAA
     missing: 'FFFF00FF',
     outlier: 'FF0000FF',
     suspected: 'FF0000FF',
   } as const,
-  RR.map(flow(S.slice(1, 7), S.toUpperCase)),
+  RR.map(f.flow(S.slice(1, 7), S.toUpperCase)),
 )
 
 export const getWrittenSheet = createSelector(
   [getFormattedSheet, getFlaggedCellsAddresses],
   (formattedSheet, flaggedCellsAddresses) =>
-    pipe(
+    f.pipe(
       flaggedCellsAddresses,
       RA.reduce(formattedSheet, (acc, [addr, reason]) =>
         RR.upsertAt(addr, {
-          ...pipe(
+          ...f.pipe(
             formattedSheet,
             RR.lookup(addr),
-            pipe({ t: 's', v: '' }, constant, O.getOrElse),
+            f.pipe({ t: 's', v: '' }, f.constant, O.getOrElse),
           ),
           s: {
             fill: {

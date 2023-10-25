@@ -60,8 +60,6 @@ export const getPath = createSelector([getPaths, getPosParam], (paths, pos) =>
   stringLookup(paths)(pos),
 )
 
-// export const getPathLabel = createSelector([getPath])
-
 export const getAllowedPaths = createSelector(
   [getPaths, getProgress],
   (paths, progress) =>

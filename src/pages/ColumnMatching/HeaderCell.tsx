@@ -11,6 +11,7 @@ const useClasses = makeStyles({
     display: 'flex',
     flexDirection: 'column',
     ...shorthands.padding(0, tokens.spacingHorizontalS),
+    justifyContent: 'center',
   },
 })
 

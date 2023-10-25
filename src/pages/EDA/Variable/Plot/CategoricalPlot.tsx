@@ -4,7 +4,7 @@ import { getIndexedRow } from '@/features/sheet/selectors'
 import { getIndexedValue } from '@/lib/array'
 import { useAppSelector } from '@/lib/hooks'
 import * as RA from 'fp-ts/ReadonlyArray'
-import { identity, pipe } from 'fp-ts/function'
+import * as f from 'fp-ts/function'
 
 import VariablePlot from '.'
 
@@ -17,7 +17,7 @@ interface Props {
 export default function CategoricalPlot({ column, variable, visit }: Props) {
   const series = useAppSelector((state) => getIndexedRow(state, column, visit))
 
-  const count = pipe(
+  const count = f.pipe(
     series,
     RA.map(getIndexedValue),
     RA.reduce({} as Readonly<Record<string, number>>, (acc, curr) => ({
@@ -43,7 +43,7 @@ export default function CategoricalPlot({ column, variable, visit }: Props) {
     yaxis: {
       range: [0, maxCount],
       tickformat: 'd',
-      tickvals: RA.makeBy(maxCount + 1, identity) as number[],
+      tickvals: RA.makeBy(maxCount + 1, f.identity) as number[],
       title: 'count',
     },
   }

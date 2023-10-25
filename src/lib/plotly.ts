@@ -2,7 +2,7 @@ import type { ColorTokens } from '@fluentui/react-components'
 import type { ColorScale } from 'plotly.js-cartesian-dist'
 
 import * as RA from 'fp-ts/ReadonlyArray'
-import { flow, identity, pipe } from 'fp-ts/function'
+import * as f from 'fp-ts/function'
 import * as S from 'fp-ts/string'
 
 import { useTokenToHex } from './hooks'
@@ -14,14 +14,14 @@ type Diff = readonly [number, number]
 type TransposedRgbDiff = readonly [Diff, Diff, Diff]
 
 const splitHexString = (hexString: string) =>
-  pipe(
+  f.pipe(
     [1, 3, 5] as const,
     RA.map((x) => S.slice(x, x + 2)),
     RA.flap(hexString),
   ) as readonly [string, string, string]
 
 const hexToRgb = (hexString: string) =>
-  pipe(
+  f.pipe(
     hexString,
     splitHexString,
     RA.map((hex) => parseInt(hex, 16)),
@@ -36,7 +36,7 @@ const interpolate =
 
 const timeToColorStep = (t: number) => (rgbDiffs: TransposedRgbDiff) => [
   t,
-  pipe(rgbDiffs, RA.map(interpolate), RA.flap(t), RA.map(numToHex)).join(''),
+  f.pipe(rgbDiffs, RA.map(interpolate), RA.flap(t), RA.map(numToHex)).join(''),
 ]
 
 // eslint-disable-next-line import/prefer-default-export
@@ -45,14 +45,14 @@ export const useFluentColorScale = (
   color2Token: ColorToken,
   n: number,
 ) => {
-  const rgbDiffs = pipe(
+  const rgbDiffs = f.pipe(
     [color1Token, color2Token] as const,
-    RA.map(flow(useTokenToHex, hexToRgb)),
-    ([rgb1, rgb2]) => RA.zip(rgb1 ?? [])(rgb2 ?? []),
+    RA.map(f.flow(useTokenToHex, hexToRgb)),
+    (rgbs) => f.tupled(RA.zip)(rgbs as [Rgb, Rgb]),
   ) as TransposedRgbDiff
 
-  return pipe(
-    RA.makeBy(n, identity),
+  return f.pipe(
+    RA.makeBy(n, f.identity),
     RA.map(divideBy),
     RA.flap(n - 1),
     RA.map(timeToColorStep),

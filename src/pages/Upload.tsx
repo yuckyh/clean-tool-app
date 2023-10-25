@@ -37,7 +37,7 @@ import * as IO from 'fp-ts/IO'
 import * as RA from 'fp-ts/ReadonlyArray'
 import * as T from 'fp-ts/Task'
 import * as TE from 'fp-ts/TaskEither'
-import { constant, flow, pipe } from 'fp-ts/function'
+import * as f from 'fp-ts/function'
 import { useCallback, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 
@@ -99,16 +99,16 @@ export function Component() {
   }, [alertRef])
 
   const handleResetConfirm = useCallback(() => {
-    pipe(
+    f.pipe(
       [deleteProgressState, deleteColumns] as const,
-      RA.map(flow((x) => dispatch(x()), IO.of)),
+      RA.map(f.flow((x) => dispatch(x()), IO.of)),
       IO.sequenceArray,
-      constant(sheetInputRef.current?.setFileTask('deleted')),
+      f.constant(sheetInputRef.current?.setFileTask('deleted')),
       IO.of,
       IO.tap(IO.of),
       () => deleteSheet,
       T.of,
-      T.tap((x) => pipe(dispatch(x()), promisedTask)),
+      T.tap((x) => f.pipe(dispatch(x()), promisedTask)),
       T.tapIO(
         IO.of(() => {
           localStorage.clear()
@@ -118,7 +118,7 @@ export function Component() {
   }, [dispatch])
 
   const handleUploadSubmit = useCallback(() => {
-    return pipe(
+    return f.pipe(
       'uploaded' as Progress,
       setProgress,
       (x) => dispatch(x),
@@ -132,15 +132,15 @@ export function Component() {
   }, [dispatch, navigate])
 
   useEffect(() => {
-    pipe(
+    f.pipe(
       columnsLength,
       (length): TE.TaskEither<typeof fetchSheet, void> =>
         length === 0 ? TE.left(fetchSheet) : TE.fromIO(stopLoading),
       TE.getOrElse((x) =>
-        pipe(
+        f.pipe(
           stopLoading,
           T.fromIO,
-          T.tap(() => pipe(dispatch(x()), promisedTask)),
+          T.tap(() => f.pipe(dispatch(x()), promisedTask)),
         ),
       ),
     )().catch(dumpError)

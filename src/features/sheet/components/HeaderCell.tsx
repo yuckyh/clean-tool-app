@@ -1,4 +1,3 @@
-import { codebook } from '@/data'
 import { useAppSelector } from '@/lib/hooks'
 import {
   makeStyles,
@@ -6,11 +5,8 @@ import {
   shorthands,
   tokens,
 } from '@fluentui/react-components'
-import * as RA from 'fp-ts/ReadonlyArray'
-import { pipe } from 'fp-ts/function'
-import * as S from 'fp-ts/string'
 
-import { getFormattedColumn } from '../../columns/selectors'
+import { getDataType, getFormattedColumn } from '../../columns/selectors'
 import { getColumn } from '../selectors'
 
 interface Props {
@@ -20,10 +16,10 @@ interface Props {
 
 const useClasses = makeStyles({
   categoricalHeader: {
-    backgroundColor: tokens.colorPalettePurpleBackground2,
+    backgroundColor: tokens.colorBrandBackground,
   },
   numericalHeader: {
-    backgroundColor: tokens.colorPaletteBerryBackground2,
+    backgroundColor: tokens.colorPaletteRedBackground3,
   },
   root: {
     alignItems: 'center',
@@ -33,6 +29,7 @@ const useClasses = makeStyles({
     textAlign: 'center',
     width: '100%',
     ...shorthands.padding(0, tokens.spacingHorizontalS),
+    justifyContent: 'center',
   },
 })
 
@@ -43,19 +40,12 @@ export default function HeaderCell({ isOriginal, pos }: Props) {
     isOriginal ? getColumn(state, pos) : getFormattedColumn(state, pos),
   )
 
-  const { type = '' } = codebook.find(({ name }) => column === name) ?? {}
+  const dataType = useAppSelector((state) => getDataType(state, pos))
 
-  const measurementType = pipe(
-    ['whole_number', 'interval'] as const,
-    pipe(type, S.includes, RA.some),
-  )
-    ? 'numerical'
-    : 'categorical'
-
-  const isCodebookCategorical = measurementType === 'categorical'
+  const isCategorical = dataType === 'categorical'
 
   const styleClass =
-    classes[isCodebookCategorical ? 'categoricalHeader' : 'numericalHeader']
+    classes[isCategorical ? 'categoricalHeader' : 'numericalHeader']
 
   return (
     <div className={mergeClasses(classes.root, !isOriginal ? styleClass : '')}>

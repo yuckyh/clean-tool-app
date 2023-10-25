@@ -13,7 +13,7 @@ import {
   DialogTrigger,
 } from '@fluentui/react-components'
 import * as IO from 'fp-ts/IO'
-import { pipe } from 'fp-ts/function'
+import * as f from 'fp-ts/function'
 import { forwardRef, useImperativeHandle, useState } from 'react'
 
 export interface AlertRef {
@@ -40,7 +40,7 @@ const AlertDialog = forwardRef<AlertRef, Props>(
     useImperativeHandle(
       ref,
       () => ({
-        open: pipe(
+        open: f.pipe(
           setOpen,
           IO.of,
           IO.flatMap((fn) =>

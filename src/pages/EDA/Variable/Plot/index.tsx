@@ -1,8 +1,8 @@
-import type { Data, Layout } from 'plotly.js-cartesian-dist-min'
+import type { Data, Layout } from 'plotly.js-cartesian-dist'
 
 import Plot from '@/components/Plot'
 import * as RA from 'fp-ts/ReadonlyArray'
-import { pipe } from 'fp-ts/function'
+import * as f from 'fp-ts/function'
 import { useMemo } from 'react'
 
 interface Props {
@@ -16,7 +16,7 @@ export default function VariablePlot({
   layout,
   variable,
 }: Readonly<Props>) {
-  const newData = pipe(
+  const newData = f.pipe(
     data,
     RA.map((obj) => ({
       name: '',

@@ -2,7 +2,7 @@
 import type { AppDispatch } from '@/app/store'
 /* eslint-disable functional/immutable-data */
 import type { AsyncThunk, PayloadAction } from '@reduxjs/toolkit'
-import type { Refinement } from 'fp-ts/Refinement'
+import type * as Ref from 'fp-ts/Refinement'
 
 import { getPersisted, setPersisted } from '@/lib/localStorage'
 import { dumpError } from '@/lib/logger'
@@ -11,7 +11,7 @@ import * as E from 'fp-ts/Either'
 import * as O from 'fp-ts/Option'
 import * as P from 'fp-ts/Predicate'
 import * as RA from 'fp-ts/ReadonlyArray'
-import { constant, flow, pipe } from 'fp-ts/function'
+import * as f from 'fp-ts/function'
 import * as S from 'fp-ts/string'
 import { type BookType, utils } from 'xlsx'
 
@@ -37,37 +37,36 @@ const defaultValue = ''
 const listKeys = ['sheetNames', 'visits', 'originalColumns'] as const
 const fileNameKey = 'fileName'
 
-const isFlagReason: Refinement<string | undefined, FlagReason> = (
+const isFlagReason: Ref.Refinement<string | undefined, FlagReason> = (
   x,
-): x is FlagReason => x === 'incorrect' || x === 'missing' || x === 'outlier'
+): x is FlagReason =>
+  x === 'incorrect' || x === 'missing' || x === 'outlier' || x === 'suspected'
 
-const isFlag: Refinement<readonly string[], Flag> = (x): x is Flag =>
+const isFlag: Ref.Refinement<readonly string[], Flag> = (x): x is Flag =>
   x.length === 3 && isFlagReason(x[2])
 
 const initialState: State = {
   data: JSON.parse(getPersisted('data', '[]')) as readonly CellItem[],
   fileName: getPersisted(fileNameKey, defaultValue),
-  flaggedCells: pipe(
+  flaggedCells: f.pipe(
     getPersisted('flaggedCells', defaultValue),
     S.slice(1, -1),
     S.split('],['),
-    // RA.filter(P.not(S.isEmpty)),
-    // RA.map(flow(S.split(','), RA.filter(P.not(S.isEmpty)))),
     RA.map(S.split(',')),
     RA.filter(isFlag),
   ),
-  originalColumns: pipe(
+  originalColumns: f.pipe(
     getPersisted(listKeys[2], defaultValue),
     S.split(','),
     RA.filter(P.not(S.isEmpty)),
   ),
   sheetName: getPersisted(sliceName, defaultValue),
-  sheetNames: pipe(
+  sheetNames: f.pipe(
     getPersisted(listKeys[0], defaultValue),
     S.split(','),
     RA.filter(P.not(S.isEmpty)),
   ),
-  visits: pipe(
+  visits: f.pipe(
     getPersisted(listKeys[1], defaultValue),
     S.split(','),
     RA.filter(P.not(S.isEmpty)),
@@ -81,9 +80,9 @@ const sheetSlice = createSlice({
         const { SheetNames, Sheets, bookType } = payload
 
         if (
-          pipe(
+          f.pipe(
             [SheetNames, Sheets, bookType] as const,
-            RA.some(flow(O.fromNullable, O.isNone)),
+            RA.some(f.flow(O.fromNullable, O.isNone)),
           )
         ) {
           return state
@@ -169,27 +168,27 @@ const sheetSlice = createSlice({
       const { pos, visit } = payload
       const visits = state.visits as readonly string[]
 
-      state.visits = pipe(
+      state.visits = f.pipe(
         visits,
-        RA.modifyAt(pos, constant(visit)),
-        pipe(visits, constant, O.getOrElse),
+        RA.modifyAt(pos, f.constant(visit)),
+        f.pipe(visits, f.constant, O.getOrElse),
       ) as string[]
 
       return state
     },
     syncFlaggedCells: (state, { payload }: PayloadAction<Flag>) => {
       const flaggedCells = state.flaggedCells as readonly Flag[]
-      state.flaggedCells = pipe(
+      state.flaggedCells = f.pipe(
         [...flaggedCells],
         (cells) =>
-          pipe(
+          f.pipe(
             cells,
             RA.some((cell) => FlagEq.equals(cell, payload)),
           )
             ? E.left(cells)
             : E.right(cells),
         E.match(
-          flow(RA.filter((cell) => !FlagEq.equals(cell, payload))),
+          f.flow(RA.filter((cell) => !FlagEq.equals(cell, payload))),
           RA.append(payload),
         ),
       ) as [string, string, FlagReason][]
@@ -200,7 +199,7 @@ const sheetSlice = createSlice({
       const visitsLengthDiff = payload - state.visits.length
 
       RA.makeBy(Math.abs(visitsLengthDiff), () => {
-        state.visits = pipe(
+        state.visits = f.pipe(
           [...state.visits] as const,
           visitsLengthDiff > 0
             ? RA.insertAt(
@@ -208,7 +207,7 @@ const sheetSlice = createSlice({
                 (state.visits.length + 1).toString(),
               )
             : RA.deleteAt(state.visits.length - 1),
-          pipe([...state.visits] as const, constant, O.getOrElse),
+          f.pipe([...state.visits] as const, f.constant, O.getOrElse),
         ) as string[]
       })
 
