@@ -5,7 +5,7 @@ import type { AsyncThunk, PayloadAction } from '@reduxjs/toolkit'
 import type { Refinement } from 'fp-ts/Refinement'
 
 import { getPersisted, setPersisted } from '@/lib/localStorage'
-import { dump, dumpError } from '@/lib/logger'
+import { dumpError } from '@/lib/logger'
 import { createSlice } from '@reduxjs/toolkit'
 import * as E from 'fp-ts/Either'
 import * as O from 'fp-ts/Option'
@@ -173,7 +173,6 @@ const sheetSlice = createSlice({
         visits,
         RA.modifyAt(pos, constant(visit)),
         pipe(visits, constant, O.getOrElse),
-        dump,
       ) as string[]
 
       return state

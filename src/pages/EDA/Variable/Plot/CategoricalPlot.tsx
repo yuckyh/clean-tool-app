@@ -1,4 +1,4 @@
-import type { Data, Layout } from 'plotly.js-cartesian-dist-min'
+import type { Data, Layout } from 'plotly.js-cartesian-dist'
 
 import { getIndexedRow } from '@/features/sheet/selectors'
 import { getIndexedValue } from '@/lib/array'

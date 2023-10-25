@@ -2,7 +2,7 @@ import type { RootState } from '@/app/store'
 import type { SheetResponse } from '@/workers/sheet'
 
 import { promisedWorker, sheetWorker } from '@/app/workers'
-import { dumpError, dumpName } from '@/lib/logger'
+import { dumpError } from '@/lib/logger'
 import { createAsyncThunk } from '@reduxjs/toolkit'
 import * as T from 'fp-ts/Task'
 import * as TE from 'fp-ts/TaskEither'

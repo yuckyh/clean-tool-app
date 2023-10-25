@@ -19,10 +19,11 @@ import { pipe } from 'fp-ts/function'
 import * as S from 'fp-ts/string'
 import { useParams } from 'react-router-dom'
 
-import AllDataGrid from './DataGrid/All'
-import IncorrectDataGrid from './DataGrid/Incorrect'
-import BlankDataGrid from './DataGrid/Missing'
-import SummaryDataGrid from './DataGrid/Summary'
+import AllDataGrid from './DataGrid/AllDataGrid'
+import IncorrectDataGrid from './DataGrid/IncorrectDataGrid'
+import BlankDataGrid from './DataGrid/MissingDataGrid'
+import OutlierDataGrid from './DataGrid/OutlierDataGrid'
+import SummaryDataGrid from './DataGrid/SummaryDataGrid'
 
 const useClasses = makeStyles({
   actions: {

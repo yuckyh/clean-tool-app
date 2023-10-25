@@ -43,8 +43,6 @@ export default function Plot({ config, layout, ...props }: Props) {
     plot_bgcolor: 'rgba(0, 0, 0, 0)',
   }
 
-  // console.log('rendering', colorway, color, config, layout, props)
-
   return (
     <PlotlyPlot
       config={{ ...defaultConfig, ...config }}

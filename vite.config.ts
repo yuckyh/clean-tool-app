@@ -20,7 +20,7 @@ export default defineConfig(({ mode }) => {
         output: {
           manualChunks: {
             fluentui: ['@fluentui/react-components'],
-            plotly: ['plotly.js-cartesian-dist-min'],
+            plotly: ['plotly.js-cartesian-dist'],
             react: ['react', 'react-dom'],
             reactHelpers: [
               'react-helmet-async',

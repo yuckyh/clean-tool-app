@@ -8,7 +8,6 @@ export const indexDuplicateSearcher = <T extends readonly U[], U>(
 ) =>
   pipe(
     indices,
-    // dump,
     RA.filter(
       flow(
         RA.zip(filterIndex),

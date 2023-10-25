@@ -1,5 +1,5 @@
 import type { ColorTokens } from '@fluentui/react-components'
-import type { ColorScale } from 'plotly.js-cartesian-dist-min'
+import type { ColorScale } from 'plotly.js-cartesian-dist'
 
 import * as RA from 'fp-ts/ReadonlyArray'
 import { flow, identity, pipe } from 'fp-ts/function'

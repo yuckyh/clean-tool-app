@@ -41,7 +41,7 @@ interface Props {
   visit: string
 }
 
-export default function IncorrectDataGrid({ column, title, visit }: Props) {
+export default function OutlierDataGrid({ column, title, visit }: Props) {
   const classes = useClasses()
 
   const series = useAppSelector((state) =>

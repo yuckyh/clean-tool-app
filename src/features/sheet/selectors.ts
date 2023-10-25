@@ -12,7 +12,6 @@ import {
 } from '@/app/selectors'
 import { getIndexedValue, stringLookup } from '@/lib/array'
 import { strEquals } from '@/lib/fp'
-import { dump } from '@/lib/logger'
 import { createSelector } from '@reduxjs/toolkit'
 import * as Eq from 'fp-ts/Eq'
 import * as O from 'fp-ts/Option'
@@ -218,7 +217,6 @@ const getFormattedData = createSelector(
           ),
         ),
       ),
-      dump,
     ) as readonly CellItem[],
 )
 
@@ -273,6 +271,7 @@ const colorMap = pipe(
     incorrect: 'FF00FFFF', // RRGGBBAA
     missing: 'FFFF00FF',
     outlier: 'FF0000FF',
+    suspected: 'FF0000FF',
   } as const,
   RR.map(flow(S.slice(1, 7), S.toUpperCase)),
 )

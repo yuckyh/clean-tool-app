@@ -1,4 +1,4 @@
-import type { Data, Layout } from 'plotly.js-cartesian-dist-min'
+import type { Data, Layout } from 'plotly.js-cartesian-dist'
 
 import { getCleanNumericalRow } from '@/features/sheet/selectors'
 import { getIndexedIndex, getIndexedValue, numberLookup } from '@/lib/array'
