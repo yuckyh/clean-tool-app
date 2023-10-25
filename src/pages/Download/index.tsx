@@ -1,5 +1,5 @@
 /* eslint-disable import/prefer-default-export */
-/* eslint-disable functional/immutable-data */
+
 /* eslint-disable functional/functional-parameters */
 
 import type { TableColumnDefinition } from '@fluentui/react-components'

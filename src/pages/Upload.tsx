@@ -73,8 +73,6 @@ const useClasses = makeStyles({
 export function Component() {
   const classes = useClasses()
 
-  const navigate = useNavigate()
-
   const dispatch = useAppDispatch()
 
   const hasSheet = useAppSelector(({ sheet }) => !!sheet.data.length)
@@ -125,11 +123,17 @@ export function Component() {
       IO.of,
       IO.tap(
         IO.of(() => {
-          navigate('/column-matching')
+          globalThis.location.reload()
+          /* Workaround to fix a bug, removes the transition animation
+            Supposed to be
+            navigate('/column-matching') */
+          globalThis.location.reload()
+          // eslint-disable-next-line functional/immutable-data
+          globalThis.location.href = '/column-matching'
         }),
       ),
     )()
-  }, [dispatch, navigate])
+  }, [dispatch])
 
   useEffect(() => {
     f.pipe(

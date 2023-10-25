@@ -14,7 +14,6 @@ export const promisedTask =
     promise
 
 export const promisedTaskOption = <V>(promise: Promise<V>): TO.TaskOption<V> =>
-  // eslint-disable-next-line functional/functional-parameters
   TO.fromTask(promisedTask(promise))
 
 export const asTask = <As extends readonly unknown[], V>(

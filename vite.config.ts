@@ -15,13 +15,12 @@ export default defineConfig(({ mode }) => {
     build: {
       cssMinify: isDev ? false : 'lightningcss',
       // don't minify for debug builds
-      // minify: isDev ? false : 'esbuild',
-      minify: false,
+      minify: isDev ? false : 'esbuild',
       rollupOptions: {
         output: {
           manualChunks: {
             fluentui: ['@fluentui/react-components'],
-            // plotly: ['plotly.js-cartesian-dist'],
+            plotly: ['plotly.js-cartesian-dist'],
             react: ['react', 'react-dom'],
             reactHelpers: [
               'react-helmet-async',
@@ -29,7 +28,6 @@ export default defineConfig(({ mode }) => {
               'react-dropzone',
               'react-redux',
             ],
-            tauri: ['@tauri-apps/api', '@tauri-apps/cli'],
           },
         },
       },

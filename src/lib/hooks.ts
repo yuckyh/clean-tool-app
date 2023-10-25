@@ -5,10 +5,7 @@ import type { TypedUseSelectorHook } from 'react-redux'
 
 import globalStyles from '@/app/global.css?inline'
 import { syncFlaggedCells } from '@/features/sheet/reducers'
-import {
-  getFlaggedRows,
-  getIndexedRowMissings,
-} from '@/features/sheet/selectors'
+import { getFlaggedRows } from '@/features/sheet/selectors'
 import { getIndexedIndex } from '@/lib/array'
 import {
   makeStaticStyles,
@@ -34,7 +31,7 @@ import {
 import { useDispatch, useSelector } from 'react-redux'
 
 import { asIO, promisedTask, promisedTaskOption } from './fp'
-import { dumpError, ioDumpTrace } from './logger'
+import { dumpError } from './logger'
 
 export const useAppDispatch: () => AppDispatch = useDispatch
 export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector
@@ -121,7 +118,6 @@ export const useStorage = () => {
       T.flatMap((persisted) =>
         persisted ? TO.none : promisedTaskOption(navigator.storage.persist()),
       ),
-      TO.flatMapIO(ioDumpTrace),
     )().catch(dumpError)
   }, [])
 }

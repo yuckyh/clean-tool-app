@@ -17,7 +17,6 @@ import {
 } from '@/features/sheet/selectors'
 import { getIndexedIndex } from '@/lib/array'
 import { useAppDispatch, useAppSelector } from '@/lib/hooks'
-import { dump } from '@/lib/logger'
 import {
   Body2,
   Card,
@@ -183,7 +182,7 @@ export default function AllDataGrid({ column, title, visit }: Readonly<Props>) {
       () => [
         createTableColumn({
           columnId: 'index',
-          compare: ([indexA], [indexB]) => dump(indexA).localeCompare(indexB),
+          compare: ([indexA], [indexB]) => indexA.localeCompare(indexB),
           renderCell: ([index]) => <ValueCell value={index} />,
           renderHeaderCell: f.constant(
             <div className={classes.columnHeader}>sno</div>,

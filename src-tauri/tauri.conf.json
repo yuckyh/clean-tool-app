@@ -3,12 +3,12 @@
   "build": {
     "beforeBuildCommand": "yarn build",
     "beforeDevCommand": "yarn dev",
-    "devPath": "http://localhost:5173",
+    "devPath": "https://localhost:5173",
     "distDir": "../dist"
   },
   "package": {
-    "productName": "clean-tool-app",
-    "version": "0.1.0"
+    "productName": "CLEaN Tool",
+    "version": "1.0.0"
   },
   "tauri": {
     "allowlist": {
@@ -16,7 +16,7 @@
     },
     "bundle": {
       "active": true,
-      "category": "DeveloperTool",
+      "category": "Productivity",
       "copyright": "",
       "deb": {
         "depends": []

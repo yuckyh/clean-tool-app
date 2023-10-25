@@ -46,7 +46,6 @@ const useClasses = makeStyles({
   },
 })
 
-// eslint-disable-next-line functional/functional-parameters
 export default function SummaryDataGrid({
   column,
   isCategorical,
