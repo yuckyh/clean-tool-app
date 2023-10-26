@@ -52,3 +52,6 @@ export const strEquals = (str: string) => (other: string) =>
 
 export const numEquals = (num: number) => (other: number) =>
   N.Eq.equals(num, other)
+
+export const isCorrectNumber = (val: string) =>
+  !!val && !/[!,.?]{2,}/.test(val) && !Number.isNaN(parseFloat(val))

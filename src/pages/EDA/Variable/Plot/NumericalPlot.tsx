@@ -1,7 +1,7 @@
 import type { Data, Layout } from 'plotly.js-cartesian-dist'
 
 import {
-  getCleanNumericalRow,
+  getIndexedNumericalRow,
   getNotOutliers,
   getOutliers,
 } from '@/features/sheet/selectors'
@@ -31,7 +31,7 @@ export default function NumericalPlot({
   visit,
 }: NumericalPlotProps) {
   const series = useAppSelector((state) =>
-    getCleanNumericalRow(state, column, visit),
+    getIndexedNumericalRow(state, column, visit),
   )
 
   const outliers = useAppSelector((state) => getOutliers(state, column, visit))

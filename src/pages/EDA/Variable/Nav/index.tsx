@@ -33,7 +33,16 @@ type Props = TabListProps
 
 const useClasses = makeStyles({
   actionPositive: {
-    backgroundColor: tokens.colorPaletteGreenBackground3,
+    ':hover': {
+      backgroundColor: tokens.colorPaletteGreenBackground3,
+      color: tokens.colorNeutralStrokeOnBrand2Hover,
+    },
+    ':hover:active': {
+      backgroundColor: tokens.colorPaletteGreenForeground1,
+      color: tokens.colorNeutralStrokeOnBrand2Pressed,
+    },
+    backgroundColor: tokens.colorPaletteGreenForegroundInverted,
+    color: tokens.colorNeutralStrokeOnBrand,
   },
   actions: {
     display: 'flex',

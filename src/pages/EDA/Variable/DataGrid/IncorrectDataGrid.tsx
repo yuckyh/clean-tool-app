@@ -5,10 +5,14 @@ import type {
 
 import SimpleDataGrid from '@/components/SimpleDataGrid'
 import {
+  getFormattedColumn,
+  getSearchedPos,
+} from '@/features/columns/selectors'
+import {
   getFlaggedRows,
   getIndexedRowIncorrects,
 } from '@/features/sheet/selectors'
-import { getIndexedIndex, getIndexedValue } from '@/lib/array'
+import { getIndexedIndex } from '@/lib/array'
 import { useAppSelector, useSyncedSelectionHandler } from '@/lib/hooks'
 import {
   Body2,
@@ -43,12 +47,24 @@ const useClasses = makeStyles({
 
 interface Props {
   column: string
-  title: string
   visit: string
 }
 
-export default function IncorrectDataGrid({ column, title, visit }: Props) {
+/* 
+  TODO: start with home page, with introduction
+  ! Post internship review - 5 mins
+  ! add team context to background
+  ! idea from me huaren and VS
+  ! mDQI was coined by Shezad and VS team
+  ! rename fuzzywuzzy pypi
+  
+*/
+
+export default function IncorrectDataGrid({ column, visit }: Props) {
   const classes = useClasses()
+
+  const pos = useAppSelector((state) => getSearchedPos(state, column, visit))
+  const title = useAppSelector((state) => getFormattedColumn(state, pos))
 
   const series = useAppSelector((state) =>
     getIndexedRowIncorrects(state, column, visit),

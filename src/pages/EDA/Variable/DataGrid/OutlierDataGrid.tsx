@@ -4,6 +4,10 @@ import type {
 } from '@fluentui/react-components'
 
 import SimpleDataGrid from '@/components/SimpleDataGrid'
+import {
+  getFormattedColumn,
+  getSearchedPos,
+} from '@/features/columns/selectors'
 import { getFlaggedRows, getOutliers } from '@/features/sheet/selectors'
 import { getIndexedIndex } from '@/lib/array'
 import { useAppSelector, useSyncedSelectionHandler } from '@/lib/hooks'
@@ -40,12 +44,14 @@ const useClasses = makeStyles({
 
 interface Props {
   column: string
-  title: string
   visit: string
 }
 
-export default function OutlierDataGrid({ column, title, visit }: Props) {
+export default function OutlierDataGrid({ column, visit }: Props) {
   const classes = useClasses()
+
+  const pos = useAppSelector((state) => getSearchedPos(state, column, visit))
+  const title = useAppSelector((state) => getFormattedColumn(state, pos))
 
   const series = useAppSelector((state) => getOutliers(state, column, visit))
   const flaggedRows = useAppSelector((state) =>

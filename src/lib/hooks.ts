@@ -31,7 +31,7 @@ import {
 import { useDispatch, useSelector } from 'react-redux'
 
 import { asIO, promisedTask, promisedTaskOption } from './fp'
-import { dumpError } from './logger'
+import { dump, dumpError } from './logger'
 
 export const useAppDispatch: () => AppDispatch = useDispatch
 export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector

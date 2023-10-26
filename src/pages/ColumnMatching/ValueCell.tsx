@@ -8,6 +8,9 @@ interface Props {
 
 const useClasses = makeStyles({
   root: {
+    alignItems: 'center',
+    display: 'flex',
+    width: '100%',
     ...shorthands.padding(0, tokens.spacingHorizontalS),
   },
 })

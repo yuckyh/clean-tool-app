@@ -7,7 +7,11 @@ import type {
 } from '@fluentui/react-components'
 
 import SimpleDataGrid from '@/components/SimpleDataGrid'
-import { getSearchedDataType } from '@/features/columns/selectors'
+import {
+  getFormattedColumn,
+  getSearchedDataType,
+  getSearchedPos,
+} from '@/features/columns/selectors'
 import { syncFlaggedCells } from '@/features/sheet/reducers'
 import {
   getFlaggedRows,
@@ -36,10 +40,10 @@ import { useCallback, useMemo, useState } from 'react'
 
 import FilterInput from '../FilterInput'
 import ValueCell from './ValueCell'
+import { isCorrectNumber } from '@/lib/fp'
 
 interface Props {
   column: string
-  title: string
   visit: string
 }
 
@@ -74,8 +78,11 @@ const useClasses = makeStyles({
 
 const cellFocusMode: () => DataGridCellFocusMode = f.constant('none')
 
-export default function AllDataGrid({ column, title, visit }: Readonly<Props>) {
+export default function AllDataGrid({ column, visit }: Readonly<Props>) {
   const classes = useClasses()
+
+  const pos = useAppSelector((state) => getSearchedPos(state, column, visit))
+  const title = useAppSelector((state) => getFormattedColumn(state, pos))
 
   const dispatch = useAppDispatch()
 
@@ -192,15 +199,7 @@ export default function AllDataGrid({ column, title, visit }: Readonly<Props>) {
           columnId: title,
           compare: ([, valueA], [, valueB]) => {
             const values = [valueA, valueB] as const
-            const isBothNum = f.pipe(
-              values,
-              RA.every(
-                (value) =>
-                  !!value &&
-                  !Number.isNaN(parseFloat(value)) &&
-                  !/[!,.?]{2,}/.test(value),
-              ),
-            )
+            const isBothNum = f.pipe(values, RA.every(isCorrectNumber))
 
             if (dataType === 'numerical' && isBothNum) {
               return f.pipe(

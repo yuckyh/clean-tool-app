@@ -37,17 +37,17 @@ const useClasses = makeStyles({
     justifyContent: 'center',
     width: '100%',
   },
-  incorrectColumn: {
+  incorrect: {
     backgroundColor: tokens.colorPaletteYellowBackground2,
     color: tokens.colorPaletteYellowForeground2,
   },
-  missingColumn: {
-    backgroundColor: tokens.colorPaletteDarkOrangeBackground2,
-    color: tokens.colorPaletteDarkOrangeForeground2,
+  missing: {
+    backgroundColor: tokens.colorStatusWarningBackground2,
+    color: tokens.colorStatusWarningForeground2,
   },
-  outlierColumn: {
-    backgroundColor: tokens.colorPaletteRedBackground2,
-    color: tokens.colorPaletteRedForeground2,
+  outlier: {
+    backgroundColor: tokens.colorNeutralForeground3,
+    color: tokens.colorNeutralBackground3,
   },
   root: {
     display: 'flex',
@@ -55,6 +55,10 @@ const useClasses = makeStyles({
     rowGap: tokens.spacingVerticalXL,
     width: '80%',
     ...shorthands.margin(0, 'auto'),
+  },
+  suspected: {
+    backgroundColor: tokens.colorStatusDangerBackground2,
+    color: tokens.colorStatusDangerForeground2,
   },
 })
 
@@ -92,14 +96,17 @@ export function Component() {
       <Title1>Download</Title1>
       <Subtitle2>Confirm your changes before downloading your file</Subtitle2>
       <TagGroup role="list">
-        <Tag className={classes.outlierColumn} role="listitem">
+        <Tag className={classes.outlier} role="listitem">
+          User flagged
+        </Tag>
+        <Tag className={classes.suspected} role="listitem">
           Outlier
         </Tag>
-        <Tag className={classes.missingColumn} role="listitem">
+        <Tag className={classes.missing} role="listitem">
           Blank Data
         </Tag>
-        <Tag className={classes.incorrectColumn} role="listitem">
-          Incorrect Data
+        <Tag className={classes.incorrect} role="listitem">
+          Incorrectly Formatted Data
         </Tag>
       </TagGroup>
       <SimpleDataGrid

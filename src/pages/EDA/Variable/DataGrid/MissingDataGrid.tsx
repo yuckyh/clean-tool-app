@@ -5,6 +5,10 @@ import type {
 
 import SimpleDataGrid from '@/components/SimpleDataGrid'
 import {
+  getFormattedColumn,
+  getSearchedPos,
+} from '@/features/columns/selectors'
+import {
   getFlaggedRows,
   getIndexedRowMissings as getIndexedRowBlanks,
 } from '@/features/sheet/selectors'
@@ -43,12 +47,14 @@ const useClasses = makeStyles({
 
 interface Props {
   column: string
-  title: string
   visit: string
 }
 
-export default function BlankDataGrid({ column, title, visit }: Props) {
+export default function BlankDataGrid({ column, visit }: Props) {
   const classes = useClasses()
+
+  const pos = useAppSelector((state) => getSearchedPos(state, column, visit))
+  const title = useAppSelector((state) => getFormattedColumn(state, pos))
 
   const series = useAppSelector((state) =>
     getIndexedRowBlanks(state, column, visit),

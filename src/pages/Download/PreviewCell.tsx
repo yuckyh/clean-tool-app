@@ -22,14 +22,30 @@ interface Props {
 }
 
 const useClasses = makeStyles({
+  // incorrect: {
+  //   backgroundColor: tokens.colorPaletteYellowBackground2,
+  // },
+  // missing: {
+  //   backgroundColor: '#ff7700',
+  // },
+  // outlier: {
+  //   backgroundColor: tokens.colorSubtleBackground,
+  // },
+  // suspected: {
+  //   backgroundColor: tokens.colorPaletteRedBackground3,
+  //   color: tokens.colorNeutralStroke3,
+  // },
   incorrect: {
-    backgroundColor: tokens.colorPaletteDarkOrangeBackground2,
+    backgroundColor: tokens.colorPaletteYellowBackground2,
+    color: tokens.colorPaletteYellowForeground2,
   },
   missing: {
-    backgroundColor: tokens.colorPaletteYellowBackground2,
+    backgroundColor: tokens.colorStatusWarningBackground2,
+    color: tokens.colorStatusWarningForeground2,
   },
   outlier: {
-    backgroundColor: tokens.colorPaletteRedBackground2,
+    backgroundColor: tokens.colorNeutralForeground3,
+    color: tokens.colorNeutralBackground3,
   },
   root: {
     alignItems: 'center',
@@ -40,11 +56,12 @@ const useClasses = makeStyles({
     justifyContent: 'center',
   },
   suspected: {
-    backgroundColor: tokens.colorPaletteRedBackground2,
+    backgroundColor: tokens.colorStatusDangerBackground2,
+    color: tokens.colorStatusDangerForeground2,
   },
 })
 
-export default function DownloadPreviewCell({ col, row }: Props) {
+export default function PreviewCell({ col, row }: Props) {
   const classes = useClasses()
 
   const column = useAppSelector((state) => getColumn(state, col))
@@ -55,6 +72,7 @@ export default function DownloadPreviewCell({ col, row }: Props) {
   )
   const indexRow = useAppSelector(getIndexRow)
   const index = stringLookup(indexRow)(row)
+
   const styleClass = useMemo(
     () =>
       f.pipe(

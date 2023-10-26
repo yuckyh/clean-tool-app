@@ -14,8 +14,6 @@ const useClasses = makeStyles({
   },
 })
 
-// TODO: add visit detection prompt
-
 export function Component() {
   const classes = useClasses()
 

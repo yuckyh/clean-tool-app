@@ -25,8 +25,6 @@ const useClasses = makeStyles({
   },
 })
 
-// TODO: make download work
-
 export function Component() {
   const classes = useClasses()
 

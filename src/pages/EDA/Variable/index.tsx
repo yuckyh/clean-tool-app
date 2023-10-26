@@ -146,20 +146,20 @@ export function Component() {
       </div>
       <div className={classes.columns}>
         <div className={classes.rows}>
-          <OutlierDataGrid column={column} title={title} visit={visit} />
+          <OutlierDataGrid column={column} visit={visit} />
         </div>
         <div className={classes.rows}>
-          <BlankDataGrid column={column} title={title} visit={visit} />
+          <BlankDataGrid column={column} visit={visit} />
         </div>
         <div className={classes.rows}>
           {!isCategorical && (
-            <IncorrectDataGrid column={column} title={title} visit={visit} />
+            <IncorrectDataGrid column={column} visit={visit} />
           )}
         </div>
       </div>
       <div className={classes.columns}>
         <div className={classes.rows}>
-          <AllDataGrid column={column} title={title} visit={visit} />
+          <AllDataGrid column={column} visit={visit} />
         </div>
       </div>
     </section>

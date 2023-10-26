@@ -5,7 +5,10 @@ import type {
 } from '@fluentui/react-components'
 
 import SimpleDataGrid from '@/components/SimpleDataGrid'
-import { getCleanNumericalRow, getIndexedRow } from '@/features/sheet/selectors'
+import {
+  getIndexedNumericalRow,
+  getIndexedRow,
+} from '@/features/sheet/selectors'
 import { getIndexedValue } from '@/lib/array'
 import { useAppSelector } from '@/lib/hooks'
 import { add, divideBy } from '@/lib/number'
@@ -57,7 +60,7 @@ export default function SummaryDataGrid({
     getIndexedRow(state, column, visit),
   )
   const numericalSeries = useAppSelector((state) =>
-    getCleanNumericalRow(state, column, visit),
+    getIndexedNumericalRow(state, column, visit),
   )
 
   const numericalValues = useMemo(
@@ -122,11 +125,7 @@ export default function SummaryDataGrid({
                 statistic: 'mean',
                 value: dataMean,
               },
-              {
-                statistic: 'sum',
-                value: dataSum,
-              },
-              { statistic: 'std', value: dataStd },
+              { statistic: 'Standard Deviation', value: dataStd },
             ],
         RA.map(({ statistic, value }) => ({
           statistic: statistic.replace(/^./g, (c) => c.toUpperCase()),
@@ -138,7 +137,6 @@ export default function SummaryDataGrid({
       categoricalSeries.length,
       numericalValues,
       dataMean,
-      dataSum,
       dataStd,
     ],
   )

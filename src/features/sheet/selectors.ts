@@ -3,6 +3,7 @@ import {
   getData,
   getDataTypes,
   getFlaggedCells,
+  getMatchColumns,
   getPosParam,
   getReasonParam,
   getSheetName,
@@ -11,14 +12,13 @@ import {
   searchPos,
 } from '@/app/selectors'
 import { getIndexedValue, numberLookup, stringLookup } from '@/lib/array'
-import { strEquals } from '@/lib/fp'
+import { isCorrectNumber, strEquals } from '@/lib/fp'
 import { add, divideBy, multiply } from '@/lib/number'
 import { createSelector } from '@reduxjs/toolkit'
 import * as E from 'fp-ts/Either'
 import * as Eq from 'fp-ts/Eq'
 import * as O from 'fp-ts/Option'
 import * as Ord from 'fp-ts/Ord'
-import * as P from 'fp-ts/Predicate'
 import * as RA from 'fp-ts/ReadonlyArray'
 import * as RR from 'fp-ts/ReadonlyRecord'
 import * as RS from 'fp-ts/ReadonlySet'
@@ -40,11 +40,12 @@ export const getColumnsLength = createSelector(
   (columns) => columns.length,
 )
 
-const getEmptyColumns = createSelector([getData, getColumns], (data, columns) =>
-  f.pipe(
-    RS.fromReadonlyArray(S.Eq)(columns),
-    RS.difference(S.Eq)(
-      RS.fromReadonlyArray(S.Eq)(
+const getPosAtEmptyList = createSelector(
+  [getData, getColumns],
+  (data, columns) =>
+    f.pipe(
+      columns,
+      RA.difference(S.Eq)(
         f.pipe(
           data,
           RA.map(RR.keys),
@@ -52,9 +53,21 @@ const getEmptyColumns = createSelector([getData, getColumns], (data, columns) =>
           f.pipe([] as readonly string[], f.constant, O.getOrElse),
         ),
       ),
+      RA.map(
+        f.flow(
+          strEquals,
+          RA.findIndex,
+          f.apply(columns),
+          f.pipe(-1, f.constant, O.getOrElse),
+        ),
+      ),
     ),
-    RS.toReadonlyArray(S.Ord),
-  ),
+)
+
+const getEmptyColumns = createSelector(
+  [getPosAtEmptyList, getMatchColumns],
+  (posList, matchColumns) =>
+    f.pipe(posList, RA.map(stringLookup(matchColumns))),
 )
 
 export const getColumn = createSelector(
@@ -146,21 +159,16 @@ export const getIndexedRowIncorrects = createSelector(
   RA.filter(f.flow(getIndexedValue, (val) => /[!,.?]{2,}/.test(val))),
 )
 
-const getIndexedNumericalRow = createSelector(
+export const getIndexedNumericalRow = createSelector(
   [getBlanklessRow],
   f.flow(
-    RA.filter(f.flow(getIndexedValue, (val) => !/[!,.?]{2,}/.test(val))),
+    RA.filter(f.flow(getIndexedValue, isCorrectNumber)),
     RA.map(([index, val]) => [index, parseFloat(val)] as const),
   ),
 )
 
-export const getCleanNumericalRow = createSelector(
-  [getIndexedNumericalRow],
-  RA.filter(f.flow(getIndexedValue, P.not(Number.isNaN))),
-)
-
 const getSortedNumericalRow = createSelector(
-  [getCleanNumericalRow],
+  [getIndexedNumericalRow],
   f.flow(RA.map(f.flow(getIndexedValue, Number)), RA.sort(N.Ord)),
 )
 
@@ -185,7 +193,7 @@ const getFences = createSelector([getSortedNumericalRow], (row) =>
 )
 
 export const getOutliers = createSelector(
-  [getCleanNumericalRow, getFences],
+  [getIndexedNumericalRow, getFences],
   (row, [lower, upper]) =>
     f.pipe(
       row,
@@ -194,7 +202,7 @@ export const getOutliers = createSelector(
 )
 
 export const getNotOutliers = createSelector(
-  [getCleanNumericalRow, getFences],
+  [getIndexedNumericalRow, getFences],
   (row, [lower, upper]) =>
     f.pipe(
       row,
@@ -220,12 +228,20 @@ export const getFlaggedRows = createSelector(
 )
 
 const getFormattedData = createSelector(
-  [getFormattedColumns, getColumns, getData, getEmptyColumns, getDataTypes],
+  [
+    getFormattedColumns,
+    getColumns,
+    getData,
+    getEmptyColumns,
+    getPosAtEmptyList,
+    getDataTypes,
+  ],
   (
     formattedColumns,
     columns,
     data,
     emptyColumns,
+    posList,
     dataTypes,
   ): readonly CellItem[] =>
     f.pipe(
@@ -244,10 +260,7 @@ const getFormattedData = createSelector(
                   f.apply(f.pipe(key, strEquals, RA.findIndex)(columns)),
                   f.pipe('', f.constant, O.getOrElse),
                 ),
-                value &&
-                !Number.isNaN(parseFloat(value)) &&
-                !/[!,.?]{2,}/.test(value) &&
-                dataType === 'numerical'
+                isCorrectNumber(value) && dataType === 'numerical'
                   ? parseFloat(value)
                   : value,
               ] as const,
@@ -257,9 +270,16 @@ const getFormattedData = createSelector(
       ),
       RA.map((entry) =>
         f.pipe(
-          emptyColumns,
-          RA.reduce(entry, (acc, curr) =>
-            RR.upsertAt(curr, '' as number | string)(acc),
+          posList,
+          RA.zip(emptyColumns),
+          RA.reduce(entry, (acc, [pos, value]) =>
+            f.pipe(
+              acc,
+              Object.entries,
+              RA.insertAt(pos, [value, '' as number | string] as const),
+              O.map(RR.fromEntries),
+              f.pipe(acc, f.constant, O.getOrElse),
+            ),
           ),
         ),
       ),
@@ -300,11 +320,12 @@ const getFlaggedCellsAddresses = createSelector(
                 RA.findIndex(strEquals(flaggedCol)),
                 f.pipe(Infinity, f.constant, O.getOrElse),
               ),
-              r: f.pipe(
-                indexRow,
-                RA.findIndex(strEquals(flaggedIndex)),
-                f.pipe(Infinity, f.constant, O.getOrElse),
-              ),
+              r:
+                f.pipe(
+                  indexRow,
+                  RA.findIndex(strEquals(flaggedIndex)),
+                  f.pipe(Infinity, f.constant, O.getOrElse),
+                ) + 1,
             }),
             flagReason,
           ] as const,
@@ -316,8 +337,8 @@ const colorMap = f.pipe(
   {
     incorrect: 'FF8800FF', // RRGGBBAA
     missing: 'FFFF00FF',
-    outlier: '0000FFFF',
-    suspected: '0000FFFF',
+    outlier: 'DDDDDDFF',
+    suspected: 'FF0000FF',
   } as const,
   RR.map(f.flow(S.slice(1, 7), S.toUpperCase)),
 )

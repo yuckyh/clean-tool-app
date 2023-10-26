@@ -4,9 +4,10 @@ import type { ComboboxProps } from '@fluentui/react-components'
 import { codebook } from '@/data'
 import { getRow } from '@/features/sheet/selectors'
 import { indexDuplicateSearcher } from '@/lib/array'
-import { numEquals, strEquals } from '@/lib/fp'
+import { isCorrectNumber, numEquals, strEquals } from '@/lib/fp'
 import fuse from '@/lib/fuse'
 import { useAppDispatch, useAppSelector, useDebounced } from '@/lib/hooks'
+import { add, multiply } from '@/lib/number'
 import {
   Combobox,
   Option,
@@ -55,23 +56,47 @@ interface FilteredOptionsProps {
 const search = fuse.search.bind(fuse)
 
 function FilteredOptions({ filteredMatches, value }: FilteredOptionsProps) {
-  return filteredMatches.length ? (
-    RA.map<ColumnMatch, JSX.Element>(({ match, score }) => (
-      <Option key={match} text={match} value={match}>
-        {match}, {(1 - score).toFixed(2)}
-      </Option>
-    ))(filteredMatches)
-  ) : (
-    <Option text={value} value={value}>
-      Create column? {value},{' '}
-      {f.pipe(
-        value,
-        search,
-        ([match]) => match?.score ?? 1,
-        (score) => 1 - score,
-        (score) => score.toFixed(2),
+  const canCreateColumn = !RA.some(strEquals(value))(
+    f.pipe(
+      filteredMatches,
+      RA.map(({ match }) => match),
+    ),
+  )
+
+  const customScore = f.pipe(
+    value,
+    search,
+    RA.head,
+    O.map(
+      f.flow(
+        ({ score }) => score,
+        O.fromNullable,
+        f.pipe(1, f.constant, O.getOrElse),
+      ),
+    ),
+    f.pipe(1, f.constant, O.getOrElse),
+    multiply(-1),
+    add(1),
+    (score) => score.toFixed(2),
+  )
+
+  return (
+    <>
+      {canCreateColumn && (
+        <Option text={value} value={value}>
+          Create column? {value}, {customScore}
+        </Option>
       )}
-    </Option>
+      {!!filteredMatches.length &&
+        f.pipe(
+          filteredMatches,
+          RA.map(({ match, score }) => (
+            <Option key={match} text={match} value={match}>
+              {match}, {(1 - score).toFixed(2)}
+            </Option>
+          )),
+        )}
+    </>
   )
 }
 
@@ -160,7 +185,7 @@ export default function MatchCell({ alertRef, pos }: Props) {
 
         const newDataType: DataType = f.pipe(
           codebook,
-          RA.findFirst(({ name }) => strEquals(name)(matchColumn)),
+          RA.findFirst(({ name }) => strEquals(name)(newMatchColumn)),
           O.map(({ type }) =>
             f.pipe(
               type,
@@ -171,11 +196,9 @@ export default function MatchCell({ alertRef, pos }: Props) {
           ),
           O.getOrElse(
             () =>
-              0.6 * row.length >
-              f.pipe(row, RA.filter(f.flow(parseFloat, P.not(Number.isNaN))))
-                .length,
+              0.6 * row.length < f.pipe(row, RA.filter(isCorrectNumber)).length,
           ),
-          (isCategorical) => (isCategorical ? 'categorical' : 'numerical'),
+          (isCategorical) => (isCategorical ? 'numerical' : 'categorical'),
         )
 
         f.pipe(
