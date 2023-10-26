@@ -23,6 +23,11 @@
     "xlsx": "https://cdn.sheetjs.com/xlsx-0.20.0/xlsx-0.20.0.tgz",
     "xlsx-js-style": "^1.2.0"
   },
+  "dependenciesMeta": {
+    "@tauri-apps/cli@1.5.6": {
+      "unplugged": true
+    }
+  },
   "description": "A data cleaning tool for Essilor",
   "devDependencies": {
     "@rollup/plugin-terser": "^0.4.4",
@@ -58,6 +63,7 @@
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-redux": "^4.0.0",
     "eslint-plugin-react-refresh": "^0.4.3",
+    "eslint-plugin-tsdoc": "^0.2.17",
     "lightningcss": "^1.22.0",
     "modern-normalize": "^2.0.0",
     "prettier": "^3.0.3",
@@ -87,20 +93,22 @@
       "plugin:@typescript-eslint/eslint-recommended",
       "plugin:@typescript-eslint/strict-type-checked",
       "plugin:@typescript-eslint/stylistic-type-checked",
-      "plugin:react/recommended",
-      "plugin:react/jsx-runtime",
-      "plugin:react-redux/recommended",
-      "plugin:react-hooks/recommended",
-      "plugin:prettier/recommended",
-      "plugin:json/recommended",
-      "plugin:perfectionist/recommended-natural",
-      "plugin:optimize-regex/all",
-      "plugin:immutable/recommended",
+      "plugin:functional/external-typescript-recommended",
+      "plugin:functional/recommended",
+      "plugin:functional/stylistic",
       "plugin:fp-ts/recommended",
       "plugin:fp-ts/recommended-requiring-type-checking",
-      "plugin:functional/recommended",
-      "plugin:functional/external-typescript-recommended",
-      "plugin:functional/stylistic"
+      "plugin:immutable/recommended",
+      "plugin:import/recommended",
+      "plugin:json/recommended",
+      "plugin:json-format/recommended",
+      "plugin:optimize-regex/all",
+      "plugin:perfectionist/recommended-natural",
+      "plugin:prettier/recommended",
+      "plugin:react/jsx-runtime",
+      "plugin:react/recommended",
+      "plugin:react-redux/recommended",
+      "plugin:react-hooks/recommended"
     ],
     "ignorePatterns": [
       "dist",
@@ -120,18 +128,19 @@
       "tsconfigRootDir": "."
     },
     "plugins": [
-      "react",
-      "react-redux",
-      "react-refresh",
-      "react-hooks",
-      "prettier",
-      "json-format",
-      "perfectionist",
-      "import",
-      "optimize-regex",
-      "immutable",
+      "eslint-plugin-tsdoc",
       "fp-ts",
-      "functional"
+      "functional",
+      "immutable",
+      "import",
+      "json-format",
+      "optimize-regex",
+      "perfectionist",
+      "prettier",
+      "react",
+      "react-hooks",
+      "react-redux",
+      "react-refresh"
     ],
     "root": true,
     "rules": {
@@ -158,7 +167,8 @@
       "react/jsx-props-no-spreading": 0,
       "redux/no-let": 0,
       "redux/no-mutation": 0,
-      "redux/no-this": 0
+      "redux/no-this": 0,
+      "tsdoc/syntax": 1
     },
     "settings": {
       "import/parsers": {
@@ -213,10 +223,5 @@
     "preview:clean": "tsc && vite build && vite preview"
   },
   "type": "module",
-  "version": "1.0.0",
-  "dependenciesMeta": {
-    "@tauri-apps/cli@1.5.6": {
-      "unplugged": true
-    }
-  }
+  "version": "1.0.0"
 }

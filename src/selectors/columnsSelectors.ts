@@ -1,0 +1,49 @@
+import { getColParam, getColumns, getMatchColumns } from '@/app/selectors'
+import { indexDuplicateSearcher, stringLookup } from '@/lib/array'
+import { length, typedIdentity } from '@/lib/fp'
+import { createSelector } from '@reduxjs/toolkit'
+import * as RA from 'fp-ts/ReadonlyArray'
+import * as f from 'fp-ts/function'
+import * as S from 'fp-ts/string'
+
+export const getColumn = createSelector(
+  [getColumns, getColParam],
+  (columns, pos) => stringLookup(columns)(pos),
+)
+
+export const getMatchColumn = createSelector(
+  [getMatchColumns, getColParam],
+  (matchColumns, pos) => stringLookup(matchColumns)(pos),
+)
+
+export const getColumnsLength = createSelector([getColumns], length)
+
+export const getColumnComparer = createSelector(
+  [getColumns],
+  (columns) => (posA: number, posB: number) =>
+    f.pipe(
+      [posA, posB] as const,
+      f.pipe(columns, stringLookup, RA.map),
+      typedIdentity<[string, string]>,
+      f.tupled(S.Ord.compare),
+    ),
+)
+
+export const getColumnDuplicates = createSelector(
+  [getMatchColumns, getMatchColumn],
+  (matchColumns, matchColumn) =>
+    indexDuplicateSearcher(f.pipe(matchColumns, RA.map(RA.of)), [matchColumn]),
+)
+
+export const getColumnDuplicatesList = createSelector(
+  [getMatchColumns],
+  (matchColumns) =>
+    f.pipe(
+      matchColumns,
+      RA.map((matchColumn) =>
+        indexDuplicateSearcher(f.pipe(matchColumns, RA.map(RA.of)), [
+          matchColumn,
+        ]),
+      ),
+    ),
+)

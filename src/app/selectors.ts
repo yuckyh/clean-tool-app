@@ -8,7 +8,9 @@ import * as f from 'fp-ts/function'
 import type { RootState } from './store'
 
 // Params selectors
-export const getPosParam = (_state: RootState, pos: number) => pos
+export const getColParam = (_state: RootState, col: number) => col
+
+export const getRowParam = (_state: RootState, _col: number, row: number) => row
 
 export const getColumnParam = (_state: RootState, column: string) => column
 

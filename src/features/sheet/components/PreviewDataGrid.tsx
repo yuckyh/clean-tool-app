@@ -16,7 +16,7 @@ import * as RA from 'fp-ts/ReadonlyArray'
 import * as f from 'fp-ts/function'
 import { useMemo } from 'react'
 
-import { getColumnsLength } from '../selectors'
+import { getColumnsLength } from '@/selectors/columnsSelectors'
 import HeaderCell from './HeaderCell'
 
 interface Props {

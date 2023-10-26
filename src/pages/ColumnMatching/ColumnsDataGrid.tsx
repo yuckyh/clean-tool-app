@@ -18,8 +18,9 @@ import {
   getVisitsComparer,
 } from '@/features/columns/selectors'
 import { fetchSheet } from '@/features/sheet/actions'
-import { getColumnComparer, getColumnsLength } from '@/features/sheet/selectors'
-import { promisedTask, promisedTaskOption } from '@/lib/fp'
+import { getColumnComparer } from '@/selectors/columnsSelectors'
+import { getColumnsLength } from '@/selectors/columnsSelectors'
+import { length, numEquals, promisedTask, promisedTaskOption } from '@/lib/fp'
 import {
   useAppDispatch,
   useAppSelector,
@@ -172,8 +173,9 @@ export default function ColumnsDataGrid({
 
   useEffect(() => {
     f.pipe(
-      matchVisits.length,
-      TO.fromPredicate((length) => length === 0),
+      matchVisits,
+      length,
+      TO.fromPredicate(numEquals(0)),
       f.pipe(fetchSheet, f.constant, TO.map),
       TO.tap((x) => f.pipe(dispatch(x()), promisedTaskOption)),
       f.pipe(fetchMatches, f.constant, TO.map),

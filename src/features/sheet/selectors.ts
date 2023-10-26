@@ -4,25 +4,24 @@ import {
   getDataTypes,
   getFlaggedCells,
   getMatchColumns,
-  getPosParam,
+  getColParam as getColParam,
   getReasonParam,
   getSheetName,
   getTitleParam,
   getVisits,
   searchPos,
+  getRowParam,
 } from '@/app/selectors'
-import { getIndexedValue, numberLookup, stringLookup } from '@/lib/array'
+import { getIndexedValue, lookup, stringLookup } from '@/lib/array'
 import {
   FlagEq,
   FlagOrd,
   equals,
   isCorrectNumber,
-  length,
   strEquals,
   stubEq,
   toString,
   typedEq,
-  typedIdentity,
 } from '@/lib/fp'
 import { add, divideBy, multiply } from '@/lib/number'
 import { createSelector } from '@reduxjs/toolkit'
@@ -45,8 +44,12 @@ import {
   getIndices,
   getSearchedPos,
 } from '../columns/selectors'
+import { getColumn } from '@/selectors/columnsSelectors'
 
-export const getColumnsLength = createSelector([getColumns], length)
+export const getVisit = createSelector(
+  [getVisits, getColParam],
+  (visits, pos) => stringLookup(visits)(pos),
+)
 
 const getColumnsByData = createSelector([getData], (data) =>
   f.pipe(
@@ -80,24 +83,14 @@ const getEmptyColumns = createSelector(
     f.pipe(matchColumns, stringLookup, RA.map, f.apply(posList)),
 )
 
-export const getColumn = createSelector(
-  [getColumns, getPosParam],
-  (columns, pos) => stringLookup(columns)(pos),
-)
-
-export const getVisit = createSelector(
-  [getVisits, getPosParam],
-  (visits, pos) => stringLookup(visits)(pos),
-)
-
-export const getColumnComparer = createSelector(
-  [getColumns],
-  (columns) => (posA: number, posB: number) =>
+export const getCell = createSelector(
+  [getData, getColumn, getRowParam],
+  (data, column, row) =>
     f.pipe(
-      [posA, posB] as const,
-      f.pipe(columns, stringLookup, RA.map),
-      typedIdentity<[string, string]>,
-      f.tupled(S.Ord.compare),
+      data,
+      RA.lookup(row),
+      O.flatMap(RR.lookup(column)),
+      f.pipe('', f.constant, O.getOrElse),
     ),
 )
 
@@ -205,7 +198,7 @@ const getFences = createSelector(
           E.fromPredicate((x) => x % 1 === 0, f.identity),
           E.getOrElse(Math.ceil),
           (x) => [x - 1, x] as const,
-          f.pipe(row, numberLookup, RA.map),
+          f.pipe(lookup(row)(0), RA.map),
           RA.reduce(0, N.MonoidSum.concat),
           f.flip(divideBy)(2),
         ),

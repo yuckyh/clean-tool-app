@@ -1,7 +1,7 @@
 import { useAppSelector } from '@/lib/hooks'
 import { makeStyles, shorthands, tokens } from '@fluentui/react-components'
 
-import { getColumn } from '../selectors'
+import { getCell } from '../selectors'
 
 interface Props {
   col: number
@@ -19,9 +19,8 @@ const useClasses = makeStyles({
 
 export default function ValueCell({ col, row }: Props) {
   const classes = useClasses()
-  const column = useAppSelector((state) => getColumn(state, col))
 
-  const cell = useAppSelector(({ sheet }) => sheet.data[row]?.[column])
+  const cell = useAppSelector((state) => getCell(state, col, row))
 
   return <div className={classes.root}>{cell}</div>
 }

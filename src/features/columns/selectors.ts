@@ -4,13 +4,13 @@ import {
   getMatchColumns,
   getMatchVisits,
   getMatchesList,
-  getPosParam,
+  getColParam,
   getScoresList,
   getVisitParam,
   getVisits,
   searchPos,
 } from '@/app/selectors'
-import { indexDuplicateSearcher, numberLookup, stringLookup } from '@/lib/array'
+import { lookup, stringLookup } from '@/lib/array'
 import { strEquals } from '@/lib/fp'
 import fuse from '@/lib/fuse'
 import { createSelector } from '@reduxjs/toolkit'
@@ -20,51 +20,32 @@ import * as f from 'fp-ts/function'
 import * as S from 'fp-ts/string'
 
 import type { DataType } from './reducers'
+import { getMatchColumn } from '@/selectors/columnsSelectors'
+import {
+  getColumnDuplicates,
+  getColumnDuplicatesList,
+} from '@/selectors/columnsSelectors'
 
 const search = fuse.search.bind(fuse)
 
 export const getMatchVisit = createSelector(
-  [getMatchVisits, getPosParam],
-  (matchVisits, pos) => numberLookup(matchVisits)(pos),
-)
-
-export const getMatchColumn = createSelector(
-  [getMatchColumns, getPosParam],
-  (matchColumns, pos) => stringLookup(matchColumns)(pos),
+  [getMatchVisits, getColParam],
+  (matchVisits, pos) => lookup(matchVisits)(0)(pos),
 )
 
 export const getMatches = createSelector(
-  [getMatchesList, getPosParam],
+  [getMatchesList, getColParam],
   (matchesList, pos) => matchesList[pos] ?? [],
 )
 
 export const getScores = createSelector(
-  [getScoresList, getPosParam],
+  [getScoresList, getColParam],
   (scoresList, pos) => scoresList[pos] ?? [],
 )
 
 export const getVisitByMatchVisit = createSelector(
   [getVisits, getMatchVisit],
   (visits, matchVisit) => stringLookup(visits)(matchVisit),
-)
-
-export const getColumnDuplicates = createSelector(
-  [getMatchColumns, getMatchColumn],
-  (matchColumns, matchColumn) =>
-    indexDuplicateSearcher(f.pipe(matchColumns, RA.map(RA.of)), [matchColumn]),
-)
-
-export const getColumnDuplicatesList = createSelector(
-  [getMatchColumns],
-  (matchColumns) =>
-    f.pipe(
-      matchColumns,
-      RA.map((matchColumn) =>
-        indexDuplicateSearcher(f.pipe(matchColumns, RA.map(RA.of)), [
-          matchColumn,
-        ]),
-      ),
-    ),
 )
 
 export const getShouldFormat = createSelector(
@@ -116,24 +97,22 @@ export const getFormattedColumn = createSelector(
     shouldFormat ? `${matchColumn}_${visit}` : matchColumn,
 )
 
-export const getFormattedColumns = createSelector(
-  [getMatchColumns, getShouldFormatList, getVisits, getMatchVisits],
-  (matchColumns, shouldFormatList, visits, matchVisits) =>
-    f.pipe(
-      matchColumns,
-      RA.zip(shouldFormatList),
-      RA.zip(matchVisits),
-      RA.map(([[matchColumn, shouldFormat], matchVisit]) =>
-        shouldFormat
-          ? `${matchColumn}_${stringLookup(visits)(matchVisit)}`
-          : matchColumn,
-      ),
-    ),
-)
-
 export const getIndices = createSelector(
   [getMatchColumns, getMatchVisits],
   (matchColumns, matchVisits) => RA.zip(matchVisits)(matchColumns),
+)
+
+export const getFormattedColumns = createSelector(
+  [getIndices, getShouldFormatList, getVisits],
+  (indices, shouldFormatList, visits) =>
+    RA.zipWith(
+      indices,
+      shouldFormatList,
+      ([matchColumn, matchVisit], shouldFormat) =>
+        shouldFormat
+          ? `${matchColumn}_${stringLookup(visits)(matchVisit)}`
+          : matchColumn,
+    ),
 )
 
 export const getSearchedPos = createSelector(
@@ -152,7 +131,7 @@ export const getMatchIndex = createSelector(
 )
 
 export const getDataType = createSelector(
-  [getDataTypes, getPosParam],
+  [getDataTypes, getColParam],
   (dataTypes, pos) => stringLookup(dataTypes)(pos),
 )
 
@@ -193,7 +172,7 @@ export const getVisitsComparer = createSelector(
   (matchVisits) => (a: number, b: number) =>
     f.pipe(
       [a, b] as const,
-      RA.map(numberLookup(matchVisits)),
+      RA.map(lookup(matchVisits, 0)),
       RA.reduce(0, (acc, curr) => acc - curr),
     ),
 )

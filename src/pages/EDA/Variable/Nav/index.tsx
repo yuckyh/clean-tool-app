@@ -8,7 +8,7 @@ import {
   getIndices,
 } from '@/features/columns/selectors'
 import { setProgress } from '@/features/progress/reducers'
-import { getColumnsLength } from '@/features/sheet/selectors'
+import { getColumnsLength } from '@/selectors/columnsSelectors'
 import { stringLookup } from '@/lib/array'
 import { useAppDispatch, useAppSelector } from '@/lib/hooks'
 import {

@@ -8,6 +8,7 @@ import * as TO from 'fp-ts/TaskOption'
 import * as f from 'fp-ts/function'
 import * as N from 'fp-ts/number'
 import * as S from 'fp-ts/string'
+import { Predicate } from 'fp-ts/lib/Predicate'
 
 export const promisedTask =
   <V>(promise: Promise<V>) =>
@@ -62,6 +63,6 @@ export const length = <V extends ArrayLike<K> | string, K>(arrLike: V) =>
 
 export const equals =
   <V>(eq: Eq.Eq<V>) =>
-  (x: V) =>
+  (x: V): Predicate<V> =>
   (y: V) =>
     eq.equals(x, y)

@@ -1,7 +1,7 @@
 import { getFormattedColumn } from '@/features/columns/selectors'
-import { getColumn, getIndexRow } from '@/features/sheet/selectors'
+import { getCell, getIndexRow } from '@/features/sheet/selectors'
 import { stringLookup } from '@/lib/array'
-import { strEquals } from '@/lib/fp'
+import { equals, stubEq, typedEq } from '@/lib/fp'
 import { useAppSelector } from '@/lib/hooks'
 import {
   makeStyles,
@@ -14,12 +14,12 @@ import * as O from 'fp-ts/Option'
 import * as RA from 'fp-ts/ReadonlyArray'
 import * as RR from 'fp-ts/ReadonlyRecord'
 import * as f from 'fp-ts/function'
+import * as Eq from 'fp-ts/Eq'
+import * as S from 'fp-ts/string'
 import { useMemo } from 'react'
-
-interface Props {
-  col: number
-  row: number
-}
+import { Flag, FlagReason } from '@/features/sheet/reducers'
+import { getColumn } from '@/selectors/columnsSelectors'
+import { getFlaggedCells } from '@/app/selectors'
 
 const useClasses = makeStyles({
   // incorrect: {
@@ -61,12 +61,26 @@ const useClasses = makeStyles({
   },
 })
 
+/**
+ * @prop {number} col - The column index
+ * @prop {number} row - The row index
+ */
+interface Props {
+  col: number
+  row: number
+}
+
+const reasonInFlagEq = Eq.tuple(
+  stubEq<string>(),
+  stubEq<string>(),
+  typedEq<FlagReason, string>(S.Eq),
+)
+
 export default function PreviewCell({ col, row }: Props) {
   const classes = useClasses()
 
-  const column = useAppSelector((state) => getColumn(state, col))
-  const cell = useAppSelector(({ sheet }) => sheet.data[row]?.[column])
-  const flaggedCells = useAppSelector(({ sheet }) => sheet.flaggedCells)
+  const cell = useAppSelector((state) => getCell(state, col, row))
+  const flaggedCells = useAppSelector(getFlaggedCells)
   const formattedColumn = useAppSelector((state) =>
     getFormattedColumn(state, col),
   )
@@ -78,31 +92,24 @@ export default function PreviewCell({ col, row }: Props) {
       f.pipe(
         flaggedCells,
         RA.filter(
-          ([flagIndex, flagColumn]) =>
-            strEquals(index)(flagIndex) &&
-            strEquals(formattedColumn)(flagColumn),
+          equals(Eq.tuple(S.Eq, S.Eq, stubEq()))([index, formattedColumn, '']),
         ),
         E.fromPredicate((flags) => flags.length === 1, f.identity),
-        E.map(
-          f.flow(
-            RA.head,
-            O.flatMap(([, , reason]) => RR.lookup(reason)(classes)),
-            f.pipe('', f.constant, O.getOrElse),
-          ),
-        ),
         E.getOrElse(
           f.flow(
             O.fromPredicate((flags) => flags.length > 1),
-            O.flatMap(
-              f.flow(
-                RA.filter(([, , reason]) => reason !== 'outlier'),
-                RA.head,
-                O.flatMap(([, , reason]) => RR.lookup(reason)(classes)),
+            O.map(
+              RA.filter(
+                f.pipe(['', '', 'outlier'] as Flag, equals(reasonInFlagEq)),
               ),
             ),
-            f.pipe('', f.constant, O.getOrElse),
+            O.getOrElse(f.constant(RA.empty as readonly Flag[])),
           ),
         ),
+        RA.head,
+        O.getOrElse(f.constant(['', '', 'outlier'] as Flag)),
+        (flag) => RR.lookup(flag[2])(classes),
+        f.pipe('', f.constant, O.getOrElse),
       ),
     [classes, flaggedCells, formattedColumn, index],
   )

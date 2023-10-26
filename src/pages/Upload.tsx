@@ -12,7 +12,7 @@ import PreviewDataGrid from '@/features/sheet/components/PreviewDataGrid'
 import SheetPickerInput from '@/features/sheet/components/SheetPickerInput'
 import SheetUploadInput from '@/features/sheet/components/SheetUploadInput'
 import VisitsInput from '@/features/sheet/components/VisitsInput'
-import { getColumnsLength } from '@/features/sheet/selectors'
+import { getColumnsLength } from '@/selectors/columnsSelectors'
 import { promisedTask } from '@/lib/fp'
 import {
   useAppDispatch,

@@ -6,10 +6,8 @@ import type { TableColumnDefinition } from '@fluentui/react-components'
 
 import SimpleDataGrid from '@/components/SimpleDataGrid'
 import { getFormattedColumns } from '@/features/columns/selectors'
-import {
-  getColumnsLength,
-  getFormattedWorkbook,
-} from '@/features/sheet/selectors'
+import { getFormattedWorkbook } from '@/features/sheet/selectors'
+import { getColumnsLength } from '@/selectors/columnsSelectors'
 import { stringLookup } from '@/lib/array'
 import { useAppSelector } from '@/lib/hooks'
 import {
