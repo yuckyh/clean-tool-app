@@ -38,7 +38,7 @@ const items = RA.makeBy(5, f.identity)
 const cellFocusMode: () => DataGridCellFocusMode = f.constant('none')
 
 const useClasses = makeStyles({
-  categoricalTag: {
+  numericalTag: {
     backgroundColor: tokens.colorPaletteRedBackground2,
     color: tokens.colorPaletteRedForeground2,
   },
@@ -70,13 +70,13 @@ function PreviewDataGrid({ isOriginal = false }: Props) {
         {!isOriginal && (
           <TagGroup aria-label="Legends" role="list">
             <Tag appearance="brand" role="listitem">
-              Numerical Column
+              Categorical Column
             </Tag>
             <Tag
               appearance="brand"
-              className={classes.categoricalTag}
+              className={classes.numericalTag}
               role="listitem">
-              Categorical Column
+              Numerical Column
             </Tag>
           </TagGroup>
         )}
