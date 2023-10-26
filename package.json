@@ -104,7 +104,8 @@
     ],
     "ignorePatterns": [
       "dist",
-      "dev-dist"
+      "dev-dist",
+      "src-tauri"
     ],
     "parser": "@typescript-eslint/parser",
     "parserOptions": {

@@ -39,7 +39,6 @@ import * as T from 'fp-ts/Task'
 import * as TE from 'fp-ts/TaskEither'
 import * as f from 'fp-ts/function'
 import { useCallback, useEffect, useRef } from 'react'
-import { useNavigate } from 'react-router-dom'
 
 const useClasses = makeStyles({
   actions: {
