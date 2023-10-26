@@ -8,7 +8,7 @@ import SimpleDataGrid from '@/components/SimpleDataGrid'
 import { getFormattedColumns } from '@/features/columns/selectors'
 import {
   getColumnsLength,
-  getWrittenWorkbook,
+  getFormattedWorkbook,
 } from '@/features/sheet/selectors'
 import { stringLookup } from '@/lib/array'
 import { useAppSelector } from '@/lib/hooks'
@@ -85,7 +85,7 @@ export function Component() {
   )
 
   const fileName = useAppSelector(({ sheet }) => sheet.fileName)
-  const workbook = useAppSelector(getWrittenWorkbook)
+  const workbook = useAppSelector(getFormattedWorkbook)
 
   const handleFileDownload = () => {
     writeFile(workbook, `flagged-${fileName}`, { type: 'file' }) as File

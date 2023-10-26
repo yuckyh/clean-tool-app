@@ -48,8 +48,7 @@ export const useDebounced = <T>(value: T, delay = 100) => {
   return debouncedValue
 }
 
-// eslint-disable-next-line functional/functional-parameters
-export const useLoadingTransition = () => {
+export const useLoadingTransition = asIO(() => {
   const [isLoading, setIsLoading] = useState(true)
   const [isPending, startTransition] = useTransition()
 
@@ -66,7 +65,7 @@ export const useLoadingTransition = () => {
   )
 
   return [isLoading || isPending, stopLoading] as const
-}
+})
 
 export const useThemePreference = (
   dark = webDarkTheme,

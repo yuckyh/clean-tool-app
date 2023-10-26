@@ -7,16 +7,19 @@ import * as RR from 'fp-ts/ReadonlyRecord'
 import * as f from 'fp-ts/function'
 import { useEffect } from 'react'
 
-import { asIO } from './fp'
-
 export const ioDumpTrace = <T extends Parameters<typeof fpConsole.log>[0]>(
   arg: T,
 ) =>
-  asIO(() => {
-    // eslint-disable-next-line no-console
-    console.trace(arg)
-    return arg
-  })
+  f.pipe(
+    arg,
+    IO.of,
+    IO.tap(() =>
+      IO.of(() => {
+        // eslint-disable-next-line no-console
+        console.trace(arg)
+      }),
+    ),
+  )
 
 export const dumpTrace = <T extends Parameters<typeof fpConsole.log>[0]>(
   arg: T,

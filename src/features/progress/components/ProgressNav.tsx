@@ -1,5 +1,6 @@
 import { saveColumnState } from '@/features/columns/reducers'
 import { saveSheetState } from '@/features/sheet/reducers'
+import { asIO } from '@/lib/fp'
 import { useAppDispatch, useAppSelector } from '@/lib/hooks'
 import {
   makeStyles,
@@ -94,10 +95,9 @@ export default function ProgressNav() {
     const classList = S.split(' ')(themeClasses)
     document.body.classList.add(...classList)
 
-    // eslint-disable-next-line functional/functional-parameters
-    return () => {
+    return asIO(() => {
       document.body.classList.remove(...classList)
-    }
+    })
   }, [themeClasses])
 
   useEffect(() => {

@@ -4,6 +4,7 @@ import type { AppDispatch } from '@/app/store'
 import type { AsyncThunk, PayloadAction } from '@reduxjs/toolkit'
 import type * as Ref from 'fp-ts/Refinement'
 
+import { FlagEq } from '@/lib/fp'
 import { getPersisted, setPersisted } from '@/lib/localStorage'
 import { dumpError } from '@/lib/logger'
 import { createSlice } from '@reduxjs/toolkit'
@@ -16,7 +17,6 @@ import * as S from 'fp-ts/string'
 import { type BookType, utils } from 'xlsx'
 
 import { deleteSheet, fetchSheet, postFile, sliceName } from './actions'
-import { FlagEq } from './selectors'
 
 export type FlagReason = 'incorrect' | 'missing' | 'outlier' | 'suspected'
 

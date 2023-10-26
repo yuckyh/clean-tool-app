@@ -7,6 +7,7 @@ import type { DropzoneOptions } from 'react-dropzone'
 
 import { sheetWorker } from '@/app/workers'
 import FileToast from '@/components/FileToast'
+import { asIO } from '@/lib/fp'
 import { useAppDispatch, useAppSelector } from '@/lib/hooks'
 import { dumpError } from '@/lib/logger'
 import { Field, Input, makeStyles } from '@fluentui/react-components'
@@ -113,10 +114,9 @@ const SheetUploadInput = forwardRef<SheetInputRef, Props>(
 
       sheetWorker.addEventListener('message', handleWorkerLoad)
 
-      // eslint-disable-next-line functional/functional-parameters
-      return () => {
+      return asIO(() => {
         sheetWorker.removeEventListener('message', handleWorkerLoad)
-      }
+      })
     }, [toastNotify])
 
     return (
