@@ -20,6 +20,7 @@ import {
   getIndexedRowMissings,
 } from '@/features/sheet/selectors'
 import { getIndexedIndex } from '@/lib/array'
+import { isCorrectNumber } from '@/lib/fp'
 import { useAppDispatch, useAppSelector } from '@/lib/hooks'
 import {
   Body2,
@@ -40,7 +41,6 @@ import { useCallback, useMemo, useState } from 'react'
 
 import FilterInput from '../FilterInput'
 import ValueCell from './ValueCell'
-import { isCorrectNumber } from '@/lib/fp'
 
 interface Props {
   column: string

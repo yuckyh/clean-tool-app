@@ -141,7 +141,7 @@ export const getIndexedRowMissings = createSelector(
       S.replace('/', ''),
       S.toLowerCase,
       strEquals,
-      RA.every<string>,
+      RA.some<string>,
       f.apply(['', 'na', 'none', 'blank'] as const),
     ),
   ),
