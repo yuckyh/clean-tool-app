@@ -24,4 +24,4 @@
 
 #### Defined in
 
-[Projects/clean-tool-app/src/pages/ColumnMatching/ValueCell.tsx:18](https://github.com/yuckyh/clean-tool-app/blob/e8c585b/src/pages/ColumnMatching/ValueCell.tsx#L18)
+[Projects/clean-tool-app/src/pages/ColumnMatching/ValueCell.tsx:18](https://github.com/yuckyh/clean-tool-app/)

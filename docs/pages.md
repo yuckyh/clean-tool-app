@@ -22,4 +22,4 @@
 
 #### Defined in
 
-[Projects/clean-tool-app/src/pages/index.tsx:28](https://github.com/yuckyh/clean-tool-app/blob/e8c585b/src/pages/index.tsx#L28)
+[Projects/clean-tool-app/src/pages/index.tsx:28](https://github.com/yuckyh/clean-tool-app/)

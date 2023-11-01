@@ -18,7 +18,7 @@
 
 #### Defined in
 
-[Projects/clean-tool-app/src/features/columns/actions.ts:19](https://github.com/yuckyh/clean-tool-app/blob/e8c585b/src/features/columns/actions.ts#L19)
+[Projects/clean-tool-app/src/features/columns/actions.ts:19](https://github.com/yuckyh/clean-tool-app/)
 
 ## Functions
 

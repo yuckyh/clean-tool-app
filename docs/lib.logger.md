@@ -38,7 +38,7 @@
 
 #### Defined in
 
-[Projects/clean-tool-app/src/lib/logger.ts:38](https://github.com/yuckyh/clean-tool-app/blob/e8c585b/src/lib/logger.ts#L38)
+[Projects/clean-tool-app/src/lib/logger.ts:38](https://github.com/yuckyh/clean-tool-app/)
 
 ___
 
@@ -64,7 +64,7 @@ ___
 
 #### Defined in
 
-[Projects/clean-tool-app/src/lib/logger.ts:32](https://github.com/yuckyh/clean-tool-app/blob/e8c585b/src/lib/logger.ts#L32)
+[Projects/clean-tool-app/src/lib/logger.ts:32](https://github.com/yuckyh/clean-tool-app/)
 
 ___
 
@@ -90,7 +90,7 @@ ___
 
 #### Defined in
 
-[Projects/clean-tool-app/src/lib/logger.ts:58](https://github.com/yuckyh/clean-tool-app/blob/e8c585b/src/lib/logger.ts#L58)
+[Projects/clean-tool-app/src/lib/logger.ts:58](https://github.com/yuckyh/clean-tool-app/)
 
 ___
 
@@ -116,7 +116,7 @@ ___
 
 #### Defined in
 
-[Projects/clean-tool-app/src/lib/logger.ts:24](https://github.com/yuckyh/clean-tool-app/blob/e8c585b/src/lib/logger.ts#L24)
+[Projects/clean-tool-app/src/lib/logger.ts:24](https://github.com/yuckyh/clean-tool-app/)
 
 ___
 
@@ -172,7 +172,7 @@ ___
 
 #### Defined in
 
-[Projects/clean-tool-app/src/lib/logger.ts:30](https://github.com/yuckyh/clean-tool-app/blob/e8c585b/src/lib/logger.ts#L30)
+[Projects/clean-tool-app/src/lib/logger.ts:30](https://github.com/yuckyh/clean-tool-app/)
 
 ___
 
@@ -198,7 +198,7 @@ ___
 
 #### Defined in
 
-[Projects/clean-tool-app/src/lib/logger.ts:43](https://github.com/yuckyh/clean-tool-app/blob/e8c585b/src/lib/logger.ts#L43)
+[Projects/clean-tool-app/src/lib/logger.ts:43](https://github.com/yuckyh/clean-tool-app/)
 
 ___
 
@@ -224,7 +224,7 @@ ___
 
 #### Defined in
 
-[Projects/clean-tool-app/src/lib/logger.ts:10](https://github.com/yuckyh/clean-tool-app/blob/e8c585b/src/lib/logger.ts#L10)
+[Projects/clean-tool-app/src/lib/logger.ts:10](https://github.com/yuckyh/clean-tool-app/)
 
 ___
 
@@ -250,4 +250,4 @@ ___
 
 #### Defined in
 
-[Projects/clean-tool-app/src/lib/logger.ts:62](https://github.com/yuckyh/clean-tool-app/blob/e8c585b/src/lib/logger.ts#L62)
+[Projects/clean-tool-app/src/lib/logger.ts:62](https://github.com/yuckyh/clean-tool-app/)

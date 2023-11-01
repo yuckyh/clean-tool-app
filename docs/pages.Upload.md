@@ -18,4 +18,4 @@
 
 #### Defined in
 
-[Projects/clean-tool-app/src/pages/Upload.tsx:72](https://github.com/yuckyh/clean-tool-app/blob/e8c585b/src/pages/Upload.tsx#L72)
+[Projects/clean-tool-app/src/pages/Upload.tsx:72](https://github.com/yuckyh/clean-tool-app/)

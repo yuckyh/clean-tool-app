@@ -26,4 +26,4 @@
 
 #### Defined in
 
-[Projects/clean-tool-app/src/lib/plotly.ts:43](https://github.com/yuckyh/clean-tool-app/blob/e8c585b/src/lib/plotly.ts#L43)
+[Projects/clean-tool-app/src/lib/plotly.ts:43](https://github.com/yuckyh/clean-tool-app/)

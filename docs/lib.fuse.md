@@ -14,4 +14,4 @@
 
 #### Defined in
 
-[Projects/clean-tool-app/src/lib/fuse.ts:4](https://github.com/yuckyh/clean-tool-app/blob/e8c585b/src/lib/fuse.ts#L4)
+[Projects/clean-tool-app/src/lib/fuse.ts:4](https://github.com/yuckyh/clean-tool-app/)

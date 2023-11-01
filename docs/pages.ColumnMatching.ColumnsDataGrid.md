@@ -24,4 +24,4 @@
 
 #### Defined in
 
-[Projects/clean-tool-app/src/pages/ColumnMatching/ColumnsDataGrid.tsx:68](https://github.com/yuckyh/clean-tool-app/blob/e8c585b/src/pages/ColumnMatching/ColumnsDataGrid.tsx#L68)
+[Projects/clean-tool-app/src/pages/ColumnMatching/ColumnsDataGrid.tsx:68](https://github.com/yuckyh/clean-tool-app/)

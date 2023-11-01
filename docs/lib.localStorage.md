@@ -33,7 +33,7 @@
 
 #### Defined in
 
-[Projects/clean-tool-app/src/lib/localStorage.ts:1](https://github.com/yuckyh/clean-tool-app/blob/e8c585b/src/lib/localStorage.ts#L1)
+[Projects/clean-tool-app/src/lib/localStorage.ts:1](https://github.com/yuckyh/clean-tool-app/)
 
 ___
 
@@ -61,4 +61,4 @@ ___
 
 #### Defined in
 
-[Projects/clean-tool-app/src/lib/localStorage.ts:6](https://github.com/yuckyh/clean-tool-app/blob/e8c585b/src/lib/localStorage.ts#L6)
+[Projects/clean-tool-app/src/lib/localStorage.ts:6](https://github.com/yuckyh/clean-tool-app/)

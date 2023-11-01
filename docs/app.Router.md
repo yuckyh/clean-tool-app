@@ -15,7 +15,7 @@
 
 #### Defined in
 
-[Projects/clean-tool-app/src/app/Router.tsx:34](https://github.com/yuckyh/clean-tool-app/blob/e8c585b/src/app/Router.tsx#L34)
+[Projects/clean-tool-app/src/app/Router.tsx:34](https://github.com/yuckyh/clean-tool-app/)
 
 ___
 
@@ -25,4 +25,4 @@ ___
 
 #### Defined in
 
-[Projects/clean-tool-app/src/app/Router.tsx:10](https://github.com/yuckyh/clean-tool-app/blob/e8c585b/src/app/Router.tsx#L10)
+[Projects/clean-tool-app/src/app/Router.tsx:10](https://github.com/yuckyh/clean-tool-app/)

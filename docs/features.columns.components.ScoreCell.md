@@ -24,4 +24,4 @@
 
 #### Defined in
 
-[Projects/clean-tool-app/src/features/columns/components/ScoreCell.tsx:29](https://github.com/yuckyh/clean-tool-app/blob/e8c585b/src/features/columns/components/ScoreCell.tsx#L29)
+[Projects/clean-tool-app/src/features/columns/components/ScoreCell.tsx:29](https://github.com/yuckyh/clean-tool-app/)

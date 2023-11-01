@@ -57,7 +57,7 @@ Worker.addEventListener
 
 #### Defined in
 
-[Projects/clean-tool-app/src/types/workers.d.ts:34](https://github.com/yuckyh/clean-tool-app/blob/e8c585b/src/types/workers.d.ts#L34)
+[Projects/clean-tool-app/src/types/workers.d.ts:34](https://github.com/yuckyh/clean-tool-app/)
 
 ___
 
@@ -99,7 +99,7 @@ Worker.postMessage
 
 #### Defined in
 
-[Projects/clean-tool-app/src/types/workers.d.ts:39](https://github.com/yuckyh/clean-tool-app/blob/e8c585b/src/types/workers.d.ts#L39)
+[Projects/clean-tool-app/src/types/workers.d.ts:39](https://github.com/yuckyh/clean-tool-app/)
 
 ___
 
@@ -135,4 +135,4 @@ Worker.removeEventListener
 
 #### Defined in
 
-[Projects/clean-tool-app/src/types/workers.d.ts:47](https://github.com/yuckyh/clean-tool-app/blob/e8c585b/src/types/workers.d.ts#L47)
+[Projects/clean-tool-app/src/types/workers.d.ts:47](https://github.com/yuckyh/clean-tool-app/)

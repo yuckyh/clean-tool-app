@@ -24,4 +24,4 @@
 
 #### Defined in
 
-Projects/clean-tool-app/src/features/columns/components/FilteredOptions.tsx:17
+[Projects/clean-tool-app/src/features/columns/components/FilteredOptions.tsx:17](https://github.com/yuckyh/clean-tool-app/)

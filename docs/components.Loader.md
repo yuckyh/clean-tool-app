@@ -24,4 +24,4 @@
 
 #### Defined in
 
-[Projects/clean-tool-app/src/components/Loader.tsx:9](https://github.com/yuckyh/clean-tool-app/blob/e8c585b/src/components/Loader.tsx#L9)
+[Projects/clean-tool-app/src/components/Loader.tsx:9](https://github.com/yuckyh/clean-tool-app/)

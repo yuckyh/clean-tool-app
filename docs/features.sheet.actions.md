@@ -20,7 +20,7 @@
 
 #### Defined in
 
-[Projects/clean-tool-app/src/features/sheet/actions.ts:11](https://github.com/yuckyh/clean-tool-app/blob/e8c585b/src/features/sheet/actions.ts#L11)
+[Projects/clean-tool-app/src/features/sheet/actions.ts:11](https://github.com/yuckyh/clean-tool-app/)
 
 ## Functions
 

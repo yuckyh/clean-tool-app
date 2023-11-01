@@ -18,7 +18,7 @@
 
 #### Defined in
 
-[Projects/clean-tool-app/src/components/FileToast.tsx:4](https://github.com/yuckyh/clean-tool-app/blob/e8c585b/src/components/FileToast.tsx#L4)
+[Projects/clean-tool-app/src/components/FileToast.tsx:4](https://github.com/yuckyh/clean-tool-app/)
 
 ## Functions
 
@@ -38,4 +38,4 @@
 
 #### Defined in
 
-[Projects/clean-tool-app/src/components/FileToast.tsx:10](https://github.com/yuckyh/clean-tool-app/blob/e8c585b/src/components/FileToast.tsx#L10)
+[Projects/clean-tool-app/src/components/FileToast.tsx:10](https://github.com/yuckyh/clean-tool-app/)

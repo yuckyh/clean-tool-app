@@ -31,7 +31,7 @@
 
 #### Defined in
 
-[Projects/clean-tool-app/src/lib/fp.ts:58](https://github.com/yuckyh/clean-tool-app/blob/e8c585b/src/lib/fp.ts#L58)
+[Projects/clean-tool-app/src/lib/fp.ts:58](https://github.com/yuckyh/clean-tool-app/)
 
 ___
 
@@ -41,7 +41,7 @@ ___
 
 #### Defined in
 
-[Projects/clean-tool-app/src/lib/fp.ts:59](https://github.com/yuckyh/clean-tool-app/blob/e8c585b/src/lib/fp.ts#L59)
+[Projects/clean-tool-app/src/lib/fp.ts:59](https://github.com/yuckyh/clean-tool-app/)
 
 ## Functions
 
@@ -68,7 +68,7 @@ ___
 
 #### Defined in
 
-[Projects/clean-tool-app/src/lib/fp.ts:34](https://github.com/yuckyh/clean-tool-app/blob/e8c585b/src/lib/fp.ts#L34)
+[Projects/clean-tool-app/src/lib/fp.ts:34](https://github.com/yuckyh/clean-tool-app/)
 
 ___
 
@@ -99,7 +99,7 @@ A task representing the function.
 
 #### Defined in
 
-[Projects/clean-tool-app/src/lib/fp.ts:30](https://github.com/yuckyh/clean-tool-app/blob/e8c585b/src/lib/fp.ts#L30)
+[Projects/clean-tool-app/src/lib/fp.ts:30](https://github.com/yuckyh/clean-tool-app/)
 
 ___
 
@@ -137,7 +137,7 @@ ___
 
 #### Defined in
 
-[Projects/clean-tool-app/src/lib/fp.ts:65](https://github.com/yuckyh/clean-tool-app/blob/e8c585b/src/lib/fp.ts#L65)
+[Projects/clean-tool-app/src/lib/fp.ts:65](https://github.com/yuckyh/clean-tool-app/)
 
 ___
 
@@ -157,7 +157,7 @@ ___
 
 #### Defined in
 
-[Projects/clean-tool-app/src/lib/fp.ts:44](https://github.com/yuckyh/clean-tool-app/blob/e8c585b/src/lib/fp.ts#L44)
+[Projects/clean-tool-app/src/lib/fp.ts:44](https://github.com/yuckyh/clean-tool-app/)
 
 ___
 
@@ -184,7 +184,7 @@ ___
 
 #### Defined in
 
-[Projects/clean-tool-app/src/lib/fp.ts:61](https://github.com/yuckyh/clean-tool-app/blob/e8c585b/src/lib/fp.ts#L61)
+[Projects/clean-tool-app/src/lib/fp.ts:61](https://github.com/yuckyh/clean-tool-app/)
 
 ___
 
@@ -216,7 +216,7 @@ ___
 
 #### Defined in
 
-[Projects/clean-tool-app/src/lib/fp.ts:41](https://github.com/yuckyh/clean-tool-app/blob/e8c585b/src/lib/fp.ts#L41)
+[Projects/clean-tool-app/src/lib/fp.ts:41](https://github.com/yuckyh/clean-tool-app/)
 
 ___
 
@@ -248,7 +248,7 @@ ___
 
 #### Defined in
 
-[Projects/clean-tool-app/src/lib/fp.ts:14](https://github.com/yuckyh/clean-tool-app/blob/e8c585b/src/lib/fp.ts#L14)
+[Projects/clean-tool-app/src/lib/fp.ts:14](https://github.com/yuckyh/clean-tool-app/)
 
 ___
 
@@ -310,7 +310,7 @@ ___
 
 #### Defined in
 
-[Projects/clean-tool-app/src/lib/fp.ts:38](https://github.com/yuckyh/clean-tool-app/blob/e8c585b/src/lib/fp.ts#L38)
+[Projects/clean-tool-app/src/lib/fp.ts:38](https://github.com/yuckyh/clean-tool-app/)
 
 ___
 
@@ -330,7 +330,7 @@ ___
 
 #### Defined in
 
-[Projects/clean-tool-app/src/lib/fp.ts:51](https://github.com/yuckyh/clean-tool-app/blob/e8c585b/src/lib/fp.ts#L51)
+[Projects/clean-tool-app/src/lib/fp.ts:51](https://github.com/yuckyh/clean-tool-app/)
 
 ___
 
@@ -356,7 +356,7 @@ ___
 
 #### Defined in
 
-[Projects/clean-tool-app/src/lib/fp.ts:47](https://github.com/yuckyh/clean-tool-app/blob/e8c585b/src/lib/fp.ts#L47)
+[Projects/clean-tool-app/src/lib/fp.ts:47](https://github.com/yuckyh/clean-tool-app/)
 
 ___
 
@@ -383,7 +383,7 @@ ___
 
 #### Defined in
 
-[Projects/clean-tool-app/src/lib/fp.ts:55](https://github.com/yuckyh/clean-tool-app/blob/e8c585b/src/lib/fp.ts#L55)
+[Projects/clean-tool-app/src/lib/fp.ts:55](https://github.com/yuckyh/clean-tool-app/)
 
 ___
 
@@ -409,4 +409,4 @@ ___
 
 #### Defined in
 
-[Projects/clean-tool-app/src/lib/fp.ts:56](https://github.com/yuckyh/clean-tool-app/blob/e8c585b/src/lib/fp.ts#L56)
+[Projects/clean-tool-app/src/lib/fp.ts:56](https://github.com/yuckyh/clean-tool-app/)

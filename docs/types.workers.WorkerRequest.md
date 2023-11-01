@@ -22,4 +22,4 @@
 
 #### Defined in
 
-[Projects/clean-tool-app/src/types/workers.d.ts:15](https://github.com/yuckyh/clean-tool-app/blob/e8c585b/src/types/workers.d.ts#L15)
+[Projects/clean-tool-app/src/types/workers.d.ts:15](https://github.com/yuckyh/clean-tool-app/)

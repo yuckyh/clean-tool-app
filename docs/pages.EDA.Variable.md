@@ -18,4 +18,4 @@
 
 #### Defined in
 
-[Projects/clean-tool-app/src/pages/EDA/Variable/index.tsx:71](https://github.com/yuckyh/clean-tool-app/blob/e8c585b/src/pages/EDA/Variable/index.tsx#L71)
+[Projects/clean-tool-app/src/pages/EDA/Variable/index.tsx:71](https://github.com/yuckyh/clean-tool-app/)

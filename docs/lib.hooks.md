@@ -26,7 +26,7 @@
 
 #### Defined in
 
-[Projects/clean-tool-app/src/lib/hooks.ts:36](https://github.com/yuckyh/clean-tool-app/blob/e8c585b/src/lib/hooks.ts#L36)
+[Projects/clean-tool-app/src/lib/hooks.ts:36](https://github.com/yuckyh/clean-tool-app/)
 
 ___
 
@@ -103,7 +103,7 @@ ___
 
 #### Defined in
 
-[Projects/clean-tool-app/src/lib/hooks.ts:39](https://github.com/yuckyh/clean-tool-app/blob/e8c585b/src/lib/hooks.ts#L39)
+[Projects/clean-tool-app/src/lib/hooks.ts:39](https://github.com/yuckyh/clean-tool-app/)
 
 ___
 
@@ -145,7 +145,7 @@ ___
 
 #### Defined in
 
-[Projects/clean-tool-app/src/lib/hooks.ts:113](https://github.com/yuckyh/clean-tool-app/blob/e8c585b/src/lib/hooks.ts#L113)
+[Projects/clean-tool-app/src/lib/hooks.ts:113](https://github.com/yuckyh/clean-tool-app/)
 
 ___
 
@@ -180,7 +180,7 @@ ___
 
 #### Defined in
 
-[Projects/clean-tool-app/src/lib/hooks.ts:126](https://github.com/yuckyh/clean-tool-app/blob/e8c585b/src/lib/hooks.ts#L126)
+[Projects/clean-tool-app/src/lib/hooks.ts:126](https://github.com/yuckyh/clean-tool-app/)
 
 ___
 
@@ -201,7 +201,7 @@ ___
 
 #### Defined in
 
-[Projects/clean-tool-app/src/lib/hooks.ts:70](https://github.com/yuckyh/clean-tool-app/blob/e8c585b/src/lib/hooks.ts#L70)
+[Projects/clean-tool-app/src/lib/hooks.ts:70](https://github.com/yuckyh/clean-tool-app/)
 
 ___
 
@@ -221,4 +221,4 @@ ___
 
 #### Defined in
 
-[Projects/clean-tool-app/src/lib/hooks.ts:92](https://github.com/yuckyh/clean-tool-app/blob/e8c585b/src/lib/hooks.ts#L92)
+[Projects/clean-tool-app/src/lib/hooks.ts:92](https://github.com/yuckyh/clean-tool-app/)

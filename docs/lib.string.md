@@ -25,4 +25,4 @@
 
 #### Defined in
 
-[Projects/clean-tool-app/src/lib/string.ts:17](https://github.com/yuckyh/clean-tool-app/blob/e8c585b/src/lib/string.ts#L17)
+[Projects/clean-tool-app/src/lib/string.ts:17](https://github.com/yuckyh/clean-tool-app/)

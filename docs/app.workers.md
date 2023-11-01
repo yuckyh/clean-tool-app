@@ -19,7 +19,7 @@
 
 #### Defined in
 
-[Projects/clean-tool-app/src/app/workers.ts:10](https://github.com/yuckyh/clean-tool-app/blob/e8c585b/src/app/workers.ts#L10)
+[Projects/clean-tool-app/src/app/workers.ts:10](https://github.com/yuckyh/clean-tool-app/)
 
 ___
 
@@ -29,7 +29,7 @@ ___
 
 #### Defined in
 
-[Projects/clean-tool-app/src/app/workers.ts:7](https://github.com/yuckyh/clean-tool-app/blob/e8c585b/src/app/workers.ts#L7)
+[Projects/clean-tool-app/src/app/workers.ts:7](https://github.com/yuckyh/clean-tool-app/)
 
 ## Functions
 
@@ -58,4 +58,4 @@ ___
 
 #### Defined in
 
-[Projects/clean-tool-app/src/app/workers.ts:13](https://github.com/yuckyh/clean-tool-app/blob/e8c585b/src/app/workers.ts#L13)
+[Projects/clean-tool-app/src/app/workers.ts:13](https://github.com/yuckyh/clean-tool-app/)

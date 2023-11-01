@@ -1,4 +1,4 @@
-# CLEaN Tool
+# CLEaN Tool - v1.0.0
 
 ## Table of contents
 

@@ -24,4 +24,4 @@
 
 #### Defined in
 
-[Projects/clean-tool-app/src/features/sheet/components/VisitInput.tsx:23](https://github.com/yuckyh/clean-tool-app/blob/e8c585b/src/features/sheet/components/VisitInput.tsx#L23)
+[Projects/clean-tool-app/src/features/sheet/components/VisitInput.tsx:23](https://github.com/yuckyh/clean-tool-app/)

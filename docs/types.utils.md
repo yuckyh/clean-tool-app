@@ -24,7 +24,7 @@
 
 #### Defined in
 
-[Projects/clean-tool-app/src/types/utils.d.ts:17](https://github.com/yuckyh/clean-tool-app/blob/e8c585b/src/types/utils.d.ts#L17)
+[Projects/clean-tool-app/src/types/utils.d.ts:17](https://github.com/yuckyh/clean-tool-app/)
 
 ___
 
@@ -40,7 +40,7 @@ ___
 
 #### Defined in
 
-[Projects/clean-tool-app/src/types/utils.d.ts:21](https://github.com/yuckyh/clean-tool-app/blob/e8c585b/src/types/utils.d.ts#L21)
+[Projects/clean-tool-app/src/types/utils.d.ts:21](https://github.com/yuckyh/clean-tool-app/)
 
 ___
 
@@ -56,7 +56,7 @@ ___
 
 #### Defined in
 
-[Projects/clean-tool-app/src/types/utils.d.ts:15](https://github.com/yuckyh/clean-tool-app/blob/e8c585b/src/types/utils.d.ts#L15)
+[Projects/clean-tool-app/src/types/utils.d.ts:15](https://github.com/yuckyh/clean-tool-app/)
 
 ___
 
@@ -66,7 +66,7 @@ ___
 
 #### Defined in
 
-[Projects/clean-tool-app/src/types/utils.d.ts:29](https://github.com/yuckyh/clean-tool-app/blob/e8c585b/src/types/utils.d.ts#L29)
+[Projects/clean-tool-app/src/types/utils.d.ts:29](https://github.com/yuckyh/clean-tool-app/)
 
 ___
 
@@ -76,7 +76,7 @@ ___
 
 #### Defined in
 
-[Projects/clean-tool-app/src/types/utils.d.ts:30](https://github.com/yuckyh/clean-tool-app/blob/e8c585b/src/types/utils.d.ts#L30)
+[Projects/clean-tool-app/src/types/utils.d.ts:30](https://github.com/yuckyh/clean-tool-app/)
 
 ___
 
@@ -92,7 +92,7 @@ ___
 
 #### Defined in
 
-[Projects/clean-tool-app/src/types/utils.d.ts:25](https://github.com/yuckyh/clean-tool-app/blob/e8c585b/src/types/utils.d.ts#L25)
+[Projects/clean-tool-app/src/types/utils.d.ts:25](https://github.com/yuckyh/clean-tool-app/)
 
 ___
 
@@ -108,7 +108,7 @@ ___
 
 #### Defined in
 
-[Projects/clean-tool-app/src/types/utils.d.ts:9](https://github.com/yuckyh/clean-tool-app/blob/e8c585b/src/types/utils.d.ts#L9)
+[Projects/clean-tool-app/src/types/utils.d.ts:9](https://github.com/yuckyh/clean-tool-app/)
 
 ___
 
@@ -124,7 +124,7 @@ ___
 
 #### Defined in
 
-[Projects/clean-tool-app/src/types/utils.d.ts:3](https://github.com/yuckyh/clean-tool-app/blob/e8c585b/src/types/utils.d.ts#L3)
+[Projects/clean-tool-app/src/types/utils.d.ts:3](https://github.com/yuckyh/clean-tool-app/)
 
 ___
 
@@ -134,7 +134,7 @@ ___
 
 #### Defined in
 
-[Projects/clean-tool-app/src/types/utils.d.ts:7](https://github.com/yuckyh/clean-tool-app/blob/e8c585b/src/types/utils.d.ts#L7)
+[Projects/clean-tool-app/src/types/utils.d.ts:7](https://github.com/yuckyh/clean-tool-app/)
 
 ___
 
@@ -150,7 +150,7 @@ ___
 
 #### Defined in
 
-[Projects/clean-tool-app/src/types/utils.d.ts:1](https://github.com/yuckyh/clean-tool-app/blob/e8c585b/src/types/utils.d.ts#L1)
+[Projects/clean-tool-app/src/types/utils.d.ts:1](https://github.com/yuckyh/clean-tool-app/)
 
 ___
 
@@ -166,4 +166,4 @@ ___
 
 #### Defined in
 
-[Projects/clean-tool-app/src/types/utils.d.ts:19](https://github.com/yuckyh/clean-tool-app/blob/e8c585b/src/types/utils.d.ts#L19)
+[Projects/clean-tool-app/src/types/utils.d.ts:19](https://github.com/yuckyh/clean-tool-app/)

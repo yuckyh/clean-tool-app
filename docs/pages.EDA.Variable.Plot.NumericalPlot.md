@@ -6,11 +6,17 @@
 
 - [default](../wiki/pages.EDA.Variable.Plot.NumericalPlot#default)
 
-## Functions
+## Component
 
 ### default
 
 ▸ **default**(`«destructured»`): `Element`
+
+The function to generate render the numerical plot. The plot is currently configured to render only a box plot.
+
+The box plot is rendered with the outliers as red x's and the non-outliers as blue x's.
+
+The y-axis is jittered to prevent the x's from overlapping.
 
 #### Parameters
 
@@ -22,6 +28,10 @@
 
 `Element`
 
+**`Argument`**
+
+props - The component prop Props
+
 #### Defined in
 
-[Projects/clean-tool-app/src/pages/EDA/Variable/Plot/NumericalPlot.tsx:27](https://github.com/yuckyh/clean-tool-app/blob/e8c585b/src/pages/EDA/Variable/Plot/NumericalPlot.tsx#L27)
+[Projects/clean-tool-app/src/pages/EDA/Variable/Plot/NumericalPlot.tsx:47](https://github.com/yuckyh/clean-tool-app/)

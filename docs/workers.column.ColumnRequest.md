@@ -23,7 +23,7 @@
 
 #### Defined in
 
-[Projects/clean-tool-app/src/workers/column.ts:13](https://github.com/yuckyh/clean-tool-app/blob/e8c585b/src/workers/column.ts#L13)
+[Projects/clean-tool-app/src/workers/column.ts:13](https://github.com/yuckyh/clean-tool-app/)
 
 ___
 
@@ -37,4 +37,4 @@ ___
 
 #### Defined in
 
-[Projects/clean-tool-app/src/workers/column.ts:14](https://github.com/yuckyh/clean-tool-app/blob/e8c585b/src/workers/column.ts#L14)
+[Projects/clean-tool-app/src/workers/column.ts:14](https://github.com/yuckyh/clean-tool-app/)

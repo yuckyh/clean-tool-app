@@ -24,4 +24,4 @@
 
 #### Defined in
 
-[Projects/clean-tool-app/src/pages/EDA/Variable/Plot/index.tsx:14](https://github.com/yuckyh/clean-tool-app/blob/e8c585b/src/pages/EDA/Variable/Plot/index.tsx#L14)
+[Projects/clean-tool-app/src/pages/EDA/Variable/Plot/index.tsx:14](https://github.com/yuckyh/clean-tool-app/)

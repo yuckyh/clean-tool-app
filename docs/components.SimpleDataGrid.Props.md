@@ -29,7 +29,7 @@
 
 #### Defined in
 
-[Projects/clean-tool-app/src/components/SimpleDataGrid.tsx:48](https://github.com/yuckyh/clean-tool-app/blob/e8c585b/src/components/SimpleDataGrid.tsx#L48)
+[Projects/clean-tool-app/src/components/SimpleDataGrid.tsx:48](https://github.com/yuckyh/clean-tool-app/)
 
 ___
 
@@ -39,4 +39,4 @@ ___
 
 #### Defined in
 
-[Projects/clean-tool-app/src/components/SimpleDataGrid.tsx:49](https://github.com/yuckyh/clean-tool-app/blob/e8c585b/src/components/SimpleDataGrid.tsx#L49)
+[Projects/clean-tool-app/src/components/SimpleDataGrid.tsx:49](https://github.com/yuckyh/clean-tool-app/)

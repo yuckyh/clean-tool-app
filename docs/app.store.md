@@ -19,7 +19,7 @@
 
 #### Defined in
 
-[Projects/clean-tool-app/src/app/store.ts:11](https://github.com/yuckyh/clean-tool-app/blob/e8c585b/src/app/store.ts#L11)
+[Projects/clean-tool-app/src/app/store.ts:11](https://github.com/yuckyh/clean-tool-app/)
 
 ___
 
@@ -29,7 +29,7 @@ ___
 
 #### Defined in
 
-[Projects/clean-tool-app/src/app/store.ts:10](https://github.com/yuckyh/clean-tool-app/blob/e8c585b/src/app/store.ts#L10)
+[Projects/clean-tool-app/src/app/store.ts:10](https://github.com/yuckyh/clean-tool-app/)
 
 ## Variables
 
@@ -39,4 +39,4 @@ ___
 
 #### Defined in
 
-[Projects/clean-tool-app/src/app/store.ts:6](https://github.com/yuckyh/clean-tool-app/blob/e8c585b/src/app/store.ts#L6)
+[Projects/clean-tool-app/src/app/store.ts:6](https://github.com/yuckyh/clean-tool-app/)

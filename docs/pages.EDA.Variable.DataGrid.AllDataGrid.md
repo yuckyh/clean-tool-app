@@ -24,4 +24,4 @@
 
 #### Defined in
 
-[Projects/clean-tool-app/src/pages/EDA/Variable/DataGrid/AllDataGrid.tsx:78](https://github.com/yuckyh/clean-tool-app/blob/e8c585b/src/pages/EDA/Variable/DataGrid/AllDataGrid.tsx#L78)
+[Projects/clean-tool-app/src/pages/EDA/Variable/DataGrid/AllDataGrid.tsx:78](https://github.com/yuckyh/clean-tool-app/)

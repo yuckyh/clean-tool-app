@@ -18,7 +18,7 @@
 
 #### Defined in
 
-[Projects/clean-tool-app/src/components/SimpleToaster.tsx:5](https://github.com/yuckyh/clean-tool-app/blob/e8c585b/src/components/SimpleToaster.tsx#L5)
+[Projects/clean-tool-app/src/components/SimpleToaster.tsx:5](https://github.com/yuckyh/clean-tool-app/)
 
 ## Functions
 

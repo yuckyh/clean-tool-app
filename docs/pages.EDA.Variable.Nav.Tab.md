@@ -24,4 +24,4 @@
 
 #### Defined in
 
-[Projects/clean-tool-app/src/pages/EDA/Variable/Nav/Tab.tsx:17](https://github.com/yuckyh/clean-tool-app/blob/e8c585b/src/pages/EDA/Variable/Nav/Tab.tsx#L17)
+[Projects/clean-tool-app/src/pages/EDA/Variable/Nav/Tab.tsx:17](https://github.com/yuckyh/clean-tool-app/)

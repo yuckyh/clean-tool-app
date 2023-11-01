@@ -24,4 +24,4 @@
 
 #### Defined in
 
-[Projects/clean-tool-app/src/features/columns/components/MatchCell.tsx:53](https://github.com/yuckyh/clean-tool-app/blob/e8c585b/src/features/columns/components/MatchCell.tsx#L53)
+[Projects/clean-tool-app/src/features/columns/components/MatchCell.tsx:53](https://github.com/yuckyh/clean-tool-app/)

@@ -34,7 +34,7 @@
 
 #### Defined in
 
-[Projects/clean-tool-app/src/lib/utils.ts:18](https://github.com/yuckyh/clean-tool-app/blob/e8c585b/src/lib/utils.ts#L18)
+[Projects/clean-tool-app/src/lib/utils.ts:18](https://github.com/yuckyh/clean-tool-app/)
 
 ___
 
@@ -61,7 +61,7 @@ ___
 
 #### Defined in
 
-[Projects/clean-tool-app/src/lib/utils.ts:7](https://github.com/yuckyh/clean-tool-app/blob/e8c585b/src/lib/utils.ts#L7)
+[Projects/clean-tool-app/src/lib/utils.ts:7](https://github.com/yuckyh/clean-tool-app/)
 
 ___
 

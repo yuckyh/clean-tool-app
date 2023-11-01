@@ -33,7 +33,7 @@ WorkerEventMap.message
 
 #### Defined in
 
-[Projects/clean-tool-app/src/types/workers.d.ts:28](https://github.com/yuckyh/clean-tool-app/blob/e8c585b/src/types/workers.d.ts#L28)
+[Projects/clean-tool-app/src/types/workers.d.ts:28](https://github.com/yuckyh/clean-tool-app/)
 
 ___
 
@@ -47,4 +47,4 @@ WorkerEventMap.messageerror
 
 #### Defined in
 
-[Projects/clean-tool-app/src/types/workers.d.ts:29](https://github.com/yuckyh/clean-tool-app/blob/e8c585b/src/types/workers.d.ts#L29)
+[Projects/clean-tool-app/src/types/workers.d.ts:29](https://github.com/yuckyh/clean-tool-app/)

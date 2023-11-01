@@ -24,4 +24,4 @@
 
 #### Defined in
 
-[Projects/clean-tool-app/src/pages/Download/HeaderCell.tsx:17](https://github.com/yuckyh/clean-tool-app/blob/e8c585b/src/pages/Download/HeaderCell.tsx#L17)
+[Projects/clean-tool-app/src/pages/Download/HeaderCell.tsx:17](https://github.com/yuckyh/clean-tool-app/)

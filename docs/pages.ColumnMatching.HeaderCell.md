@@ -24,4 +24,4 @@
 
 #### Defined in
 
-[Projects/clean-tool-app/src/pages/ColumnMatching/HeaderCell.tsx:23](https://github.com/yuckyh/clean-tool-app/blob/e8c585b/src/pages/ColumnMatching/HeaderCell.tsx#L23)
+[Projects/clean-tool-app/src/pages/ColumnMatching/HeaderCell.tsx:23](https://github.com/yuckyh/clean-tool-app/)

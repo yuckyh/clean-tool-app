@@ -14,4 +14,4 @@
 
 #### Defined in
 
-[Projects/clean-tool-app/src/data/codebook.json:1](https://github.com/yuckyh/clean-tool-app/blob/e8c585b/src/data/codebook.json#L1)
+[Projects/clean-tool-app/src/data/codebook.json:1](https://github.com/yuckyh/clean-tool-app/)

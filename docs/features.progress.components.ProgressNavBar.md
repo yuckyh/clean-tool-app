@@ -18,4 +18,4 @@
 
 #### Defined in
 
-[Projects/clean-tool-app/src/features/progress/components/ProgressNavBar.tsx:23](https://github.com/yuckyh/clean-tool-app/blob/e8c585b/src/features/progress/components/ProgressNavBar.tsx#L23)
+[Projects/clean-tool-app/src/features/progress/components/ProgressNavBar.tsx:23](https://github.com/yuckyh/clean-tool-app/)

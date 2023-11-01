@@ -24,4 +24,4 @@
 
 #### Defined in
 
-[Projects/clean-tool-app/src/pages/EDA/Variable/DataGrid/MissingDataGrid.tsx:48](https://github.com/yuckyh/clean-tool-app/blob/e8c585b/src/pages/EDA/Variable/DataGrid/MissingDataGrid.tsx#L48)
+[Projects/clean-tool-app/src/pages/EDA/Variable/DataGrid/MissingDataGrid.tsx:48](https://github.com/yuckyh/clean-tool-app/)

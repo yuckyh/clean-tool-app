@@ -34,4 +34,4 @@
 
 #### Defined in
 
-[Projects/clean-tool-app/src/components/SimpleDataGrid.tsx:52](https://github.com/yuckyh/clean-tool-app/blob/e8c585b/src/components/SimpleDataGrid.tsx#L52)
+[Projects/clean-tool-app/src/components/SimpleDataGrid.tsx:52](https://github.com/yuckyh/clean-tool-app/)

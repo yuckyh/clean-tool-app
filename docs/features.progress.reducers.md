@@ -21,7 +21,7 @@
 
 #### Defined in
 
-[Projects/clean-tool-app/src/features/progress/reducers.ts:8](https://github.com/yuckyh/clean-tool-app/blob/e8c585b/src/features/progress/reducers.ts#L8)
+[Projects/clean-tool-app/src/features/progress/reducers.ts:8](https://github.com/yuckyh/clean-tool-app/)
 
 ## Functions
 

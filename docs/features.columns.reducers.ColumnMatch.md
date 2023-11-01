@@ -17,7 +17,7 @@
 
 #### Defined in
 
-[Projects/clean-tool-app/src/features/columns/reducers.ts:19](https://github.com/yuckyh/clean-tool-app/blob/e8c585b/src/features/columns/reducers.ts#L19)
+[Projects/clean-tool-app/src/features/columns/reducers.ts:19](https://github.com/yuckyh/clean-tool-app/)
 
 ___
 
@@ -27,4 +27,4 @@ ___
 
 #### Defined in
 
-[Projects/clean-tool-app/src/features/columns/reducers.ts:20](https://github.com/yuckyh/clean-tool-app/blob/e8c585b/src/features/columns/reducers.ts#L20)
+[Projects/clean-tool-app/src/features/columns/reducers.ts:20](https://github.com/yuckyh/clean-tool-app/)

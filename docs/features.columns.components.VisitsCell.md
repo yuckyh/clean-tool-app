@@ -24,4 +24,4 @@
 
 #### Defined in
 
-[Projects/clean-tool-app/src/features/columns/components/VisitsCell.tsx:34](https://github.com/yuckyh/clean-tool-app/blob/e8c585b/src/features/columns/components/VisitsCell.tsx#L34)
+[Projects/clean-tool-app/src/features/columns/components/VisitsCell.tsx:34](https://github.com/yuckyh/clean-tool-app/)

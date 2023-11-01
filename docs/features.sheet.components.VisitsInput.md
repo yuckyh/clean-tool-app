@@ -18,4 +18,4 @@
 
 #### Defined in
 
-[Projects/clean-tool-app/src/features/sheet/components/VisitsInput.tsx:21](https://github.com/yuckyh/clean-tool-app/blob/e8c585b/src/features/sheet/components/VisitsInput.tsx#L21)
+[Projects/clean-tool-app/src/features/sheet/components/VisitsInput.tsx:21](https://github.com/yuckyh/clean-tool-app/)

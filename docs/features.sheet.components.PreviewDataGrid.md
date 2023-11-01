@@ -28,4 +28,4 @@
 
 #### Defined in
 
-[Projects/clean-tool-app/src/features/sheet/components/PreviewDataGrid.tsx:44](https://github.com/yuckyh/clean-tool-app/blob/e8c585b/src/features/sheet/components/PreviewDataGrid.tsx#L44)
+[Projects/clean-tool-app/src/features/sheet/components/PreviewDataGrid.tsx:44](https://github.com/yuckyh/clean-tool-app/)

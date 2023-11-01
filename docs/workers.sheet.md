@@ -15,7 +15,7 @@
 
 #### Defined in
 
-[Projects/clean-tool-app/src/workers/sheet.ts:7](https://github.com/yuckyh/clean-tool-app/blob/e8c585b/src/workers/sheet.ts#L7)
+[Projects/clean-tool-app/src/workers/sheet.ts:7](https://github.com/yuckyh/clean-tool-app/)
 
 ___
 
@@ -25,4 +25,4 @@ ___
 
 #### Defined in
 
-[Projects/clean-tool-app/src/workers/sheet.ts:23](https://github.com/yuckyh/clean-tool-app/blob/e8c585b/src/workers/sheet.ts#L23)
+[Projects/clean-tool-app/src/workers/sheet.ts:23](https://github.com/yuckyh/clean-tool-app/)

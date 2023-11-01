@@ -45,7 +45,7 @@
 
 #### Defined in
 
-[Projects/clean-tool-app/src/app/selectors.ts:11](https://github.com/yuckyh/clean-tool-app/blob/e8c585b/src/app/selectors.ts#L11)
+[Projects/clean-tool-app/src/app/selectors.ts:11](https://github.com/yuckyh/clean-tool-app/)
 
 ___
 
@@ -69,7 +69,7 @@ ___
 
 #### Defined in
 
-[Projects/clean-tool-app/src/app/selectors.ts:15](https://github.com/yuckyh/clean-tool-app/blob/e8c585b/src/app/selectors.ts#L15)
+[Projects/clean-tool-app/src/app/selectors.ts:15](https://github.com/yuckyh/clean-tool-app/)
 
 ___
 
@@ -92,7 +92,7 @@ readonly `string`[]
 
 #### Defined in
 
-[Projects/clean-tool-app/src/app/selectors.ts:38](https://github.com/yuckyh/clean-tool-app/blob/e8c585b/src/app/selectors.ts#L38)
+[Projects/clean-tool-app/src/app/selectors.ts:38](https://github.com/yuckyh/clean-tool-app/)
 
 ___
 
@@ -115,7 +115,7 @@ readonly [`CellItem`](../wiki/types.utils#cellitem)[]
 
 #### Defined in
 
-[Projects/clean-tool-app/src/app/selectors.ts:40](https://github.com/yuckyh/clean-tool-app/blob/e8c585b/src/app/selectors.ts#L40)
+[Projects/clean-tool-app/src/app/selectors.ts:40](https://github.com/yuckyh/clean-tool-app/)
 
 ___
 
@@ -138,7 +138,7 @@ readonly [`DataType`](../wiki/features.columns.reducers#datatype)[]
 
 #### Defined in
 
-[Projects/clean-tool-app/src/app/selectors.ts:52](https://github.com/yuckyh/clean-tool-app/blob/e8c585b/src/app/selectors.ts#L52)
+[Projects/clean-tool-app/src/app/selectors.ts:52](https://github.com/yuckyh/clean-tool-app/)
 
 ___
 
@@ -161,7 +161,7 @@ readonly [`Flag`](../wiki/features.sheet.reducers#flag)[]
 
 #### Defined in
 
-[Projects/clean-tool-app/src/app/selectors.ts:42](https://github.com/yuckyh/clean-tool-app/blob/e8c585b/src/app/selectors.ts#L42)
+[Projects/clean-tool-app/src/app/selectors.ts:42](https://github.com/yuckyh/clean-tool-app/)
 
 ___
 
@@ -184,7 +184,7 @@ readonly `string`[]
 
 #### Defined in
 
-[Projects/clean-tool-app/src/app/selectors.ts:44](https://github.com/yuckyh/clean-tool-app/blob/e8c585b/src/app/selectors.ts#L44)
+[Projects/clean-tool-app/src/app/selectors.ts:44](https://github.com/yuckyh/clean-tool-app/)
 
 ___
 
@@ -207,7 +207,7 @@ readonly `number`[]
 
 #### Defined in
 
-[Projects/clean-tool-app/src/app/selectors.ts:46](https://github.com/yuckyh/clean-tool-app/blob/e8c585b/src/app/selectors.ts#L46)
+[Projects/clean-tool-app/src/app/selectors.ts:46](https://github.com/yuckyh/clean-tool-app/)
 
 ___
 
@@ -230,7 +230,7 @@ readonly readonly string[][]
 
 #### Defined in
 
-[Projects/clean-tool-app/src/app/selectors.ts:50](https://github.com/yuckyh/clean-tool-app/blob/e8c585b/src/app/selectors.ts#L50)
+[Projects/clean-tool-app/src/app/selectors.ts:50](https://github.com/yuckyh/clean-tool-app/)
 
 ___
 
@@ -253,7 +253,7 @@ ___
 
 #### Defined in
 
-[Projects/clean-tool-app/src/app/selectors.ts:32](https://github.com/yuckyh/clean-tool-app/blob/e8c585b/src/app/selectors.ts#L32)
+[Projects/clean-tool-app/src/app/selectors.ts:32](https://github.com/yuckyh/clean-tool-app/)
 
 ___
 
@@ -278,7 +278,7 @@ ___
 
 #### Defined in
 
-[Projects/clean-tool-app/src/app/selectors.ts:25](https://github.com/yuckyh/clean-tool-app/blob/e8c585b/src/app/selectors.ts#L25)
+[Projects/clean-tool-app/src/app/selectors.ts:25](https://github.com/yuckyh/clean-tool-app/)
 
 ___
 
@@ -303,7 +303,7 @@ ___
 
 #### Defined in
 
-[Projects/clean-tool-app/src/app/selectors.ts:13](https://github.com/yuckyh/clean-tool-app/blob/e8c585b/src/app/selectors.ts#L13)
+[Projects/clean-tool-app/src/app/selectors.ts:13](https://github.com/yuckyh/clean-tool-app/)
 
 ___
 
@@ -326,7 +326,7 @@ readonly readonly number[][]
 
 #### Defined in
 
-[Projects/clean-tool-app/src/app/selectors.ts:48](https://github.com/yuckyh/clean-tool-app/blob/e8c585b/src/app/selectors.ts#L48)
+[Projects/clean-tool-app/src/app/selectors.ts:48](https://github.com/yuckyh/clean-tool-app/)
 
 ___
 
@@ -349,7 +349,7 @@ ___
 
 #### Defined in
 
-[Projects/clean-tool-app/src/app/selectors.ts:34](https://github.com/yuckyh/clean-tool-app/blob/e8c585b/src/app/selectors.ts#L34)
+[Projects/clean-tool-app/src/app/selectors.ts:34](https://github.com/yuckyh/clean-tool-app/)
 
 ___
 
@@ -373,7 +373,7 @@ ___
 
 #### Defined in
 
-[Projects/clean-tool-app/src/app/selectors.ts:23](https://github.com/yuckyh/clean-tool-app/blob/e8c585b/src/app/selectors.ts#L23)
+[Projects/clean-tool-app/src/app/selectors.ts:23](https://github.com/yuckyh/clean-tool-app/)
 
 ___
 
@@ -398,7 +398,7 @@ ___
 
 #### Defined in
 
-[Projects/clean-tool-app/src/app/selectors.ts:17](https://github.com/yuckyh/clean-tool-app/blob/e8c585b/src/app/selectors.ts#L17)
+[Projects/clean-tool-app/src/app/selectors.ts:17](https://github.com/yuckyh/clean-tool-app/)
 
 ___
 
@@ -421,7 +421,7 @@ readonly `string`[]
 
 #### Defined in
 
-[Projects/clean-tool-app/src/app/selectors.ts:36](https://github.com/yuckyh/clean-tool-app/blob/e8c585b/src/app/selectors.ts#L36)
+[Projects/clean-tool-app/src/app/selectors.ts:36](https://github.com/yuckyh/clean-tool-app/)
 
 ___
 
@@ -444,4 +444,4 @@ ___
 
 #### Defined in
 
-[Projects/clean-tool-app/src/app/selectors.ts:54](https://github.com/yuckyh/clean-tool-app/blob/e8c585b/src/app/selectors.ts#L54)
+[Projects/clean-tool-app/src/app/selectors.ts:54](https://github.com/yuckyh/clean-tool-app/)

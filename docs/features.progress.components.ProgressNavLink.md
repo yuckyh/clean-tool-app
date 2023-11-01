@@ -24,4 +24,4 @@
 
 #### Defined in
 
-[Projects/clean-tool-app/src/features/progress/components/ProgressNavLink.tsx:56](https://github.com/yuckyh/clean-tool-app/blob/e8c585b/src/features/progress/components/ProgressNavLink.tsx#L56)
+[Projects/clean-tool-app/src/features/progress/components/ProgressNavLink.tsx:56](https://github.com/yuckyh/clean-tool-app/)

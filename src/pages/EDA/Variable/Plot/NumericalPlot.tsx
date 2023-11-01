@@ -17,13 +17,32 @@ const jitterPower = 0.3
 
 const jitterY = (jitter: number) => Math.random() * jitter * 2 - jitter
 
-interface Props {
+/**
+ * Props for the numerical plot component {@link NumericalPlot}
+ *
+ * @property {string} column The column for the plot
+ * @property {string} unit The unit of measurement for the variable
+ * @property {string} variable The variable name of the formatted column and visit for the plot
+ * @property {string} visit The visit for the plot
+ */
+export interface Props {
   column: string
   unit: string
   variable: string
   visit: string
 }
 
+/**
+ * The function to generate render the numerical plot. The plot is currently configured to render only a box plot.
+ * 
+ * The box plot is rendered with the outliers as red x's and the non-outliers as blue x's.
+ * 
+ * The y-axis is jittered to prevent the x's from overlapping.
+ * 
+ * @function NumericalPlot
+ * 
+ * @argument {Props} props - The component's props
+ */
 export default function NumericalPlot({
   column,
   unit,
