@@ -1,0 +1,24 @@
+{
+  "$schema": "https://typedoc.org/schema.json",
+  "entryPoints": [
+    "./src/*",
+  ],
+  "entryPointStrategy": "expand",
+  "excludeExternals": true,
+  "externalPattern": [
+    "**/node_modules/**/*",
+    "**/dist/**/*",
+    "**/dev-dist/**/*",
+    "**/src-tauri/**/*",
+    "**/.yarn/**/*",
+  ],
+  "plugin": [
+    "typedoc-theme-hierarchy",
+    "typedoc-github-wiki-theme",
+    "typedoc-plugin-markdown"
+  ],
+  "readme": "./README.md",
+  "name": "CLEaN Tool",
+  "out": "docs",
+  "tsconfig": "./src/tsconfig.json"
+}
