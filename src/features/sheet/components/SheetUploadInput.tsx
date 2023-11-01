@@ -29,10 +29,6 @@ export interface SheetInputRef {
   setFileTask: Dispatch<SetStateAction<FileTaskType | undefined>>
 }
 
-interface Props {
-  toasterRef: React.MutableRefObject<SimpleToasterRef | null>
-}
-
 const useClasses = makeStyles({
   input: {
     width: '100%',
@@ -41,6 +37,10 @@ const useClasses = makeStyles({
     cursor: 'pointer',
   },
 })
+
+interface Props {
+  toasterRef: React.MutableRefObject<SimpleToasterRef | null>
+}
 
 const SheetUploadInput = forwardRef<SheetInputRef, Props>(
   ({ toasterRef }, ref) => {

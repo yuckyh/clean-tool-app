@@ -18,23 +18,9 @@ import * as Eq from 'fp-ts/Eq'
 import * as S from 'fp-ts/string'
 import { useMemo } from 'react'
 import { Flag, FlagReason } from '@/features/sheet/reducers'
-import { getColumn } from '@/selectors/columnsSelectors'
 import { getFlaggedCells } from '@/app/selectors'
 
 const useClasses = makeStyles({
-  // incorrect: {
-  //   backgroundColor: tokens.colorPaletteYellowBackground2,
-  // },
-  // missing: {
-  //   backgroundColor: '#ff7700',
-  // },
-  // outlier: {
-  //   backgroundColor: tokens.colorSubtleBackground,
-  // },
-  // suspected: {
-  //   backgroundColor: tokens.colorPaletteRedBackground3,
-  //   color: tokens.colorNeutralStroke3,
-  // },
   incorrect: {
     backgroundColor: tokens.colorPaletteYellowBackground2,
     color: tokens.colorPaletteYellowForeground2,
@@ -62,6 +48,7 @@ const useClasses = makeStyles({
 })
 
 /**
+ * @interface Props
  * @prop {number} col - The column index
  * @prop {number} row - The row index
  */

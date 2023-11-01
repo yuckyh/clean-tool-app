@@ -13,23 +13,23 @@ import { useMemo } from 'react'
 
 import VariablePlot from '.'
 
-interface NumericalPlotProps {
+const jitterPower = 0.3
+
+const jitterY = (jitter: number) => Math.random() * jitter * 2 - jitter
+
+interface Props {
   column: string
   unit: string
   variable: string
   visit: string
 }
 
-const jitterPower = 0.3
-
-const jitterY = (jitter: number) => Math.random() * jitter * 2 - jitter
-
 export default function NumericalPlot({
   column,
   unit,
   variable,
   visit,
-}: NumericalPlotProps) {
+}: Props) {
   const series = useAppSelector((state) =>
     getIndexedNumericalRow(state, column, visit),
   )

@@ -19,12 +19,6 @@ import {
 
 import { getDisabled } from '../selectors'
 
-interface Props {
-  done: boolean
-  path: string
-  pos: number
-}
-
 const useClasses = makeStyles({
   activeStepThumb: {
     backgroundColor: tokens.colorCompoundBrandBackground,
@@ -52,6 +46,12 @@ const useClasses = makeStyles({
     ...shorthands.transition('background-color', '0.2s', '0s', 'ease-in-out'),
   },
 })
+
+interface Props {
+  done: boolean
+  path: string
+  pos: number
+}
 
 export default function ProgressNavLink({ done, path, pos }: Props) {
   const classes = useClasses()

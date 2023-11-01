@@ -1,4 +1,3 @@
-import { Flag } from '@/features/sheet/reducers'
 import * as O from 'fp-ts/Option'
 import * as RA from 'fp-ts/ReadonlyArray'
 import * as f from 'fp-ts/function'

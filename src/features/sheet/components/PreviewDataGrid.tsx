@@ -1,6 +1,5 @@
 /* eslint-disable functional/immutable-data */
 import type { Props as SimpleDataGridProps } from '@/components/SimpleDataGrid'
-import type { DataGridCellFocusMode } from '@fluentui/react-components'
 
 import { useAppSelector } from '@/lib/hooks'
 import { createLazyMemo } from '@/lib/utils'
@@ -19,23 +18,17 @@ import { useMemo } from 'react'
 import { getColumnsLength } from '@/selectors/columnsSelectors'
 import HeaderCell from './HeaderCell'
 
-interface Props {
-  isOriginal?: boolean
-}
-
 const MemoizedValueCell = createLazyMemo(
   'MemoizedValueCell',
-  () => import('./ValueCell'),
+  import('./ValueCell'),
 )
 
 const MemoizedSimpleDataGrid = createLazyMemo<SimpleDataGridProps<number>>(
   'MemoizedSimpleDataGrid',
-  () => import('@/components/SimpleDataGrid'),
+  import('@/components/SimpleDataGrid'),
 )
 
 const items = RA.makeBy(5, f.identity)
-
-const cellFocusMode: () => DataGridCellFocusMode = f.constant('none')
 
 const useClasses = makeStyles({
   numericalTag: {
@@ -43,6 +36,10 @@ const useClasses = makeStyles({
     color: tokens.colorPaletteRedForeground2,
   },
 })
+
+interface Props {
+  isOriginal?: boolean
+}
 
 function PreviewDataGrid({ isOriginal = false }: Props) {
   const classes = useClasses()
@@ -80,11 +77,7 @@ function PreviewDataGrid({ isOriginal = false }: Props) {
             </Tag>
           </TagGroup>
         )}
-        <MemoizedSimpleDataGrid
-          cellFocusMode={cellFocusMode}
-          columns={columnsDefinition}
-          items={items}
-        />
+        <MemoizedSimpleDataGrid columns={columnsDefinition} items={items} />
       </>
     )
   )

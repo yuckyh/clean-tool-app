@@ -5,9 +5,7 @@ import { codebook } from '@/data'
 import { getRow } from '@/features/sheet/selectors'
 import { indexDuplicateSearcher } from '@/lib/array'
 import { isCorrectNumber, numEquals, strEquals } from '@/lib/fp'
-import fuse from '@/lib/fuse'
 import { useAppDispatch, useAppSelector, useDebounced } from '@/lib/hooks'
-import { add, multiply } from '@/lib/number'
 import {
   Combobox,
   Option,
@@ -22,24 +20,23 @@ import * as P from 'fp-ts/Predicate'
 import * as RA from 'fp-ts/ReadonlyArray'
 import * as f from 'fp-ts/function'
 import * as S from 'fp-ts/string'
-import { memo, useCallback, useMemo, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 
-import type { ColumnMatch, DataType } from '../reducers'
+import type { DataType } from '../reducers'
 
 import { setDataType, setMatchColumn, setMatchVisit } from '../reducers'
 import {
   getIndices,
-  getMatchColumn,
   getMatchVisit,
   getMatches,
   getScores,
   getVisitByMatchVisit,
 } from '../selectors'
+import FilteredOptions from './FilteredOptions'
+import { getMatchColumn } from '@/selectors/columnsSelectors'
+import { createMemo } from '@/lib/utils'
 
-interface Props {
-  alertRef: React.RefObject<AlertRef>
-  pos: number
-}
+const MemoizedFilteredOptions = createMemo('FilteredOptions', FilteredOptions)
 
 const useClasses = makeStyles({
   root: {
@@ -48,59 +45,10 @@ const useClasses = makeStyles({
   },
 })
 
-interface FilteredOptionsProps {
-  filteredMatches: readonly ColumnMatch[]
-  value: string
+interface Props {
+  alertRef: React.RefObject<AlertRef>
+  pos: number
 }
-
-const search = fuse.search.bind(fuse)
-
-function FilteredOptions({ filteredMatches, value }: FilteredOptionsProps) {
-  const canCreateColumn = !RA.some(strEquals(value))(
-    f.pipe(
-      filteredMatches,
-      RA.map(({ match }) => match),
-    ),
-  )
-
-  const customScore = f.pipe(
-    value,
-    search,
-    RA.head,
-    O.map(
-      f.flow(
-        ({ score }) => score,
-        O.fromNullable,
-        f.pipe(1, f.constant, O.getOrElse),
-      ),
-    ),
-    f.pipe(1, f.constant, O.getOrElse),
-    multiply(-1),
-    add(1),
-    (score) => score.toFixed(2),
-  )
-
-  return (
-    <>
-      {canCreateColumn && (
-        <Option text={value} value={value}>
-          Create column? {value}, {customScore}
-        </Option>
-      )}
-      {!!filteredMatches.length &&
-        f.pipe(
-          filteredMatches,
-          RA.map(({ match, score }) => (
-            <Option key={match} text={match} value={match}>
-              {match}, {(1 - score).toFixed(2)}
-            </Option>
-          )),
-        )}
-    </>
-  )
-}
-
-const MemoizedFilteredOptions = memo(FilteredOptions)
 
 export default function MatchCell({ alertRef, pos }: Props) {
   const classes = useClasses()

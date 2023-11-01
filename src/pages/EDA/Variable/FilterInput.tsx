@@ -2,23 +2,23 @@ import type { InputProps } from '@fluentui/react-components'
 
 import { Field, Input, makeStyles } from '@fluentui/react-components'
 
-interface FilterInputProps {
-  handleChange: InputProps['onChange']
-  label: string
-  value: string
-}
-
 const useClasses = makeStyles({
   input: {
     minWidth: '150px',
   },
 })
 
+interface Props {
+  handleChange: InputProps['onChange']
+  label: string
+  value: string
+}
+
 export default function FilterInput({
   handleChange,
   label,
   value,
-}: FilterInputProps) {
+}: Props) {
   const classes = useClasses()
 
   return (

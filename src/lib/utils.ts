@@ -17,9 +17,9 @@ export const createMemo = <T>(
 
 export const createLazyMemo = <T>(
   displayName: string,
-  factory: () => Promise<{ default: ComponentType<T> }>,
+  promise: Promise<{ default: ComponentType<T> }>,
 ) => {
-  const component = memo(lazy(factory))
+  const component = memo(lazy(() => promise))
   // eslint-disable-next-line functional/immutable-data
   component.displayName = displayName
   return component

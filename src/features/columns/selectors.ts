@@ -172,7 +172,7 @@ export const getVisitsComparer = createSelector(
   (matchVisits) => (a: number, b: number) =>
     f.pipe(
       [a, b] as const,
-      RA.map(lookup(matchVisits, 0)),
+      RA.map(lookup(matchVisits)(0)),
       RA.reduce(0, (acc, curr) => acc - curr),
     ),
 )

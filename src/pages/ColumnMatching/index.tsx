@@ -19,6 +19,16 @@ import * as f from 'fp-ts/function'
 import { useCallback, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 
+const MemoizedColumnsDataGrid = createLazyMemo(
+  'MemoizedColumnsDataGrid',
+  import('@/pages/ColumnMatching/ColumnsDataGrid'),
+)
+
+const MemoizedPreviewDataGrid = createLazyMemo(
+  'MemoizedPreviewDataGrid',
+  import('@/features/sheet/components/PreviewDataGrid'),
+)
+
 const useClasses = makeStyles({
   root: {
     display: 'flex',
@@ -28,16 +38,6 @@ const useClasses = makeStyles({
     ...shorthands.margin(0, 'auto'),
   },
 })
-
-const MemoizedColumnsDataGrid = createLazyMemo(
-  'MemoizedColumnsDataGrid',
-  () => import('@/pages/ColumnMatching/ColumnsDataGrid'),
-)
-
-const MemoizedPreviewDataGrid = createLazyMemo(
-  'MemoizedPreviewDataGrid',
-  () => import('@/features/sheet/components/PreviewDataGrid'),
-)
 
 export function Component() {
   const classes = useClasses()

@@ -1,7 +1,4 @@
-import type {
-  DataGridCellFocusMode,
-  TableColumnDefinition,
-} from '@fluentui/react-components'
+import type { TableColumnDefinition } from '@fluentui/react-components'
 
 import SimpleDataGrid from '@/components/SimpleDataGrid'
 import {
@@ -28,8 +25,6 @@ import { useMemo } from 'react'
 
 import ValueCell from './ValueCell'
 
-const cellFocusMode: () => DataGridCellFocusMode = f.constant('none')
-
 const useClasses = makeStyles({
   card: {
     width: '100%',
@@ -49,16 +44,6 @@ interface Props {
   column: string
   visit: string
 }
-
-/* 
-  TODO: start with home page, with introduction
-  ! Post internship review - 5 mins
-  ! add team context to background
-  ! idea from me huaren and VS
-  ! mDQI was coined by Shezad and VS team
-  ! rename fuzzywuzzy pypi
-  
-*/
 
 export default function IncorrectDataGrid({ column, visit }: Props) {
   const classes = useClasses()
@@ -108,7 +93,6 @@ export default function IncorrectDataGrid({ column, visit }: Props) {
       </Body2>
       {series.length ? (
         <SimpleDataGrid
-          cellFocusMode={cellFocusMode}
           columns={columnDefinition}
           getRowId={getIndexedIndex}
           items={series}

@@ -1,5 +1,4 @@
 import type {
-  DataGridCellFocusMode,
   TableColumnDefinition,
 } from '@fluentui/react-components'
 
@@ -24,8 +23,6 @@ import * as f from 'fp-ts/function'
 import { useMemo } from 'react'
 
 import ValueCell from './ValueCell'
-
-const cellFocusMode: () => DataGridCellFocusMode = f.constant('none')
 
 const useClasses = makeStyles({
   card: {
@@ -94,7 +91,6 @@ export default function OutlierDataGrid({ column, visit }: Props) {
       </Body2>
       {series.length ? (
         <SimpleDataGrid
-          cellFocusMode={cellFocusMode}
           columns={columnDefinition}
           getRowId={getIndexedIndex}
           items={series}

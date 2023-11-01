@@ -1,9 +1,7 @@
 import type {
   DataGridBodyProps,
-  DataGridCellFocusMode,
   DataGridProps,
   TableColumnDefinition,
-  TableColumnId,
   TableRowData,
 } from '@fluentui/react-components'
 
@@ -25,12 +23,7 @@ import { Suspense, useCallback, useMemo } from 'react'
 
 import Loader from './Loader'
 
-export interface Props<T>
-  extends Partial<Omit<DataGridProps, 'columns' | 'items'>> {
-  cellFocusMode: (columnId: TableColumnId) => DataGridCellFocusMode
-  columns: readonly TableColumnDefinition<T>[]
-  items: readonly T[]
-}
+const MemoizedGrid = createMemo('MemoizedGrid', DataGrid)
 
 const useClasses = makeStyles({
   cell: {
@@ -50,10 +43,13 @@ const useClasses = makeStyles({
   },
 })
 
-const MemoizedGrid = createMemo('MemoizedGrid', DataGrid)
+export interface Props<T>
+  extends Partial<Omit<DataGridProps, 'columns' | 'items'>> {
+  columns: readonly TableColumnDefinition<T>[]
+  items: readonly T[]
+}
 
 export default function SimpleDataGrid<T>({
-  cellFocusMode,
   columns,
   items,
   ...props
@@ -80,7 +76,7 @@ export default function SimpleDataGrid<T>({
         {({ columnId, renderCell }) => (
           <DataGridCell
             className={classes.cell}
-            focusMode={cellFocusMode(columnId)}
+            focusMode="none"
             key={columnId}>
             <Suspense
               fallback={
@@ -94,7 +90,7 @@ export default function SimpleDataGrid<T>({
         )}
       </DataGridRow>
     ),
-    [cellFocusMode, classes.cell, classes.skeleton],
+    [classes.cell, classes.skeleton],
   )
 
   return (

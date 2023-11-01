@@ -1,7 +1,6 @@
 import type { AlertRef } from '@/components/AlertDialog'
 import type { Props as SimpleDataGridProps } from '@/components/SimpleDataGrid'
 import type {
-  DataGridCellFocusMode,
   DataGridFocusMode,
   DataGridProps,
   TableColumnDefinition,
@@ -42,30 +41,29 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import HeaderCell from './HeaderCell'
 import ValueCell from './ValueCell'
 
-interface Props {
-  errorAlertRef: RefObject<AlertRef>
-  infoAlertRef: RefObject<AlertRef>
-}
-
 const MemoizedMatchCell = createLazyMemo(
   'MemoizedMatchCell',
-  () => import('@/features/columns/components/MatchCell'),
+  import('@/features/columns/components/MatchCell'),
 )
 const MemoizedScoreCell = createLazyMemo(
   'MemoizedScoreCell',
-  () => import('@/features/columns/components/ScoreCell'),
+  import('@/features/columns/components/ScoreCell'),
 )
 const MemoizedVisitsCell = createLazyMemo(
   'MemoizedVisitsCell',
-  () => import('@/features/columns/components/VisitsCell'),
+  import('@/features/columns/components/VisitsCell'),
 )
 const MemoizedDataGrid = createMemo<SimpleDataGridProps<number>>(
   'MemoizedDataGrid',
   SimpleDataGrid,
 )
 
-const cellFocusMode: () => DataGridCellFocusMode = f.constant('none')
 const focusMode: DataGridFocusMode = 'composite'
+
+interface Props {
+  errorAlertRef: RefObject<AlertRef>
+  infoAlertRef: RefObject<AlertRef>
+}
 
 export default function ColumnsDataGrid({
   errorAlertRef,
@@ -206,7 +204,6 @@ export default function ColumnsDataGrid({
       labelPosition="below"
       size="huge">
       <MemoizedDataGrid
-        cellFocusMode={cellFocusMode}
         columns={columnsDefinition}
         focusMode={focusMode}
         items={items}

@@ -1,15 +1,11 @@
-import type {
-  DataGridCellFocusMode,
-  TableColumnDefinition,
-  TableColumnId,
-} from '@fluentui/react-components'
+import type { TableColumnDefinition } from '@fluentui/react-components'
 
 import SimpleDataGrid from '@/components/SimpleDataGrid'
 import {
   getIndexedNumericalRow,
   getIndexedRow,
 } from '@/features/sheet/selectors'
-import { getIndexedValue } from '@/lib/array'
+import { getIndexedValue, lookup } from '@/lib/array'
 import { useAppSelector } from '@/lib/hooks'
 import { add, divideBy } from '@/lib/number'
 import {
@@ -31,15 +27,6 @@ interface SummaryStats {
   value: string
 }
 
-interface Props {
-  column: string
-  isCategorical: boolean
-  visit: string
-}
-
-const cellFocusMode: (tableColumnId: TableColumnId) => DataGridCellFocusMode =
-  f.constant('none')
-
 const useClasses = makeStyles({
   card: {
     height: '100%',
@@ -48,6 +35,12 @@ const useClasses = makeStyles({
     ...shorthands.padding(tokens.spacingHorizontalXXXL, '5%'),
   },
 })
+
+interface Props {
+  column: string
+  isCategorical: boolean
+  visit: string
+}
 
 export default function SummaryDataGrid({
   column,
@@ -94,6 +87,14 @@ export default function SummaryDataGrid({
     [dataSum, numericalValues.length],
   )
 
+  const dataMedian = useMemo(
+    () =>
+      f.pipe(numericalValues, RA.sort(N.Ord), (values) =>
+        lookup(values)(0)(Math.floor(values.length / 2)),
+      ),
+    [numericalValues],
+  )
+
   const dataStd = useMemo(
     () =>
       f.pipe(
@@ -122,6 +123,10 @@ export default function SummaryDataGrid({
                 value: Math.max(...numericalValues),
               },
               {
+                statistic: 'median',
+                value: dataMedian,
+              },
+              {
                 statistic: 'mean',
                 value: dataMean,
               },
@@ -143,11 +148,7 @@ export default function SummaryDataGrid({
   return (
     <Card className={classes.card} size="large">
       <CardHeader header={<Title1>Summary Statistics</Title1>} />
-      <SimpleDataGrid
-        cellFocusMode={cellFocusMode}
-        columns={columnDefinition}
-        items={summaryStatistics}
-      />
+      <SimpleDataGrid columns={columnDefinition} items={summaryStatistics} />
     </Card>
   )
 }

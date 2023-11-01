@@ -16,17 +16,8 @@ import * as f from 'fp-ts/function'
 import { type RefObject, useCallback } from 'react'
 
 import { setMatchVisit } from '../reducers'
-import {
-  getIndices,
-  getMatchColumn,
-  getMatchVisit,
-  getVisitByMatchVisit,
-} from '../selectors'
-
-interface Props {
-  alertRef: RefObject<AlertRef>
-  pos: number
-}
+import { getIndices, getMatchVisit, getVisitByMatchVisit } from '../selectors'
+import { getMatchColumn } from '@/selectors/columnsSelectors'
 
 const useClasses = makeStyles({
   root: {
@@ -34,6 +25,11 @@ const useClasses = makeStyles({
     ...shorthands.margin(0, tokens.spacingHorizontalS),
   },
 })
+
+interface Props {
+  alertRef: RefObject<AlertRef>
+  pos: number
+}
 
 export default function VisitsCell({ alertRef, pos }: Props) {
   const classes = useClasses()

@@ -1,6 +1,5 @@
 import type { Flag } from '@/features/sheet/reducers'
 import type {
-  DataGridCellFocusMode,
   DataGridProps,
   InputProps,
   TableColumnDefinition,
@@ -42,11 +41,6 @@ import { useCallback, useMemo, useState } from 'react'
 import FilterInput from '../FilterInput'
 import ValueCell from './ValueCell'
 
-interface Props {
-  column: string
-  visit: string
-}
-
 const useClasses = makeStyles({
   card: {
     width: '100%',
@@ -76,7 +70,10 @@ const useClasses = makeStyles({
   },
 })
 
-const cellFocusMode: () => DataGridCellFocusMode = f.constant('none')
+interface Props {
+  column: string
+  visit: string
+}
 
 export default function AllDataGrid({ column, visit }: Readonly<Props>) {
   const classes = useClasses()
@@ -258,7 +255,6 @@ export default function AllDataGrid({ column, visit }: Readonly<Props>) {
         </div>
       </div>
       <SimpleDataGrid
-        cellFocusMode={cellFocusMode}
         columns={columnsDefinition}
         focusMode="composite"
         getRowId={getIndexedIndex}

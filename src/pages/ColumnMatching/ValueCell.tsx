@@ -1,10 +1,6 @@
-import { getColumn } from '@/features/sheet/selectors'
 import { useAppSelector } from '@/lib/hooks'
+import { getColumn } from '@/selectors/columnsSelectors'
 import { makeStyles, shorthands, tokens } from '@fluentui/react-components'
-
-interface Props {
-  pos: number
-}
 
 const useClasses = makeStyles({
   root: {
@@ -14,6 +10,10 @@ const useClasses = makeStyles({
     ...shorthands.padding(0, tokens.spacingHorizontalS),
   },
 })
+
+interface Props {
+  pos: number
+}
 
 export default function ValueCell({ pos }: Props) {
   const classes = useClasses()

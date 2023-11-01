@@ -107,11 +107,7 @@ export function Component() {
           Incorrectly Formatted Data
         </Tag>
       </TagGroup>
-      <SimpleDataGrid
-        cellFocusMode={f.constant('none')}
-        columns={columnDefinitions}
-        items={items}
-      />
+      <SimpleDataGrid columns={columnDefinitions} items={items} />
       <div className={classes.actions}>
         <Button appearance="primary" onClick={handleFileDownload}>
           Download

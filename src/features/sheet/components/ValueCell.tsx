@@ -3,11 +3,6 @@ import { makeStyles, shorthands, tokens } from '@fluentui/react-components'
 
 import { getCell } from '../selectors'
 
-interface Props {
-  col: number
-  row: number
-}
-
 const useClasses = makeStyles({
   root: {
     ...shorthands.padding(0, tokens.spacingHorizontalS),
@@ -16,6 +11,11 @@ const useClasses = makeStyles({
     width: '100%',
   },
 })
+
+interface Props {
+  col: number
+  row: number
+}
 
 export default function ValueCell({ col, row }: Props) {
   const classes = useClasses()

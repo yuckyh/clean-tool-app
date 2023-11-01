@@ -19,6 +19,7 @@ const useClasses = makeStyles({
     ...shorthands.margin(0, 'auto'),
   },
 })
+
 export default function ProgressNavBar() {
   const classes = useClasses()
 

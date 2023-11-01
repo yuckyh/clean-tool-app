@@ -9,16 +9,16 @@ import { useCallback } from 'react'
 import { setVisit } from '../reducers'
 import { getVisit } from '../selectors'
 
-interface Props {
-  pos: number
-}
-
 const useClasses = makeStyles({
   input: {
     minWidth: 'initial',
     width: '100%',
   },
 })
+
+interface Props {
+  pos: number
+}
 
 export default function VisitInput({ pos }: Props) {
   const classes = useClasses()

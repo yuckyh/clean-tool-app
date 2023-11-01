@@ -23,7 +23,7 @@ const getComponentPathParam = (_: RootState, componentPath: string) =>
 
 const getPosParam = (_: RootState, _1: string, _2: string, pos: number) => pos
 
-const getLocationPathWords = createSelector(
+export const getLocationPathWords = createSelector(
   [getLocationPathParam],
   (locationPath) =>
     f.pipe(locationPath, S.split('/'), RA.filter(P.not(S.isEmpty))),

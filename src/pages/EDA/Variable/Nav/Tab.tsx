@@ -3,16 +3,16 @@ import { useAppSelector } from '@/lib/hooks'
 import { Link, Tab, makeStyles } from '@fluentui/react-components'
 import { useHref, useLinkClickHandler } from 'react-router-dom'
 
-interface Props {
-  pos: number
-}
-
 const useClasses = makeStyles({
   root: {
     minHeight: '32px',
     overflowY: 'visible',
   },
 })
+
+interface Props {
+  pos: number
+}
 
 export default function NavTab({ pos }: Props) {
   const classes = useClasses()

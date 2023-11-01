@@ -47,9 +47,9 @@ export default defineConfig(({ mode }) => {
     },
     // env variables
     envPrefix: ['VITE_', 'TAURI_'],
-    // esbuild: {
-    jsxInject: `import React from 'react'`,
-    // },
+    esbuild: {
+      jsxInject: `import React from 'react'`,
+    },
     // to make use of `TAURI_PLATFORM`, `TAURI_ARCH`, `TAURI_FAMILY`,
     plugins: [
       react(),

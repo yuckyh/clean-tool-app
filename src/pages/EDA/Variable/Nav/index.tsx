@@ -1,5 +1,4 @@
 import type { Progress } from '@/features/progress/reducers'
-import type { TabListProps } from '@fluentui/react-components'
 
 import { getVisits } from '@/app/selectors'
 import {
@@ -9,7 +8,7 @@ import {
 } from '@/features/columns/selectors'
 import { setProgress } from '@/features/progress/reducers'
 import { getColumnsLength } from '@/selectors/columnsSelectors'
-import { stringLookup } from '@/lib/array'
+import { lookup, stringLookup } from '@/lib/array'
 import { useAppDispatch, useAppSelector } from '@/lib/hooks'
 import {
   Button,
@@ -28,8 +27,9 @@ import { useCallback, useMemo } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 
 import NavTab from './Tab'
-
-type Props = TabListProps
+import { getVisit } from '@/features/sheet/selectors'
+import { getLocationPathWords } from '@/features/progress/selectors'
+import { length } from '@/lib/fp'
 
 const useClasses = makeStyles({
   actionPositive: {
@@ -73,7 +73,7 @@ const useClasses = makeStyles({
   },
 })
 
-export default function Nav(props: Props) {
+export default function Nav() {
   const classes = useClasses()
 
   const navigate = useNavigate()
@@ -84,12 +84,24 @@ export default function Nav(props: Props) {
   const columnsLength = useAppSelector(getColumnsLength)
   const indices = useAppSelector(getIndices)
   const visits = useAppSelector(getVisits)
+  const firstVisit = useAppSelector((state) => getVisit(state, 0))
   const columnPaths = useAppSelector(getColumnPaths)
+  const pathWords = useAppSelector((state) =>
+    getLocationPathWords(state, '', pathname),
+  )
+  const depth = useMemo(() => length(pathWords), [pathWords])
 
-  const pathWords = useMemo(() => S.split('/')(pathname), [pathname])
-  const depth = useMemo(() => pathWords.length, [pathWords.length])
-  const column = useMemo(() => stringLookup(pathWords)(2), [pathWords])
-  const visit = useMemo(() => stringLookup(pathWords)(3), [pathWords])
+  const column = useMemo(
+    () =>
+      f.pipe(
+        pathWords,
+        f.flip(lookup<string>)(''),
+        f.apply(1),
+        S.replace(/-/g, '_'),
+      ),
+    [pathWords],
+  )
+  const visit = useMemo(() => stringLookup(pathWords)(2), [pathWords])
 
   const pos = useMemo(
     () =>
@@ -97,7 +109,7 @@ export default function Nav(props: Props) {
         indices,
         RA.findIndex(([matchColumn, matchVisit]) =>
           Eq.tuple(S.Eq, S.Eq).equals(
-            [S.replace(/-/g, '_')(column), visit || stringLookup(visits)(0)],
+            [column, visit || firstVisit],
             [matchColumn, stringLookup(visits)(matchVisit)],
           ),
         ),
@@ -155,7 +167,7 @@ export default function Nav(props: Props) {
 
   return (
     <div className={classes.root}>
-      <TabList {...props} className={classes.tabList} selectedValue={pathname}>
+      <TabList vertical className={classes.tabList} selectedValue={pathname}>
         {RA.makeBy(columnsLength, (col) => (
           <NavTab key={col} pos={col} />
         ))}
