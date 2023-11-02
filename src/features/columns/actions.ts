@@ -1,6 +1,6 @@
 import type { RootState } from '@/app/store'
 
-import { getColumns } from '@/app/selectors'
+import { getOriginalColumns } from '@/app/selectors'
 import { columnWorker, promisedWorker } from '@/app/workers'
 import { add } from '@/lib/number'
 import { createAsyncThunk } from '@reduxjs/toolkit'
@@ -21,7 +21,7 @@ export const sliceName = 'columns' as const
 export const fetchMatches = createAsyncThunk(
   `${sliceName}/fetchMatches`,
   async (_, { dispatch, getState }) => {
-    const columns = getColumns(getState() as RootState)
+    const columns = getOriginalColumns(getState() as RootState)
 
     columnWorker.postMessage({
       columns,

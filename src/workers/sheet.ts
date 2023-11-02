@@ -71,14 +71,14 @@ const remove: Handler<'remove'> = async ({ fileName }) => {
   return { fileName, status: 'ok' }
 }
 
-const controller: Controller<SheetRequest, SheetResponse> = {
+const controller: Readonly<Controller<SheetRequest, SheetResponse>> = {
   get: get as Handler,
   // postFormattedJSON,
   postFile: postFile as Handler,
   remove: remove as Handler,
 }
 
-const main = async (data: SheetRequest) => {
+const main = async (data: Readonly<SheetRequest>) => {
   const { method } = data
   try {
     const response = await controller[method](data)
@@ -91,13 +91,13 @@ const main = async (data: SheetRequest) => {
 
 globalThis.addEventListener(
   'message',
-  ({ data }: MessageEvent<SheetRequest>) => {
+  ({ data }: Readonly<MessageEvent<SheetRequest>>) => {
     main(data).catch(dumpError)
     return undefined
   },
 )
 
-globalThis.addEventListener('error', ({ error }: ErrorEvent) => {
+globalThis.addEventListener('error', ({ error }: Readonly<ErrorEvent>) => {
   dumpError(error as Error)
   return undefined
 })

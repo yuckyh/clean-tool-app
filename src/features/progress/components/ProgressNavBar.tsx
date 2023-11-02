@@ -1,4 +1,6 @@
-/* eslint-disable functional/functional-parameters */
+/* eslint-disable
+  functional/functional-parameters
+*/
 import { useAppSelector } from '@/lib/hooks'
 import {
   ProgressBar,
@@ -20,6 +22,15 @@ const useClasses = makeStyles({
   },
 })
 
+/**
+ * The progress navigation's bar component
+ *
+ * This component is used to control the length of the progress bar's fill
+ * @see {@link ProgressNav} for details of the overall navigation component
+ * @category Component
+ * @group Progress slice
+ * @returns The component object
+ */
 export default function ProgressNavBar() {
   const classes = useClasses()
 

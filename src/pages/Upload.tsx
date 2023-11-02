@@ -1,3 +1,8 @@
+/* eslint-disable
+  import/prefer-default-export,
+  functional/functional-parameters
+*/
+
 import type { AlertRef } from '@/components/AlertDialog'
 import type { SimpleToasterRef } from '@/components/SimpleToaster'
 import type { Progress } from '@/features/progress/reducers'
@@ -12,7 +17,6 @@ import PreviewDataGrid from '@/features/sheet/components/PreviewDataGrid'
 import SheetPickerInput from '@/features/sheet/components/SheetPickerInput'
 import SheetUploadInput from '@/features/sheet/components/SheetUploadInput'
 import VisitsInput from '@/features/sheet/components/VisitsInput'
-import { getColumnsLength } from '@/selectors/columnsSelectors'
 import { promisedTask } from '@/lib/fp'
 import {
   useAppDispatch,
@@ -20,6 +24,7 @@ import {
   useLoadingTransition,
 } from '@/lib/hooks'
 import { dumpError } from '@/lib/logger'
+import { getColumnsLength } from '@/selectors/columnsSelectors'
 import {
   Button,
   Card,
@@ -68,8 +73,14 @@ const useClasses = makeStyles({
   },
 })
 
-// eslint-disable-next-line import/prefer-default-export, functional/functional-parameters
-export function Component() {
+/**
+ * The upload page.
+ * This page is used to upload the file, select the sheet if it has more than one sheet, and also specify the visit information.
+ * This page is also where the user can reset the cleaning process.
+ * @category Page
+ * @returns The component object
+ */
+export default function Upload() {
   const classes = useClasses()
 
   const dispatch = useAppDispatch()

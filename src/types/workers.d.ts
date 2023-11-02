@@ -4,7 +4,7 @@ type RequestHandler<
   Request extends WorkerRequest & { method: Method },
   Response extends WorkerResponse,
   Method extends Request['method'] = Request['method'],
-> = (request: Request) => Promise<Response> | Response
+> = (request: Readonly<Request>) => Readonly<Promise<Response> | Response>
 
 type Controller<
   Request extends WorkerRequest,
@@ -42,6 +42,7 @@ interface RequestWorker<Req extends WorkerRequest, Res extends WorkerResponse>
 
       options?: Readonly<StructuredSerializeOptions>,
     ): void
+    // eslint-disable-next-line functional/prefer-immutable-types
     (request: Readonly<Req>, transfer: Transferable[]): void
   }
   removeEventListener: <K extends keyof GenericWorkerEventMap<Res>>(

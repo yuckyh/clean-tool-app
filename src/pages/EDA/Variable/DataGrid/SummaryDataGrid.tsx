@@ -36,7 +36,7 @@ const useClasses = makeStyles({
   },
 })
 
-interface Props {
+export interface Props {
   column: string
   isCategorical: boolean
   visit: string

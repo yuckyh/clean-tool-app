@@ -1,10 +1,17 @@
-**CLEaN Tool - v1.0.0** ( Readme \| [API](modules.md) )
+**CLEaN Tool - v1.0.0** ( Readme \| [API](exports.md) )
 
 ***
 
 # CLEaN Tool
 
 Welcome to the CLEaN Tool Documentation
+
+## Contents
+
+- [Current Milestone](README.md#current-milestone)
+- [Planned Features](README.md#planned-features)
+- [Development](README.md#development)
+- [Deployment](README.md#deployment)
 
 ## Current Milestone
 

@@ -7,7 +7,7 @@ import {
 } from '@fluentui/react-components'
 
 import { getDataType, getFormattedColumn } from '../../columns/selectors'
-import { getColumn } from '@/selectors/columnsSelectors'
+import { getOriginalColumn } from '@/selectors/columnsSelectors'
 
 const useClasses = makeStyles({
   categoricalHeader: {
@@ -28,7 +28,7 @@ const useClasses = makeStyles({
   },
 })
 
-interface Props {
+export interface Props {
   isOriginal: boolean
   pos: number
 }
@@ -37,7 +37,7 @@ export default function HeaderCell({ isOriginal, pos }: Props) {
   const classes = useClasses()
 
   const column = useAppSelector((state) =>
-    isOriginal ? getColumn(state, pos) : getFormattedColumn(state, pos),
+    isOriginal ? getOriginalColumn(state, pos) : getFormattedColumn(state, pos),
   )
 
   const dataType = useAppSelector((state) => getDataType(state, pos))

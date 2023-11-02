@@ -1,4 +1,6 @@
-/* eslint-disable functional/immutable-data */
+/* eslint-disable
+  functional/immutable-data
+*/
 import type { FileTaskType } from '@/components/FileToast'
 import type { SimpleToasterRef } from '@/components/SimpleToaster'
 import type { SheetResponse } from '@/workers/sheet'
@@ -38,7 +40,7 @@ const useClasses = makeStyles({
   },
 })
 
-interface Props {
+export interface Props {
   toasterRef: React.MutableRefObject<SimpleToasterRef | null>
 }
 
@@ -53,7 +55,7 @@ const SheetUploadInput = forwardRef<SheetInputRef, Props>(
 
     const [fileTask, setFileTask] = useState<FileTaskType | undefined>()
 
-    const zoneOptions: DropzoneOptions = useMemo(
+    const zoneOptions: Readonly<DropzoneOptions> = useMemo(
       () => ({
         accept: {
           'application/vnd.ms-excel': ['.xls'],
@@ -65,7 +67,7 @@ const SheetUploadInput = forwardRef<SheetInputRef, Props>(
         },
         disabled: !!dataLength,
         maxFiles: 1,
-        onDrop: (acceptedFiles: File[]) => {
+        onDrop: (acceptedFiles: readonly File[]) => {
           const [file] = acceptedFiles
           if (!file) {
             return
@@ -100,7 +102,9 @@ const SheetUploadInput = forwardRef<SheetInputRef, Props>(
     }))
 
     useEffect(() => {
-      const handleWorkerLoad = ({ data }: MessageEvent<SheetResponse>) => {
+      const handleWorkerLoad = ({
+        data,
+      }: Readonly<MessageEvent<SheetResponse>>) => {
         const isTask = data.fileName && !data.workbook
 
         if (!isTask) {

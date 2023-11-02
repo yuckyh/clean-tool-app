@@ -10,7 +10,7 @@ const useClasses = makeStyles({
   },
 })
 
-interface Props {
+export interface Props {
   pos: number
 }
 

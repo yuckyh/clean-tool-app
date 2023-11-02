@@ -9,7 +9,7 @@ const useClasses = makeStyles({
   },
 })
 
-interface Props {
+export interface Props {
   value: number | string
 }
 

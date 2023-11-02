@@ -28,7 +28,7 @@ const get: Handler = ({ columns }) => ({
   status: 'ok',
 })
 
-const controller: Controller<ColumnRequest, ColumnResponse> = {
+const controller: Readonly<Controller<ColumnRequest, ColumnResponse>> = {
   get,
 }
 
@@ -40,14 +40,14 @@ const main = async (data: Readonly<ColumnRequest>) => {
 
 globalThis.addEventListener(
   'message',
-  ({ data }: MessageEvent<ColumnRequest>) => {
+  ({ data }: Readonly<MessageEvent<ColumnRequest>>) => {
     main(data).catch(dumpError)
     return undefined
   },
   false,
 )
 
-globalThis.addEventListener('error', ({ error }: ErrorEvent) => {
+globalThis.addEventListener('error', ({ error }: Readonly<ErrorEvent>) => {
   dumpError(error as Error)
   return undefined
 })

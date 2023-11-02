@@ -60,7 +60,7 @@ const MemoizedDataGrid = createMemo<SimpleDataGridProps<number>>(
 
 const focusMode: DataGridFocusMode = 'composite'
 
-interface Props {
+export interface Props {
   errorAlertRef: RefObject<AlertRef>
   infoAlertRef: RefObject<AlertRef>
 }

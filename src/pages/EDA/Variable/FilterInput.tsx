@@ -8,7 +8,7 @@ const useClasses = makeStyles({
   },
 })
 
-interface Props {
+export interface Props {
   handleChange: InputProps['onChange']
   label: string
   value: string

@@ -1,4 +1,7 @@
-/* eslint-disable functional/functional-parameters */
+/* eslint-disable
+  functional/functional-parameters,
+  import/prefer-default-export
+*/
 import type { AlertRef } from '@/components/AlertDialog'
 import type { Progress } from '@/features/progress/reducers'
 
@@ -6,7 +9,6 @@ import AlertDialog from '@/components/AlertDialog'
 import { setProgress } from '@/features/progress/reducers'
 import { useAppDispatch } from '@/lib/hooks'
 import { createLazyMemo } from '@/lib/utils'
-/* eslint-disable import/prefer-default-export */
 import {
   Button,
   Title1,
@@ -39,7 +41,12 @@ const useClasses = makeStyles({
   },
 })
 
-export function Component() {
+/**
+ * The column matching page.
+ * This page is responsible for matching the columns of the uploaded sheet to the columns from the codebook.
+ * @returns The component object
+ */
+export default function ColumnMatching() {
   const classes = useClasses()
 
   const navigate = useNavigate()

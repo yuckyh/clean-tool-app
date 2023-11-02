@@ -1,3 +1,6 @@
+/* eslint-disable
+  functional/functional-parameters
+*/
 import { saveColumnState } from '@/features/columns/reducers'
 import { saveSheetState } from '@/features/sheet/reducers'
 import { asIO } from '@/lib/fp'
@@ -47,7 +50,15 @@ const useClasses = makeStyles({
   },
 })
 
-// eslint-disable-next-line functional/functional-parameters
+/**
+ * The progress navigation component
+ *
+ * This components is used as the main navigation with the functionality of showing the user's progress
+ * @see {@link ProgressNavBar} for details on the bar's functionality
+ * @category Component
+ * @group Progress slice
+ * @returns The component object
+ */
 export default function ProgressNav() {
   const classes = useClasses()
 

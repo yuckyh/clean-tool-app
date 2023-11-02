@@ -68,7 +68,10 @@ const useClasses = makeStyles({
   },
 })
 
-export function Component() {
+/**
+ *
+ */
+export default function Variable() {
   const classes = useClasses()
 
   const params = useParams()

@@ -12,7 +12,7 @@ const useClasses = makeStyles({
   },
 })
 
-interface Props {
+export interface Props {
   col: number
   row: number
 }

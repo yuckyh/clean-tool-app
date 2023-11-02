@@ -8,12 +8,12 @@ import * as f from 'fp-ts/function'
 
 const search = fuse.search.bind(fuse)
 
-interface ColumnMatch {
+export interface ColumnMatch {
   match: string
   score: number
 }
 
-interface Props {
+export interface Props {
   filteredMatches: readonly ColumnMatch[]
   value: string
 }

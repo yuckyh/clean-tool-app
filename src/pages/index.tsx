@@ -1,6 +1,8 @@
-/* eslint-disable import/prefer-default-export */
-/* eslint-disable functional/functional-parameters */
-/* eslint-disable functional/immutable-data */
+/* eslint-disable
+  import/prefer-default-export, 
+  functional/functional-parameters,
+  functional/immutable-data
+*/
 import {
   Button,
   Card,
@@ -25,7 +27,14 @@ const useClasses = makeStyles({
   },
 })
 
-export function Component() {
+/**
+ * The home page component
+ * This page is simply used to navigate to the upload page
+ * @todo Add an quick introduction text to the tool in this page
+ * @category Page
+ * @returns The component object
+ */
+export default function Home() {
   const classes = useClasses()
 
   const uploadHref = useHref('/upload')
@@ -52,4 +61,4 @@ export function Component() {
   )
 }
 
-Component.displayName = 'Home'
+Home.displayName = 'Home'

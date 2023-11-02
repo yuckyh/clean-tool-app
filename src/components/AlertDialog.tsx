@@ -1,4 +1,6 @@
-/* eslint-disable functional/immutable-data */
+/* eslint-disable
+  functional/immutable-data
+*/
 import type { DialogProps } from '@fluentui/react-components'
 
 import { noOpIO } from '@/lib/utils'
@@ -22,7 +24,7 @@ export interface AlertRef {
   setTitle: (title: string) => string
 }
 
-interface Props {
+export interface Props {
   noCancel?: boolean
   onConfirm?: IO.IO<void>
 }

@@ -8,7 +8,7 @@ import * as f from 'fp-ts/function'
 import Plotly from 'plotly.js-cartesian-dist'
 import createPlotlyComponent from 'react-plotly.js/factory'
 
-interface Props extends Partial<PlotParams> {
+export interface Props extends Partial<PlotParams> {
   data: Data[]
 }
 

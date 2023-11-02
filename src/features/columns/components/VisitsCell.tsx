@@ -26,7 +26,7 @@ const useClasses = makeStyles({
   },
 })
 
-interface Props {
+export interface Props {
   alertRef: RefObject<AlertRef>
   pos: number
 }

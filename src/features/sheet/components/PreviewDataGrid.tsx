@@ -37,7 +37,7 @@ const useClasses = makeStyles({
   },
 })
 
-interface Props {
+export interface Props {
   isOriginal?: boolean
 }
 

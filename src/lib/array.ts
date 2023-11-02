@@ -25,25 +25,32 @@ export const lookup =
   (pos: number) =>
     f.pipe(RA.lookup(pos, arr), f.pipe(defaultValue, f.constant, O.getOrElse))
 
+/**
+ * @param arr - The array
+ * @returns A function that returns the first element of the array or the provided default value
+ */
 export const head =
   <T>(arr: readonly T[]) =>
+  /**
+   * @param defaultValue - The default value
+   * @returns The first element of the array or the provided default value
+   */
   (defaultValue: T) =>
     f.pipe(arr, RA.head, f.pipe(defaultValue, f.constant, O.getOrElse))
 
 /**
- * Retrieves the value from an indexed tuple.
- * @template I - The index type.
- * @template V - The value type.
- * @param tuple - The indexed tuple.
- * @returns The value from the tuple.
+ * Retrieves the value from an indexed tuple
+ * @param tuple - The indexed tuple
+ * @param tuple.0 - The index
+ * @param tuple.1 - The value
+ * @returns The value
  */
 export const getIndexedValue = <I, V>([, value]: readonly [I, V]) => value
 
 /**
- * Retrieves the index from an indexed tuple.
- * @template I - The index type.
- * @template V - The value type.
- * @param tuple - The indexed tuple.
- * @returns The index from the tuple.
+ * Retrieves the index from an indexed tuple
+ * @param tuple - The indexed tuple
+ * @param tuple.0 - The index
+ * @returns The index
  */
 export const getIndexedIndex = <I, V>([index]: readonly [I, V]) => index

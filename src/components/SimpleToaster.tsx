@@ -1,4 +1,6 @@
-/* eslint-disable functional/immutable-data */
+/* eslint-disable
+  functional/immutable-data
+*/
 import { Toaster, useId, useToastController } from '@fluentui/react-components'
 import { forwardRef, useImperativeHandle } from 'react'
 

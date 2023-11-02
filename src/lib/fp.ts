@@ -1,4 +1,5 @@
 import type { Flag } from '@/features/sheet/reducers'
+import type * as P from 'fp-ts/Predicate'
 import type * as T from 'fp-ts/Task'
 
 import * as Eq from 'fp-ts/Eq'
@@ -8,10 +9,9 @@ import * as TO from 'fp-ts/TaskOption'
 import * as f from 'fp-ts/function'
 import * as N from 'fp-ts/number'
 import * as S from 'fp-ts/string'
-import { Predicate } from 'fp-ts/lib/Predicate'
 
 export const promisedTask =
-  <V>(promise: Promise<V>) =>
+  <V>(promise: Promise<V>): T.Task<V> =>
   // eslint-disable-next-line functional/functional-parameters
   () =>
     promise
@@ -63,6 +63,6 @@ export const length = <V extends ArrayLike<K> | string, K>(arrLike: V) =>
 
 export const equals =
   <V>(eq: Eq.Eq<V>) =>
-  (x: V): Predicate<V> =>
+  (x: V): P.Predicate<V> =>
   (y: V) =>
     eq.equals(x, y)

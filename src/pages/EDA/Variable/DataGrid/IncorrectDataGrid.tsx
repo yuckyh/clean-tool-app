@@ -40,7 +40,7 @@ const useClasses = makeStyles({
   },
 })
 
-interface Props {
+export interface Props {
   column: string
   visit: string
 }

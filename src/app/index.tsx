@@ -1,4 +1,9 @@
-/* eslint-disable functional/functional-parameters */
+/* eslint-disable
+  functional/functional-parameters
+*/
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import type Layout from '@/pages/Layout'
+
 import { author, description, keywords } from '@/../package.json'
 import store from '@/app/store'
 import { useGlobalStyles, useStorage, useThemePreference } from '@/lib/hooks'
@@ -9,6 +14,12 @@ import { Provider } from 'react-redux'
 import { Outlet } from 'react-router-dom'
 import { useRegisterSW } from 'virtual:pwa-register/react'
 
+/**
+ * This is the second entry point of the application.
+ * @remarks This component could potentially be merged with {@link Layout}
+ * @category Component
+ * @returns The main app component
+ */
 export default function App() {
   useGlobalStyles()
   useStorage()

@@ -3,7 +3,7 @@ import { Toast, ToastBody, ToastTitle } from '@fluentui/react-components'
 
 export type FileTaskType = 'deleted' | 'downloaded' | 'uploaded'
 
-interface Props {
+export interface Props {
   fileTask: FileTaskType
 }
 

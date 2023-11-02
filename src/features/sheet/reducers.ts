@@ -1,7 +1,9 @@
-/* eslint-disable no-param-reassign */
-import type { AppDispatch } from '@/app/store'
-/* eslint-disable functional/immutable-data */
-import type { AsyncThunk, PayloadAction } from '@reduxjs/toolkit'
+/* eslint-disable
+  no-param-reassign,
+  functional/immutable-data
+*/
+import type { RejectedAction } from '@/types/redux'
+import type { PayloadAction } from '@reduxjs/toolkit'
 import type * as Ref from 'fp-ts/Refinement'
 
 import { FlagEq } from '@/lib/fp'
@@ -22,12 +24,36 @@ export type FlagReason = 'incorrect' | 'missing' | 'outlier' | 'suspected'
 
 export type Flag = readonly [string, string, FlagReason]
 
-interface State {
+/**
+ * The state struct for the sheet slice.
+ *
+ * This typically contains the information for the sheet.
+ * @see {@link sheetSlice}
+ */
+export interface State {
+  /**
+   * The type of the workbook. This determines whether to show the sheet picker input in the case of using a csv file.
+   */
   bookType?: BookType
+  /**
+   * The data from the selected sheet. The data is a list of records with keys as the column names.
+   */
   data: readonly CellItem[]
+  /**
+   * The name of the file.
+   */
   fileName: string
+  /**
+   * The list of flagged cells.
+   */
   flaggedCells: readonly Flag[]
+  /**
+   * The list of original column names.
+   */
   originalColumns: readonly string[]
+  /**
+   * The name of the selected sheet.
+   */
   sheetName: string
   sheetNames: readonly string[]
   visits: readonly string[]
@@ -45,7 +71,7 @@ const isFlagReason: Ref.Refinement<string | undefined, FlagReason> = (
 const isFlag: Ref.Refinement<readonly string[], Flag> = (x): x is Flag =>
   x.length === 3 && isFlagReason(x[2])
 
-const initialState: State = {
+const initialState: Readonly<State> = {
   data: JSON.parse(getPersisted('data', '[]')) as readonly CellItem[],
   fileName: getPersisted(fileNameKey, defaultValue),
   flaggedCells: f.pipe(
@@ -119,7 +145,7 @@ const sheetSlice = createSlice({
         return state
       })
       .addMatcher<RejectedAction>(
-        (action: RejectedAction) => action.type.endsWith('rejected'),
+        (action: Readonly<RejectedAction>) => action.type.endsWith('rejected'),
         (state, action) => {
           dumpError(action)
           return state
@@ -156,14 +182,14 @@ const sheetSlice = createSlice({
 
       return state
     },
-    setSheetName: (state, { payload }: PayloadAction<string>) => {
+    setSheetName: (state, { payload }: Readonly<PayloadAction<string>>) => {
       state.sheetName = payload
 
       return state
     },
     setVisit: (
       state,
-      { payload }: PayloadAction<{ pos: number; visit: string }>,
+      { payload }: Readonly<PayloadAction<{ pos: number; visit: string }>>,
     ) => {
       const { pos, visit } = payload
       const visits = state.visits as readonly string[]
@@ -176,7 +202,7 @@ const sheetSlice = createSlice({
 
       return state
     },
-    syncFlaggedCells: (state, { payload }: PayloadAction<Flag>) => {
+    syncFlaggedCells: (state, { payload }: Readonly<PayloadAction<Flag>>) => {
       const flaggedCells = state.flaggedCells as readonly Flag[]
       state.flaggedCells = f.pipe(
         [...flaggedCells],
@@ -195,7 +221,7 @@ const sheetSlice = createSlice({
 
       return state
     },
-    syncVisits: (state, { payload }: PayloadAction<number>) => {
+    syncVisits: (state, { payload }: Readonly<PayloadAction<number>>) => {
       const visitsLengthDiff = payload - state.visits.length
 
       RA.makeBy(Math.abs(visitsLengthDiff), () => {
@@ -216,20 +242,16 @@ const sheetSlice = createSlice({
   },
 })
 
-interface AsyncThunkConfig {
-  dispatch?: AppDispatch
-  extra?: unknown
-  fulfilledMeta?: unknown
-  pendingMeta?: unknown
-  rejectValue?: unknown
-  rejectedMeta?: unknown
-  serializedErrorType?: unknown
-  state?: unknown
-}
-
-type GenericAsyncThunk = AsyncThunk<unknown, unknown, AsyncThunkConfig>
-type RejectedAction = ReturnType<GenericAsyncThunk['rejected']>
-
+/**
+ * The sheet slice actions
+ * @member deleteVisits - Deletes the visits
+ * @member saveSheetState - Saves the sheet state
+ * @member setSheetName - Sets the sheet name
+ * @member setVisit - Sets the visit
+ * @member syncFlaggedCells - Syncs the flagged cells
+ * @member syncVisits - Syncs the visits
+ * @see {@link sheetSlice}
+ */
 export const {
   deleteVisits,
   saveSheetState,

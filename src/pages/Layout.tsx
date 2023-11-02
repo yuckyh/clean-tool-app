@@ -1,4 +1,6 @@
-/* eslint-disable functional/functional-parameters */
+/* eslint-disable
+  functional/functional-parameters
+*/
 import Loader from '@/components/Loader'
 import ProgressNav from '@/features/progress/components/ProgressNav'
 import {
@@ -22,6 +24,11 @@ const useClasses = makeStyles({
   },
 })
 
+/**
+ * This component is used to render the progress navigation bar and the main content of the page.
+ * @category Component
+ * @returns The main layout component
+ */
 export default function Layout() {
   const classes = useClasses()
 

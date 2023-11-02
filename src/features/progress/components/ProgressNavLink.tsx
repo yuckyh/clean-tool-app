@@ -47,7 +47,7 @@ const useClasses = makeStyles({
   },
 })
 
-interface Props {
+export interface Props {
   done: boolean
   path: string
   pos: number

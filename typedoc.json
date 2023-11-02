@@ -12,19 +12,18 @@
     "**/src-tauri/**/*",
     "**/.yarn/**/*",
   ],
+  "gitRevision": "main",
+  "includeVersion": true,
+  "name": "CLEaN Tool",
+  "out": "html-docs",
   "plugin": [
     "typedoc-theme-hierarchy",
-    "typedoc-plugin-markdown",
-    "typedoc-github-wiki-theme",
-    "typedoc-plugin-frontmatter",
     "typedoc-plugin-merge-modules",
   ],
-  "mergeModulesMergeMode": "module",
-  "name": "CLEaN Tool",
-  "out": "docs",
-  "tsconfig": "./src/tsconfig.json",
+  "lightHighlightTheme": "material-theme-lighter",
+  "darkHighlightTheme": "material-theme-ocean",
+  "theme": "hierarchy",
   "readme": "./README.md",
-  "includeVersion": true,
-  "gitRevision": "main",
-  "sourceLinkTemplate": "https://github.com/yuckyh/clean-tool-app/"
+  "sourceLinkTemplate": "https://github.com/yuckyh/clean-tool-app/",
+  "tsconfig": "./src/tsconfig.json"
 }

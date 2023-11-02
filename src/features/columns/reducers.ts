@@ -1,4 +1,7 @@
-/* eslint-disable no-param-reassign */
+/* eslint-disable
+  no-param-reassign,
+  functional/immutable-data
+*/
 import type { PayloadAction } from '@reduxjs/toolkit'
 import type * as Ref from 'fp-ts/Refinement'
 
@@ -8,7 +11,6 @@ import { getPersisted, setPersisted } from '@/lib/localStorage'
 import { createSlice } from '@reduxjs/toolkit'
 import * as O from 'fp-ts/Option'
 import * as P from 'fp-ts/Predicate'
-/* eslint-disable functional/immutable-data */
 import * as RA from 'fp-ts/ReadonlyArray'
 import * as f from 'fp-ts/function'
 import * as S from 'fp-ts/string'
@@ -17,7 +19,7 @@ import { fetchMatches, sliceName } from './actions'
 
 export type DataType = 'categorical' | 'numerical'
 
-interface State {
+export interface State {
   dataTypes: readonly DataType[]
   matchColumns: readonly string[]
   matchVisits: readonly number[]

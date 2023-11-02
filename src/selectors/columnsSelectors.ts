@@ -1,4 +1,8 @@
-import { getColParam, getColumns, getMatchColumns } from '@/app/selectors'
+import {
+  getColParam,
+  getMatchColumns,
+  getOriginalColumns,
+} from '@/app/selectors'
 import { indexDuplicateSearcher, stringLookup } from '@/lib/array'
 import { length, typedIdentity } from '@/lib/fp'
 import { createSelector } from '@reduxjs/toolkit'
@@ -6,8 +10,8 @@ import * as RA from 'fp-ts/ReadonlyArray'
 import * as f from 'fp-ts/function'
 import * as S from 'fp-ts/string'
 
-export const getColumn = createSelector(
-  [getColumns, getColParam],
+export const getOriginalColumn = createSelector(
+  [getOriginalColumns, getColParam],
   (columns, pos) => stringLookup(columns)(pos),
 )
 
@@ -16,10 +20,10 @@ export const getMatchColumn = createSelector(
   (matchColumns, pos) => stringLookup(matchColumns)(pos),
 )
 
-export const getColumnsLength = createSelector([getColumns], length)
+export const getColumnsLength = createSelector([getOriginalColumns], length)
 
 export const getColumnComparer = createSelector(
-  [getColumns],
+  [getOriginalColumns],
   (columns) => (posA: number, posB: number) =>
     f.pipe(
       [posA, posB] as const,

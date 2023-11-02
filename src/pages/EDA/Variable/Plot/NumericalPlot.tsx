@@ -19,36 +19,41 @@ const jitterY = (jitter: number) => Math.random() * jitter * 2 - jitter
 
 /**
  * Props for the numerical plot component {@link NumericalPlot}
- *
- * @property {string} column The column for the plot
- * @property {string} unit The unit of measurement for the variable
- * @property {string} variable The variable name of the formatted column and visit for the plot
- * @property {string} visit The visit for the plot
+ * @param column - The column for the plot
+ * @param unit - The unit of measurement for the variable
+ * @param variable - The variable name of the formatted column and visit for the plot
+ * @param visit - The visit for the plot
  */
-interface Props {
+export interface Props {
+  /** The column used to get the row for plotting  */
   column: string
+  /** The */
   unit: string
+  /**  */
   variable: string
+  /**  */
   visit: string
 }
 
 /**
  * The function to generate render the numerical plot. The plot is currently configured to render only a box plot.
- * 
+ *
  * The box plot is rendered with the outliers as red x's and the non-outliers as blue x's.
- * 
+ *
  * The y-axis is jittered to prevent the x's from overlapping.
- * 
- * @function NumericalPlot
- * 
- * @argument {Props} props - The component's props
+ * @param props - The component's props
+ * @param props.column - The column used to get the row for plotting
+ * @param props.unit - The unit of measurement for the variable
+ * @param props.variable - The variable name of the formatted column and visit for the plot
+ * @param props.visit - The visit for the plot
+ * @returns \{JSX.Element\} The numerical plot component
  */
 export default function NumericalPlot({
   column,
   unit,
   variable,
   visit,
-}: Props) {
+}: Readonly<Props>): Readonly<JSX.Element> {
   const series = useAppSelector((state) =>
     getIndexedNumericalRow(state, column, visit),
   )
@@ -98,7 +103,7 @@ export default function NumericalPlot({
 
   const notOutlierColor = useTokenToHex(tokens.colorBrandBackground)
 
-  const layout: Partial<Layout> = {
+  const layout: Readonly<Partial<Layout>> = {
     xaxis: {
       title: unit,
     },
@@ -113,7 +118,7 @@ export default function NumericalPlot({
     },
   }
 
-  const data: Partial<Data>[] = [
+  const data: readonly Readonly<Partial<Data>>[] = [
     {
       // customdata: RA.map(getIndexedIndex)(series) as string[],
       boxmean: true,

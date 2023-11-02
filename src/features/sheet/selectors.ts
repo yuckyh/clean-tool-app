@@ -1,16 +1,16 @@
 import {
-  getColumns,
+  getColParam,
   getData,
   getDataTypes,
   getFlaggedCells,
   getMatchColumns,
-  getColParam as getColParam,
+  getOriginalColumns,
   getReasonParam,
+  getRowParam,
   getSheetName,
   getTitleParam,
   getVisits,
   searchPos,
-  getRowParam,
 } from '@/app/selectors'
 import { getIndexedValue, lookup, stringLookup } from '@/lib/array'
 import {
@@ -24,6 +24,7 @@ import {
   typedEq,
 } from '@/lib/fp'
 import { add, divideBy, multiply } from '@/lib/number'
+import { getOriginalColumn } from '@/selectors/columnsSelectors'
 import { createSelector } from '@reduxjs/toolkit'
 import * as E from 'fp-ts/Either'
 import * as Eq from 'fp-ts/Eq'
@@ -44,7 +45,6 @@ import {
   getIndices,
   getSearchedPos,
 } from '../columns/selectors'
-import { getColumn } from '@/selectors/columnsSelectors'
 
 export const getVisit = createSelector(
   [getVisits, getColParam],
@@ -61,7 +61,7 @@ const getColumnsByData = createSelector([getData], (data) =>
 )
 
 const getPosAtEmptyList = createSelector(
-  [getColumnsByData, getColumns],
+  [getColumnsByData, getOriginalColumns],
   (dataColumns, columns) =>
     f.pipe(
       columns,
@@ -84,7 +84,7 @@ const getEmptyColumns = createSelector(
 )
 
 export const getCell = createSelector(
-  [getData, getColumn, getRowParam],
+  [getData, getOriginalColumn, getRowParam],
   (data, column, row) =>
     f.pipe(
       data,
@@ -95,7 +95,7 @@ export const getCell = createSelector(
 )
 
 export const getIndexRow = createSelector(
-  [getData, getColumns, getIndices, getVisits],
+  [getData, getOriginalColumns, getIndices, getVisits],
   (data, columns, indices, visits) =>
     f.pipe(
       data,
@@ -114,7 +114,7 @@ export const getIndexRow = createSelector(
 )
 
 export const getRow = createSelector(
-  [getData, getColumns, getSearchedPos],
+  [getData, getOriginalColumns, getSearchedPos],
   (data, columns, pos) =>
     f.pipe(
       data,
@@ -213,6 +213,8 @@ export const getOutliers = createSelector(
    * Selects the values from the indexed numerical row that are outliers, using the provided row and fences.
    * @param row - The indexed numerical row to select from.
    * @param fences - The fences to use for outlier detection.
+   * @param fences."0"
+   * @param fences."1"
    * @returns An array of values that are outliers.
    */
   (row, [lower, upper]) =>
@@ -228,6 +230,8 @@ export const getNotOutliers = createSelector(
    * Selects the values from the indexed numerical row that are not outliers, using the provided row and fences.
    * @param row - The indexed numerical row to select from.
    * @param fences - The fences to use for outlier detection.
+   * @param fences."0"
+   * @param fences."1"
    * @returns An array of values that are not outliers.
    */
   (row, [lower, upper]) =>
@@ -261,7 +265,7 @@ export const getFlaggedRows = createSelector(
 const getFormattedData = createSelector(
   [
     getFormattedColumns,
-    getColumns,
+    getOriginalColumns,
     getData,
     getEmptyColumns,
     getPosAtEmptyList,
@@ -432,6 +436,7 @@ export const getFormattedWorkbook = createSelector(
   /**
    * Creates a workbook using the formatted sheet and sheet name.
    * @param formattedSheet - The formatted sheet to use for creating the workbook.
+   * @param writtenSheet
    * @param sheetName - The sheet name to use for creating the workbook.
    * @returns The formatted workbook.
    */

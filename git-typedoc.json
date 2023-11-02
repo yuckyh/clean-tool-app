@@ -1,0 +1,30 @@
+{
+  "$schema": "https://typedoc.org/schema.json",
+  "entryPoints": ["./src/*"],
+  "entryPointStrategy": "expand",
+  "excludeExternals": true,
+  "externalPattern": [
+    "**/node_modules/**/*",
+    "**/dist/**/*",
+    "**/dev-dist/**/*",
+    "**/src-tauri/**/*",
+    "**/.yarn/**/*"
+  ],
+  "githubPages": false,
+  "gitRevision": "main",
+  "includeVersion": true,
+  "name": "CLEaN Tool",
+  "out": "docs",
+  "plugin": [
+    "typedoc-plugin-markdown",
+    "typedoc-plugin-frontmatter",
+    "typedoc-github-wiki-theme",
+    "typedoc-plugin-merge-modules"
+  ],
+  "lightHighlightTheme": "material-theme-lighter",
+  "darkHighlightTheme": "material-theme-ocean",
+  "readme": "./README.md",
+  "sourceLinkTemplate": "https://github.com/yuckyh/clean-tool-app/",
+  "theme": "github-wiki",
+  "tsconfig": "./src/tsconfig.json"
+}

@@ -1,3 +1,6 @@
+import type { Flag, FlagReason } from '@/features/sheet/reducers'
+
+import { getFlaggedCells } from '@/app/selectors'
 import { getFormattedColumn } from '@/features/columns/selectors'
 import { getCell, getIndexRow } from '@/features/sheet/selectors'
 import { stringLookup } from '@/lib/array'
@@ -10,15 +13,13 @@ import {
   tokens,
 } from '@fluentui/react-components'
 import * as E from 'fp-ts/Either'
+import * as Eq from 'fp-ts/Eq'
 import * as O from 'fp-ts/Option'
 import * as RA from 'fp-ts/ReadonlyArray'
 import * as RR from 'fp-ts/ReadonlyRecord'
 import * as f from 'fp-ts/function'
-import * as Eq from 'fp-ts/Eq'
 import * as S from 'fp-ts/string'
 import { useMemo } from 'react'
-import { Flag, FlagReason } from '@/features/sheet/reducers'
-import { getFlaggedCells } from '@/app/selectors'
 
 const useClasses = makeStyles({
   incorrect: {
@@ -49,13 +50,8 @@ const useClasses = makeStyles({
 
 /**
  * The props for {@link PreviewCell}
- * 
- * @prop {number} col - The column index
- * @prop {number} row - The row index
- * 
- * @interface
  */
-interface Props {
+export interface Props {
   /**
    * The column index
    */
@@ -72,7 +68,14 @@ const reasonInFlagEq = Eq.tuple(
   typedEq<FlagReason, string>(S.Eq),
 )
 
-export default function PreviewCell({ col, row }: Props) {
+/**
+ * The cell in the {@link PreviewDataGrid} that displays the value of the data value with the flag formatting
+ * @param props - The component's props
+ * @param props.col - The column index
+ * @param props.row - The row index
+ * @returns JSX.Element
+ */
+export default function PreviewCell({ col, row }: Readonly<Props>) {
   const classes = useClasses()
 
   const cell = useAppSelector((state) => getCell(state, col, row))

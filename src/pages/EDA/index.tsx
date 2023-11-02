@@ -13,7 +13,10 @@ const useClasses = makeStyles({
   },
 })
 
-export function Component() {
+/**
+ *
+ */
+export default function EDA() {
   const classes = useClasses()
 
   return (

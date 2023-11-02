@@ -1,5 +1,7 @@
-/* eslint-disable no-param-reassign */
-/* eslint-disable functional/immutable-data */
+/* eslint-disable
+  no-param-reassign,
+  functional/immutable-data
+*/
 import type { PayloadAction } from '@reduxjs/toolkit'
 
 import { getPersisted, setPersisted } from '@/lib/localStorage'
@@ -7,14 +9,14 @@ import { createSlice } from '@reduxjs/toolkit'
 
 export type Progress = 'explored' | 'matched' | 'none' | 'uploaded'
 
-interface State {
+export interface State {
   progress: Progress
 }
 
 const sliceName = 'progress'
 const defaultValue: Progress = 'none'
 
-const initialState: State = {
+const initialState: Readonly<State> = {
   progress: getPersisted(sliceName, defaultValue),
 }
 
@@ -35,7 +37,7 @@ const progressSlice = createSlice({
 
       return state
     },
-    setProgress: (state, { payload }: PayloadAction<Progress>) => {
+    setProgress: (state, { payload }: Readonly<PayloadAction<Progress>>) => {
       state.progress = payload
 
       return state

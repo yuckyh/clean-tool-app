@@ -7,9 +7,9 @@ import type { TableColumnDefinition } from '@fluentui/react-components'
 import SimpleDataGrid from '@/components/SimpleDataGrid'
 import { getFormattedColumns } from '@/features/columns/selectors'
 import { getFormattedWorkbook } from '@/features/sheet/selectors'
-import { getColumnsLength } from '@/selectors/columnsSelectors'
 import { stringLookup } from '@/lib/array'
 import { useAppSelector } from '@/lib/hooks'
+import { getColumnsLength } from '@/selectors/columnsSelectors'
 import {
   Button,
   Subtitle2,
@@ -60,7 +60,10 @@ const useClasses = makeStyles({
   },
 })
 
-export function Component() {
+/**
+ *
+ */
+export default function Download() {
   const classes = useClasses()
 
   const dataLength = useAppSelector(({ sheet }) => sheet.data.length)

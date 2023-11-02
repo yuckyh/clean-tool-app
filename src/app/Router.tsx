@@ -1,33 +1,53 @@
 import App from '@/app'
+import { asTask } from '@/lib/fp'
 import Layout from '@/pages/Layout'
-import * as f from 'fp-ts/function'
 import {
   Route,
   createBrowserRouter,
   createRoutesFromElements,
 } from 'react-router-dom'
 
+/**
+ * A helper function to import a component lazily from its default export.
+ * @public
+ * @template T - The component's prop type
+ * @param path - Path to the component
+ * @returns A {@link https://gcanti.github.io/fp-ts/modules/Task.ts.html `task`} that resolves the default export of the component which can be used by the {@link https://reactrouter.com/en/main/route/lazy `lazy`} property for a route.
+ */
+export function lazyComponentImport<T>(path: string) {
+  return asTask(async () => ({
+    Component: (
+      await (import(path) as Promise<{ default: React.ComponentType<T> }>)
+    ).default,
+  }))
+}
+
+/**
+ * The application routes defined using JSX.
+ *
+ * Most of the routes are lazy loaded using the {@link lazyComponentImport | `lazyComponentImport`} helper.
+ */
 export const routes = createRoutesFromElements(
   <Route element={<App />}>
     <Route element={<Layout />}>
-      <Route index lazy={f.constant(import('@/pages'))} />
-      <Route lazy={f.constant(import('@/pages/Upload'))} path="upload" />
+      <Route index lazy={lazyComponentImport('@/pages')} />
+      <Route lazy={lazyComponentImport('@/pages/Upload')} path="upload" />
       <Route
-        lazy={f.constant(import('@/pages/ColumnMatching'))}
+        lazy={lazyComponentImport('@/pages/ColumnMatching')}
         path="column-matching"
       />
-      <Route lazy={f.constant(import('@/pages/EDA'))} path="EDA">
+      <Route lazy={lazyComponentImport('@/pages/EDA')} path="EDA">
         <Route path=":column">
-          <Route index lazy={f.constant(import('@/pages/EDA/Variable'))} />
+          <Route index lazy={lazyComponentImport('@/pages/EDA/Variable')} />
           <Route
-            lazy={f.constant(import('@/pages/EDA/Variable'))}
+            lazy={lazyComponentImport('@/pages/EDA/Variable')}
             path=":visit"
           />
         </Route>
       </Route>
-      <Route lazy={f.constant(import('@/pages/Download'))} path="download" />
+      <Route lazy={lazyComponentImport('@/pages/Download')} path="download" />
     </Route>
-    <Route lazy={f.constant(import('@/pages/404'))} path="*" />
+    <Route lazy={lazyComponentImport('@/pages/NotFound')} path="*" />
   </Route>,
 )
 
@@ -35,4 +55,4 @@ export const router = createBrowserRouter(routes, {
   future: {
     v7_normalizeFormMethod: true,
   },
-})
+} as const)

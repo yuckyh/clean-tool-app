@@ -35,7 +35,8 @@ export const getSheetName = ({ sheet }: RootState) => sheet.sheetName
 
 export const getVisits = ({ sheet }: RootState) => sheet.visits
 
-export const getColumns = ({ sheet }: RootState) => sheet.originalColumns
+export const getOriginalColumns = ({ sheet }: RootState) =>
+  sheet.originalColumns
 
 export const getData = ({ sheet }: RootState) => sheet.data
 
