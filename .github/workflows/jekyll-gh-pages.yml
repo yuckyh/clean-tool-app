@@ -25,6 +25,9 @@ jobs:
   # Build job
   build:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: docs
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -35,6 +38,7 @@ jobs:
         with:
           source: ./docs/
           destination: ./_site
+          working-directory: '${{ github.workspace }}/docs'
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v2
 
