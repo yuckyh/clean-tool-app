@@ -21,6 +21,8 @@ dist-ssr
 dev-dist/*
 *.local
 
+docs
+html-docs
 .frontmatter
 frontmatter.json
 
