@@ -17,12 +17,11 @@
     "typedoc-github-wiki-theme",
     "typedoc-plugin-markdown",
   ],
-  "readme": "./README.md",
+  // "readme": "./README.md",
   "name": "CLEaN Tool",
   "out": "docs",
   "tsconfig": "./src/tsconfig.json",
   "includeVersion": true,
   "gitRevision": "main",
-  "githubPages": false,
   "sourceLinkTemplate": "https://github.com/yuckyh/clean-tool-app/"
 }

@@ -231,8 +231,9 @@
   "scripts": {
     "build": "tsc && vite build",
     "dev": "vite",
-    "doc": "typedoc --theme hierarchy --out html-docs",
+    "doc": "typedoc --theme hierarchy --out html-docs --githubPages false",
     "doc:git": "typedoc --theme github-wiki --out docs",
+    "doc:all": "yarn doc && yarn doc:git",
     "lint": "eslint . --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
     "preview:clean": "tsc && vite build && vite preview"

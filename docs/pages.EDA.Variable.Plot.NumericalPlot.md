@@ -2,11 +2,15 @@
 
 ## Table of contents
 
+### Interfaces
+
+- [Props](../wiki/pages.EDA.Variable.Plot.NumericalPlot.Props)
+
 ### Functions
 
 - [default](../wiki/pages.EDA.Variable.Plot.NumericalPlot#default)
 
-## Component
+## Functions
 
 ### default
 
@@ -22,16 +26,20 @@ The y-axis is jittered to prevent the x's from overlapping.
 
 | Name | Type |
 | :------ | :------ |
-| `«destructured»` | `Props` |
+| `«destructured»` | [`Props`](../wiki/pages.EDA.Variable.Plot.NumericalPlot.Props) |
 
 #### Returns
 
 `Element`
 
+**`Function`**
+
+NumericalPlot
+
 **`Argument`**
 
-props - The component prop Props
+props - The component's props
 
 #### Defined in
 
-[Projects/clean-tool-app/src/pages/EDA/Variable/Plot/NumericalPlot.tsx:47](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/pages/EDA/Variable/Plot/NumericalPlot.tsx:46](https://github.com/yuckyh/clean-tool-app/)
