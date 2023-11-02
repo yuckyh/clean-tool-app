@@ -21,10 +21,13 @@ dist-ssr
 dev-dist/*
 *.local
 
-docs
-html-docs
+docs/*
+html-docs/*
 .frontmatter
 frontmatter.json
+
+.env.*
+!.env.*.example
 
 # Editor directories and files
 .vscode/*
@@ -36,5 +39,3 @@ frontmatter.json
 *.njsproj
 *.sln
 *.sw?
-.env.*
-!.env.*.example
