@@ -12,7 +12,7 @@ import {
  * @public
  * @template T - The component's prop type
  * @param path - Path to the component
- * @returns A {@link https://gcanti.github.io/fp-ts/modules/Task.ts.html `task`} that resolves the default export of the component which can be used by the {@link https://reactrouter.com/en/main/route/lazy `lazy`} property for a route.
+ * @returns A {@link https://gcanti.github.io/fp-ts/modules/Task.ts.html `Task`} that resolves the default export of the component which can be used by the {@link https://reactrouter.com/en/main/route/lazy `lazy`} property for a route.
  */
 export function lazyComponentImport<T>(path: string) {
   return asTask(async () => ({
