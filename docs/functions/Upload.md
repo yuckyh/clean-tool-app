@@ -2,11 +2,11 @@
 
 ***
 
-[CLEaN Tool](../exports.md) / Component
+[CLEaN Tool](../exports.md) / Upload
 
-# Function: Component()
+# Function: Upload()
 
-> **Component**(): `Element`
+> **Upload**(): `Element`
 
 The upload page.
 This page is used to upload the file, select the sheet if it has more than one sheet, and also specify the visit information.

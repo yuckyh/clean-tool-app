@@ -8,13 +8,23 @@
 
 > **ProgressNav**(): `Element`
 
+The progress navigation component
+
+This components is used as the main navigation with the functionality of showing the user's progress
+
 ## Returns
 
 `Element`
 
+The component object
+
+## See
+
+[ProgressNavBar](ProgressNavBar.md) for details on the bar's functionality
+
 ## Source
 
-[Projects/clean-tool-app/src/features/progress/components/ProgressNav.tsx:51](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/features/progress/components/ProgressNav.tsx:62](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

@@ -18,7 +18,7 @@ The main app component
 
 ## Remarks
 
-This component can be merged with [Layout](Layout.md)
+This component could potentially be merged with [Layout](Layout.md)
 
 ## Source
 

@@ -8,9 +8,13 @@
 
 > **`const`** **routes**: `RouteObject`[]
 
+The application routes defined using JSX.
+
+Most of the routes are lazy loaded using the [`lazyComponentImport`](../functions/lazyComponentImport.md) helper.
+
 ## Source
 
-[Projects/clean-tool-app/src/app/Router.tsx:10](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/app/Router.tsx:30](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

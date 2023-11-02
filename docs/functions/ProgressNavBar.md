@@ -8,7 +8,7 @@
 
 > **ProgressNavBar**(): `Element`
 
-The progress bar navigation component
+The progress navigation's bar component
 
 This component is used to control the length of the progress bar's fill
 
@@ -18,9 +18,13 @@ This component is used to control the length of the progress bar's fill
 
 The component object
 
+## See
+
+[ProgressNav](ProgressNav.md) for details of the overall navigation component
+
 ## Source
 
-[Projects/clean-tool-app/src/features/progress/components/ProgressNavBar.tsx:33](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/features/progress/components/ProgressNavBar.tsx:34](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

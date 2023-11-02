@@ -2,15 +2,19 @@
 
 ***
 
-[CLEaN Tool](../exports.md) / router
+[CLEaN Tool](../exports.md) / EDA
 
-# Variable: router
+# Function: EDA()
 
-> **`const`** **router**: `Router`
+> **EDA**(): `Element`
+
+## Returns
+
+`Element`
 
 ## Source
 
-[Projects/clean-tool-app/src/app/Router.tsx:54](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/pages/EDA/index.tsx:19](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

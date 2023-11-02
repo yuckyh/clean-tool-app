@@ -9,7 +9,7 @@
 - [Exports](exports.md#exports)
   - [Component](exports.md#component)
   - [Other](exports.md#other)
-  - [Page component](exports.md#page-component)
+  - [Page](exports.md#page)
 - [Other](exports.md#other-1)
   - [codebook](exports.md#codebook)
 
@@ -19,12 +19,12 @@
 
 - [App](functions/App.md)
 - [Layout](functions/Layout.md)
+- [ProgressNav](functions/ProgressNav.md)
 - [ProgressNavBar](functions/ProgressNavBar.md)
 
 ### Other
 
-- [Component](namespaces/Component/README.md)
-- [Component](namespaces/Component/README.md)
+- [default](namespaces/default/README.md)
 - [default](namespaces/default/README.md)
 - [AlertRef](interfaces/AlertRef.md)
 - [AsyncThunkConfig](interfaces/AsyncThunkConfig.md)
@@ -110,11 +110,10 @@
 - [AllDataGrid](functions/AllDataGrid.md)
 - [BlankDataGrid](functions/BlankDataGrid.md)
 - [CategoricalPlot](functions/CategoricalPlot.md)
+- [ColumnMatching](functions/ColumnMatching.md)
 - [ColumnsDataGrid](functions/ColumnsDataGrid.md)
-- [Component](functions/Component.md)
-- [Component](functions/Component.md)
-- [Component](functions/Component.md)
-- [Component](functions/Component.md)
+- [Download](functions/Download.md)
+- [EDA](functions/EDA.md)
 - [FileToast](functions/FileToast.md)
 - [FilterInput](functions/FilterInput.md)
 - [FilteredOptions](functions/FilteredOptions.md)
@@ -131,7 +130,6 @@
 - [Plot](functions/Plot.md)
 - [PreviewCell](functions/PreviewCell.md)
 - [PreviewDataGrid](functions/PreviewDataGrid.md)
-- [ProgressNav](functions/ProgressNav.md)
 - [ProgressNavLink](functions/ProgressNavLink.md)
 - [ScoreCell](functions/ScoreCell.md)
 - [SheetPickerInput](functions/SheetPickerInput.md)
@@ -142,6 +140,7 @@
 - [ValueCell](functions/ValueCell.md)
 - [ValueCell](functions/ValueCell.md)
 - [ValueCell](functions/ValueCell.md)
+- [Variable](functions/Variable.md)
 - [VariablePlot](functions/VariablePlot.md)
 - [VisitInput](functions/VisitInput.md)
 - [VisitsCell](functions/VisitsCell.md)
@@ -237,6 +236,7 @@
 - [ioDumpName](functions/ioDumpName.md)
 - [ioDumpTrace](functions/ioDumpTrace.md)
 - [isCorrectNumber](functions/isCorrectNumber.md)
+- [lazyComponentImport](functions/lazyComponentImport.md)
 - [length](functions/length.md)
 - [lookup](functions/lookup.md)
 - [multiply](functions/multiply.md)
@@ -279,11 +279,11 @@
 - [useThemePreference](functions/useThemePreference.md)
 - [useTokenToHex](functions/useTokenToHex.md)
 
-### Page component
+### Page
 
-- [Component](functions/Component.md)
-- [Component](functions/Component.md)
-- [Component](functions/Component.md)
+- [Home](functions/Home.md)
+- [NotFound](functions/NotFound.md)
+- [Upload](functions/Upload.md)
 
 ## Other
 

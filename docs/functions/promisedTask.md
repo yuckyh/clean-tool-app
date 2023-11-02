@@ -6,7 +6,7 @@
 
 # Function: promisedTask()
 
-> **promisedTask**\<`V`\>(`promise`): () => `Promise`\<`V`\>
+> **promisedTask**\<`V`\>(`promise`): `Task`\<`V`\>
 
 ## Type parameters
 
@@ -18,18 +18,7 @@
 
 ## Returns
 
-`function`
-
-> > (): `Promise`\<`V`\>
->
-> ### Returns
->
-> `Promise`\<`V`\>
->
-> ### Source
->
-> [Projects/clean-tool-app/src/lib/fp.ts:16](https://github.com/yuckyh/clean-tool-app/)
->
+`Task`\<`V`\>
 
 ## Source
 

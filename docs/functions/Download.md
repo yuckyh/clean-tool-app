@@ -2,15 +2,19 @@
 
 ***
 
-[CLEaN Tool](../exports.md) / router
+[CLEaN Tool](../exports.md) / Download
 
-# Variable: router
+# Function: Download()
 
-> **`const`** **router**: `Router`
+> **Download**(): `Element`
+
+## Returns
+
+`Element`
 
 ## Source
 
-[Projects/clean-tool-app/src/app/Router.tsx:54](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/pages/Download/index.tsx:66](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

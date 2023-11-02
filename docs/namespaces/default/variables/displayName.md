@@ -2,7 +2,7 @@
 
 ***
 
-[CLEaN Tool](../../../exports.md) / [Component](../README.md) / displayName
+[CLEaN Tool](../../../exports.md) / [default](../README.md) / displayName
 
 # Variable: displayName
 

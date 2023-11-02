@@ -10,7 +10,7 @@
 
 ### Variables
 
-- [defaultProps](variables/defaultProps.md)
+- [displayName](variables/displayName.md)
 
 ***
 
