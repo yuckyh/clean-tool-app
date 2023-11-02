@@ -23,6 +23,7 @@
   ],
   "lightHighlightTheme": "material-theme-lighter",
   "darkHighlightTheme": "material-theme-ocean",
+  "cleanOutputDir": false,
   "readme": "./README.md",
   "sourceLinkTemplate": "https://github.com/yuckyh/clean-tool-app/",
   "theme": "github-wiki",
