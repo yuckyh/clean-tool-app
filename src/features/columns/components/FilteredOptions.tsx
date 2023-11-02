@@ -5,9 +5,13 @@ import { Option } from '@fluentui/react-components'
 import * as O from 'fp-ts/Option'
 import * as RA from 'fp-ts/ReadonlyArray'
 import * as f from 'fp-ts/function'
-import type { ColumnMatch } from '../reducers'
 
 const search = fuse.search.bind(fuse)
+
+interface ColumnMatch {
+  match: string
+  score: number
+}
 
 interface Props {
   filteredMatches: readonly ColumnMatch[]

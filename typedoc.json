@@ -14,13 +14,16 @@
   ],
   "plugin": [
     "typedoc-theme-hierarchy",
-    "typedoc-github-wiki-theme",
     "typedoc-plugin-markdown",
+    "typedoc-github-wiki-theme",
+    "typedoc-plugin-frontmatter",
+    "typedoc-plugin-merge-modules",
   ],
-  // "readme": "./README.md",
+  "mergeModulesMergeMode": "module",
   "name": "CLEaN Tool",
   "out": "docs",
   "tsconfig": "./src/tsconfig.json",
+  "readme": "./README.md",
   "includeVersion": true,
   "gitRevision": "main",
   "sourceLinkTemplate": "https://github.com/yuckyh/clean-tool-app/"

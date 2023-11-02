@@ -1,7 +1,3 @@
----
-permalink: /
----
-
 # CLEaN Tool
 
 Welcome to the CLEaN Tool Documentation

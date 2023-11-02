@@ -1,1 +1,0 @@
-# Module: types/vite-env

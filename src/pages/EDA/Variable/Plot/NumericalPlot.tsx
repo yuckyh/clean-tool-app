@@ -25,7 +25,7 @@ const jitterY = (jitter: number) => Math.random() * jitter * 2 - jitter
  * @property {string} variable The variable name of the formatted column and visit for the plot
  * @property {string} visit The visit for the plot
  */
-export interface Props {
+interface Props {
   column: string
   unit: string
   variable: string

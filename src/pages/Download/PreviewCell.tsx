@@ -48,12 +48,21 @@ const useClasses = makeStyles({
 })
 
 /**
- * @interface Props
+ * The props for {@link PreviewCell}
+ * 
  * @prop {number} col - The column index
  * @prop {number} row - The row index
+ * 
+ * @interface
  */
 interface Props {
+  /**
+   * The column index
+   */
   col: number
+  /**
+   * The row index
+   */
   row: number
 }
 

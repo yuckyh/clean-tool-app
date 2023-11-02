@@ -15,11 +15,6 @@ import * as S from 'fp-ts/string'
 
 import { fetchMatches, sliceName } from './actions'
 
-export interface ColumnMatch {
-  match: string
-  score: number
-}
-
 export type DataType = 'categorical' | 'numerical'
 
 interface State {
