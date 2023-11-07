@@ -1,9 +1,10 @@
+/**
+ * @file This is a component file for the App component.
+ */
+
 /* eslint-disable
   functional/functional-parameters
 */
-
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import type Layout from '@/pages/Layout'
 
 import { author, description, keywords } from '@/../package.json'
 import store from '@/app/store'
@@ -17,9 +18,13 @@ import { useRegisterSW } from 'virtual:pwa-register/react'
 
 /**
  * This is the second entry point of the application.
- * @remarks This component could potentially be merged with {@link Layout}
+ * This is to be used inside the router.
  * @category Component
  * @returns The main app component
+ * @example
+ * ```tsx
+ * <Route element={<App />} />
+ * ```
  */
 export default function App() {
   useGlobalStyles()

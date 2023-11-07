@@ -1,26 +1,28 @@
 import type { AppState } from '@/app/store'
 import type { SheetResponse } from '@/workers/sheet'
+import type * as T from 'fp-ts/Task'
 
-import { promisedWorker, sheetWorker } from '@/app/workers'
+import { sheetWorker } from '@/app/workers'
 import { dumpError } from '@/lib/fp/logger'
+import { promisedWorker } from '@/lib/utils'
 import { createAsyncThunk } from '@reduxjs/toolkit'
-import * as T from 'fp-ts/Task'
 import * as TE from 'fp-ts/TaskEither'
 import * as f from 'fp-ts/function'
 
 export const sliceName = 'sheet'
 
-const messagePromise = f.pipe(
-  TE.tryCatch(() => promisedWorker('message', sheetWorker), dumpError),
-  TE.map(({ data }) => data),
-  TE.getOrElse(() =>
-    T.of<SheetResponse>({
-      error: new Error('sheetWorker failed'),
-      fileName: '',
-      status: 'fail',
-    }),
-  ),
-)
+const messagePromise: T.Task<SheetResponse<'fail'> | SheetResponse<'ok'>> =
+  f.pipe(
+    TE.tryCatch(() => promisedWorker('message', sheetWorker), dumpError),
+    TE.matchW(
+      () => ({
+        error: new Error('sheetWorker failed'),
+        fileName: '',
+        status: 'fail',
+      }),
+      ({ data }) => data,
+    ),
+  )
 
 export const fetchSheet = createAsyncThunk(
   `${sliceName}/fetchSheet`,
@@ -29,7 +31,7 @@ export const fetchSheet = createAsyncThunk(
 
     sheetWorker.postMessage({ fileName, method: 'get' })
 
-    const { workbook } = await messagePromise()
+    const { workbook } = (await messagePromise()) as SheetResponse<'ok'>
 
     return {
       SheetNames: workbook?.SheetNames,
@@ -53,9 +55,9 @@ export const postFile = createAsyncThunk(
       [buffer],
     )
 
-    const promise = await messagePromise()
+    const { fileName } = await messagePromise()
 
-    return promise.fileName
+    return fileName
   },
 )
 

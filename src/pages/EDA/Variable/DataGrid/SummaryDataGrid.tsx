@@ -36,7 +36,7 @@ const useClasses = makeStyles({
   },
 })
 
-export interface Props {
+interface Props {
   column: string
   isCategorical: boolean
   visit: string
@@ -48,6 +48,7 @@ export interface Props {
  * @param props.column
  * @param props.isCategorical
  * @param props.visit
+ * @example
  */
 export default function SummaryDataGrid({
   column,

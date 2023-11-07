@@ -13,4 +13,4 @@ interface AsyncThunkConfig {
 }
 
 type GenericAsyncThunk = AsyncThunk<unknown, unknown, AsyncThunkConfig>
-export type RejectedAction = Readonly<ReturnType<GenericAsyncThunk['rejected']>>
+type RejectedAction = Readonly<ReturnType<GenericAsyncThunk['rejected']>>

@@ -47,7 +47,7 @@ const useClasses = makeStyles({
   },
 })
 
-export interface Props {
+interface Props {
   done: boolean
   path: string
   pos: number
@@ -59,6 +59,7 @@ export interface Props {
  * @param props.done
  * @param props.path
  * @param props.pos
+ * @example
  */
 export default function ProgressNavLink({ done, path, pos }: Readonly<Props>) {
   const classes = useClasses()

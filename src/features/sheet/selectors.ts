@@ -16,7 +16,7 @@ import { equals, isCorrectNumber, refinedEq, stubEq, toString } from '@/lib/fp'
 import * as CellItem from '@/lib/fp/CellItem'
 import * as Flag from '@/lib/fp/Flag'
 import { add, divideBy, multiply } from '@/lib/fp/number'
-import { getOriginalColumn } from '@/selectors/selectors'
+import { getOriginalColumn } from '@/selectors/columns/selectors'
 import { createSelector } from '@reduxjs/toolkit'
 import * as E from 'fp-ts/Either'
 import * as Eq from 'fp-ts/Eq'
@@ -35,6 +35,7 @@ import {
   getIndexColumnPos,
   getSearchedPos,
 } from '../columns/selectors'
+import { dump } from '@/lib/fp/logger'
 
 export const getVisit = createSelector(
   [getVisits, getColParam],
@@ -74,9 +75,8 @@ export const getCell = createSelector(
   [getData, getOriginalColumn, getRowParam],
   (data, column, row) =>
     f.pipe(
-      data,
-      RA.lookup(row),
-      O.flatMap(CellItem.fold(RR.lookup(column))),
+      arrLookup(data)(CellItem.of({}))(row),
+      CellItem.fold(RR.lookup(column)),
       f.pipe('' as CellItem.Value, f.constant, O.getOrElse),
     ),
 )
@@ -164,6 +164,7 @@ const getFences = createSelector(
    * Calculates the fences for outlier detection using the provided sorted numerical row.
    * @param row - The sorted numerical row to calculate the fences from.
    * @returns The fences tuple.
+   * @example
    */
   (row) =>
     f.pipe(
@@ -193,6 +194,7 @@ export const getOutliers = createSelector(
    * @param fences."0" - The lower fence.
    * @param fences."1" - The upper fence.
    * @returns An array of values that are outliers.
+   * @example
    */
   (row, [lower, upper]) =>
     f.pipe(
@@ -217,6 +219,7 @@ export const getNotOutliers = createSelector(
    * @param fences."0" - The lower fence
    * @param fences."1" - The upper fence
    * @returns - An array of non outlier values
+   * @example
    */
   (row, [lower, upper]) =>
     f.pipe(
@@ -235,6 +238,7 @@ export const getFlaggedRows = createSelector(
    * @param title - The title to use for selection.
    * @param reason - The flag reason.
    * @returns An array of flagged rows.
+   * @example
    */
   (flaggedCells, title, reason) =>
     f.pipe(
@@ -272,6 +276,7 @@ const getFormattedData = createSelector(
    * @param posList - The positions at empty list to use for data formatting.
    * @param dataTypes - The data types to use for data formatting.
    * @returns An array of formatted cell items.
+   * @example
    */
   (
     formattedColumns,
@@ -332,6 +337,7 @@ const getRenamedSheet = createSelector(
    * Renames the sheet using the formatted data.
    * @param formattedData - The formatted data to use for renaming.
    * @returns The renamed sheet.
+   * @example
    */
   (formattedData) => utils.json_to_sheet(formattedData as CellItem.CellItem[]),
 )
@@ -344,6 +350,7 @@ const getFlaggedCellsAddresses = createSelector(
    * @param formattedColumns - The formatted columns to use for address encoding.
    * @param indexRow - The index row to use for address encoding.
    * @returns An array of flagged cells addresses.
+   * @example
    */
   (flaggedCells, formattedColumns, indexRow) =>
     f.pipe(
@@ -400,6 +407,7 @@ export const getFormattedSheet = createSelector(
    * @param renamedSheet - The renamed sheet to format.
    * @param flaggedCellsAddresses - The flagged cells addresses to use for formatting.
    * @returns The formatted sheet.
+   * @example
    */
   (renamedSheet, flaggedCellsAddresses) =>
     f.pipe(
@@ -431,6 +439,7 @@ export const getFormattedWorkbook = createSelector(
    * @param formattedSheet - The sheet that has been formatted with the flagged cells
    * @param sheetName - The sheet name to use for creating the workbook
    * @returns The formatted workbook.
+   * @example
    */
   (formattedSheet, sheetName) => {
     const newWorkbook = utils.book_new()

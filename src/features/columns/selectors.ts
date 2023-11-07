@@ -10,7 +10,7 @@ import {
   getVisits,
   indexEq,
 } from '@/app/selectors'
-import { arrLookup, findIndex } from '@/lib/array'
+import { arrLookup, findIndex, head } from '@/lib/array'
 import { dualMap, equals } from '@/lib/fp'
 import { snakeToKebab } from '@/lib/fp/string'
 import fuse from '@/lib/fuse'
@@ -18,7 +18,7 @@ import {
   getColumnDuplicates,
   getColumnDuplicatesList,
   getMatchColumn,
-} from '@/selectors/selectors'
+} from '@/selectors/columns/selectors'
 import { createSelector } from '@reduxjs/toolkit'
 import * as O from 'fp-ts/Option'
 import * as P from 'fp-ts/Predicate'
@@ -76,7 +76,7 @@ export const getVisitByMatchVisit = createSelector(
   (visits, matchVisit) => arrLookup(visits)('')(matchVisit),
 )
 
-export const getShouldFormat = createSelector(
+const getShouldFormat = createSelector(
   [getMatchVisit, getColumnDuplicates],
   (matchVisit, columnDuplicates) =>
     columnDuplicates.length > 1 || P.not(equals(N.Eq)(matchVisit))(0),
@@ -103,7 +103,7 @@ const getResolvedVisits = createSelector(
   (visits, matchVisits) => RA.map(arrLookup(visits)(''))(matchVisits),
 )
 
-export const getResolvedIndices = createSelector(
+const getResolvedIndices = createSelector(
   [getMatchColumns, getResolvedVisits],
   RA.zip<string, string>,
 )
@@ -146,9 +146,8 @@ export const getSearchedPos = createSelector(
 )
 
 export const getIndexColumnPos = createSelector(
-  [getIndices, getVisits, getFirstVisit],
-  (indices, visits, firstVisit) =>
-    searchPos(indices, visits, 'sno', firstVisit),
+  [getIndices, getVisits],
+  (indices, visits) => searchPos(indices, visits, 'sno', head(visits)('')),
 )
 
 export const getMatchIndex = createSelector(

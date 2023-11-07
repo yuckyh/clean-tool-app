@@ -7,6 +7,9 @@ import type { AppState } from './store'
 
 /**
  * Utility function to get the column position parameter
+ * @param _state - The application state {@link AppState}
+ * @param col - The column position parameter
+ * @returns The column position parameter
  * @example
  * ```ts
  * const getOriginalColumn = createSelector(
@@ -14,9 +17,6 @@ import type { AppState } from './store'
  *  (originalColumns, col) => originalColumns[col],
  * )
  * ```
- * @param _state - The application state {@link AppState}
- * @param col - The column position parameter
- * @returns The column position parameter
  */
 export const getColParam = (_state: AppState, col: number) => col
 
@@ -24,6 +24,10 @@ export const getColParam = (_state: AppState, col: number) => col
  * Utility function to get the column position parameter
  *
  * This function is to be used with the column position parameter to select a cell from the data array
+ * @param _state - The application state {@link AppState}
+ * @param _col - The column position parameter
+ * @param row - The row position parameter
+ * @returns The row position parameter
  * @example
  * ```ts
  * const originalColumn = createSelector(
@@ -31,15 +35,14 @@ export const getColParam = (_state: AppState, col: number) => col
  *  (originalColumn, row) => originalColumn[row],
  * )
  * ```
- * @param _state - The application state {@link AppState}
- * @param _col - The column position parameter
- * @param row - The row position parameter
- * @returns The row position parameter
  */
 export const getRowParam = (_state: AppState, _col: number, row: number) => row
 
 /**
  * Utility function to get the column parameter
+ * @param _state - The application state {@link AppState}
+ * @param column - The column parameter
+ * @returns The column parameter
  * @example
  * ```ts
  * const originalColumn = createSelector(
@@ -47,9 +50,6 @@ export const getRowParam = (_state: AppState, _col: number, row: number) => row
  *  (originalColumn, column) => data.map((row) => row[column]),
  * )
  * ```
- * @param _state - The application state {@link AppState}
- * @param column - The column parameter
- * @returns The column parameter
  */
 export const getColumnParam = (_state: AppState, column: string) => column
 
@@ -72,6 +72,11 @@ export const getProgress = ({ progress }: AppState) => progress.progress
 
 export const getSheetName = ({ sheet }: AppState) => sheet.sheetName
 
+/**
+ * Selector function to get the visits.
+ * @param state - The application state {@link AppState}
+ * @returns The visits that has been specified by the user
+ */
 export const getVisits = ({ sheet }: AppState) => sheet.visits
 
 export const getOriginalColumns = ({ sheet }: AppState) => sheet.originalColumns

@@ -18,20 +18,32 @@ const jitterPower = 0.3
 const jitterY = (jitter: number) => Math.random() * jitter * 2 - jitter
 
 /**
- * Props for the numerical plot component {@link NumericalPlot}
- * @param column - The column for the plot
- * @param unit - The unit of measurement for the variable
- * @param variable - The variable name of the formatted column and visit for the plot
- * @param visit - The visit for the plot
+ * Props for the numerical plot component {@link NumericalPlot}.
+ * @example
+ * ```tsx
+ * <NumericalPlot
+ *   column="al_r"
+ *   unit="mm"
+ *   variable="al_r_1"
+ *   visit="1" />
+ * ```
  */
-export interface Props {
-  /** The column used to get the row for plotting  */
+interface Props {
+  /**
+   * The column used to get the row for plotting.
+   */
   column: string
-  /** The */
+  /**
+   * The measurement unit.
+   */
   unit: string
-  /**  */
+  /**
+   * The variable name of the formatted column and visit for the plot.
+   */
   variable: string
-  /**  */
+  /**
+   * The visit for the plot.
+   */
   visit: string
 }
 
@@ -41,12 +53,22 @@ export interface Props {
  * The box plot is rendered with the outliers as red x's and the non-outliers as blue x's.
  *
  * The y-axis is jittered to prevent the x's from overlapping.
+ * @category Component
+ * @group Plot
  * @param props - The component's props
  * @param props.column - The column used to get the row for plotting
  * @param props.unit - The unit of measurement for the variable
  * @param props.variable - The variable name of the formatted column and visit for the plot
  * @param props.visit - The visit for the plot
- * @returns \{JSX.Element\} The numerical plot component
+ * @returns The numerical plot component
+ * @example A variable with column name `al_r` and visit `1` with unit `mm` will have variable `al_r_1` resulting to the following usage:
+ * ```tsx
+ * <NumericalPlot
+ *   column="al_r"
+ *   unit="mm"
+ *   variable="al_r_1"
+ *   visit="1" />
+ * ```
  */
 export default function NumericalPlot({
   column,

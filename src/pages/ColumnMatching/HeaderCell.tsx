@@ -15,7 +15,7 @@ const useClasses = makeStyles({
   },
 })
 
-export interface Props {
+interface Props {
   header: string
   subtitle: string
 }
@@ -25,6 +25,7 @@ export interface Props {
  * @param props
  * @param props.header
  * @param props.subtitle
+ * @example
  */
 export default function HeaderCell({ header, subtitle }: Readonly<Props>) {
   const classes = useClasses()

@@ -25,7 +25,10 @@ import {
   useLoadingTransition,
 } from '@/lib/hooks'
 import { createLazyMemo, createMemo } from '@/lib/utils'
-import { getColumnComparer, getColumnsLength } from '@/selectors/selectors'
+import {
+  getColumnComparer,
+  getColumnsLength,
+} from '@/selectors/columns/selectors'
 import {
   Spinner,
   Subtitle1,
@@ -60,7 +63,7 @@ const MemoizedDataGrid = createMemo<SimpleDataGridProps<number>>(
 
 const focusMode: DataGridFocusMode = 'composite'
 
-export interface Props {
+interface Props {
   errorAlertRef: RefObject<AlertRef>
   infoAlertRef: RefObject<AlertRef>
 }
@@ -70,6 +73,7 @@ export interface Props {
  * @param props
  * @param props.errorAlertRef
  * @param props.infoAlertRef
+ * @example
  */
 export default function ColumnsDataGrid({
   errorAlertRef,

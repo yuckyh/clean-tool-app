@@ -10,6 +10,8 @@ type Props = SpinnerProps & PropsWithChildren
  *
  * @param props
  * @param props.children
+ * @returns
+ * @example
  */
 export default function Loader({ children, ...props }: Readonly<Props>) {
   return <Suspense fallback={<Spinner {...props} />}>{children}</Suspense>

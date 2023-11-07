@@ -8,7 +8,7 @@ const useClasses = makeStyles({
   },
 })
 
-export interface Props {
+interface Props {
   handleChange: InputProps['onChange']
   label: string
   value: string
@@ -20,6 +20,7 @@ export interface Props {
  * @param props.handleChange
  * @param props.label
  * @param props.value
+ * @example
  */
 export default function FilterInput({
   handleChange,

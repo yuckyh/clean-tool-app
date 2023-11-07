@@ -9,7 +9,7 @@ import { getFormattedColumns } from '@/features/columns/selectors'
 import { getFormattedWorkbook } from '@/features/sheet/selectors'
 import { arrLookup } from '@/lib/array'
 import { useAppSelector } from '@/lib/hooks'
-import { getColumnsLength } from '@/selectors/selectors'
+import { getColumnsLength } from '@/selectors/columns/selectors'
 import {
   Button,
   Subtitle2,

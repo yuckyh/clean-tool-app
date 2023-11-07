@@ -1,5 +1,5 @@
 import { useAppSelector } from '@/lib/hooks'
-import { getOriginalColumn } from '@/selectors/selectors'
+import { getOriginalColumn } from '@/selectors/columns/selectors'
 import {
   makeStyles,
   mergeClasses,
@@ -28,7 +28,7 @@ const useClasses = makeStyles({
   },
 })
 
-export interface Props {
+interface Props {
   isOriginal: boolean
   pos: number
 }
@@ -38,6 +38,7 @@ export interface Props {
  * @param props
  * @param props.isOriginal
  * @param props.pos
+ * @example
  */
 export default function HeaderCell({ isOriginal, pos }: Readonly<Props>) {
   const classes = useClasses()

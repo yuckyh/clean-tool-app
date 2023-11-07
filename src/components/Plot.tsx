@@ -8,7 +8,7 @@ import * as f from 'fp-ts/function'
 import Plotly from 'plotly.js-cartesian-dist'
 import createPlotlyComponent from 'react-plotly.js/factory'
 
-export interface Props extends Partial<PlotParams> {
+interface Props extends Partial<PlotParams> {
   data: Data[]
 }
 
@@ -25,6 +25,7 @@ const defaultConfig: Readonly<Partial<Config>> = {
  * @param props
  * @param props.config
  * @param props.layout
+ * @example
  */
 export default function Plot({ config, layout, ...props }: Readonly<Props>) {
   const color = useTokenToHex(tokens.colorNeutralStrokeAccessible)

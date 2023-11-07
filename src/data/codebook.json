@@ -1,2467 +1,2466 @@
 [
   {
-      "name": "sno",
-      "description": "participant study id",
-      "category": "identifier",
-      "type": "free text",
-      "unit": "NA"
+    "category": "identifier",
+    "description": "participant study id",
+    "name": "sno",
+    "type": "free text",
+    "unit": "NA"
   },
   {
-      "name": "visit_id",
-      "description": "visit id",
-      "category": "identifier",
-      "type": "free text",
-      "unit": "NA"
+    "category": "identifier",
+    "description": "visit id",
+    "name": "visit_id",
+    "type": "free text",
+    "unit": "NA"
   },
   {
-      "name": "visit",
-      "description": "subsequent visit number",
-      "category": "identifier",
-      "type": "ordinal",
-      "unit": "whole number"
+    "category": "identifier",
+    "description": "subsequent visit number",
+    "name": "visit",
+    "type": "ordinal",
+    "unit": "whole number"
   },
   {
-      "name": "data_source",
-      "description": "data source",
-      "category": "identifier",
-      "type": "categorical",
-      "unit": "whole number"
+    "category": "identifier",
+    "description": "data source",
+    "name": "data_source",
+    "type": "categorical",
+    "unit": "whole number"
   },
   {
-      "name": "study_design",
-      "description": "study design",
-      "category": "identifier",
-      "type": "free text",
-      "unit": "NA"
+    "category": "identifier",
+    "description": "study design",
+    "name": "study_design",
+    "type": "free text",
+    "unit": "NA"
   },
   {
-      "name": "study_site",
-      "description": "study site",
-      "category": "identifier",
-      "type": "categorical",
-      "unit": "whole number"
+    "category": "identifier",
+    "description": "study site",
+    "name": "study_site",
+    "type": "categorical",
+    "unit": "whole number"
   },
   {
-      "name": "school",
-      "description": "school",
-      "category": "identifier",
-      "type": "categorical",
-      "unit": "NA"
+    "category": "identifier",
+    "description": "school",
+    "name": "school",
+    "type": "categorical",
+    "unit": "NA"
   },
   {
-      "name": "grade",
-      "description": "grade/level participant is studying at in school",
-      "category": "identifier",
-      "type": "categorical",
-      "unit": "whole number"
+    "category": "identifier",
+    "description": "grade/level participant is studying at in school",
+    "name": "grade",
+    "type": "categorical",
+    "unit": "whole number"
   },
   {
-      "name": "lens_group",
-      "description": "intervention lens group",
-      "category": "identifier",
-      "type": "free text",
-      "unit": "NA"
+    "category": "identifier",
+    "description": "intervention lens group",
+    "name": "lens_group",
+    "type": "free text",
+    "unit": "NA"
   },
   {
-      "name": "lens_group_info",
-      "description": "additional information for intervention lens group",
-      "category": "identifier",
-      "type": "free text",
-      "unit": "NA"
+    "category": "identifier",
+    "description": "additional information for intervention lens group",
+    "name": "lens_group_info",
+    "type": "free text",
+    "unit": "NA"
   },
   {
-      "name": "visit_date_noncyclo",
-      "description": "visit date for non-cycloplegic measurements",
-      "category": "visit details",
-      "type": "date",
-      "unit": "YY-MM-DD"
+    "category": "visit details",
+    "description": "visit date for non-cycloplegic measurements",
+    "name": "visit_date_noncyclo",
+    "type": "date",
+    "unit": "YY-MM-DD"
   },
   {
-      "name": "visit_date_cyclo",
-      "description": "visit date for cycloplegic measurements",
-      "category": "visit details",
-      "type": "date",
-      "unit": "YY-MM-DD"
+    "category": "visit details",
+    "description": "visit date for cycloplegic measurements",
+    "name": "visit_date_cyclo",
+    "type": "date",
+    "unit": "YY-MM-DD"
   },
   {
-      "name": "visit_duration",
-      "description": "visit duration from baseline",
-      "category": "visit details",
-      "type": "interval",
-      "unit": "months"
+    "category": "visit details",
+    "description": "visit duration from baseline",
+    "name": "visit_duration",
+    "type": "interval",
+    "unit": "months"
   },
   {
-      "name": "ethnicity",
-      "description": "ethnicity",
-      "category": "demography",
-      "type": "free text",
-      "unit": "NA"
+    "category": "demography",
+    "description": "ethnicity",
+    "name": "ethnicity",
+    "type": "free text",
+    "unit": "NA"
   },
   {
-      "name": "gender",
-      "description": "gender",
-      "category": "demography",
-      "type": "categorical",
-      "unit": "whole number"
+    "category": "demography",
+    "description": "gender",
+    "name": "gender",
+    "type": "categorical",
+    "unit": "whole number"
   },
   {
-      "name": "age",
-      "description": "age",
-      "category": "demography",
-      "type": "interval",
-      "unit": "years"
+    "category": "demography",
+    "description": "age",
+    "name": "age",
+    "type": "interval",
+    "unit": "years"
   },
   {
-      "name": "parental_myopia",
-      "description": "number of myopic parents",
-      "category": "demography",
-      "type": "interval",
-      "unit": "whole number"
+    "category": "demography",
+    "description": "number of myopic parents",
+    "name": "parental_myopia",
+    "type": "interval",
+    "unit": "whole number"
   },
   {
-      "name": "parental_high_myopia",
-      "description": "number of highly myopic parents",
-      "category": "demography",
-      "type": "interval",
-      "unit": "whole number"
+    "category": "demography",
+    "description": "number of highly myopic parents",
+    "name": "parental_high_myopia",
+    "type": "interval",
+    "unit": "whole number"
   },
   {
-      "name": "age_myopia_onset",
-      "description": "self-reported age of myopia onset",
-      "category": "demography",
-      "type": "interval",
-      "unit": "years"
+    "category": "demography",
+    "description": "self-reported age of myopia onset",
+    "name": "age_myopia_onset",
+    "type": "interval",
+    "unit": "years"
   },
   {
-      "name": "height",
-      "description": "height",
-      "category": "anthropometry",
-      "type": "interval",
-      "unit": "centimeters"
+    "category": "anthropometry",
+    "description": "height",
+    "name": "height",
+    "type": "interval",
+    "unit": "centimeters"
   },
   {
-      "name": "weight",
-      "description": "weight",
-      "category": "anthropometry",
-      "type": "interval",
-      "unit": "kilograms"
+    "category": "anthropometry",
+    "description": "weight",
+    "name": "weight",
+    "type": "interval",
+    "unit": "kilograms"
   },
   {
-      "name": "pva_r",
-      "description": "presenting visual acuity of right eye only",
-      "category": "visual acuity",
-      "type": "interval",
-      "unit": "logMAR"
+    "category": "visual acuity",
+    "description": "presenting visual acuity of right eye only",
+    "name": "pva_r",
+    "type": "interval",
+    "unit": "logMAR"
   },
   {
-      "name": "pva_l",
-      "description": "presenting visual acuity of left eye only",
-      "category": "visual acuity",
-      "type": "interval",
-      "unit": "logMAR"
+    "category": "visual acuity",
+    "description": "presenting visual acuity of left eye only",
+    "name": "pva_l",
+    "type": "interval",
+    "unit": "logMAR"
   },
   {
-      "name": "pva_bino",
-      "description": "presenting visual acuity of both eyes (binocular)",
-      "category": "visual acuity",
-      "type": "interval",
-      "unit": "logMAR"
+    "category": "visual acuity",
+    "description": "presenting visual acuity of both eyes (binocular)",
+    "name": "pva_bino",
+    "type": "interval",
+    "unit": "logMAR"
   },
   {
-      "name": "pva_correction",
-      "description": "type of habitual correction used",
-      "category": "visual acuity",
-      "type": "free text",
-      "unit": "NA"
+    "category": "visual acuity",
+    "description": "type of habitual correction used",
+    "name": "pva_correction",
+    "type": "free text",
+    "unit": "NA"
   },
   {
-      "name": "near_va_r",
-      "description": "near visual acuity of right eye only",
-      "category": "visual acuity",
-      "type": "interval",
-      "unit": "logMAR"
+    "category": "visual acuity",
+    "description": "near visual acuity of right eye only",
+    "name": "near_va_r",
+    "type": "interval",
+    "unit": "logMAR"
   },
   {
-      "name": "near_va_l",
-      "description": "near visual acuity of left eye only",
-      "category": "visual acuity",
-      "type": "interval",
-      "unit": "logMAR"
+    "category": "visual acuity",
+    "description": "near visual acuity of left eye only",
+    "name": "near_va_l",
+    "type": "interval",
+    "unit": "logMAR"
   },
   {
-      "name": "near_va_bino",
-      "description": "near visual acuity of both eyes (binocular)",
-      "category": "visual acuity",
-      "type": "interval",
-      "unit": "logMAR"
+    "category": "visual acuity",
+    "description": "near visual acuity of both eyes (binocular)",
+    "name": "near_va_bino",
+    "type": "interval",
+    "unit": "logMAR"
   },
   {
-      "name": "bcva_r",
-      "description": "best-corrected visual acuity of right eye only",
-      "category": "visual acuity",
-      "type": "interval",
-      "unit": "logMAR"
+    "category": "visual acuity",
+    "description": "best-corrected visual acuity of right eye only",
+    "name": "bcva_r",
+    "type": "interval",
+    "unit": "logMAR"
   },
   {
-      "name": "bcva_l",
-      "description": "best-corrected visual acuity of left eye only",
-      "category": "visual acuity",
-      "type": "interval",
-      "unit": "logMAR"
+    "category": "visual acuity",
+    "description": "best-corrected visual acuity of left eye only",
+    "name": "bcva_l",
+    "type": "interval",
+    "unit": "logMAR"
   },
   {
-      "name": "bcva_bino",
-      "description": "best-corrected visual acuity of both eyes (binocular)",
-      "category": "visual acuity",
-      "type": "interval",
-      "unit": "logMAR"
+    "category": "visual acuity",
+    "description": "best-corrected visual acuity of both eyes (binocular)",
+    "name": "bcva_bino",
+    "type": "interval",
+    "unit": "logMAR"
   },
   {
-      "name": "near_bcva_r",
-      "description": "near best-corrected visual acuity of right eye",
-      "category": "visual acuity",
-      "type": "interval",
-      "unit": "logMAR"
+    "category": "visual acuity",
+    "description": "near best-corrected visual acuity of right eye",
+    "name": "near_bcva_r",
+    "type": "interval",
+    "unit": "logMAR"
   },
   {
-      "name": "near_bcva_l",
-      "description": "near best-corrected visual acuity of left eye",
-      "category": "visual acuity",
-      "type": "interval",
-      "unit": "logMAR"
+    "category": "visual acuity",
+    "description": "near best-corrected visual acuity of left eye",
+    "name": "near_bcva_l",
+    "type": "interval",
+    "unit": "logMAR"
   },
   {
-      "name": "protocol_pva",
-      "description": "",
-      "category": "visual acuity",
-      "type": "free text",
-      "unit": "NA"
+    "category": "visual acuity",
+    "description": "",
+    "name": "protocol_pva",
+    "type": "free text",
+    "unit": "NA"
   },
   {
-      "name": "protocol_near_va",
-      "description": "",
-      "category": "visual acuity",
-      "type": "free text",
-      "unit": "NA"
+    "category": "visual acuity",
+    "description": "",
+    "name": "protocol_near_va",
+    "type": "free text",
+    "unit": "NA"
   },
   {
-      "name": "protocol_bcva",
-      "description": "",
-      "category": "visual acuity",
-      "type": "free text",
-      "unit": "NA"
+    "category": "visual acuity",
+    "description": "",
+    "name": "protocol_bcva",
+    "type": "free text",
+    "unit": "NA"
   },
   {
-      "name": "pd",
-      "description": "interpupillary distance",
-      "category": "interocular",
-      "type": "interval",
-      "unit": "mm"
+    "category": "interocular",
+    "description": "interpupillary distance",
+    "name": "pd",
+    "type": "interval",
+    "unit": "mm"
   },
   {
-      "name": "mear_pd",
-      "description": "interpupillary distance at near",
-      "category": "interocular",
-      "type": "interval",
-      "unit": "mm"
+    "category": "interocular",
+    "description": "interpupillary distance at near",
+    "name": "mear_pd",
+    "type": "interval",
+    "unit": "mm"
   },
   {
-      "name": "phoria_status",
-      "description": "phoria status (horizontal)",
-      "category": "phoria and prisms",
-      "type": "categorical",
-      "unit": "NA"
+    "category": "phoria and prisms",
+    "description": "phoria status (horizontal)",
+    "name": "phoria_status",
+    "type": "categorical",
+    "unit": "NA"
   },
   {
-      "name": "phoria",
-      "description": "distance phoria - horizontal (binocular)",
-      "category": "phoria and prisms",
-      "type": "interval",
-      "unit": "Prism diopters"
+    "category": "phoria and prisms",
+    "description": "distance phoria - horizontal (binocular)",
+    "name": "phoria",
+    "type": "interval",
+    "unit": "Prism diopters"
   },
   {
-      "name": "vert_phoria_status",
-      "description": "phoria status (vertical)",
-      "category": "phoria and prisms",
-      "type": "categorical",
-      "unit": "NA"
+    "category": "phoria and prisms",
+    "description": "phoria status (vertical)",
+    "name": "vert_phoria_status",
+    "type": "categorical",
+    "unit": "NA"
   },
   {
-      "name": "vert_phoria",
-      "description": "distance phoria - vertical (binocular)",
-      "category": "phoria and prisms",
-      "type": "interval",
-      "unit": "Prism diopters"
+    "category": "phoria and prisms",
+    "description": "distance phoria - vertical (binocular)",
+    "name": "vert_phoria",
+    "type": "interval",
+    "unit": "Prism diopters"
   },
   {
-      "name": "near_phoria_status",
-      "description": "near phoria status",
-      "category": "phoria and prisms",
-      "type": "categorical",
-      "unit": "NA"
+    "category": "phoria and prisms",
+    "description": "near phoria status",
+    "name": "near_phoria_status",
+    "type": "categorical",
+    "unit": "NA"
   },
   {
-      "name": "near_phoria",
-      "description": "near phoria (binocular)",
-      "category": "phoria and prisms",
-      "type": "interval",
-      "unit": "Prism diopters"
+    "category": "phoria and prisms",
+    "description": "near phoria (binocular)",
+    "name": "near_phoria",
+    "type": "interval",
+    "unit": "Prism diopters"
   },
   {
-      "name": "near_phoria_1d",
-      "description": "near phoria (binocular) with +1D lens",
-      "category": "phoria and prisms",
-      "type": "interval",
-      "unit": "Prism diopters"
+    "category": "phoria and prisms",
+    "description": "near phoria (binocular) with +1D lens",
+    "name": "near_phoria_1d",
+    "type": "interval",
+    "unit": "Prism diopters"
   },
   {
-      "name": "base_in",
-      "description": "base in - average reading",
-      "category": "phoria and prisms",
-      "type": "interval",
-      "unit": "Prism diopters"
+    "category": "phoria and prisms",
+    "description": "base in - average reading",
+    "name": "base_in",
+    "type": "interval",
+    "unit": "Prism diopters"
   },
   {
-      "name": "base_out",
-      "description": "base out - average reading",
-      "category": "phoria and prisms",
-      "type": "interval",
-      "unit": "Prism diopters"
+    "category": "phoria and prisms",
+    "description": "base out - average reading",
+    "name": "base_out",
+    "type": "interval",
+    "unit": "Prism diopters"
   },
   {
-      "name": "base_in_blur",
-      "description": "base in - average reading (blur)",
-      "category": "phoria and prisms",
-      "type": "interval",
-      "unit": "Prism diopters"
+    "category": "phoria and prisms",
+    "description": "base in - average reading (blur)",
+    "name": "base_in_blur",
+    "type": "interval",
+    "unit": "Prism diopters"
   },
   {
-      "name": "base_in_break",
-      "description": "base in - average reading (break)",
-      "category": "phoria and prisms",
-      "type": "interval",
-      "unit": "Prism diopters"
+    "category": "phoria and prisms",
+    "description": "base in - average reading (break)",
+    "name": "base_in_break",
+    "type": "interval",
+    "unit": "Prism diopters"
   },
   {
-      "name": "base_in_rec",
-      "description": "base in - average reading (recovery)",
-      "category": "phoria and prisms",
-      "type": "interval",
-      "unit": "Prism diopters"
+    "category": "phoria and prisms",
+    "description": "base in - average reading (recovery)",
+    "name": "base_in_rec",
+    "type": "interval",
+    "unit": "Prism diopters"
   },
   {
-      "name": "base_out_blur",
-      "description": "base in - average reading (blur)",
-      "category": "phoria and prisms",
-      "type": "interval",
-      "unit": "Prism diopters"
+    "category": "phoria and prisms",
+    "description": "base in - average reading (blur)",
+    "name": "base_out_blur",
+    "type": "interval",
+    "unit": "Prism diopters"
   },
   {
-      "name": "base_out_break",
-      "description": "base in - average reading (break)",
-      "category": "phoria and prisms",
-      "type": "interval",
-      "unit": "Prism diopters"
+    "category": "phoria and prisms",
+    "description": "base in - average reading (break)",
+    "name": "base_out_break",
+    "type": "interval",
+    "unit": "Prism diopters"
   },
   {
-      "name": "base_out_rec",
-      "description": "base in - average reading (recovery)",
-      "category": "phoria and prisms",
-      "type": "interval",
-      "unit": "Prism diopters"
+    "category": "phoria and prisms",
+    "description": "base in - average reading (recovery)",
+    "name": "base_out_rec",
+    "type": "interval",
+    "unit": "Prism diopters"
   },
   {
-      "name": "protocol_phoria",
-      "description": "",
-      "category": "phoria and prisms",
-      "type": "free text",
-      "unit": "NA"
+    "category": "phoria and prisms",
+    "description": "",
+    "name": "protocol_phoria",
+    "type": "free text",
+    "unit": "NA"
   },
   {
-      "name": "protocol_near_phoria",
-      "description": "",
-      "category": "phoria and prisms",
-      "type": "free text",
-      "unit": "NA"
+    "category": "phoria and prisms",
+    "description": "",
+    "name": "protocol_near_phoria",
+    "type": "free text",
+    "unit": "NA"
   },
   {
-      "name": "raf_r",
-      "description": "accommodative amplitude of right eye",
-      "category": "accommodation",
-      "type": "interval",
-      "unit": "diopters"
+    "category": "accommodation",
+    "description": "accommodative amplitude of right eye",
+    "name": "raf_r",
+    "type": "interval",
+    "unit": "diopters"
   },
   {
-      "name": "raf_l",
-      "description": "accommodative amplitude of left eye",
-      "category": "accommodation",
-      "type": "interval",
-      "unit": "diopters"
+    "category": "accommodation",
+    "description": "accommodative amplitude of left eye",
+    "name": "raf_l",
+    "type": "interval",
+    "unit": "diopters"
   },
   {
-      "name": "raf_bino",
-      "description": "accommodative amplitude of both eyes (binocular)",
-      "category": "accommodation",
-      "type": "interval",
-      "unit": "diopters"
+    "category": "accommodation",
+    "description": "accommodative amplitude of both eyes (binocular)",
+    "name": "raf_bino",
+    "type": "interval",
+    "unit": "diopters"
   },
   {
-      "name": "aca_ratio",
-      "description": "accommodative convergence (AC) per unit of accommodative (A) response",
-      "category": "accommodation",
-      "type": "interval",
-      "unit": "NA"
+    "category": "accommodation",
+    "description": "accommodative convergence (AC) per unit of accommodative (A) response",
+    "name": "aca_ratio",
+    "type": "interval",
+    "unit": "NA"
   },
   {
-      "name": "acc_response",
-      "description": "accommodative response measured using Grand Seiko WAM 5500",
-      "category": "accommodation",
-      "type": "interval",
-      "unit": "diopters"
+    "category": "accommodation",
+    "description": "accommodative response measured using Grand Seiko WAM 5500",
+    "name": "acc_response",
+    "type": "interval",
+    "unit": "diopters"
   },
   {
-      "name": "acc_response_r",
-      "description": "accommodative response in the right eye",
-      "category": "accommodation",
-      "type": "interval",
-      "unit": "diopters"
+    "category": "accommodation",
+    "description": "accommodative response in the right eye",
+    "name": "acc_response_r",
+    "type": "interval",
+    "unit": "diopters"
   },
   {
-      "name": "acc_response_l",
-      "description": "accommodative response in the left eye",
-      "category": "accommodation",
-      "type": "interval",
-      "unit": "diopters"
+    "category": "accommodation",
+    "description": "accommodative response in the left eye",
+    "name": "acc_response_l",
+    "type": "interval",
+    "unit": "diopters"
   },
   {
-      "name": "nra",
-      "description": "negative relative accommodation (NRA) at 33cm (binocular) - average reading",
-      "category": "accommodation",
-      "type": "interval",
-      "unit": "diopters"
+    "category": "accommodation",
+    "description": "negative relative accommodation (NRA) at 33cm (binocular) - average reading",
+    "name": "nra",
+    "type": "interval",
+    "unit": "diopters"
   },
   {
-      "name": "pra",
-      "description": "positive relative accommodation (PRA) at 33cm (binocular) - average reading",
-      "category": "accommodation",
-      "type": "interval",
-      "unit": "diopters"
+    "category": "accommodation",
+    "description": "positive relative accommodation (PRA) at 33cm (binocular) - average reading",
+    "name": "pra",
+    "type": "interval",
+    "unit": "diopters"
   },
   {
-      "name": "protocol_nra",
-      "description": "",
-      "category": "accommodation",
-      "type": "free text",
-      "unit": "NA"
+    "category": "accommodation",
+    "description": "",
+    "name": "protocol_nra",
+    "type": "free text",
+    "unit": "NA"
   },
   {
-      "name": "protocol_pra",
-      "description": "",
-      "category": "accommodation",
-      "type": "free text",
-      "unit": "NA"
+    "category": "accommodation",
+    "description": "",
+    "name": "protocol_pra",
+    "type": "free text",
+    "unit": "NA"
   },
   {
-      "name": "npc_b",
-      "description": "Near point convergence (break)",
-      "category": "accommodation",
-      "type": "interval",
-      "unit": "cm"
+    "category": "accommodation",
+    "description": "Near point convergence (break)",
+    "name": "npc_b",
+    "type": "interval",
+    "unit": "cm"
   },
   {
-      "name": "npc_r",
-      "description": "Near point convergence (recovery)",
-      "category": "accommodation",
-      "type": "interval",
-      "unit": "cm"
+    "category": "accommodation",
+    "description": "Near point convergence (recovery)",
+    "name": "npc_r",
+    "type": "interval",
+    "unit": "cm"
   },
   {
-      "name": "iop_r",
-      "description": "intraocular pressure of right eye",
-      "category": "intraocular pressure",
-      "type": "interval",
-      "unit": "mmHg"
+    "category": "intraocular pressure",
+    "description": "intraocular pressure of right eye",
+    "name": "iop_r",
+    "type": "interval",
+    "unit": "mmHg"
   },
   {
-      "name": "iop_l",
-      "description": "intraocular pressure of left eye",
-      "category": "intraocular pressure",
-      "type": "interval",
-      "unit": "mmHg"
+    "category": "intraocular pressure",
+    "description": "intraocular pressure of left eye",
+    "name": "iop_l",
+    "type": "interval",
+    "unit": "mmHg"
   },
   {
-      "name": "protocol_iop",
-      "description": "",
-      "category": "intraocular pressure",
-      "type": "free text",
-      "unit": "NA"
+    "category": "intraocular pressure",
+    "description": "",
+    "name": "protocol_iop",
+    "type": "free text",
+    "unit": "NA"
   },
   {
-      "name": "cyclo_sph_r",
-      "description": "cycloplegic autorefraction sphere value of right eye",
-      "category": "cycloplegic refraction",
-      "type": "interval",
-      "unit": "diopters"
+    "category": "cycloplegic refraction",
+    "description": "cycloplegic autorefraction sphere value of right eye",
+    "name": "cyclo_sph_r",
+    "type": "interval",
+    "unit": "diopters"
   },
   {
-      "name": "cyclo_cyl_r",
-      "description": "cycloplegic autorefraction cylinder value of right eye",
-      "category": "cycloplegic refraction",
-      "type": "interval",
-      "unit": "diopters"
+    "category": "cycloplegic refraction",
+    "description": "cycloplegic autorefraction cylinder value of right eye",
+    "name": "cyclo_cyl_r",
+    "type": "interval",
+    "unit": "diopters"
   },
   {
-      "name": "cyclo_axis_r",
-      "description": "cycloplegic autorefraction axis value of right eye",
-      "category": "cycloplegic refraction",
-      "type": "interval",
-      "unit": "degrees"
+    "category": "cycloplegic refraction",
+    "description": "cycloplegic autorefraction axis value of right eye",
+    "name": "cyclo_axis_r",
+    "type": "interval",
+    "unit": "degrees"
   },
   {
-      "name": "cyclo_se_r",
-      "description": "cycloplegic autorefraction spherical equivalent value of right eye",
-      "category": "cycloplegic refraction",
-      "type": "interval",
-      "unit": "diopters"
+    "category": "cycloplegic refraction",
+    "description": "cycloplegic autorefraction spherical equivalent value of right eye",
+    "name": "cyclo_se_r",
+    "type": "interval",
+    "unit": "diopters"
   },
   {
-      "name": "cyclo_sph_l",
-      "description": "cycloplegic autorefraction sphere value of left eye",
-      "category": "cycloplegic refraction",
-      "type": "interval",
-      "unit": "diopters"
+    "category": "cycloplegic refraction",
+    "description": "cycloplegic autorefraction sphere value of left eye",
+    "name": "cyclo_sph_l",
+    "type": "interval",
+    "unit": "diopters"
   },
   {
-      "name": "cyclo_cyl_l",
-      "description": "cycloplegic autorefraction cylinder value of left eye",
-      "category": "cycloplegic refraction",
-      "type": "interval",
-      "unit": "diopters"
+    "category": "cycloplegic refraction",
+    "description": "cycloplegic autorefraction cylinder value of left eye",
+    "name": "cyclo_cyl_l",
+    "type": "interval",
+    "unit": "diopters"
   },
   {
-      "name": "cyclo_axis_l",
-      "description": "cycloplegic autorefraction axis value of left eye",
-      "category": "cycloplegic refraction",
-      "type": "interval",
-      "unit": "degrees"
+    "category": "cycloplegic refraction",
+    "description": "cycloplegic autorefraction axis value of left eye",
+    "name": "cyclo_axis_l",
+    "type": "interval",
+    "unit": "degrees"
   },
   {
-      "name": "cyclo_se_l",
-      "description": "cycloplegic autorefraction spherical equivalent value of left eye",
-      "category": "cycloplegic refraction",
-      "type": "interval",
-      "unit": "diopters"
+    "category": "cycloplegic refraction",
+    "description": "cycloplegic autorefraction spherical equivalent value of left eye",
+    "name": "cyclo_se_l",
+    "type": "interval",
+    "unit": "diopters"
   },
   {
-      "name": "cyclo_subjref_sph_r",
-      "description": "cycloplegic subjective refraction sphere value of right eye",
-      "category": "cycloplegic refraction",
-      "type": "interval",
-      "unit": "diopters"
+    "category": "cycloplegic refraction",
+    "description": "cycloplegic subjective refraction sphere value of right eye",
+    "name": "cyclo_subjref_sph_r",
+    "type": "interval",
+    "unit": "diopters"
   },
   {
-      "name": "cyclo_subjref_cyl_r",
-      "description": "cycloplegic subjective refraction cylinder value of right eye",
-      "category": "cycloplegic refraction",
-      "type": "interval",
-      "unit": "diopters"
+    "category": "cycloplegic refraction",
+    "description": "cycloplegic subjective refraction cylinder value of right eye",
+    "name": "cyclo_subjref_cyl_r",
+    "type": "interval",
+    "unit": "diopters"
   },
   {
-    
-      "name": "cyclo_subjref_axis_r",
-      "description": "cycloplegic subjective refraction axis value of right eye",
-      "category": "cycloplegic refraction",
-      "type": "interval",
-      "unit": "degrees"
+    "category": "cycloplegic refraction",
+    "description": "cycloplegic subjective refraction axis value of right eye",
+    "name": "cyclo_subjref_axis_r",
+    "type": "interval",
+    "unit": "degrees"
   },
   {
-      "name": "cyclo_subjref_se_r",
-      "description": "cycloplegic subjective refraction spherical equivalent value of right eye",
-      "category": "cycloplegic refraction",
-      "type": "interval",
-      "unit": "diopters"
+    "category": "cycloplegic refraction",
+    "description": "cycloplegic subjective refraction spherical equivalent value of right eye",
+    "name": "cyclo_subjref_se_r",
+    "type": "interval",
+    "unit": "diopters"
   },
   {
-      "name": "cyclo_subjref_sph_l",
-      "description": "cycloplegic subjective refraction sphere value of left eye",
-      "category": "cycloplegic refraction",
-      "type": "interval",
-      "unit": "diopters"
+    "category": "cycloplegic refraction",
+    "description": "cycloplegic subjective refraction sphere value of left eye",
+    "name": "cyclo_subjref_sph_l",
+    "type": "interval",
+    "unit": "diopters"
   },
   {
-      "name": "cyclo_subjref_cyl_l",
-      "description": "cycloplegic subjective refraction cylinder value of left eye",
-      "category": "cycloplegic refraction",
-      "type": "interval",
-      "unit": "diopters"
+    "category": "cycloplegic refraction",
+    "description": "cycloplegic subjective refraction cylinder value of left eye",
+    "name": "cyclo_subjref_cyl_l",
+    "type": "interval",
+    "unit": "diopters"
   },
   {
-      "name": "cyclo_subjref_axis_l",
-      "description": "cycloplegic subjective refraction axis value of left eye",
-      "category": "cycloplegic refraction",
-      "type": "interval",
-      "unit": "degrees"
+    "category": "cycloplegic refraction",
+    "description": "cycloplegic subjective refraction axis value of left eye",
+    "name": "cyclo_subjref_axis_l",
+    "type": "interval",
+    "unit": "degrees"
   },
   {
-      "name": "cyclo_subjref_se_l",
-      "description": "cycloplegic subjective refraction spherical equivalent value of left eye",
-      "category": "cycloplegic refraction",
-      "type": "interval",
-      "unit": "diopters"
+    "category": "cycloplegic refraction",
+    "description": "cycloplegic subjective refraction spherical equivalent value of left eye",
+    "name": "cyclo_subjref_se_l",
+    "type": "interval",
+    "unit": "diopters"
   },
   {
-      "name": "noncycloauto_sph_r",
-      "description": "non-cycloplegic autorefraction sphere value of right eye",
-      "category": "noncycloplegic autorefraction",
-      "type": "interval",
-      "unit": "diopters"
+    "category": "noncycloplegic autorefraction",
+    "description": "non-cycloplegic autorefraction sphere value of right eye",
+    "name": "noncycloauto_sph_r",
+    "type": "interval",
+    "unit": "diopters"
   },
   {
-      "name": "noncycloauto_cyl_r",
-      "description": "non-cycloplegic autorefraction cylinder value of right eye",
-      "category": "noncycloplegic autorefraction",
-      "type": "interval",
-      "unit": "diopters"
+    "category": "noncycloplegic autorefraction",
+    "description": "non-cycloplegic autorefraction cylinder value of right eye",
+    "name": "noncycloauto_cyl_r",
+    "type": "interval",
+    "unit": "diopters"
   },
   {
-      "name": "noncycloauto_axis_r",
-      "description": "non-cycloplegic autorefraction axis value of right eye",
-      "category": "noncycloplegic autorefraction",
-      "type": "interval",
-      "unit": "degrees"
+    "category": "noncycloplegic autorefraction",
+    "description": "non-cycloplegic autorefraction axis value of right eye",
+    "name": "noncycloauto_axis_r",
+    "type": "interval",
+    "unit": "degrees"
   },
   {
-      "name": "noncycloauto_se_r",
-      "description": "non-cycloplegic autorefraction spherical equivalent value of right eye",
-      "category": "noncycloplegic autorefraction",
-      "type": "interval",
-      "unit": "diopters"
+    "category": "noncycloplegic autorefraction",
+    "description": "non-cycloplegic autorefraction spherical equivalent value of right eye",
+    "name": "noncycloauto_se_r",
+    "type": "interval",
+    "unit": "diopters"
   },
   {
-      "name": "noncycloauto_sph_l",
-      "description": "non-cycloplegic autorefraction sphere value of left eye",
-      "category": "noncycloplegic autorefraction",
-      "type": "interval",
-      "unit": "diopters"
+    "category": "noncycloplegic autorefraction",
+    "description": "non-cycloplegic autorefraction sphere value of left eye",
+    "name": "noncycloauto_sph_l",
+    "type": "interval",
+    "unit": "diopters"
   },
   {
-      "name": "noncycloauto_cyl_l",
-      "description": "non-cycloplegic autorefraction cylinder value of left eye",
-      "category": "noncycloplegic autorefraction",
-      "type": "interval",
-      "unit": "diopters"
+    "category": "noncycloplegic autorefraction",
+    "description": "non-cycloplegic autorefraction cylinder value of left eye",
+    "name": "noncycloauto_cyl_l",
+    "type": "interval",
+    "unit": "diopters"
   },
   {
-      "name": "noncycloauto_axis_l",
-      "description": "non-cycloplegic autorefraction axis value of left eye",
-      "category": "noncycloplegic autorefraction",
-      "type": "interval",
-      "unit": "degrees"
+    "category": "noncycloplegic autorefraction",
+    "description": "non-cycloplegic autorefraction axis value of left eye",
+    "name": "noncycloauto_axis_l",
+    "type": "interval",
+    "unit": "degrees"
   },
   {
-      "name": "noncycloauto_se_l",
-      "description": "non-cycloplegic autorefraction spherical equivalent value of left eye",
-      "category": "noncycloplegic autorefraction",
-      "type": "interval",
-      "unit": "diopters"
+    "category": "noncycloplegic autorefraction",
+    "description": "non-cycloplegic autorefraction spherical equivalent value of left eye",
+    "name": "noncycloauto_se_l",
+    "type": "interval",
+    "unit": "diopters"
   },
   {
-      "name": "retinoscopy_sph_r",
-      "description": "retinoscopy sphere value of right eye",
-      "category": "retinoscopy refraction",
-      "type": "interval",
-      "unit": "diopters"
+    "category": "retinoscopy refraction",
+    "description": "retinoscopy sphere value of right eye",
+    "name": "retinoscopy_sph_r",
+    "type": "interval",
+    "unit": "diopters"
   },
   {
-      "name": "retinoscopy_cyl_r",
-      "description": "retinoscopy cylinder value of right eye",
-      "category": "retinoscopy refraction",
-      "type": "interval",
-      "unit": "diopters"
+    "category": "retinoscopy refraction",
+    "description": "retinoscopy cylinder value of right eye",
+    "name": "retinoscopy_cyl_r",
+    "type": "interval",
+    "unit": "diopters"
   },
   {
-      "name": "retinoscopy_axis_r",
-      "description": "retinoscopy axis value of right eye",
-      "category": "retinoscopy refraction",
-      "type": "interval",
-      "unit": "degrees"
+    "category": "retinoscopy refraction",
+    "description": "retinoscopy axis value of right eye",
+    "name": "retinoscopy_axis_r",
+    "type": "interval",
+    "unit": "degrees"
   },
   {
-      "name": "retinoscopy_se_r",
-      "description": "retinoscopy spherical equivalent value of right eye",
-      "category": "retinoscopy refraction",
-      "type": "interval",
-      "unit": "diopters"
+    "category": "retinoscopy refraction",
+    "description": "retinoscopy spherical equivalent value of right eye",
+    "name": "retinoscopy_se_r",
+    "type": "interval",
+    "unit": "diopters"
   },
   {
-      "name": "retinoscopy_sph_l",
-      "description": "retinoscopy sphere value of left eye",
-      "category": "retinoscopy refraction",
-      "type": "interval",
-      "unit": "diopters"
+    "category": "retinoscopy refraction",
+    "description": "retinoscopy sphere value of left eye",
+    "name": "retinoscopy_sph_l",
+    "type": "interval",
+    "unit": "diopters"
   },
   {
-      "name": "retinoscopy_cyl_l",
-      "description": "retinoscopy cylinder value of left eye",
-      "category": "retinoscopy refraction",
-      "type": "interval",
-      "unit": "diopters"
+    "category": "retinoscopy refraction",
+    "description": "retinoscopy cylinder value of left eye",
+    "name": "retinoscopy_cyl_l",
+    "type": "interval",
+    "unit": "diopters"
   },
   {
-      "name": "retinoscopy_axis_l",
-      "description": "retinoscopy axis value of left eye",
-      "category": "retinoscopy refraction",
-      "type": "interval",
-      "unit": "degrees"
+    "category": "retinoscopy refraction",
+    "description": "retinoscopy axis value of left eye",
+    "name": "retinoscopy_axis_l",
+    "type": "interval",
+    "unit": "degrees"
   },
   {
-      "name": "retinoscopy_se_l",
-      "description": "retinoscopy spherical equivalent value of left eye",
-      "category": "retinoscopy refraction",
-      "type": "interval",
-      "unit": "diopters"
+    "category": "retinoscopy refraction",
+    "description": "retinoscopy spherical equivalent value of left eye",
+    "name": "retinoscopy_se_l",
+    "type": "interval",
+    "unit": "diopters"
   },
   {
-      "name": "subjref_sph_r",
-      "description": "subjective refraction sphere value of right eye",
-      "category": "subjective refraction",
-      "type": "interval",
-      "unit": "diopters"
+    "category": "subjective refraction",
+    "description": "subjective refraction sphere value of right eye",
+    "name": "subjref_sph_r",
+    "type": "interval",
+    "unit": "diopters"
   },
   {
-      "name": "subjref_cyl_r",
-      "description": "subjective refraction cylinder value of right eye",
-      "category": "subjective refraction",
-      "type": "interval",
-      "unit": "diopters"
+    "category": "subjective refraction",
+    "description": "subjective refraction cylinder value of right eye",
+    "name": "subjref_cyl_r",
+    "type": "interval",
+    "unit": "diopters"
   },
   {
-      "name": "subjref_axis_r",
-      "description": "subjective refraction axis value of right eye",
-      "category": "subjective refraction",
-      "type": "interval",
-      "unit": "degrees"
+    "category": "subjective refraction",
+    "description": "subjective refraction axis value of right eye",
+    "name": "subjref_axis_r",
+    "type": "interval",
+    "unit": "degrees"
   },
   {
-      "name": "subjref_se_r",
-      "description": "subjective refraction spherical equivalent value of right eye",
-      "category": "subjective refraction",
-      "type": "interval",
-      "unit": "diopters"
+    "category": "subjective refraction",
+    "description": "subjective refraction spherical equivalent value of right eye",
+    "name": "subjref_se_r",
+    "type": "interval",
+    "unit": "diopters"
   },
   {
-      "name": "subjref_sph_l",
-      "description": "subjective refraction sphere value of left eye",
-      "category": "subjective refraction",
-      "type": "interval",
-      "unit": "diopters"
+    "category": "subjective refraction",
+    "description": "subjective refraction sphere value of left eye",
+    "name": "subjref_sph_l",
+    "type": "interval",
+    "unit": "diopters"
   },
   {
-      "name": "subjref_cyl_l",
-      "description": "subjective refraction cylinder value of left eye",
-      "category": "subjective refraction",
-      "type": "interval",
-      "unit": "diopters"
+    "category": "subjective refraction",
+    "description": "subjective refraction cylinder value of left eye",
+    "name": "subjref_cyl_l",
+    "type": "interval",
+    "unit": "diopters"
   },
   {
-      "name": "subjref_axis_l",
-      "description": "subjective refraction axis value of left eye",
-      "category": "subjective refraction",
-      "type": "interval",
-      "unit": "degrees"
+    "category": "subjective refraction",
+    "description": "subjective refraction axis value of left eye",
+    "name": "subjref_axis_l",
+    "type": "interval",
+    "unit": "degrees"
   },
   {
-      "name": "subjref_se_l",
-      "description": "subjective refraction spherical equivalent value of left eye",
-      "category": "subjective refraction",
-      "type": "interval",
-      "unit": "diopters"
+    "category": "subjective refraction",
+    "description": "subjective refraction spherical equivalent value of left eye",
+    "name": "subjref_se_l",
+    "type": "interval",
+    "unit": "diopters"
   },
   {
-      "name": "al_r",
-      "description": "axial length of right eye",
-      "category": "ocular biometry",
-      "type": "interval",
-      "unit": "mm"
+    "category": "ocular biometry",
+    "description": "axial length of right eye",
+    "name": "al_r",
+    "type": "interval",
+    "unit": "mm"
   },
   {
-      "name": "al_l",
-      "description": "axial length of left eye",
-      "category": "ocular biometry",
-      "type": "interval",
-      "unit": "mm"
+    "category": "ocular biometry",
+    "description": "axial length of left eye",
+    "name": "al_l",
+    "type": "interval",
+    "unit": "mm"
   },
   {
-      "name": "cct_r",
-      "description": "central corneal thickness of right eye ",
-      "category": "ocular biometry",
-      "type": "interval",
-      "unit": "mm"
+    "category": "ocular biometry",
+    "description": "central corneal thickness of right eye ",
+    "name": "cct_r",
+    "type": "interval",
+    "unit": "mm"
   },
   {
-      "name": "cct_l",
-      "description": "central corneal thickness of left eye ",
-      "category": "ocular biometry",
-      "type": "interval",
-      "unit": "mm"
+    "category": "ocular biometry",
+    "description": "central corneal thickness of left eye ",
+    "name": "cct_l",
+    "type": "interval",
+    "unit": "mm"
   },
   {
-      "name": "lt_r",
-      "description": "lens thickness of right eye",
-      "category": "ocular biometry",
-      "type": "interval",
-      "unit": "mm"
+    "category": "ocular biometry",
+    "description": "lens thickness of right eye",
+    "name": "lt_r",
+    "type": "interval",
+    "unit": "mm"
   },
   {
-      "name": "lt_l",
-      "description": "lens thickness of left eye",
-      "category": "ocular biometry",
-      "type": "interval",
-      "unit": "mm"
+    "category": "ocular biometry",
+    "description": "lens thickness of left eye",
+    "name": "lt_l",
+    "type": "interval",
+    "unit": "mm"
   },
   {
-      "name": "acd_r",
-      "description": "anterior chamber depth of right eye",
-      "category": "ocular biometry",
-      "type": "interval",
-      "unit": "mm"
+    "category": "ocular biometry",
+    "description": "anterior chamber depth of right eye",
+    "name": "acd_r",
+    "type": "interval",
+    "unit": "mm"
   },
   {
-      "name": "acd_l",
-      "description": "anterior chamber depth of left eye",
-      "category": "ocular biometry",
-      "type": "interval",
-      "unit": "mm"
+    "category": "ocular biometry",
+    "description": "anterior chamber depth of left eye",
+    "name": "acd_l",
+    "type": "interval",
+    "unit": "mm"
   },
   {
-      "name": "k1_r",
-      "description": "keratomery (flat) value of right eye",
-      "category": "ocular biometry",
-      "type": "interval",
-      "unit": "mm"
+    "category": "ocular biometry",
+    "description": "keratomery (flat) value of right eye",
+    "name": "k1_r",
+    "type": "interval",
+    "unit": "mm"
   },
   {
-      "name": "k2_r",
-      "description": "keratomery (steep) value of right eye",
-      "category": "ocular biometry",
-      "type": "interval",
-      "unit": "mm"
+    "category": "ocular biometry",
+    "description": "keratomery (steep) value of right eye",
+    "name": "k2_r",
+    "type": "interval",
+    "unit": "mm"
   },
   {
-      "name": "k_axis_r",
-      "description": "keratomery axis value of right eye",
-      "category": "ocular biometry",
-      "type": "interval",
-      "unit": "degrees"
+    "category": "ocular biometry",
+    "description": "keratomery axis value of right eye",
+    "name": "k_axis_r",
+    "type": "interval",
+    "unit": "degrees"
   },
   {
-      "name": "k1_l",
-      "description": "keratomery (flat) value of left eye",
-      "category": "ocular biometry",
-      "type": "interval",
-      "unit": "mm"
+    "category": "ocular biometry",
+    "description": "keratomery (flat) value of left eye",
+    "name": "k1_l",
+    "type": "interval",
+    "unit": "mm"
   },
   {
-      "name": "k2_l",
-      "description": "keratomery (steep) value of left eye",
-      "category": "ocular biometry",
-      "type": "interval",
-      "unit": "mm"
+    "category": "ocular biometry",
+    "description": "keratomery (steep) value of left eye",
+    "name": "k2_l",
+    "type": "interval",
+    "unit": "mm"
   },
   {
-      "name": "k_axis_l",
-      "description": "keratomery axis value of left eye",
-      "category": "ocular biometry",
-      "type": "interval",
-      "unit": "degrees"
+    "category": "ocular biometry",
+    "description": "keratomery axis value of left eye",
+    "name": "k_axis_l",
+    "type": "interval",
+    "unit": "degrees"
   },
   {
-      "name": "mean_k_r",
-      "description": "corneal curvature (CR) using mean of keratometry readings of right eye",
-      "category": "ocular biometry",
-      "type": "interval",
-      "unit": "mm"
+    "category": "ocular biometry",
+    "description": "corneal curvature (CR) using mean of keratometry readings of right eye",
+    "name": "mean_k_r",
+    "type": "interval",
+    "unit": "mm"
   },
   {
-      "name": "diff_k_r",
-      "description": "difference in keratometry readings (K1-K2) of right eye",
-      "category": "ocular biometry",
-      "type": "interval",
-      "unit": "mm"
+    "category": "ocular biometry",
+    "description": "difference in keratometry readings (K1-K2) of right eye",
+    "name": "diff_k_r",
+    "type": "interval",
+    "unit": "mm"
   },
   {
-      "name": "alcr_r",
-      "description": "axial length corneal curvature ratio (ALCR) of right eye",
-      "category": "ocular biometry",
-      "type": "interval",
-      "unit": "NA"
+    "category": "ocular biometry",
+    "description": "axial length corneal curvature ratio (ALCR) of right eye",
+    "name": "alcr_r",
+    "type": "interval",
+    "unit": "NA"
   },
   {
-      "name": "mean_k_l",
-      "description": "corneal curvature (CR) using mean of keratometry readings of left eye",
-      "category": "ocular biometry",
-      "type": "interval",
-      "unit": "mm"
+    "category": "ocular biometry",
+    "description": "corneal curvature (CR) using mean of keratometry readings of left eye",
+    "name": "mean_k_l",
+    "type": "interval",
+    "unit": "mm"
   },
   {
-      "name": "diff_k_l",
-      "description": "difference in keratometry readings (K1-K2) of left eye",
-      "category": "ocular biometry",
-      "type": "interval",
-      "unit": "mm"
+    "category": "ocular biometry",
+    "description": "difference in keratometry readings (K1-K2) of left eye",
+    "name": "diff_k_l",
+    "type": "interval",
+    "unit": "mm"
   },
   {
-      "name": "alcr_l",
-      "description": "axial length corneal curvature ratio (ALCR) of left eye",
-      "category": "ocular biometry",
-      "type": "interval",
-      "unit": "NA"
+    "category": "ocular biometry",
+    "description": "axial length corneal curvature ratio (ALCR) of left eye",
+    "name": "alcr_l",
+    "type": "interval",
+    "unit": "NA"
   },
   {
-      "name": "ct_average_l",
-      "description": "average choroidal thickness of macular region of left eye",
-      "category": "choroid",
-      "type": "interval",
-      "unit": "um"
+    "category": "choroid",
+    "description": "average choroidal thickness of macular region of left eye",
+    "name": "ct_average_l",
+    "type": "interval",
+    "unit": "um"
   },
   {
-      "name": "ct_average_r",
-      "description": "average choroidal thickness of macular region of right eye",
-      "category": "choroid",
-      "type": "interval",
-      "unit": "um"
+    "category": "choroid",
+    "description": "average choroidal thickness of macular region of right eye",
+    "name": "ct_average_r",
+    "type": "interval",
+    "unit": "um"
   },
   {
-      "name": "ct_center_l",
-      "description": "center choroidal thickness of left eye",
-      "category": "choroid",
-      "type": "interval",
-      "unit": "um"
+    "category": "choroid",
+    "description": "center choroidal thickness of left eye",
+    "name": "ct_center_l",
+    "type": "interval",
+    "unit": "um"
   },
   {
-      "name": "ct_center_r",
-      "description": "center choroidal thickness of right eye",
-      "category": "choroid",
-      "type": "interval",
-      "unit": "um"
+    "category": "choroid",
+    "description": "center choroidal thickness of right eye",
+    "name": "ct_center_r",
+    "type": "interval",
+    "unit": "um"
   },
   {
-      "name": "ct_subf_l",
-      "description": "subfoveal choroidal thickness of left eye (central fovea subfield within the inner 1-mm-diameter circle)",
-      "category": "choroid",
-      "type": "interval",
-      "unit": "um"
+    "category": "choroid",
+    "description": "subfoveal choroidal thickness of left eye (central fovea subfield within the inner 1-mm-diameter circle)",
+    "name": "ct_subf_l",
+    "type": "interval",
+    "unit": "um"
   },
   {
-      "name": "ct_subf_r",
-      "description": "subfoveal choroidal thickness of right eye (central fovea subfield within the inner 1-mm-diameter circle)",
-      "category": "choroid",
-      "type": "interval",
-      "unit": "um"
+    "category": "choroid",
+    "description": "subfoveal choroidal thickness of right eye (central fovea subfield within the inner 1-mm-diameter circle)",
+    "name": "ct_subf_r",
+    "type": "interval",
+    "unit": "um"
   },
   {
-      "name": "ct_inf_15_l",
-      "description": "inferior choroidal thickness (1.5mm) of left eye (inner circle subfield between the inner and middle 1.5-mm-diameter circles)",
-      "category": "choroid",
-      "type": "interval",
-      "unit": "um"
+    "category": "choroid",
+    "description": "inferior choroidal thickness (1.5mm) of left eye (inner circle subfield between the inner and middle 1.5-mm-diameter circles)",
+    "name": "ct_inf_15_l",
+    "type": "interval",
+    "unit": "um"
   },
   {
-      "name": "ct_inf_15_r",
-      "description": "inferior choroidal thickness (1.5mm) of right eye (inner circle subfield between the inner and middle 1.5-mm-diameter circles)",
-      "category": "choroid",
-      "type": "interval",
-      "unit": "um"
+    "category": "choroid",
+    "description": "inferior choroidal thickness (1.5mm) of right eye (inner circle subfield between the inner and middle 1.5-mm-diameter circles)",
+    "name": "ct_inf_15_r",
+    "type": "interval",
+    "unit": "um"
   },
   {
-      "name": "ct_nas_15_l",
-      "description": "nasal choroidal thickness (1.5mm) of left eye (inner circle subfield between the inner and middle 1.5-mm-diameter circles)",
-      "category": "choroid",
-      "type": "interval",
-      "unit": "um"
+    "category": "choroid",
+    "description": "nasal choroidal thickness (1.5mm) of left eye (inner circle subfield between the inner and middle 1.5-mm-diameter circles)",
+    "name": "ct_nas_15_l",
+    "type": "interval",
+    "unit": "um"
   },
   {
-      "name": "ct_nas_15_r",
-      "description": "nasal choroidal thickness (1.5mm) of right eye (inner circle subfield between the inner and middle 1.5-mm-diameter circles)",
-      "category": "choroid",
-      "type": "interval",
-      "unit": "um"
+    "category": "choroid",
+    "description": "nasal choroidal thickness (1.5mm) of right eye (inner circle subfield between the inner and middle 1.5-mm-diameter circles)",
+    "name": "ct_nas_15_r",
+    "type": "interval",
+    "unit": "um"
   },
   {
-      "name": "ct_sup_15_l",
-      "description": "superior choroidal thickness (1.5mm) of left eye (inner circle subfield between the inner and middle 1.5-mm-diameter circles)",
-      "category": "choroid",
-      "type": "interval",
-      "unit": "um"
+    "category": "choroid",
+    "description": "superior choroidal thickness (1.5mm) of left eye (inner circle subfield between the inner and middle 1.5-mm-diameter circles)",
+    "name": "ct_sup_15_l",
+    "type": "interval",
+    "unit": "um"
   },
   {
-      "name": "ct_sup_15_r",
-      "description": "superior choroidal thickness (1.5mm) of right eye (inner circle subfield between the inner and middle 1.5-mm-diameter circles)",
-      "category": "choroid",
-      "type": "interval",
-      "unit": "um"
+    "category": "choroid",
+    "description": "superior choroidal thickness (1.5mm) of right eye (inner circle subfield between the inner and middle 1.5-mm-diameter circles)",
+    "name": "ct_sup_15_r",
+    "type": "interval",
+    "unit": "um"
   },
   {
-      "name": "ct_tem_15_l",
-      "description": "temporal choroidal thickness (1.5mm) of left eye (inner circle subfield between the inner and middle 1.5-mm-diameter circles)",
-      "category": "choroid",
-      "type": "interval",
-      "unit": "um"
+    "category": "choroid",
+    "description": "temporal choroidal thickness (1.5mm) of left eye (inner circle subfield between the inner and middle 1.5-mm-diameter circles)",
+    "name": "ct_tem_15_l",
+    "type": "interval",
+    "unit": "um"
   },
   {
-      "name": "ct_tem_15_r",
-      "description": "temporal choroidal thickness (1.5mm) of right eye (inner circle subfield between the inner and middle 1.5-mm-diameter circles)",
-      "category": "choroid",
-      "type": "interval",
-      "unit": "um"
+    "category": "choroid",
+    "description": "temporal choroidal thickness (1.5mm) of right eye (inner circle subfield between the inner and middle 1.5-mm-diameter circles)",
+    "name": "ct_tem_15_r",
+    "type": "interval",
+    "unit": "um"
   },
   {
-      "name": "ct_inf_30_l",
-      "description": "inferior choroidal thickness (3mm) of left eye (inner circle subfield between the inner and middle 3-mm-diameter circles)",
-      "category": "choroid",
-      "type": "interval",
-      "unit": "um"
+    "category": "choroid",
+    "description": "inferior choroidal thickness (3mm) of left eye (inner circle subfield between the inner and middle 3-mm-diameter circles)",
+    "name": "ct_inf_30_l",
+    "type": "interval",
+    "unit": "um"
   },
   {
-      "name": "ct_inf_30_r",
-      "description": "inferior choroidal thickness (3mm) of right eye (inner circle subfield between the inner and middle 3-mm-diameter circles)",
-      "category": "choroid",
-      "type": "interval",
-      "unit": "um"
+    "category": "choroid",
+    "description": "inferior choroidal thickness (3mm) of right eye (inner circle subfield between the inner and middle 3-mm-diameter circles)",
+    "name": "ct_inf_30_r",
+    "type": "interval",
+    "unit": "um"
   },
   {
-      "name": "ct_nas_30_l",
-      "description": "nasal choroidal thickness (3mm) of left eye (inner circle subfield between the inner and middle 3-mm-diameter circles)",
-      "category": "choroid",
-      "type": "interval",
-      "unit": "um"
+    "category": "choroid",
+    "description": "nasal choroidal thickness (3mm) of left eye (inner circle subfield between the inner and middle 3-mm-diameter circles)",
+    "name": "ct_nas_30_l",
+    "type": "interval",
+    "unit": "um"
   },
   {
-      "name": "ct_nas_30_r",
-      "description": "nasal choroidal thickness (3mm) of right eye (inner circle subfield between the inner and middle 3-mm-diameter circles)",
-      "category": "choroid",
-      "type": "interval",
-      "unit": "um"
+    "category": "choroid",
+    "description": "nasal choroidal thickness (3mm) of right eye (inner circle subfield between the inner and middle 3-mm-diameter circles)",
+    "name": "ct_nas_30_r",
+    "type": "interval",
+    "unit": "um"
   },
   {
-      "name": "ct_sup_30_l",
-      "description": "superior choroidal thickness (3mm) of left eye (inner circle subfield between the inner and middle 3-mm-diameter circles)",
-      "category": "choroid",
-      "type": "interval",
-      "unit": "um"
+    "category": "choroid",
+    "description": "superior choroidal thickness (3mm) of left eye (inner circle subfield between the inner and middle 3-mm-diameter circles)",
+    "name": "ct_sup_30_l",
+    "type": "interval",
+    "unit": "um"
   },
   {
-      "name": "ct_sup_30_r",
-      "description": "superior choroidal thickness (3mm) of right eye (inner circle subfield between the inner and middle 3-mm-diameter circles)",
-      "category": "choroid",
-      "type": "interval",
-      "unit": "um"
+    "category": "choroid",
+    "description": "superior choroidal thickness (3mm) of right eye (inner circle subfield between the inner and middle 3-mm-diameter circles)",
+    "name": "ct_sup_30_r",
+    "type": "interval",
+    "unit": "um"
   },
   {
-      "name": "ct_tem_30_l",
-      "description": "temporal choroidal thickness (3mm) of left eye (inner circle subfield between the inner and middle 3-mm-diameter circles)",
-      "category": "choroid",
-      "type": "interval",
-      "unit": "um"
+    "category": "choroid",
+    "description": "temporal choroidal thickness (3mm) of left eye (inner circle subfield between the inner and middle 3-mm-diameter circles)",
+    "name": "ct_tem_30_l",
+    "type": "interval",
+    "unit": "um"
   },
   {
-      "name": "ct_tem_30_r",
-      "description": "temporal choroidal thickness (3mm) of right eye (inner circle subfield between the inner and middle 3-mm-diameter circles)",
-      "category": "choroid",
-      "type": "interval",
-      "unit": "um"
+    "category": "choroid",
+    "description": "temporal choroidal thickness (3mm) of right eye (inner circle subfield between the inner and middle 3-mm-diameter circles)",
+    "name": "ct_tem_30_r",
+    "type": "interval",
+    "unit": "um"
   },
   {
-      "name": "ct_inf_60_l",
-      "description": "inferior choroidal thickness (6mm) of left eye (outer circle subfield between the middle and outer 6-mm-diameter circles)",
-      "category": "choroid",
-      "type": "interval",
-      "unit": "um"
+    "category": "choroid",
+    "description": "inferior choroidal thickness (6mm) of left eye (outer circle subfield between the middle and outer 6-mm-diameter circles)",
+    "name": "ct_inf_60_l",
+    "type": "interval",
+    "unit": "um"
   },
   {
-      "name": "ct_inf_60_r",
-      "description": "inferior choroidal thickness (6mm) of right eye (outer circle subfield between the middle and outer 6-mm-diameter circles)",
-      "category": "choroid",
-      "type": "interval",
-      "unit": "um"
+    "category": "choroid",
+    "description": "inferior choroidal thickness (6mm) of right eye (outer circle subfield between the middle and outer 6-mm-diameter circles)",
+    "name": "ct_inf_60_r",
+    "type": "interval",
+    "unit": "um"
   },
   {
-      "name": "ct_nas_60_l",
-      "description": "nasal choroidal thickness (6mm) of left eye (outer circle subfield between the middle and outer 6-mm-diameter circles)",
-      "category": "choroid",
-      "type": "interval",
-      "unit": "um"
+    "category": "choroid",
+    "description": "nasal choroidal thickness (6mm) of left eye (outer circle subfield between the middle and outer 6-mm-diameter circles)",
+    "name": "ct_nas_60_l",
+    "type": "interval",
+    "unit": "um"
   },
   {
-      "name": "ct_nas_60_r",
-      "description": "nasal choroidal thickness (6mm) of right eye (outer circle subfield between the middle and outer 6-mm-diameter circles)",
-      "category": "choroid",
-      "type": "interval",
-      "unit": "um"
+    "category": "choroid",
+    "description": "nasal choroidal thickness (6mm) of right eye (outer circle subfield between the middle and outer 6-mm-diameter circles)",
+    "name": "ct_nas_60_r",
+    "type": "interval",
+    "unit": "um"
   },
   {
-      "name": "ct_sup_60_l",
-      "description": "superior choroidal thickness (6mm) of left eye (outer circle subfield between the middle and outer 6-mm-diameter circles)",
-      "category": "choroid",
-      "type": "interval",
-      "unit": "um"
+    "category": "choroid",
+    "description": "superior choroidal thickness (6mm) of left eye (outer circle subfield between the middle and outer 6-mm-diameter circles)",
+    "name": "ct_sup_60_l",
+    "type": "interval",
+    "unit": "um"
   },
   {
-      "name": "ct_sup_60_r",
-      "description": "superior choroidal thickness (6mm) of right eye (outer circle subfield between the middle and outer 6-mm-diameter circles)",
-      "category": "choroid",
-      "type": "interval",
-      "unit": "um"
+    "category": "choroid",
+    "description": "superior choroidal thickness (6mm) of right eye (outer circle subfield between the middle and outer 6-mm-diameter circles)",
+    "name": "ct_sup_60_r",
+    "type": "interval",
+    "unit": "um"
   },
   {
-      "name": "ct_tem_60_l",
-      "description": "temporal choroidal thickness (6mm) of left eye (outer circle subfield between the middle and outer 6-mm-diameter circles)",
-      "category": "choroid",
-      "type": "interval",
-      "unit": "um"
+    "category": "choroid",
+    "description": "temporal choroidal thickness (6mm) of left eye (outer circle subfield between the middle and outer 6-mm-diameter circles)",
+    "name": "ct_tem_60_l",
+    "type": "interval",
+    "unit": "um"
   },
   {
-      "name": "ct_tem_60_r",
-      "description": "temporal choroidal thickness (6mm) of right eye (outer circle subfield between the middle and outer 6-mm-diameter circles)",
-      "category": "choroid",
-      "type": "interval",
-      "unit": "um"
+    "category": "choroid",
+    "description": "temporal choroidal thickness (6mm) of right eye (outer circle subfield between the middle and outer 6-mm-diameter circles)",
+    "name": "ct_tem_60_r",
+    "type": "interval",
+    "unit": "um"
   },
   {
-      "name": "ct_vol_l",
-      "description": "total choroidal volume in left eye",
-      "category": "choroid",
-      "type": "interval",
-      "unit": "NA"
+    "category": "choroid",
+    "description": "total choroidal volume in left eye",
+    "name": "ct_vol_l",
+    "type": "interval",
+    "unit": "NA"
   },
   {
-      "name": "ct_vol_r",
-      "description": "total choroidal volume in right eye",
-      "category": "choroid",
-      "type": "interval",
-      "unit": "NA"
+    "category": "choroid",
+    "description": "total choroidal volume in right eye",
+    "name": "ct_vol_r",
+    "type": "interval",
+    "unit": "NA"
   },
   {
-      "name": "cyclo_0_sph_r",
-      "description": "peripheral cycloplegic autorefraction sphere value at 0 degrees of right eye",
-      "category": "peripheral cycloplegic autorefraction",
-      "type": "interval",
-      "unit": "diopters"
+    "category": "peripheral cycloplegic autorefraction",
+    "description": "peripheral cycloplegic autorefraction sphere value at 0 degrees of right eye",
+    "name": "cyclo_0_sph_r",
+    "type": "interval",
+    "unit": "diopters"
   },
   {
-      "name": "cyclo_0_cyl_r",
-      "description": "peripheral cycloplegic autorefraction cylinder value at 0 degrees of right eye",
-      "category": "peripheral cycloplegic autorefraction",
-      "type": "interval",
-      "unit": "diopters"
+    "category": "peripheral cycloplegic autorefraction",
+    "description": "peripheral cycloplegic autorefraction cylinder value at 0 degrees of right eye",
+    "name": "cyclo_0_cyl_r",
+    "type": "interval",
+    "unit": "diopters"
   },
   {
-      "name": "cyclo_0_axis_r",
-      "description": "peripheral cycloplegic autorefraction axis value at 0 degrees of right eye",
-      "category": "peripheral cycloplegic autorefraction",
-      "type": "interval",
-      "unit": "diopters"
+    "category": "peripheral cycloplegic autorefraction",
+    "description": "peripheral cycloplegic autorefraction axis value at 0 degrees of right eye",
+    "name": "cyclo_0_axis_r",
+    "type": "interval",
+    "unit": "diopters"
   },
   {
-      "name": "cyclo_0_se_r",
-      "description": "peripheral cycloplegic autorefraction spherical equivalent value at 0 degrees of right eye",
-      "category": "peripheral cycloplegic autorefraction",
-      "type": "interval",
-      "unit": "degrees"
+    "category": "peripheral cycloplegic autorefraction",
+    "description": "peripheral cycloplegic autorefraction spherical equivalent value at 0 degrees of right eye",
+    "name": "cyclo_0_se_r",
+    "type": "interval",
+    "unit": "degrees"
   },
   {
-      "name": "cyclo_n10_sph_r",
-      "description": "peripheral cycloplegic autorefraction sphere value at nasal 10 degrees of right eye",
-      "category": "peripheral cycloplegic autorefraction",
-      "type": "interval",
-      "unit": "diopters"
+    "category": "peripheral cycloplegic autorefraction",
+    "description": "peripheral cycloplegic autorefraction sphere value at nasal 10 degrees of right eye",
+    "name": "cyclo_n10_sph_r",
+    "type": "interval",
+    "unit": "diopters"
   },
   {
-      "name": "cyclo_n10_cyl_r",
-      "description": "peripheral cycloplegic autorefraction cylinder value at nasal 10 degrees of right eye",
-      "category": "peripheral cycloplegic autorefraction",
-      "type": "interval",
-      "unit": "diopters"
+    "category": "peripheral cycloplegic autorefraction",
+    "description": "peripheral cycloplegic autorefraction cylinder value at nasal 10 degrees of right eye",
+    "name": "cyclo_n10_cyl_r",
+    "type": "interval",
+    "unit": "diopters"
   },
   {
-      "name": "cyclo_n10_axis_r",
-      "description": "peripheral cycloplegic autorefraction axis value at nasal 10 degrees of right eye",
-      "category": "peripheral cycloplegic autorefraction",
-      "type": "interval",
-      "unit": "diopters"
+    "category": "peripheral cycloplegic autorefraction",
+    "description": "peripheral cycloplegic autorefraction axis value at nasal 10 degrees of right eye",
+    "name": "cyclo_n10_axis_r",
+    "type": "interval",
+    "unit": "diopters"
   },
   {
-      "name": "cyclo_n10_se_r",
-      "description": "peripheral cycloplegic autorefraction spherical equivalent value at nasal 10 degrees of right eye",
-      "category": "peripheral cycloplegic autorefraction",
-      "type": "interval",
-      "unit": "degrees"
+    "category": "peripheral cycloplegic autorefraction",
+    "description": "peripheral cycloplegic autorefraction spherical equivalent value at nasal 10 degrees of right eye",
+    "name": "cyclo_n10_se_r",
+    "type": "interval",
+    "unit": "degrees"
   },
   {
-      "name": "cyclo_n10_sph_l",
-      "description": "peripheral cycloplegic autorefraction sphere value at nasal 10 degrees of left eye",
-      "category": "peripheral cycloplegic autorefraction",
-      "type": "interval",
-      "unit": "diopters"
+    "category": "peripheral cycloplegic autorefraction",
+    "description": "peripheral cycloplegic autorefraction sphere value at nasal 10 degrees of left eye",
+    "name": "cyclo_n10_sph_l",
+    "type": "interval",
+    "unit": "diopters"
   },
   {
-      "name": "cyclo_n10_cyl_l",
-      "description": "peripheral cycloplegic autorefraction cylinder value at nasal 10 degrees of left eye",
-      "category": "peripheral cycloplegic autorefraction",
-      "type": "interval",
-      "unit": "diopters"
+    "category": "peripheral cycloplegic autorefraction",
+    "description": "peripheral cycloplegic autorefraction cylinder value at nasal 10 degrees of left eye",
+    "name": "cyclo_n10_cyl_l",
+    "type": "interval",
+    "unit": "diopters"
   },
   {
-      "name": "cyclo_n10_axis_l",
-      "description": "peripheral cycloplegic autorefraction axis value at nasal 10 degrees of left eye",
-      "category": "peripheral cycloplegic autorefraction",
-      "type": "interval",
-      "unit": "diopters"
+    "category": "peripheral cycloplegic autorefraction",
+    "description": "peripheral cycloplegic autorefraction axis value at nasal 10 degrees of left eye",
+    "name": "cyclo_n10_axis_l",
+    "type": "interval",
+    "unit": "diopters"
   },
   {
-      "name": "cyclo_n10_se_l",
-      "description": "peripheral cycloplegic autorefraction spherical equivalent value at nasal 10 degrees of left eye",
-      "category": "peripheral cycloplegic autorefraction",
-      "type": "interval",
-      "unit": "diopters"
+    "category": "peripheral cycloplegic autorefraction",
+    "description": "peripheral cycloplegic autorefraction spherical equivalent value at nasal 10 degrees of left eye",
+    "name": "cyclo_n10_se_l",
+    "type": "interval",
+    "unit": "diopters"
   },
   {
-      "name": "cyclo_n15_sph_r",
-      "description": "peripheral cycloplegic autorefraction sphere value at nasal 15 degrees of right eye",
-      "category": "peripheral cycloplegic autorefraction",
-      "type": "interval",
-      "unit": "diopters"
+    "category": "peripheral cycloplegic autorefraction",
+    "description": "peripheral cycloplegic autorefraction sphere value at nasal 15 degrees of right eye",
+    "name": "cyclo_n15_sph_r",
+    "type": "interval",
+    "unit": "diopters"
   },
   {
-      "name": "cyclo_n15_cyl_r",
-      "description": "peripheral cycloplegic autorefraction cylinder value at nasal 15 degrees of right eye",
-      "category": "peripheral cycloplegic autorefraction",
-      "type": "interval",
-      "unit": "diopters"
+    "category": "peripheral cycloplegic autorefraction",
+    "description": "peripheral cycloplegic autorefraction cylinder value at nasal 15 degrees of right eye",
+    "name": "cyclo_n15_cyl_r",
+    "type": "interval",
+    "unit": "diopters"
   },
   {
-      "name": "cyclo_n15_axis_r",
-      "description": "peripheral cycloplegic autorefraction axis value at nasal 15 degrees of right eye",
-      "category": "peripheral cycloplegic autorefraction",
-      "type": "interval",
-      "unit": "diopters"
+    "category": "peripheral cycloplegic autorefraction",
+    "description": "peripheral cycloplegic autorefraction axis value at nasal 15 degrees of right eye",
+    "name": "cyclo_n15_axis_r",
+    "type": "interval",
+    "unit": "diopters"
   },
   {
-      "name": "cyclo_n15_se_r",
-      "description": "peripheral cycloplegic autorefraction spherical equivalent value at nasal 15 degrees of right eye",
-      "category": "peripheral cycloplegic autorefraction",
-      "type": "interval",
-      "unit": "degrees"
+    "category": "peripheral cycloplegic autorefraction",
+    "description": "peripheral cycloplegic autorefraction spherical equivalent value at nasal 15 degrees of right eye",
+    "name": "cyclo_n15_se_r",
+    "type": "interval",
+    "unit": "degrees"
   },
   {
-      "name": "cyclo_n20_sph_r",
-      "description": "peripheral cycloplegic autorefraction sphere value at nasal 20 degrees of right eye",
-      "category": "peripheral cycloplegic autorefraction",
-      "type": "interval",
-      "unit": "degrees"
+    "category": "peripheral cycloplegic autorefraction",
+    "description": "peripheral cycloplegic autorefraction sphere value at nasal 20 degrees of right eye",
+    "name": "cyclo_n20_sph_r",
+    "type": "interval",
+    "unit": "degrees"
   },
   {
-      "name": "cyclo_n20_cyl_r",
-      "description": "peripheral cycloplegic autorefraction cylinder value at nasal 20 degrees of right eye",
-      "category": "peripheral cycloplegic autorefraction",
-      "type": "interval",
-      "unit": "diopters"
+    "category": "peripheral cycloplegic autorefraction",
+    "description": "peripheral cycloplegic autorefraction cylinder value at nasal 20 degrees of right eye",
+    "name": "cyclo_n20_cyl_r",
+    "type": "interval",
+    "unit": "diopters"
   },
   {
-      "name": "cyclo_n20_axis_r",
-      "description": "peripheral cycloplegic autorefraction axis value at nasal 20 degrees of right eye",
-      "category": "peripheral cycloplegic autorefraction",
-      "type": "interval",
-      "unit": "diopters"
+    "category": "peripheral cycloplegic autorefraction",
+    "description": "peripheral cycloplegic autorefraction axis value at nasal 20 degrees of right eye",
+    "name": "cyclo_n20_axis_r",
+    "type": "interval",
+    "unit": "diopters"
   },
   {
-      "name": "cyclo_n20_se_r",
-      "description": "peripheral cycloplegic autorefraction spherical equivalent value at nasal 20 degrees of right eye",
-      "category": "peripheral cycloplegic autorefraction",
-      "type": "interval",
-      "unit": "diopters"
+    "category": "peripheral cycloplegic autorefraction",
+    "description": "peripheral cycloplegic autorefraction spherical equivalent value at nasal 20 degrees of right eye",
+    "name": "cyclo_n20_se_r",
+    "type": "interval",
+    "unit": "diopters"
   },
   {
-      "name": "cyclo_n20_sph_l",
-      "description": "peripheral cycloplegic autorefraction sphere value at nasal 20 degrees of left eye",
-      "category": "peripheral cycloplegic autorefraction",
-      "type": "interval",
-      "unit": "diopters"
+    "category": "peripheral cycloplegic autorefraction",
+    "description": "peripheral cycloplegic autorefraction sphere value at nasal 20 degrees of left eye",
+    "name": "cyclo_n20_sph_l",
+    "type": "interval",
+    "unit": "diopters"
   },
   {
-      "name": "cyclo_n20_cyl_l",
-      "description": "peripheral cycloplegic autorefraction cylinder value at nasal 20 degrees of left eye",
-      "category": "peripheral cycloplegic autorefraction",
-      "type": "interval",
-      "unit": "degrees"
+    "category": "peripheral cycloplegic autorefraction",
+    "description": "peripheral cycloplegic autorefraction cylinder value at nasal 20 degrees of left eye",
+    "name": "cyclo_n20_cyl_l",
+    "type": "interval",
+    "unit": "degrees"
   },
   {
-      "name": "cyclo_n20_axis_l",
-      "description": "peripheral cycloplegic autorefraction axis value at nasal 20 degrees of left eye",
-      "category": "peripheral cycloplegic autorefraction",
-      "type": "interval",
-      "unit": "diopters"
+    "category": "peripheral cycloplegic autorefraction",
+    "description": "peripheral cycloplegic autorefraction axis value at nasal 20 degrees of left eye",
+    "name": "cyclo_n20_axis_l",
+    "type": "interval",
+    "unit": "diopters"
   },
   {
-      "name": "cyclo_n20_se_l",
-      "description": "peripheral cycloplegic autorefraction spherical equivalent value at nasal 20 degrees of left eye",
-      "category": "peripheral cycloplegic autorefraction",
-      "type": "interval",
-      "unit": "diopters"
+    "category": "peripheral cycloplegic autorefraction",
+    "description": "peripheral cycloplegic autorefraction spherical equivalent value at nasal 20 degrees of left eye",
+    "name": "cyclo_n20_se_l",
+    "type": "interval",
+    "unit": "diopters"
   },
   {
-      "name": "cyclo_n30_sph_r",
-      "description": "peripheral cycloplegic autorefraction sphere value at nasal 30 degrees of right eye",
-      "category": "peripheral cycloplegic autorefraction",
-      "type": "interval",
-      "unit": "degrees"
+    "category": "peripheral cycloplegic autorefraction",
+    "description": "peripheral cycloplegic autorefraction sphere value at nasal 30 degrees of right eye",
+    "name": "cyclo_n30_sph_r",
+    "type": "interval",
+    "unit": "degrees"
   },
   {
-      "name": "cyclo_n30_cyl_r",
-      "description": "peripheral cycloplegic autorefraction cylinder value at nasal 30 degrees of right eye",
-      "category": "peripheral cycloplegic autorefraction",
-      "type": "interval",
-      "unit": "diopters"
+    "category": "peripheral cycloplegic autorefraction",
+    "description": "peripheral cycloplegic autorefraction cylinder value at nasal 30 degrees of right eye",
+    "name": "cyclo_n30_cyl_r",
+    "type": "interval",
+    "unit": "diopters"
   },
   {
-      "name": "cyclo_n30_axis_r",
-      "description": "peripheral cycloplegic autorefraction axis value at nasal 30 degrees of right eye",
-      "category": "peripheral cycloplegic autorefraction",
-      "type": "interval",
-      "unit": "diopters"
+    "category": "peripheral cycloplegic autorefraction",
+    "description": "peripheral cycloplegic autorefraction axis value at nasal 30 degrees of right eye",
+    "name": "cyclo_n30_axis_r",
+    "type": "interval",
+    "unit": "diopters"
   },
   {
-      "name": "cyclo_n30_se_r",
-      "description": "peripheral cycloplegic autorefraction spherical equivalent value at nasal 30 degrees of right eye",
-      "category": "peripheral cycloplegic autorefraction",
-      "type": "interval",
-      "unit": "diopters"
+    "category": "peripheral cycloplegic autorefraction",
+    "description": "peripheral cycloplegic autorefraction spherical equivalent value at nasal 30 degrees of right eye",
+    "name": "cyclo_n30_se_r",
+    "type": "interval",
+    "unit": "diopters"
   },
   {
-      "name": "cyclo_n30_sph_l",
-      "description": "peripheral cycloplegic autorefraction sphere value at nasal 30 degrees of left eye",
-      "category": "peripheral cycloplegic autorefraction",
-      "type": "interval",
-      "unit": "diopters"
+    "category": "peripheral cycloplegic autorefraction",
+    "description": "peripheral cycloplegic autorefraction sphere value at nasal 30 degrees of left eye",
+    "name": "cyclo_n30_sph_l",
+    "type": "interval",
+    "unit": "diopters"
   },
   {
-      "name": "cyclo_n30_cyl_l",
-      "description": "peripheral cycloplegic autorefraction cylinder value at nasal 30 degrees of left eye",
-      "category": "peripheral cycloplegic autorefraction",
-      "type": "interval",
-      "unit": "degrees"
+    "category": "peripheral cycloplegic autorefraction",
+    "description": "peripheral cycloplegic autorefraction cylinder value at nasal 30 degrees of left eye",
+    "name": "cyclo_n30_cyl_l",
+    "type": "interval",
+    "unit": "degrees"
   },
   {
-      "name": "cyclo_n30_axis_l",
-      "description": "peripheral cycloplegic autorefraction axis value at nasal 30 degrees of left eye",
-      "category": "peripheral cycloplegic autorefraction",
-      "type": "interval",
-      "unit": "diopters"
+    "category": "peripheral cycloplegic autorefraction",
+    "description": "peripheral cycloplegic autorefraction axis value at nasal 30 degrees of left eye",
+    "name": "cyclo_n30_axis_l",
+    "type": "interval",
+    "unit": "diopters"
   },
   {
-      "name": "cyclo_n30_se_l",
-      "description": "peripheral cycloplegic autorefraction spherical equivalent value at nasal 30 degrees of left eye",
-      "category": "peripheral cycloplegic autorefraction",
-      "type": "interval",
-      "unit": "diopters"
+    "category": "peripheral cycloplegic autorefraction",
+    "description": "peripheral cycloplegic autorefraction spherical equivalent value at nasal 30 degrees of left eye",
+    "name": "cyclo_n30_se_l",
+    "type": "interval",
+    "unit": "diopters"
   },
   {
-      "name": "cyclo_t10_sph_r",
-      "description": "peripheral cycloplegic autorefraction sphere value at nasal 10 degrees of right eye",
-      "category": "peripheral cycloplegic autorefraction",
-      "type": "interval",
-      "unit": "diopters"
+    "category": "peripheral cycloplegic autorefraction",
+    "description": "peripheral cycloplegic autorefraction sphere value at nasal 10 degrees of right eye",
+    "name": "cyclo_t10_sph_r",
+    "type": "interval",
+    "unit": "diopters"
   },
   {
-      "name": "cyclo_t10_cyl_r",
-      "description": "peripheral cycloplegic autorefraction cylinder value at nasal 10 degrees of right eye",
-      "category": "peripheral cycloplegic autorefraction",
-      "type": "interval",
-      "unit": "diopters"
+    "category": "peripheral cycloplegic autorefraction",
+    "description": "peripheral cycloplegic autorefraction cylinder value at nasal 10 degrees of right eye",
+    "name": "cyclo_t10_cyl_r",
+    "type": "interval",
+    "unit": "diopters"
   },
   {
-      "name": "cyclo_t10_axis_r",
-      "description": "peripheral cycloplegic autorefraction axis value at nasal 10 degrees of right eye",
-      "category": "peripheral cycloplegic autorefraction",
-      "type": "interval",
-      "unit": "diopters"
+    "category": "peripheral cycloplegic autorefraction",
+    "description": "peripheral cycloplegic autorefraction axis value at nasal 10 degrees of right eye",
+    "name": "cyclo_t10_axis_r",
+    "type": "interval",
+    "unit": "diopters"
   },
   {
-      "name": "cyclo_t10_se_r",
-      "description": "peripheral cycloplegic autorefraction spherical equivalent value at nasal 10 degrees of right eye",
-      "category": "peripheral cycloplegic autorefraction",
-      "type": "interval",
-      "unit": "degrees"
+    "category": "peripheral cycloplegic autorefraction",
+    "description": "peripheral cycloplegic autorefraction spherical equivalent value at nasal 10 degrees of right eye",
+    "name": "cyclo_t10_se_r",
+    "type": "interval",
+    "unit": "degrees"
   },
   {
-      "name": "cyclo_t10_sph_l",
-      "description": "peripheral cycloplegic autorefraction sphere value at nasal 10 degrees of left eye",
-      "category": "peripheral cycloplegic autorefraction",
-      "type": "interval",
-      "unit": "diopters"
+    "category": "peripheral cycloplegic autorefraction",
+    "description": "peripheral cycloplegic autorefraction sphere value at nasal 10 degrees of left eye",
+    "name": "cyclo_t10_sph_l",
+    "type": "interval",
+    "unit": "diopters"
   },
   {
-      "name": "cyclo_t10_cyl_l",
-      "description": "peripheral cycloplegic autorefraction cylinder value at nasal 10 degrees of left eye",
-      "category": "peripheral cycloplegic autorefraction",
-      "type": "interval",
-      "unit": "diopters"
+    "category": "peripheral cycloplegic autorefraction",
+    "description": "peripheral cycloplegic autorefraction cylinder value at nasal 10 degrees of left eye",
+    "name": "cyclo_t10_cyl_l",
+    "type": "interval",
+    "unit": "diopters"
   },
   {
-      "name": "cyclo_t10_axis_l",
-      "description": "peripheral cycloplegic autorefraction axis value at nasal 10 degrees of left eye",
-      "category": "peripheral cycloplegic autorefraction",
-      "type": "interval",
-      "unit": "diopters"
+    "category": "peripheral cycloplegic autorefraction",
+    "description": "peripheral cycloplegic autorefraction axis value at nasal 10 degrees of left eye",
+    "name": "cyclo_t10_axis_l",
+    "type": "interval",
+    "unit": "diopters"
   },
   {
-      "name": "cyclo_t10_se_l",
-      "description": "peripheral cycloplegic autorefraction spherical equivalent value at nasal 10 degrees of left eye",
-      "category": "peripheral cycloplegic autorefraction",
-      "type": "interval",
-      "unit": "diopters"
+    "category": "peripheral cycloplegic autorefraction",
+    "description": "peripheral cycloplegic autorefraction spherical equivalent value at nasal 10 degrees of left eye",
+    "name": "cyclo_t10_se_l",
+    "type": "interval",
+    "unit": "diopters"
   },
   {
-      "name": "cyclo_t15_sph_r",
-      "description": "peripheral cycloplegic autorefraction sphere value at nasal 15 degrees of right eye",
-      "category": "peripheral cycloplegic autorefraction",
-      "type": "interval",
-      "unit": "diopters"
+    "category": "peripheral cycloplegic autorefraction",
+    "description": "peripheral cycloplegic autorefraction sphere value at nasal 15 degrees of right eye",
+    "name": "cyclo_t15_sph_r",
+    "type": "interval",
+    "unit": "diopters"
   },
   {
-      "name": "cyclo_t15_cyl_r",
-      "description": "peripheral cycloplegic autorefraction cylinder value at nasal 15 degrees of right eye",
-      "category": "peripheral cycloplegic autorefraction",
-      "type": "interval",
-      "unit": "diopters"
+    "category": "peripheral cycloplegic autorefraction",
+    "description": "peripheral cycloplegic autorefraction cylinder value at nasal 15 degrees of right eye",
+    "name": "cyclo_t15_cyl_r",
+    "type": "interval",
+    "unit": "diopters"
   },
   {
-      "name": "cyclo_t15_axis_r",
-      "description": "peripheral cycloplegic autorefraction axis value at nasal 15 degrees of right eye",
-      "category": "peripheral cycloplegic autorefraction",
-      "type": "interval",
-      "unit": "diopters"
+    "category": "peripheral cycloplegic autorefraction",
+    "description": "peripheral cycloplegic autorefraction axis value at nasal 15 degrees of right eye",
+    "name": "cyclo_t15_axis_r",
+    "type": "interval",
+    "unit": "diopters"
   },
   {
-      "name": "cyclo_t15_se_r",
-      "description": "peripheral cycloplegic autorefraction spherical equivalent value at nasal 15 degrees of right eye",
-      "category": "peripheral cycloplegic autorefraction",
-      "type": "interval",
-      "unit": "degrees"
+    "category": "peripheral cycloplegic autorefraction",
+    "description": "peripheral cycloplegic autorefraction spherical equivalent value at nasal 15 degrees of right eye",
+    "name": "cyclo_t15_se_r",
+    "type": "interval",
+    "unit": "degrees"
   },
   {
-      "name": "cyclo_t20_sph_r",
-      "description": "peripheral cycloplegic autorefraction sphere value at nasal 20 degrees of right eye",
-      "category": "peripheral cycloplegic autorefraction",
-      "type": "interval",
-      "unit": "degrees"
+    "category": "peripheral cycloplegic autorefraction",
+    "description": "peripheral cycloplegic autorefraction sphere value at nasal 20 degrees of right eye",
+    "name": "cyclo_t20_sph_r",
+    "type": "interval",
+    "unit": "degrees"
   },
   {
-      "name": "cyclo_t20_cyl_r",
-      "description": "peripheral cycloplegic autorefraction cylinder value at nasal 20 degrees of right eye",
-      "category": "peripheral cycloplegic autorefraction",
-      "type": "interval",
-      "unit": "diopters"
+    "category": "peripheral cycloplegic autorefraction",
+    "description": "peripheral cycloplegic autorefraction cylinder value at nasal 20 degrees of right eye",
+    "name": "cyclo_t20_cyl_r",
+    "type": "interval",
+    "unit": "diopters"
   },
   {
-      "name": "cyclo_t20_axis_r",
-      "description": "peripheral cycloplegic autorefraction axis value at nasal 20 degrees of right eye",
-      "category": "peripheral cycloplegic autorefraction",
-      "type": "interval",
-      "unit": "diopters"
+    "category": "peripheral cycloplegic autorefraction",
+    "description": "peripheral cycloplegic autorefraction axis value at nasal 20 degrees of right eye",
+    "name": "cyclo_t20_axis_r",
+    "type": "interval",
+    "unit": "diopters"
   },
   {
-      "name": "cyclo_t20_se_r",
-      "description": "peripheral cycloplegic autorefraction spherical equivalent value at nasal 20 degrees of right eye",
-      "category": "peripheral cycloplegic autorefraction",
-      "type": "interval",
-      "unit": "diopters"
+    "category": "peripheral cycloplegic autorefraction",
+    "description": "peripheral cycloplegic autorefraction spherical equivalent value at nasal 20 degrees of right eye",
+    "name": "cyclo_t20_se_r",
+    "type": "interval",
+    "unit": "diopters"
   },
   {
-      "name": "cyclo_t20_sph_l",
-      "description": "peripheral cycloplegic autorefraction sphere value at nasal 20 degrees of left eye",
-      "category": "peripheral cycloplegic autorefraction",
-      "type": "interval",
-      "unit": "diopters"
+    "category": "peripheral cycloplegic autorefraction",
+    "description": "peripheral cycloplegic autorefraction sphere value at nasal 20 degrees of left eye",
+    "name": "cyclo_t20_sph_l",
+    "type": "interval",
+    "unit": "diopters"
   },
   {
-      "name": "cyclo_t20_cyl_l",
-      "description": "peripheral cycloplegic autorefraction cylinder value at nasal 20 degrees of left eye",
-      "category": "peripheral cycloplegic autorefraction",
-      "type": "interval",
-      "unit": "degrees"
+    "category": "peripheral cycloplegic autorefraction",
+    "description": "peripheral cycloplegic autorefraction cylinder value at nasal 20 degrees of left eye",
+    "name": "cyclo_t20_cyl_l",
+    "type": "interval",
+    "unit": "degrees"
   },
   {
-      "name": "cyclo_t20_axis_l",
-      "description": "peripheral cycloplegic autorefraction axis value at nasal 20 degrees of left eye",
-      "category": "peripheral cycloplegic autorefraction",
-      "type": "interval",
-      "unit": "diopters"
+    "category": "peripheral cycloplegic autorefraction",
+    "description": "peripheral cycloplegic autorefraction axis value at nasal 20 degrees of left eye",
+    "name": "cyclo_t20_axis_l",
+    "type": "interval",
+    "unit": "diopters"
   },
   {
-      "name": "cyclo_t20_se_l",
-      "description": "peripheral cycloplegic autorefraction spherical equivalent value at nasal 20 degrees of left eye",
-      "category": "peripheral cycloplegic autorefraction",
-      "type": "interval",
-      "unit": "diopters"
+    "category": "peripheral cycloplegic autorefraction",
+    "description": "peripheral cycloplegic autorefraction spherical equivalent value at nasal 20 degrees of left eye",
+    "name": "cyclo_t20_se_l",
+    "type": "interval",
+    "unit": "diopters"
   },
   {
-      "name": "cyclo_t30_sph_r",
-      "description": "peripheral cycloplegic autorefraction sphere value at nasal 30 degrees of right eye",
-      "category": "peripheral cycloplegic autorefraction",
-      "type": "interval",
-      "unit": "degrees"
+    "category": "peripheral cycloplegic autorefraction",
+    "description": "peripheral cycloplegic autorefraction sphere value at nasal 30 degrees of right eye",
+    "name": "cyclo_t30_sph_r",
+    "type": "interval",
+    "unit": "degrees"
   },
   {
-      "name": "cyclo_t30_cyl_r",
-      "description": "peripheral cycloplegic autorefraction cylinder value at nasal 30 degrees of right eye",
-      "category": "peripheral cycloplegic autorefraction",
-      "type": "interval",
-      "unit": "diopters"
+    "category": "peripheral cycloplegic autorefraction",
+    "description": "peripheral cycloplegic autorefraction cylinder value at nasal 30 degrees of right eye",
+    "name": "cyclo_t30_cyl_r",
+    "type": "interval",
+    "unit": "diopters"
   },
   {
-      "name": "cyclo_t30_axis_r",
-      "description": "peripheral cycloplegic autorefraction axis value at nasal 30 degrees of right eye",
-      "category": "peripheral cycloplegic autorefraction",
-      "type": "interval",
-      "unit": "diopters"
+    "category": "peripheral cycloplegic autorefraction",
+    "description": "peripheral cycloplegic autorefraction axis value at nasal 30 degrees of right eye",
+    "name": "cyclo_t30_axis_r",
+    "type": "interval",
+    "unit": "diopters"
   },
   {
-      "name": "cyclo_t30_se_r",
-      "description": "peripheral cycloplegic autorefraction spherical equivalent value at nasal 30 degrees of right eye",
-      "category": "peripheral cycloplegic autorefraction",
-      "type": "interval",
-      "unit": "diopters"
+    "category": "peripheral cycloplegic autorefraction",
+    "description": "peripheral cycloplegic autorefraction spherical equivalent value at nasal 30 degrees of right eye",
+    "name": "cyclo_t30_se_r",
+    "type": "interval",
+    "unit": "diopters"
   },
   {
-      "name": "cyclo_t30_sph_l",
-      "description": "peripheral cycloplegic autorefraction sphere value at nasal 30 degrees of left eye",
-      "category": "peripheral cycloplegic autorefraction",
-      "type": "interval",
-      "unit": "diopters"
+    "category": "peripheral cycloplegic autorefraction",
+    "description": "peripheral cycloplegic autorefraction sphere value at nasal 30 degrees of left eye",
+    "name": "cyclo_t30_sph_l",
+    "type": "interval",
+    "unit": "diopters"
   },
   {
-      "name": "cyclo_t30_cyl_l",
-      "description": "peripheral cycloplegic autorefraction cylinder value at nasal 30 degrees of left eye",
-      "category": "peripheral cycloplegic autorefraction",
-      "type": "interval",
-      "unit": "degrees"
+    "category": "peripheral cycloplegic autorefraction",
+    "description": "peripheral cycloplegic autorefraction cylinder value at nasal 30 degrees of left eye",
+    "name": "cyclo_t30_cyl_l",
+    "type": "interval",
+    "unit": "degrees"
   },
   {
-      "name": "cyclo_t30_axis_l",
-      "description": "peripheral cycloplegic autorefraction axis value at nasal 30 degrees of left eye",
-      "category": "peripheral cycloplegic autorefraction",
-      "type": "interval",
-      "unit": "diopters"
+    "category": "peripheral cycloplegic autorefraction",
+    "description": "peripheral cycloplegic autorefraction axis value at nasal 30 degrees of left eye",
+    "name": "cyclo_t30_axis_l",
+    "type": "interval",
+    "unit": "diopters"
   },
   {
-      "name": "cyclo_t30_se_l",
-      "description": "peripheral cycloplegic autorefraction spherical equivalent value at nasal 30 degrees of left eye",
-      "category": "peripheral cycloplegic autorefraction",
-      "type": "interval",
-      "unit": "diopters"
+    "category": "peripheral cycloplegic autorefraction",
+    "description": "peripheral cycloplegic autorefraction spherical equivalent value at nasal 30 degrees of left eye",
+    "name": "cyclo_t30_se_l",
+    "type": "interval",
+    "unit": "diopters"
   },
   {
-      "name": "al_n10_r",
-      "description": "peripheral eye length at nasal 10 degrees of right eye",
-      "category": "peripheral ocular biometry",
-      "type": "interval",
-      "unit": "mm"
+    "category": "peripheral ocular biometry",
+    "description": "peripheral eye length at nasal 10 degrees of right eye",
+    "name": "al_n10_r",
+    "type": "interval",
+    "unit": "mm"
   },
   {
-      "name": "cct_n10_r",
-      "description": "peripheral corneal thickness at nasal 10 degrees of right eye",
-      "category": "peripheral ocular biometry",
-      "type": "interval",
-      "unit": "um"
+    "category": "peripheral ocular biometry",
+    "description": "peripheral corneal thickness at nasal 10 degrees of right eye",
+    "name": "cct_n10_r",
+    "type": "interval",
+    "unit": "um"
   },
   {
-      "name": "acd_n10_r",
-      "description": "peripheral anterior chamber depth at nasal 10 degrees of right eye",
-      "category": "peripheral ocular biometry",
-      "type": "interval",
-      "unit": "mm"
+    "category": "peripheral ocular biometry",
+    "description": "peripheral anterior chamber depth at nasal 10 degrees of right eye",
+    "name": "acd_n10_r",
+    "type": "interval",
+    "unit": "mm"
   },
   {
-      "name": "lt_n10_r",
-      "description": "peripheral lens thickness at nasal 10 degrees of right eye",
-      "category": "peripheral ocular biometry",
-      "type": "interval",
-      "unit": "mm"
+    "category": "peripheral ocular biometry",
+    "description": "peripheral lens thickness at nasal 10 degrees of right eye",
+    "name": "lt_n10_r",
+    "type": "interval",
+    "unit": "mm"
   },
   {
-      "name": "k1_n10_r",
-      "description": "peripheral flat keratomery at nasal 10 degrees of right eye",
-      "category": "peripheral ocular biometry",
-      "type": "interval",
-      "unit": "mm"
+    "category": "peripheral ocular biometry",
+    "description": "peripheral flat keratomery at nasal 10 degrees of right eye",
+    "name": "k1_n10_r",
+    "type": "interval",
+    "unit": "mm"
   },
   {
-      "name": "k2_n10_r",
-      "description": "peripheral steep keratomery at nasal 10 degrees of right eye",
-      "category": "peripheral ocular biometry",
-      "type": "interval",
-      "unit": "mm"
+    "category": "peripheral ocular biometry",
+    "description": "peripheral steep keratomery at nasal 10 degrees of right eye",
+    "name": "k2_n10_r",
+    "type": "interval",
+    "unit": "mm"
   },
   {
-      "name": "k_axis_n10_r",
-      "description": "peripheral keratometry axis value at nasal 10 degrees of right eye",
-      "category": "peripheral ocular biometry",
-      "type": "interval",
-      "unit": "degrees"
+    "category": "peripheral ocular biometry",
+    "description": "peripheral keratometry axis value at nasal 10 degrees of right eye",
+    "name": "k_axis_n10_r",
+    "type": "interval",
+    "unit": "degrees"
   },
   {
-      "name": "al_n15_r",
-      "description": "peripheral eye length at nasal 15 degrees of right eye",
-      "category": "peripheral ocular biometry",
-      "type": "interval",
-      "unit": "mm"
+    "category": "peripheral ocular biometry",
+    "description": "peripheral eye length at nasal 15 degrees of right eye",
+    "name": "al_n15_r",
+    "type": "interval",
+    "unit": "mm"
   },
   {
-      "name": "al_n20_r",
-      "description": "peripheral eye length at nasal 20 degrees of right eye",
-      "category": "peripheral ocular biometry",
-      "type": "interval",
-      "unit": "mm"
+    "category": "peripheral ocular biometry",
+    "description": "peripheral eye length at nasal 20 degrees of right eye",
+    "name": "al_n20_r",
+    "type": "interval",
+    "unit": "mm"
   },
   {
-      "name": "cct_n20_r",
-      "description": "peripheral corneal thickness at nasal 20 degrees of right eye",
-      "category": "peripheral ocular biometry",
-      "type": "interval",
-      "unit": "um"
+    "category": "peripheral ocular biometry",
+    "description": "peripheral corneal thickness at nasal 20 degrees of right eye",
+    "name": "cct_n20_r",
+    "type": "interval",
+    "unit": "um"
   },
   {
-      "name": "acd_n20_r",
-      "description": "peripheral anterior chamber depth at nasal 20 degrees of right eye",
-      "category": "peripheral ocular biometry",
-      "type": "interval",
-      "unit": "mm"
+    "category": "peripheral ocular biometry",
+    "description": "peripheral anterior chamber depth at nasal 20 degrees of right eye",
+    "name": "acd_n20_r",
+    "type": "interval",
+    "unit": "mm"
   },
   {
-      "name": "lt_n20_r",
-      "description": "peripheral lens thickness at nasal 20 degrees of right eye",
-      "category": "peripheral ocular biometry",
-      "type": "interval",
-      "unit": "mm"
+    "category": "peripheral ocular biometry",
+    "description": "peripheral lens thickness at nasal 20 degrees of right eye",
+    "name": "lt_n20_r",
+    "type": "interval",
+    "unit": "mm"
   },
   {
-      "name": "k1_n20_r",
-      "description": "peripheral flat keratomery at nasal 20 degrees of right eye",
-      "category": "peripheral ocular biometry",
-      "type": "interval",
-      "unit": "mm"
+    "category": "peripheral ocular biometry",
+    "description": "peripheral flat keratomery at nasal 20 degrees of right eye",
+    "name": "k1_n20_r",
+    "type": "interval",
+    "unit": "mm"
   },
   {
-      "name": "k2_n20_r",
-      "description": "peripheral steep keratomery at nasal 20 degrees of right eye",
-      "category": "peripheral ocular biometry",
-      "type": "interval",
-      "unit": "mm"
+    "category": "peripheral ocular biometry",
+    "description": "peripheral steep keratomery at nasal 20 degrees of right eye",
+    "name": "k2_n20_r",
+    "type": "interval",
+    "unit": "mm"
   },
   {
-      "name": "k_axis_n20_r",
-      "description": "peripheral keratometry axis value at nasal 20 degrees of right eye",
-      "category": "peripheral ocular biometry",
-      "type": "interval",
-      "unit": "degrees"
+    "category": "peripheral ocular biometry",
+    "description": "peripheral keratometry axis value at nasal 20 degrees of right eye",
+    "name": "k_axis_n20_r",
+    "type": "interval",
+    "unit": "degrees"
   },
   {
-      "name": "al_n30_r",
-      "description": "peripheral eye length at nasal 30 degrees of right eye",
-      "category": "peripheral ocular biometry",
-      "type": "interval",
-      "unit": "mm"
+    "category": "peripheral ocular biometry",
+    "description": "peripheral eye length at nasal 30 degrees of right eye",
+    "name": "al_n30_r",
+    "type": "interval",
+    "unit": "mm"
   },
   {
-      "name": "al_t10_r",
-      "description": "peripheral eye length at temporal 10 degrees of right eye",
-      "category": "peripheral ocular biometry",
-      "type": "interval",
-      "unit": "mm"
+    "category": "peripheral ocular biometry",
+    "description": "peripheral eye length at temporal 10 degrees of right eye",
+    "name": "al_t10_r",
+    "type": "interval",
+    "unit": "mm"
   },
   {
-      "name": "cct_t10_r",
-      "description": "peripheral corneal thickness at temporal 10 degrees of right eye",
-      "category": "peripheral ocular biometry",
-      "type": "interval",
-      "unit": "um"
+    "category": "peripheral ocular biometry",
+    "description": "peripheral corneal thickness at temporal 10 degrees of right eye",
+    "name": "cct_t10_r",
+    "type": "interval",
+    "unit": "um"
   },
   {
-      "name": "acd_t10_r",
-      "description": "peripheral anterior chamber depth at temporal 10 degrees of right eye",
-      "category": "peripheral ocular biometry",
-      "type": "interval",
-      "unit": "mm"
+    "category": "peripheral ocular biometry",
+    "description": "peripheral anterior chamber depth at temporal 10 degrees of right eye",
+    "name": "acd_t10_r",
+    "type": "interval",
+    "unit": "mm"
   },
   {
-      "name": "lt_t10_r",
-      "description": "peripheral lens thickness at temporal 10 degrees of right eye",
-      "category": "peripheral ocular biometry",
-      "type": "interval",
-      "unit": "mm"
+    "category": "peripheral ocular biometry",
+    "description": "peripheral lens thickness at temporal 10 degrees of right eye",
+    "name": "lt_t10_r",
+    "type": "interval",
+    "unit": "mm"
   },
   {
-      "name": "k1_t10_r",
-      "description": "peripheral flat keratomery at temporal 10 degrees of right eye",
-      "category": "peripheral ocular biometry",
-      "type": "interval",
-      "unit": "mm"
+    "category": "peripheral ocular biometry",
+    "description": "peripheral flat keratomery at temporal 10 degrees of right eye",
+    "name": "k1_t10_r",
+    "type": "interval",
+    "unit": "mm"
   },
   {
-      "name": "k2_t10_r",
-      "description": "peripheral steep keratomery at temporal 10 degrees of right eye",
-      "category": "peripheral ocular biometry",
-      "type": "interval",
-      "unit": "mm"
+    "category": "peripheral ocular biometry",
+    "description": "peripheral steep keratomery at temporal 10 degrees of right eye",
+    "name": "k2_t10_r",
+    "type": "interval",
+    "unit": "mm"
   },
   {
-      "name": "k_axis_t10_r",
-      "description": "peripheral keratometry axis value at temporal 10 degrees of right eye",
-      "category": "peripheral ocular biometry",
-      "type": "interval",
-      "unit": "degrees"
+    "category": "peripheral ocular biometry",
+    "description": "peripheral keratometry axis value at temporal 10 degrees of right eye",
+    "name": "k_axis_t10_r",
+    "type": "interval",
+    "unit": "degrees"
   },
   {
-      "name": "al_t15_r",
-      "description": "peripheral eye length at temporal 15 degrees of right eye",
-      "category": "peripheral ocular biometry",
-      "type": "interval",
-      "unit": "mm"
+    "category": "peripheral ocular biometry",
+    "description": "peripheral eye length at temporal 15 degrees of right eye",
+    "name": "al_t15_r",
+    "type": "interval",
+    "unit": "mm"
   },
   {
-      "name": "al_t20_r",
-      "description": "peripheral eye length at temporal 20 degrees of right eye",
-      "category": "peripheral ocular biometry",
-      "type": "interval",
-      "unit": "mm"
+    "category": "peripheral ocular biometry",
+    "description": "peripheral eye length at temporal 20 degrees of right eye",
+    "name": "al_t20_r",
+    "type": "interval",
+    "unit": "mm"
   },
   {
-      "name": "cct_t20_r",
-      "description": "peripheral corneal thickness at temporal 20 degrees of right eye",
-      "category": "peripheral ocular biometry",
-      "type": "interval",
-      "unit": "um"
+    "category": "peripheral ocular biometry",
+    "description": "peripheral corneal thickness at temporal 20 degrees of right eye",
+    "name": "cct_t20_r",
+    "type": "interval",
+    "unit": "um"
   },
   {
-      "name": "acd_t20_r",
-      "description": "peripheral anterior chamber depth at temporal 20 degrees of right eye",
-      "category": "peripheral ocular biometry",
-      "type": "interval",
-      "unit": "mm"
+    "category": "peripheral ocular biometry",
+    "description": "peripheral anterior chamber depth at temporal 20 degrees of right eye",
+    "name": "acd_t20_r",
+    "type": "interval",
+    "unit": "mm"
   },
   {
-      "name": "lt_t20_r",
-      "description": "peripheral lens thickness at temporal 20 degrees of right eye",
-      "category": "peripheral ocular biometry",
-      "type": "interval",
-      "unit": "mm"
+    "category": "peripheral ocular biometry",
+    "description": "peripheral lens thickness at temporal 20 degrees of right eye",
+    "name": "lt_t20_r",
+    "type": "interval",
+    "unit": "mm"
   },
   {
-      "name": "k1_t20_r",
-      "description": "peripheral flat keratomery at temporal 20 degrees of right eye",
-      "category": "peripheral ocular biometry",
-      "type": "interval",
-      "unit": "mm"
+    "category": "peripheral ocular biometry",
+    "description": "peripheral flat keratomery at temporal 20 degrees of right eye",
+    "name": "k1_t20_r",
+    "type": "interval",
+    "unit": "mm"
   },
   {
-      "name": "k2_t20_r",
-      "description": "peripheral steep keratomery at temporal 20 degrees of right eye",
-      "category": "peripheral ocular biometry",
-      "type": "interval",
-      "unit": "mm"
+    "category": "peripheral ocular biometry",
+    "description": "peripheral steep keratomery at temporal 20 degrees of right eye",
+    "name": "k2_t20_r",
+    "type": "interval",
+    "unit": "mm"
   },
   {
-      "name": "k_axis_t20_r",
-      "description": "peripheral keratometry axis value at temporal 20 degrees of right eye",
-      "category": "peripheral ocular biometry",
-      "type": "interval",
-      "unit": "degrees"
+    "category": "peripheral ocular biometry",
+    "description": "peripheral keratometry axis value at temporal 20 degrees of right eye",
+    "name": "k_axis_t20_r",
+    "type": "interval",
+    "unit": "degrees"
   },
   {
-      "name": "al_t30_r",
-      "description": "peripheral eye length at temporal 30 degrees of right eye",
-      "category": "peripheral ocular biometry",
-      "type": "interval",
-      "unit": "mm"
+    "category": "peripheral ocular biometry",
+    "description": "peripheral eye length at temporal 30 degrees of right eye",
+    "name": "al_t30_r",
+    "type": "interval",
+    "unit": "mm"
   },
   {
-      "name": "al_s10_r",
-      "description": "peripheral eye length at superior 10 degrees of right eye",
-      "category": "peripheral ocular biometry",
-      "type": "interval",
-      "unit": "mm"
+    "category": "peripheral ocular biometry",
+    "description": "peripheral eye length at superior 10 degrees of right eye",
+    "name": "al_s10_r",
+    "type": "interval",
+    "unit": "mm"
   },
   {
-      "name": "al_i10_r",
-      "description": "peripheral eye length at inferior 10 degrees of right eye",
-      "category": "peripheral ocular biometry",
-      "type": "interval",
-      "unit": "mm"
+    "category": "peripheral ocular biometry",
+    "description": "peripheral eye length at inferior 10 degrees of right eye",
+    "name": "al_i10_r",
+    "type": "interval",
+    "unit": "mm"
   },
   {
-      "name": "al_i20_r",
-      "description": "peripheral eye length at inferior 20 degrees of right eye",
-      "category": "peripheral ocular biometry",
-      "type": "interval",
-      "unit": "mm"
+    "category": "peripheral ocular biometry",
+    "description": "peripheral eye length at inferior 20 degrees of right eye",
+    "name": "al_i20_r",
+    "type": "interval",
+    "unit": "mm"
   },
   {
-      "name": "al_i30_r",
-      "description": "peripheral eye length at inferior 30 degrees of right eye",
-      "category": "peripheral ocular biometry",
-      "type": "interval",
-      "unit": "mm"
+    "category": "peripheral ocular biometry",
+    "description": "peripheral eye length at inferior 30 degrees of right eye",
+    "name": "al_i30_r",
+    "type": "interval",
+    "unit": "mm"
   },
   {
-      "name": "white_to_white_r",
-      "description": "white to white of right eye",
-      "category": "pupillary and iris features",
-      "type": "interval",
-      "unit": "mm"
+    "category": "pupillary and iris features",
+    "description": "white to white of right eye",
+    "name": "white_to_white_r",
+    "type": "interval",
+    "unit": "mm"
   },
   {
-      "name": "iris_barycenter_x_r",
-      "description": "iris barycenter (x) of right eye",
-      "category": "pupillary and iris features",
-      "type": "interval",
-      "unit": "NA"
+    "category": "pupillary and iris features",
+    "description": "iris barycenter (x) of right eye",
+    "name": "iris_barycenter_x_r",
+    "type": "interval",
+    "unit": "NA"
   },
   {
-      "name": "iris_barycenter_y_r",
-      "description": "iris barycenter (y) of right eye",
-      "category": "pupillary and iris features",
-      "type": "interval",
-      "unit": "NA"
+    "category": "pupillary and iris features",
+    "description": "iris barycenter (y) of right eye",
+    "name": "iris_barycenter_y_r",
+    "type": "interval",
+    "unit": "NA"
   },
   {
-      "name": "pupil_diameter_r",
-      "description": "pupil diameter of right eye",
-      "category": "pupillary and iris features",
-      "type": "interval",
-      "unit": "mm"
+    "category": "pupillary and iris features",
+    "description": "pupil diameter of right eye",
+    "name": "pupil_diameter_r",
+    "type": "interval",
+    "unit": "mm"
   },
   {
-      "name": "pupil_barycenter_x_r",
-      "description": "pupil barycenter (x) of right eye",
-      "category": "pupillary and iris features",
-      "type": "interval",
-      "unit": "NA"
+    "category": "pupillary and iris features",
+    "description": "pupil barycenter (x) of right eye",
+    "name": "pupil_barycenter_x_r",
+    "type": "interval",
+    "unit": "NA"
   },
   {
-      "name": "pupil_barycenter_y_r",
-      "description": "pupil barycenter (y) of right eye",
-      "category": "pupillary and iris features",
-      "type": "interval",
-      "unit": "NA"
+    "category": "pupillary and iris features",
+    "description": "pupil barycenter (y) of right eye",
+    "name": "pupil_barycenter_y_r",
+    "type": "interval",
+    "unit": "NA"
   },
   {
-      "name": "white_to_white_l",
-      "description": "white to white of left eye",
-      "category": "pupillary and iris features",
-      "type": "interval",
-      "unit": "mm"
+    "category": "pupillary and iris features",
+    "description": "white to white of left eye",
+    "name": "white_to_white_l",
+    "type": "interval",
+    "unit": "mm"
   },
   {
-      "name": "iris_barycenter_x_l",
-      "description": "iris barycenter (x) of left eye",
-      "category": "pupillary and iris features",
-      "type": "interval",
-      "unit": "NA"
+    "category": "pupillary and iris features",
+    "description": "iris barycenter (x) of left eye",
+    "name": "iris_barycenter_x_l",
+    "type": "interval",
+    "unit": "NA"
   },
   {
-      "name": "iris_barycenter_y_l",
-      "description": "iris barycenter (y) of left eye",
-      "category": "pupillary and iris features",
-      "type": "interval",
-      "unit": "NA"
+    "category": "pupillary and iris features",
+    "description": "iris barycenter (y) of left eye",
+    "name": "iris_barycenter_y_l",
+    "type": "interval",
+    "unit": "NA"
   },
   {
-      "name": "pupil_diameter_l",
-      "description": "pupil diameter of left eye",
-      "category": "pupillary and iris features",
-      "type": "interval",
-      "unit": "mm"
+    "category": "pupillary and iris features",
+    "description": "pupil diameter of left eye",
+    "name": "pupil_diameter_l",
+    "type": "interval",
+    "unit": "mm"
   },
   {
-      "name": "pupil_barycenter_x_l",
-      "description": "pupil barycenter (x) of left eye",
-      "category": "pupillary and iris features",
-      "type": "interval",
-      "unit": "NA"
+    "category": "pupillary and iris features",
+    "description": "pupil barycenter (x) of left eye",
+    "name": "pupil_barycenter_x_l",
+    "type": "interval",
+    "unit": "NA"
   },
   {
-      "name": "pupil_barycenter_y_l",
-      "description": "pupil barycenter (y) of left eye",
-      "category": "pupillary and iris features",
-      "type": "interval",
-      "unit": "NA"
+    "category": "pupillary and iris features",
+    "description": "pupil barycenter (y) of left eye",
+    "name": "pupil_barycenter_y_l",
+    "type": "interval",
+    "unit": "NA"
   },
   {
-      "name": "white_to_white_n10_r",
-      "description": "peripheral white to white at nasal 10 degrees of right eye",
-      "category": "pupillary and iris features",
-      "type": "interval",
-      "unit": "mm"
+    "category": "pupillary and iris features",
+    "description": "peripheral white to white at nasal 10 degrees of right eye",
+    "name": "white_to_white_n10_r",
+    "type": "interval",
+    "unit": "mm"
   },
   {
-      "name": "iris_barycenter_x_n10_r",
-      "description": "peripheral iris barycenter (x) at nasal 10 degrees of right eye",
-      "category": "pupillary and iris features",
-      "type": "interval",
-      "unit": "NA"
+    "category": "pupillary and iris features",
+    "description": "peripheral iris barycenter (x) at nasal 10 degrees of right eye",
+    "name": "iris_barycenter_x_n10_r",
+    "type": "interval",
+    "unit": "NA"
   },
   {
-      "name": "iris_barycenter_y_n10_r",
-      "description": "peripheral iris barycenter (y) at nasal 10 degrees of right eye",
-      "category": "pupillary and iris features",
-      "type": "interval",
-      "unit": "NA"
+    "category": "pupillary and iris features",
+    "description": "peripheral iris barycenter (y) at nasal 10 degrees of right eye",
+    "name": "iris_barycenter_y_n10_r",
+    "type": "interval",
+    "unit": "NA"
   },
   {
-      "name": "pupil_diameter_n10_r",
-      "description": "peripheral pupil diameter at nasal 10 degrees of right eye",
-      "category": "pupillary and iris features",
-      "type": "interval",
-      "unit": "mm"
+    "category": "pupillary and iris features",
+    "description": "peripheral pupil diameter at nasal 10 degrees of right eye",
+    "name": "pupil_diameter_n10_r",
+    "type": "interval",
+    "unit": "mm"
   },
   {
-      "name": "pupil_barycenter_x_n10_r",
-      "description": "peripheral pupil barycenter (x) at nasal 10 degrees of right eye",
-      "category": "pupillary and iris features",
-      "type": "interval",
-      "unit": "NA"
+    "category": "pupillary and iris features",
+    "description": "peripheral pupil barycenter (x) at nasal 10 degrees of right eye",
+    "name": "pupil_barycenter_x_n10_r",
+    "type": "interval",
+    "unit": "NA"
   },
   {
-      "name": "pupil_barycenter_y_n10_r",
-      "description": "peripheral pupil barycenter (y) at nasal 10 degrees of right eye",
-      "category": "pupillary and iris features",
-      "type": "interval",
-      "unit": "NA"
+    "category": "pupillary and iris features",
+    "description": "peripheral pupil barycenter (y) at nasal 10 degrees of right eye",
+    "name": "pupil_barycenter_y_n10_r",
+    "type": "interval",
+    "unit": "NA"
   },
   {
-      "name": "white_to_white_n20_r",
-      "description": "peripheral white to white at nasal 20 degrees of right eye",
-      "category": "pupillary and iris features",
-      "type": "interval",
-      "unit": "mm"
+    "category": "pupillary and iris features",
+    "description": "peripheral white to white at nasal 20 degrees of right eye",
+    "name": "white_to_white_n20_r",
+    "type": "interval",
+    "unit": "mm"
   },
   {
-      "name": "iris_barycenter_x_n20_r",
-      "description": "peripheral iris barycenter (x) at nasal 20 degrees of right eye",
-      "category": "pupillary and iris features",
-      "type": "interval",
-      "unit": "NA"
+    "category": "pupillary and iris features",
+    "description": "peripheral iris barycenter (x) at nasal 20 degrees of right eye",
+    "name": "iris_barycenter_x_n20_r",
+    "type": "interval",
+    "unit": "NA"
   },
   {
-      "name": "iris_barycenter_y_n20_r",
-      "description": "peripheral iris barycenter (y) at nasal 20 degrees of right eye",
-      "category": "pupillary and iris features",
-      "type": "interval",
-      "unit": "NA"
+    "category": "pupillary and iris features",
+    "description": "peripheral iris barycenter (y) at nasal 20 degrees of right eye",
+    "name": "iris_barycenter_y_n20_r",
+    "type": "interval",
+    "unit": "NA"
   },
   {
-      "name": "pupil_diameter_n20_r",
-      "description": "peripheral pupil diameter at nasal 20 degrees of right eye",
-      "category": "pupillary and iris features",
-      "type": "interval",
-      "unit": "mm"
+    "category": "pupillary and iris features",
+    "description": "peripheral pupil diameter at nasal 20 degrees of right eye",
+    "name": "pupil_diameter_n20_r",
+    "type": "interval",
+    "unit": "mm"
   },
   {
-      "name": "pupil_barycenter_x_n20_r",
-      "description": "peripheral pupil barycenter (x) at nasal 20 degrees of right eye",
-      "category": "pupillary and iris features",
-      "type": "interval",
-      "unit": "NA"
+    "category": "pupillary and iris features",
+    "description": "peripheral pupil barycenter (x) at nasal 20 degrees of right eye",
+    "name": "pupil_barycenter_x_n20_r",
+    "type": "interval",
+    "unit": "NA"
   },
   {
-      "name": "pupil_barycenter_y_n20_r",
-      "description": "peripheral pupil barycenter (y) at nasal 20 degrees of right eye",
-      "category": "pupillary and iris features",
-      "type": "interval",
-      "unit": "NA"
+    "category": "pupillary and iris features",
+    "description": "peripheral pupil barycenter (y) at nasal 20 degrees of right eye",
+    "name": "pupil_barycenter_y_n20_r",
+    "type": "interval",
+    "unit": "NA"
   },
   {
-      "name": "white_to_white_t10_r",
-      "description": "peripheral white to white at temporal 10 degrees of right eye",
-      "category": "pupillary and iris features",
-      "type": "interval",
-      "unit": "mm"
+    "category": "pupillary and iris features",
+    "description": "peripheral white to white at temporal 10 degrees of right eye",
+    "name": "white_to_white_t10_r",
+    "type": "interval",
+    "unit": "mm"
   },
   {
-      "name": "iris_barycenter_x_t10_r",
-      "description": "peripheral iris barycenter (x) at temporal 10 degrees of right eye",
-      "category": "pupillary and iris features",
-      "type": "interval",
-      "unit": "NA"
+    "category": "pupillary and iris features",
+    "description": "peripheral iris barycenter (x) at temporal 10 degrees of right eye",
+    "name": "iris_barycenter_x_t10_r",
+    "type": "interval",
+    "unit": "NA"
   },
   {
-      "name": "iris_barycenter_y_t10_r",
-      "description": "peripheral iris barycenter (y) at temporal 10 degrees of right eye",
-      "category": "pupillary and iris features",
-      "type": "interval",
-      "unit": "NA"
+    "category": "pupillary and iris features",
+    "description": "peripheral iris barycenter (y) at temporal 10 degrees of right eye",
+    "name": "iris_barycenter_y_t10_r",
+    "type": "interval",
+    "unit": "NA"
   },
   {
-      "name": "pupil_diameter_t10_r",
-      "description": "peripheral pupil diameter at temporal 10 degrees of right eye",
-      "category": "pupillary and iris features",
-      "type": "interval",
-      "unit": "mm"
+    "category": "pupillary and iris features",
+    "description": "peripheral pupil diameter at temporal 10 degrees of right eye",
+    "name": "pupil_diameter_t10_r",
+    "type": "interval",
+    "unit": "mm"
   },
   {
-      "name": "pupil_barycenter_x_t10_r",
-      "description": "peripheral pupil barycenter (x) at temporal 10 degrees of right eye",
-      "category": "pupillary and iris features",
-      "type": "interval",
-      "unit": "NA"
+    "category": "pupillary and iris features",
+    "description": "peripheral pupil barycenter (x) at temporal 10 degrees of right eye",
+    "name": "pupil_barycenter_x_t10_r",
+    "type": "interval",
+    "unit": "NA"
   },
   {
-      "name": "pupil_barycenter_y_t10_r",
-      "description": "peripheral pupil barycenter (y) at temporal 10 degrees of right eye",
-      "category": "pupillary and iris features",
-      "type": "interval",
-      "unit": "NA"
+    "category": "pupillary and iris features",
+    "description": "peripheral pupil barycenter (y) at temporal 10 degrees of right eye",
+    "name": "pupil_barycenter_y_t10_r",
+    "type": "interval",
+    "unit": "NA"
   },
   {
-      "name": "white_to_white_t20_r",
-      "description": "peripheral white to white at temporal 20 degrees of right eye",
-      "category": "pupillary and iris features",
-      "type": "interval",
-      "unit": "mm"
+    "category": "pupillary and iris features",
+    "description": "peripheral white to white at temporal 20 degrees of right eye",
+    "name": "white_to_white_t20_r",
+    "type": "interval",
+    "unit": "mm"
   },
   {
-      "name": "iris_barycenter_x_t20_r",
-      "description": "peripheral iris barycenter (x) at temporal 20 degrees of right eye",
-      "category": "pupillary and iris features",
-      "type": "interval",
-      "unit": "NA"
+    "category": "pupillary and iris features",
+    "description": "peripheral iris barycenter (x) at temporal 20 degrees of right eye",
+    "name": "iris_barycenter_x_t20_r",
+    "type": "interval",
+    "unit": "NA"
   },
   {
-      "name": "iris_barycenter_y_t20_r",
-      "description": "peripheral iris barycenter (y) at temporal 20 degrees of right eye",
-      "category": "pupillary and iris features",
-      "type": "interval",
-      "unit": "NA"
+    "category": "pupillary and iris features",
+    "description": "peripheral iris barycenter (y) at temporal 20 degrees of right eye",
+    "name": "iris_barycenter_y_t20_r",
+    "type": "interval",
+    "unit": "NA"
   },
   {
-      "name": "pupil_diameter_t20_r",
-      "description": "peripheral pupil diameter at temporal 20 degrees of right eye",
-      "category": "pupillary and iris features",
-      "type": "interval",
-      "unit": "mm"
+    "category": "pupillary and iris features",
+    "description": "peripheral pupil diameter at temporal 20 degrees of right eye",
+    "name": "pupil_diameter_t20_r",
+    "type": "interval",
+    "unit": "mm"
   },
   {
-      "name": "pupil_barycenter_x_t20_r",
-      "description": "peripheral pupil barycenter (x) at temporal 20 degrees of right eye",
-      "category": "pupillary and iris features",
-      "type": "interval",
-      "unit": "NA"
+    "category": "pupillary and iris features",
+    "description": "peripheral pupil barycenter (x) at temporal 20 degrees of right eye",
+    "name": "pupil_barycenter_x_t20_r",
+    "type": "interval",
+    "unit": "NA"
   },
   {
-      "name": "pupil_barycenter_y_t20_r",
-      "description": "peripheral pupil barycenter (y) at temporal 20 degrees of right eye",
-      "category": "pupillary and iris features",
-      "type": "interval",
-      "unit": "NA"
+    "category": "pupillary and iris features",
+    "description": "peripheral pupil barycenter (y) at temporal 20 degrees of right eye",
+    "name": "pupil_barycenter_y_t20_r",
+    "type": "interval",
+    "unit": "NA"
   },
   {
-      "name": "amf_ar",
-      "description": "accommodative microfluctuations value",
-      "category": "accommodative microfluctuations",
-      "type": "",
-      "unit": ""
+    "category": "accommodative microfluctuations",
+    "description": "accommodative microfluctuations value",
+    "name": "amf_ar",
+    "type": "",
+    "unit": ""
   },
   {
-      "name": "amf_sd",
-      "description": "accommodative microfluctuations standard deviation",
-      "category": "accommodative microfluctuations",
-      "type": "",
-      "unit": ""
+    "category": "accommodative microfluctuations",
+    "description": "accommodative microfluctuations standard deviation",
+    "name": "amf_sd",
+    "type": "",
+    "unit": ""
   },
   {
-      "name": "pupil_size_mean",
-      "description": "mean pupil diameter (non-cycloplegic conditions)",
-      "category": "accommodative microfluctuations",
-      "type": "",
-      "unit": ""
+    "category": "accommodative microfluctuations",
+    "description": "mean pupil diameter (non-cycloplegic conditions)",
+    "name": "pupil_size_mean",
+    "type": "",
+    "unit": ""
   },
   {
-      "name": "pupil_size_sd",
-      "description": "pupil diameter standard deviation (non-cycloplegic conditions)",
-      "category": "accommodative microfluctuations",
-      "type": "",
-      "unit": ""
+    "category": "accommodative microfluctuations",
+    "description": "pupil diameter standard deviation (non-cycloplegic conditions)",
+    "name": "pupil_size_sd",
+    "type": "",
+    "unit": ""
   },
   {
-      "name": "lids_normal_r",
-      "description": "Lids.Normal.Right",
-      "category": "slit lamp",
-      "type": "",
-      "unit": ""
+    "category": "slit lamp",
+    "description": "Lids.Normal.Right",
+    "name": "lids_normal_r",
+    "type": "",
+    "unit": ""
   },
   {
-      "name": "lids_normal_l",
-      "description": "Lids.Normal.Left",
-      "category": "slit lamp",
-      "type": "",
-      "unit": ""
+    "category": "slit lamp",
+    "description": "Lids.Normal.Left",
+    "name": "lids_normal_l",
+    "type": "",
+    "unit": ""
   },
   {
-      "name": "lids_other_r",
-      "description": "Lids.Other.Right",
-      "category": "slit lamp",
-      "type": "",
-      "unit": ""
+    "category": "slit lamp",
+    "description": "Lids.Other.Right",
+    "name": "lids_other_r",
+    "type": "",
+    "unit": ""
   },
   {
-      "name": "lids_other_l",
-      "description": "Lids.Other.Left",
-      "category": "slit lamp",
-      "type": "",
-      "unit": ""
+    "category": "slit lamp",
+    "description": "Lids.Other.Left",
+    "name": "lids_other_l",
+    "type": "",
+    "unit": ""
   },
   {
-      "name": "lids_other_spec_r",
-      "description": "Lids.Other.Specify.Right",
-      "category": "slit lamp",
-      "type": "",
-      "unit": ""
+    "category": "slit lamp",
+    "description": "Lids.Other.Specify.Right",
+    "name": "lids_other_spec_r",
+    "type": "",
+    "unit": ""
   },
   {
-      "name": "lids_other_spec_l",
-      "description": "Lids.Other.Specify.Left",
-      "category": "slit lamp",
-      "type": "",
-      "unit": ""
+    "category": "slit lamp",
+    "description": "Lids.Other.Specify.Left",
+    "name": "lids_other_spec_l",
+    "type": "",
+    "unit": ""
   },
   {
-      "name": "cornea_clear_r",
-      "description": "Cornea.Clear.Right",
-      "category": "slit lamp",
-      "type": "",
-      "unit": ""
+    "category": "slit lamp",
+    "description": "Cornea.Clear.Right",
+    "name": "cornea_clear_r",
+    "type": "",
+    "unit": ""
   },
   {
-      "name": "cornea_clear_l",
-      "description": "Cornea.Clear.Left",
-      "category": "slit lamp",
-      "type": "",
-      "unit": ""
+    "category": "slit lamp",
+    "description": "Cornea.Clear.Left",
+    "name": "cornea_clear_l",
+    "type": "",
+    "unit": ""
   },
   {
-      "name": "cornea_scar_r",
-      "description": "Cornea.Scars.Right",
-      "category": "slit lamp",
-      "type": "",
-      "unit": ""
+    "category": "slit lamp",
+    "description": "Cornea.Scars.Right",
+    "name": "cornea_scar_r",
+    "type": "",
+    "unit": ""
   },
   {
-      "name": "cornea_scar_l",
-      "description": "Cornea.Scars.Left",
-      "category": "slit lamp",
-      "type": "",
-      "unit": ""
+    "category": "slit lamp",
+    "description": "Cornea.Scars.Left",
+    "name": "cornea_scar_l",
+    "type": "",
+    "unit": ""
   },
   {
-      "name": "cornea_vars_r",
-      "description": "Cornea.Vascularisation.Right",
-      "category": "slit lamp",
-      "type": "",
-      "unit": ""
+    "category": "slit lamp",
+    "description": "Cornea.Vascularisation.Right",
+    "name": "cornea_vars_r",
+    "type": "",
+    "unit": ""
   },
   {
-      "name": "cornea_vars_l",
-      "description": "Cornea.Vascularisation.Left",
-      "category": "slit lamp",
-      "type": "",
-      "unit": ""
+    "category": "slit lamp",
+    "description": "Cornea.Vascularisation.Left",
+    "name": "cornea_vars_l",
+    "type": "",
+    "unit": ""
   },
   {
-      "name": "cornea_infiltrates_r",
-      "description": "Cornea.Infiltrates.Right",
-      "category": "slit lamp",
-      "type": "",
-      "unit": ""
+    "category": "slit lamp",
+    "description": "Cornea.Infiltrates.Right",
+    "name": "cornea_infiltrates_r",
+    "type": "",
+    "unit": ""
   },
   {
-      "name": "cornea_infiltrates_l",
-      "description": "Cornea.Infiltrates.Left",
-      "category": "slit lamp",
-      "type": "",
-      "unit": ""
+    "category": "slit lamp",
+    "description": "Cornea.Infiltrates.Left",
+    "name": "cornea_infiltrates_l",
+    "type": "",
+    "unit": ""
   },
   {
-      "name": "cornea_epi_defect_r",
-      "description": "Cornea.Epithelial.Defect.Right",
-      "category": "slit lamp",
-      "type": "",
-      "unit": ""
+    "category": "slit lamp",
+    "description": "Cornea.Epithelial.Defect.Right",
+    "name": "cornea_epi_defect_r",
+    "type": "",
+    "unit": ""
   },
   {
-      "name": "cornea_epi_defect_l",
-      "description": "Cornea.Epithelial.Defect.Left",
-      "category": "slit lamp",
-      "type": "",
-      "unit": ""
+    "category": "slit lamp",
+    "description": "Cornea.Epithelial.Defect.Left",
+    "name": "cornea_epi_defect_l",
+    "type": "",
+    "unit": ""
   },
   {
-      "name": "cornea_oedema_r",
-      "description": "Cornea.Oedema.Right",
-      "category": "slit lamp",
-      "type": "",
-      "unit": ""
+    "category": "slit lamp",
+    "description": "Cornea.Oedema.Right",
+    "name": "cornea_oedema_r",
+    "type": "",
+    "unit": ""
   },
   {
-      "name": "cornea_oedema_l",
-      "description": "Cornea.Oedema.Left",
-      "category": "slit lamp",
-      "type": "",
-      "unit": ""
+    "category": "slit lamp",
+    "description": "Cornea.Oedema.Left",
+    "name": "cornea_oedema_l",
+    "type": "",
+    "unit": ""
   },
   {
-      "name": "cornea_other_r",
-      "description": "Cornea.Other.Right",
-      "category": "slit lamp",
-      "type": "",
-      "unit": ""
+    "category": "slit lamp",
+    "description": "Cornea.Other.Right",
+    "name": "cornea_other_r",
+    "type": "",
+    "unit": ""
   },
   {
-      "name": "cornea_other_l",
-      "description": "Cornea.Other.Left",
-      "category": "slit lamp",
-      "type": "",
-      "unit": ""
+    "category": "slit lamp",
+    "description": "Cornea.Other.Left",
+    "name": "cornea_other_l",
+    "type": "",
+    "unit": ""
   },
   {
-      "name": "cornea_other_spec_r",
-      "description": "Cornea.Other.Specify.Right",
-      "category": "slit lamp",
-      "type": "",
-      "unit": ""
+    "category": "slit lamp",
+    "description": "Cornea.Other.Specify.Right",
+    "name": "cornea_other_spec_r",
+    "type": "",
+    "unit": ""
   },
   {
-      "name": "cornea_other_spec_l",
-      "description": "Cornea.Other.Specify.Left",
-      "category": "slit lamp",
-      "type": "",
-      "unit": ""
+    "category": "slit lamp",
+    "description": "Cornea.Other.Specify.Left",
+    "name": "cornea_other_spec_l",
+    "type": "",
+    "unit": ""
   },
   {
-      "name": "conjunct_palpebral_red_r",
-      "description": "Conjunctival.Palpebral.Redness.Overall.Screening.Right",
-      "category": "slit lamp",
-      "type": "",
-      "unit": ""
+    "category": "slit lamp",
+    "description": "Conjunctival.Palpebral.Redness.Overall.Screening.Right",
+    "name": "conjunct_palpebral_red_r",
+    "type": "",
+    "unit": ""
   },
   {
-      "name": "conjunct_palpebral_red_l",
-      "description": "Conjunctival.Palpebral.Redness.Overall.Screening.Left",
-      "category": "slit lamp",
-      "type": "",
-      "unit": ""
+    "category": "slit lamp",
+    "description": "Conjunctival.Palpebral.Redness.Overall.Screening.Left",
+    "name": "conjunct_palpebral_red_l",
+    "type": "",
+    "unit": ""
   },
   {
-      "name": "conjunct_palpebral_rough_r",
-      "description": "Conjunctival.Palpebral.Roughness.Overall.Screening.Right",
-      "category": "slit lamp",
-      "type": "",
-      "unit": ""
+    "category": "slit lamp",
+    "description": "Conjunctival.Palpebral.Roughness.Overall.Screening.Right",
+    "name": "conjunct_palpebral_rough_r",
+    "type": "",
+    "unit": ""
   },
   {
-      "name": "conjunct_palpebral_rough_l",
-      "description": "Conjunctival.Palpebral.Roughness.Overall.Screening.Left",
-      "category": "slit lamp",
-      "type": "",
-      "unit": ""
+    "category": "slit lamp",
+    "description": "Conjunctival.Palpebral.Roughness.Overall.Screening.Left",
+    "name": "conjunct_palpebral_rough_l",
+    "type": "",
+    "unit": ""
   },
   {
-      "name": "conjunct_bulbar_red_r",
-      "description": "Bulbar.Conjunctival.Redness.Overall.Screening.Right",
-      "category": "slit lamp",
-      "type": "",
-      "unit": ""
+    "category": "slit lamp",
+    "description": "Bulbar.Conjunctival.Redness.Overall.Screening.Right",
+    "name": "conjunct_bulbar_red_r",
+    "type": "",
+    "unit": ""
   },
   {
-      "name": "conjunct_bulbar_red_l",
-      "description": "Bulbar.Conjunctival.Redness.Overall.Screening.Left",
-      "category": "slit lamp",
-      "type": "",
-      "unit": ""
+    "category": "slit lamp",
+    "description": "Bulbar.Conjunctival.Redness.Overall.Screening.Left",
+    "name": "conjunct_bulbar_red_l",
+    "type": "",
+    "unit": ""
   },
   {
-      "name": "conjunct_limbal_red_r",
-      "description": "Limbal.Conjunctival.Redness.Overall.Screening.Right",
-      "category": "slit lamp",
-      "type": "",
-      "unit": ""
+    "category": "slit lamp",
+    "description": "Limbal.Conjunctival.Redness.Overall.Screening.Right",
+    "name": "conjunct_limbal_red_r",
+    "type": "",
+    "unit": ""
   },
   {
-      "name": "conjunct_limbal_red_l",
-      "description": "Limbal.Conjunctival.Redness.Overall.Screening.Left",
-      "category": "slit lamp",
-      "type": "",
-      "unit": ""
+    "category": "slit lamp",
+    "description": "Limbal.Conjunctival.Redness.Overall.Screening.Left",
+    "name": "conjunct_limbal_red_l",
+    "type": "",
+    "unit": ""
   },
   {
-      "name": "acd_empty_r",
-      "description": "Anterior.Chamber.Empty.Right",
-      "category": "slit lamp",
-      "type": "",
-      "unit": ""
+    "category": "slit lamp",
+    "description": "Anterior.Chamber.Empty.Right",
+    "name": "acd_empty_r",
+    "type": "",
+    "unit": ""
   },
   {
-      "name": "acd_empty_l",
-      "description": "Anterior.Chamber.Empty.Left",
-      "category": "slit lamp",
-      "type": "",
-      "unit": ""
+    "category": "slit lamp",
+    "description": "Anterior.Chamber.Empty.Left",
+    "name": "acd_empty_l",
+    "type": "",
+    "unit": ""
   },
   {
-      "name": "lids_comments_r",
-      "description": "Comments.Right",
-      "category": "slit lamp",
-      "type": "",
-      "unit": ""
+    "category": "slit lamp",
+    "description": "Comments.Right",
+    "name": "lids_comments_r",
+    "type": "",
+    "unit": ""
   },
   {
-      "name": "lids_comments_l",
-      "description": "Comments.Left",
-      "category": "slit lamp",
-      "type": "",
-      "unit": ""
+    "category": "slit lamp",
+    "description": "Comments.Left",
+    "name": "lids_comments_l",
+    "type": "",
+    "unit": ""
   },
   {
-      "name": "metapm_cat_r",
-      "description": "META-PM category for MMD in right eye",
-      "category": "myopic macular degeneration",
-      "type": "categorical",
-      "unit": "free text"
+    "category": "myopic macular degeneration",
+    "description": "META-PM category for MMD in right eye",
+    "name": "metapm_cat_r",
+    "type": "categorical",
+    "unit": "free text"
   },
   {
-      "name": "metapm_cat_l",
-      "description": "META-PM category for MMD in left eye",
-      "category": "myopic macular degeneration",
-      "type": "categorical",
-      "unit": "free text"
+    "category": "myopic macular degeneration",
+    "description": "META-PM category for MMD in left eye",
+    "name": "metapm_cat_l",
+    "type": "categorical",
+    "unit": "free text"
   },
   {
-      "name": "metapm_cat_r_comments",
-      "description": "META-PM category for MMD in right eye - comments",
-      "category": "myopic macular degeneration",
-      "type": "categorical",
-      "unit": "free text"
+    "category": "myopic macular degeneration",
+    "description": "META-PM category for MMD in right eye - comments",
+    "name": "metapm_cat_r_comments",
+    "type": "categorical",
+    "unit": "free text"
   },
   {
-      "name": "metapm_cat_l_comments",
-      "description": "META-PM category for MMD in left eye - comments",
-      "category": "myopic macular degeneration",
-      "type": "categorical",
-      "unit": "free text"
+    "category": "myopic macular degeneration",
+    "description": "META-PM category for MMD in left eye - comments",
+    "name": "metapm_cat_l_comments",
+    "type": "categorical",
+    "unit": "free text"
   },
   {
-      "name": "glass_year_ofprescription",
-      "description": "year of previous glasses prescription",
-      "category": "prescription history",
-      "type": "year",
-      "unit": "whole number"
+    "category": "prescription history",
+    "description": "year of previous glasses prescription",
+    "name": "glass_year_ofprescription",
+    "type": "year",
+    "unit": "whole number"
   },
   {
-      "name": "glass_month_ofprescription",
-      "description": "month of previous glasses prescription",
-      "category": "prescription history",
-      "type": "month",
-      "unit": "whole number"
+    "category": "prescription history",
+    "description": "month of previous glasses prescription",
+    "name": "glass_month_ofprescription",
+    "type": "month",
+    "unit": "whole number"
   },
   {
-      "name": "glass_wearing_day_perweek",
-      "description": "self-reported number of days of wearing previous glasses per week",
-      "category": "wearing time",
-      "type": "interval",
-      "unit": "NA"
+    "category": "wearing time",
+    "description": "self-reported number of days of wearing previous glasses per week",
+    "name": "glass_wearing_day_perweek",
+    "type": "interval",
+    "unit": "NA"
   },
   {
-      "name": "glass_wearing_hr_perday_weekday",
-      "description": "self-reported number of hours of wearing previous glasses per day (weekday)",
-      "category": "wearing time",
-      "type": "interval",
-      "unit": "NA"
+    "category": "wearing time",
+    "description": "self-reported number of hours of wearing previous glasses per day (weekday)",
+    "name": "glass_wearing_hr_perday_weekday",
+    "type": "interval",
+    "unit": "NA"
   },
   {
-      "name": "glass_wearing_hr_perday_weekend",
-      "description": "self-reported number of hours of wearing previous glasses per day (weekend)",
-      "category": "wearing time",
-      "type": "interval",
-      "unit": "NA"
+    "category": "wearing time",
+    "description": "self-reported number of hours of wearing previous glasses per day (weekend)",
+    "name": "glass_wearing_hr_perday_weekend",
+    "type": "interval",
+    "unit": "NA"
   },
   {
-      "name": "glass_sph_r",
-      "description": "previous glasses prescription: sphere value for right eye",
-      "category": "prescription history",
-      "type": "interval",
-      "unit": "diopters"
+    "category": "prescription history",
+    "description": "previous glasses prescription: sphere value for right eye",
+    "name": "glass_sph_r",
+    "type": "interval",
+    "unit": "diopters"
   },
   {
-      "name": "glass_cyl_r",
-      "description": "previous glasses prescription: cylinder value for right eye",
-      "category": "prescription history",
-      "type": "interval",
-      "unit": "diopters"
+    "category": "prescription history",
+    "description": "previous glasses prescription: cylinder value for right eye",
+    "name": "glass_cyl_r",
+    "type": "interval",
+    "unit": "diopters"
   },
   {
-      "name": "glass_axis_r",
-      "description": "previous glasses prescription: axis value for right eye",
-      "category": "prescription history",
-      "type": "interval",
-      "unit": "degrees"
+    "category": "prescription history",
+    "description": "previous glasses prescription: axis value for right eye",
+    "name": "glass_axis_r",
+    "type": "interval",
+    "unit": "degrees"
   },
   {
-      "name": "glass_sph_l",
-      "description": "previous glasses prescription: sphere value for left eye",
-      "category": "prescription history",
-      "type": "interval",
-      "unit": "diopters"
+    "category": "prescription history",
+    "description": "previous glasses prescription: sphere value for left eye",
+    "name": "glass_sph_l",
+    "type": "interval",
+    "unit": "diopters"
   },
   {
-      "name": "glass_cyl_l",
-      "description": "previous glasses prescription: cylinder value for left eye",
-      "category": "prescription history",
-      "type": "interval",
-      "unit": "diopters"
+    "category": "prescription history",
+    "description": "previous glasses prescription: cylinder value for left eye",
+    "name": "glass_cyl_l",
+    "type": "interval",
+    "unit": "diopters"
   },
   {
-      "name": "glass_axis_l",
-      "description": "previous glasses prescription: axis value for left eye",
-      "category": "prescription history",
-      "type": "interval",
-      "unit": "degrees"
+    "category": "prescription history",
+    "description": "previous glasses prescription: axis value for left eye",
+    "name": "glass_axis_l",
+    "type": "interval",
+    "unit": "degrees"
   },
   {
-      "name": "frame_width",
-      "description": "width of frame",
-      "category": "frame",
-      "type": "interval",
-      "unit": "mm"
+    "category": "frame",
+    "description": "width of frame",
+    "name": "frame_width",
+    "type": "interval",
+    "unit": "mm"
   },
   {
-      "name": "frame_size",
-      "description": "size of frame",
-      "category": "frame",
-      "type": "interval",
-      "unit": "mm"
+    "category": "frame",
+    "description": "size of frame",
+    "name": "frame_size",
+    "type": "interval",
+    "unit": "mm"
   },
   {
-      "name": "fit_height_r",
-      "description": "fitting height in right eye",
-      "category": "frame",
-      "type": "interval",
-      "unit": "mm"
+    "category": "frame",
+    "description": "fitting height in right eye",
+    "name": "fit_height_r",
+    "type": "interval",
+    "unit": "mm"
   },
   {
-      "name": "fit_height_l",
-      "description": "fitting height in left eye",
-      "category": "frame",
-      "type": "interval",
-      "unit": "mm"
+    "category": "frame",
+    "description": "fitting height in left eye",
+    "name": "fit_height_l",
+    "type": "interval",
+    "unit": "mm"
   }
 ]

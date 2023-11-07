@@ -29,7 +29,11 @@ const useClasses = makeStyles({
 /**
  * The home page component
  * This page is simply used to navigate to the upload page
- * @todo Add an quick introduction text to the tool in this page
+ * @example
+ * ```tsx
+ * <Route lazy={lazyComponentImport('@/pages')} />
+ * ```
+ * @todo Add a quick introduction text to the tool in this page
  * @category Page
  * @returns The component object
  */

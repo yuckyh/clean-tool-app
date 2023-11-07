@@ -1,5 +1,5 @@
 import { useAppSelector } from '@/lib/hooks'
-import { getOriginalColumn } from '@/selectors/selectors'
+import { getOriginalColumn } from '@/selectors/columns/selectors'
 import { makeStyles, shorthands, tokens } from '@fluentui/react-components'
 
 const useClasses = makeStyles({
@@ -14,7 +14,7 @@ const useClasses = makeStyles({
 /**
  * The props for {@link ValueCell}
  */
-export interface Props {
+interface Props {
   /**
    * The column index
    */
@@ -26,6 +26,7 @@ export interface Props {
  * @param props - The component's props
  * @param props.pos - The column index
  * @returns The component object
+ * @example
  */
 export default function ValueCell({ pos }: Readonly<Props>) {
   const classes = useClasses()

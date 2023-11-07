@@ -190,13 +190,11 @@
       "jsdoc/require-file-overview": 2,
       "jsdoc/require-hyphen-before-param-description": 2,
       "jsdoc/require-throws": 2,
-      "jsdox/text-escaping": 2,
       "react/jsx-props-no-spreading": 0,
       "redux/no-let": 0,
       "redux/no-mutation": 0,
       "redux/no-this": 0,
-      "require-jsdoc": 2,
-      "valid-jsdoc": 2
+      "require-jsdoc": 2
     },
     "settings": {
       "import/parsers": {

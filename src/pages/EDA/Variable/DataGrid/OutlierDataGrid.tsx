@@ -37,7 +37,7 @@ const useClasses = makeStyles({
   },
 })
 
-export interface Props {
+interface Props {
   column: string
   visit: string
 }
@@ -47,6 +47,7 @@ export interface Props {
  * @param props
  * @param props.column
  * @param props.visit
+ * @example
  */
 export default function OutlierDataGrid({ column, visit }: Readonly<Props>) {
   const classes = useClasses()

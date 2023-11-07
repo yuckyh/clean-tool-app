@@ -8,7 +8,7 @@ import * as f from 'fp-ts/function'
 
 import VariablePlot from '.'
 
-export interface Props {
+interface Props {
   column: string
   variable: string
   visit: string
@@ -20,6 +20,7 @@ export interface Props {
  * @param props.column
  * @param props.variable
  * @param props.visit
+ * @example
  */
 export default function CategoricalPlot({
   column,

@@ -5,7 +5,7 @@ import * as RA from 'fp-ts/ReadonlyArray'
 import * as f from 'fp-ts/function'
 import { useMemo } from 'react'
 
-export interface Props {
+interface Props {
   data: readonly Partial<Data>[]
   layout: Partial<Layout>
   variable: string
@@ -17,6 +17,7 @@ export interface Props {
  * @param props.data
  * @param props.layout
  * @param props.variable
+ * @example
  */
 export default function VariablePlot({
   data,

@@ -3,7 +3,7 @@ import type { ComponentType } from 'react'
 import * as f from 'fp-ts/function'
 import { lazy, memo } from 'react'
 
-import { promisedTask } from './fp'
+import { asTask, promisedTask } from './fp'
 
 export const createMemo = <T>(
   displayName: string,
@@ -25,3 +25,52 @@ export const createLazyMemo = <T>(
   })
   return component
 }
+
+/**
+ * A helper function to import a component lazily from its default export.
+ * @public
+ * @template T - The component's prop type
+ * @param path - Path to the component
+ * @returns A {@link https://gcanti.github.io/fp-ts/modules/Task.ts.html `Task`} that resolves the default export of the component which can be used by the {@link https://reactrouter.com/en/main/route/lazy `lazy`} property for a {@link https://reactrouter.com/en/main/route/route `route`}.
+ * @example To create a lazy import for the home page a route will be declared as such:
+ * ```tsx
+ * <Route index lazy={lazyComponentImport('@/pages')} />
+ * ```
+ */
+export const lazyComponentImport = <T>(path: string) =>
+  asTask(async () => ({
+    Component: (
+      await (import(path) as Promise<{ default: React.ComponentType<T> }>)
+    ).default,
+  }))
+
+export const promisedWorker = <
+  Req extends WorkerRequest,
+  Res extends WorkerResponse,
+>(
+  type: keyof Omit<GenericWorkerEventMap<Res>, 'error'>,
+  worker: Readonly<RequestWorker<Req, Res>>,
+  options: AddEventListenerOptions = { once: true },
+) =>
+  new Promise<GenericWorkerEventMap<Res>[typeof type]>((resolve, reject) => {
+    worker.addEventListener(
+      type,
+      (event) => {
+        if (event.data.status === 'fail') {
+          reject(event)
+          return
+        }
+
+        resolve(event)
+      },
+      options,
+    )
+
+    worker.addEventListener(
+      'error',
+      (event) => {
+        reject(event)
+      },
+      options,
+    )
+  })

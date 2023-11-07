@@ -7,7 +7,7 @@ import { indexDuplicateSearcher } from '@/lib/array'
 import { equals, isCorrectNumber } from '@/lib/fp'
 import { useAppDispatch, useAppSelector, useDebounced } from '@/lib/hooks'
 import { createMemo } from '@/lib/utils'
-import { getMatchColumn } from '@/selectors/selectors'
+import { getMatchColumn } from '@/selectors/columns/selectors'
 import {
   Combobox,
   Option,
@@ -50,7 +50,7 @@ const useClasses = makeStyles({
 /**
  *
  */
-export interface Props {
+interface Props {
   alertRef: React.RefObject<AlertRef>
   pos: number
 }
@@ -60,6 +60,7 @@ export interface Props {
  * @param props
  * @param props.alertRef
  * @param props.pos
+ * @example
  */
 export default function MatchCell({ alertRef, pos }: Readonly<Props>) {
   const classes = useClasses()

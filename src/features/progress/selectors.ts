@@ -56,7 +56,7 @@ export const getPaths = createSelector(
     ),
 )
 
-export const getPath = createSelector([getPaths, getPosParam], (paths, pos) =>
+const getPath = createSelector([getPaths, getPosParam], (paths, pos) =>
   arrLookup(paths)('')(pos),
 )
 

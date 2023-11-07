@@ -3,7 +3,7 @@ import type { DropdownProps } from '@fluentui/react-components'
 
 import { indexDuplicateSearcher } from '@/lib/array'
 import { useAppDispatch, useAppSelector } from '@/lib/hooks'
-import { getMatchColumn } from '@/selectors/selectors'
+import { getMatchColumn } from '@/selectors/columns/selectors'
 import {
   Dropdown,
   Option,
@@ -26,7 +26,7 @@ const useClasses = makeStyles({
   },
 })
 
-export interface Props {
+interface Props {
   alertRef: RefObject<AlertRef>
   pos: number
 }
@@ -36,6 +36,7 @@ export interface Props {
  * @param props
  * @param props.alertRef
  * @param props.pos
+ * @example
  */
 export default function VisitsCell({ alertRef, pos }: Readonly<Props>) {
   const classes = useClasses()

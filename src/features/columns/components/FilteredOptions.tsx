@@ -10,12 +10,12 @@ import * as S from 'fp-ts/string'
 
 const search = fuse.search.bind(fuse)
 
-export interface ColumnMatch {
+interface ColumnMatch {
   match: string
   score: number
 }
 
-export interface Props {
+interface Props {
   filteredMatches: readonly ColumnMatch[]
   value: string
 }
@@ -25,6 +25,7 @@ export interface Props {
  * @param props
  * @param props.filteredMatches
  * @param props.value
+ * @example
  */
 export default function FilteredOptions({
   filteredMatches,

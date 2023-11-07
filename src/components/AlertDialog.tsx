@@ -24,13 +24,13 @@ export interface AlertRef {
   setTitle: (title: string) => string
 }
 
-export interface Props {
+interface Props {
   noCancel?: boolean
   onConfirm?: IO.IO<void>
 }
 
 const AlertDialog = forwardRef<AlertRef, Props>(
-  ({ noCancel, onConfirm }, ref) => {
+  ({ noCancel = false, onConfirm = noOpIO() }, ref) => {
     const [open, setOpen] = useState(false)
     const [content, setContent] = useState('')
     const [title, setTitle] = useState('')

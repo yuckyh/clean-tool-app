@@ -1,9 +1,18 @@
+/**
+ * @file Web worker for the sheet I/O.
+ */
+
 import type { WorkBook } from 'xlsx'
 
 import { dumpError } from '@/lib/fp/logger'
 import * as f from 'fp-ts/function'
 import XLSX from 'xlsx'
 
+type SheetMethod = 'get' | 'postFile' | 'remove'
+
+/**
+ * The type of the worker's request.
+ */
 export type SheetRequest = (
   | {
       file: File
@@ -20,10 +29,14 @@ export type SheetRequest = (
 ) &
   WorkerRequest
 
-export type SheetResponse = WorkerResponse & {
-  fileName: string
-  workbook?: WorkBook
-}
+/**
+ * The type of the worker's response.
+ */
+export type SheetResponse<S extends ResponseStatus = ResponseStatus> =
+  WorkerResponse<S> & {
+    fileName: string
+    workbook?: WorkBook
+  }
 
 type Handler<Method extends SheetRequest['method'] = SheetRequest['method']> =
   RequestHandler<SheetRequest & { method: Method }, SheetResponse, Method>

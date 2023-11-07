@@ -1,3 +1,7 @@
+/**
+ * @file This is a component file for the Layout component.
+ */
+
 /* eslint-disable
   functional/functional-parameters
 */
@@ -28,6 +32,10 @@ const useClasses = makeStyles({
  * This component is used to render the progress navigation bar and the main content of the page.
  * @category Component
  * @returns The main layout component
+ * @example
+ * ```tsx
+ * <Layout />
+ * ```
  */
 export default function Layout() {
   const classes = useClasses()

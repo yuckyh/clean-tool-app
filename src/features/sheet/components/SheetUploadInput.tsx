@@ -2,7 +2,6 @@
   functional/immutable-data
 */
 import type { FileTaskType } from '@/components/FileToast'
-import type { SimpleToasterRef } from '@/components/SimpleToaster'
 import type { SheetResponse } from '@/workers/sheet'
 import type { Dispatch, SetStateAction } from 'react'
 import type { DropzoneOptions } from 'react-dropzone'
@@ -12,7 +11,12 @@ import FileToast from '@/components/FileToast'
 import { asIO } from '@/lib/fp'
 import { dumpError } from '@/lib/fp/logger'
 import { useAppDispatch, useAppSelector } from '@/lib/hooks'
-import { Field, Input, makeStyles } from '@fluentui/react-components'
+import {
+  Field,
+  Input,
+  makeStyles,
+  useToastController,
+} from '@fluentui/react-components'
 import * as T from 'fp-ts/Task'
 import * as f from 'fp-ts/function'
 import {
@@ -40,12 +44,12 @@ const useClasses = makeStyles({
   },
 })
 
-export interface Props {
-  toasterRef: React.MutableRefObject<SimpleToasterRef | null>
+interface Props {
+  toasterId: string
 }
 
 const SheetUploadInput = forwardRef<SheetInputRef, Props>(
-  ({ toasterRef }, ref) => {
+  ({ toasterId }, ref) => {
     const classes = useClasses()
 
     const dispatch = useAppDispatch()
@@ -54,6 +58,8 @@ const SheetUploadInput = forwardRef<SheetInputRef, Props>(
     const dataLength = useAppSelector(({ sheet }) => sheet.data.length)
 
     const [fileTask, setFileTask] = useState<FileTaskType | undefined>()
+
+    const { dispatchToast } = useToastController(toasterId)
 
     const zoneOptions: Readonly<DropzoneOptions> = useMemo(
       () => ({
@@ -87,15 +93,11 @@ const SheetUploadInput = forwardRef<SheetInputRef, Props>(
 
     const toastNotify = useCallback(() => {
       if (fileTask) {
-        toasterRef.current?.dispatchToast(<FileToast fileTask={fileTask} />, {
+        dispatchToast(<FileToast fileTask={fileTask} />, {
           intent: 'success',
         })
-
-        return undefined
       }
-
-      return undefined
-    }, [fileTask, toasterRef])
+    }, [fileTask, dispatchToast])
 
     useImperativeHandle(ref, () => ({
       setFileTask,
@@ -109,11 +111,10 @@ const SheetUploadInput = forwardRef<SheetInputRef, Props>(
 
         if (!isTask) {
           setFileTask(undefined)
-          return undefined
+          return
         }
 
         toastNotify()
-        return undefined
       }
 
       sheetWorker.addEventListener('message', handleWorkerLoad)

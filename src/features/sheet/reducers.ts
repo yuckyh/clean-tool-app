@@ -9,7 +9,7 @@ import { head } from '@/lib/array'
 import { equals } from '@/lib/fp'
 import * as CellItem from '@/lib/fp/CellItem'
 import * as Flag from '@/lib/fp/Flag'
-import { dumpError } from '@/lib/fp/logger'
+import { dump, dumpError } from '@/lib/fp/logger'
 import { add } from '@/lib/fp/number'
 import { getPersisted, setPersisted } from '@/lib/localStorage'
 import { createSlice } from '@reduxjs/toolkit'
@@ -65,10 +65,11 @@ const listKeys = ['sheetNames', 'visits', 'originalColumns'] as const
 const fileNameKey = 'fileName'
 
 const initialState: Readonly<State> = {
-  data: RA.map(CellItem.of)(
+  data: f.pipe(
     JSON.parse(
       getPersisted('data', '[]'),
     ) as readonly CellItem.CellItem['value'][],
+    RA.map(CellItem.of),
   ),
   fileName: getPersisted(fileNameKey, defaultValue),
   flaggedCells: f.pipe(
@@ -119,7 +120,10 @@ const sheetSlice = createSlice({
 
         const sheet = Sheets?.[state.sheetName] ?? {}
 
-        state.data = utils.sheet_to_json(sheet)
+        state.data = f.pipe(
+          utils.sheet_to_json<CellItem.CellItem['value']>(sheet),
+          RA.map(CellItem.of),
+        ) as CellItem.CellItem[]
 
         state.originalColumns = f.pipe(
           utils.sheet_to_json<string[]>(sheet, {

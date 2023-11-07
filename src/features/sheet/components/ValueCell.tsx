@@ -12,7 +12,7 @@ const useClasses = makeStyles({
   },
 })
 
-export interface Props {
+interface Props {
   col: number
   row: number
 }
@@ -22,6 +22,7 @@ export interface Props {
  * @param props
  * @param props.col
  * @param props.row
+ * @example
  */
 export default function ValueCell({ col, row }: Readonly<Props>) {
   const classes = useClasses()

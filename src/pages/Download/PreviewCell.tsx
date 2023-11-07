@@ -50,7 +50,7 @@ const useClasses = makeStyles({
 /**
  * The props for {@link PreviewCell}
  */
-export interface Props {
+interface Props {
   /**
    * The column index
    */
@@ -73,6 +73,7 @@ const reasonInFlagEq = Eq.tuple(
  * @param props.col - The column index
  * @param props.row - The row index
  * @returns JSX.Element
+ * @example
  */
 export default function PreviewCell({ col, row }: Readonly<Props>) {
   const classes = useClasses()

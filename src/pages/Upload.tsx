@@ -3,12 +3,10 @@
 */
 
 import type { AlertRef } from '@/components/AlertDialog'
-import type { SimpleToasterRef } from '@/components/SimpleToaster'
 import type { Progress } from '@/features/progress/reducers'
 import type { SheetInputRef } from '@/features/sheet/components/SheetUploadInput'
 
 import AlertDialog from '@/components/AlertDialog'
-import SimpleToaster from '@/components/SimpleToaster'
 import { deleteColumns } from '@/features/columns/reducers'
 import { deleteProgressState, setProgress } from '@/features/progress/reducers'
 import { deleteSheet, fetchSheet } from '@/features/sheet/actions'
@@ -23,7 +21,7 @@ import {
   useAppSelector,
   useLoadingTransition,
 } from '@/lib/hooks'
-import { getColumnsLength } from '@/selectors/selectors'
+import { getColumnsLength } from '@/selectors/columns/selectors'
 import {
   Button,
   Card,
@@ -33,9 +31,11 @@ import {
   Subtitle1,
   Title1,
   Title2,
+  Toaster,
   makeStyles,
   shorthands,
   tokens,
+  useId,
 } from '@fluentui/react-components'
 import * as IO from 'fp-ts/IO'
 import * as RA from 'fp-ts/ReadonlyArray'
@@ -43,6 +43,7 @@ import * as T from 'fp-ts/Task'
 import * as TE from 'fp-ts/TaskEither'
 import * as f from 'fp-ts/function'
 import { useCallback, useEffect, useRef } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 const useClasses = makeStyles({
   actions: {
@@ -82,6 +83,8 @@ const useClasses = makeStyles({
 export default function Upload() {
   const classes = useClasses()
 
+  const navigate = useNavigate()
+
   const dispatch = useAppDispatch()
 
   const hasSheet = useAppSelector(({ sheet }) => !!sheet.data.length)
@@ -90,8 +93,10 @@ export default function Upload() {
 
   const [isLoading, stopLoading] = useLoadingTransition()
 
+  const toasterId = useId()
+
   const alertRef = useRef<AlertRef>(null)
-  const toasterRef = useRef<SimpleToasterRef>(null)
+  // const toasterRef = useRef<SimpleToasterRef>(null)
   const sheetInputRef = useRef<SheetInputRef>(null)
 
   useEffect(() => {
@@ -132,13 +137,13 @@ export default function Upload() {
       IO.of,
       IO.tap(
         IO.of(() => {
-          globalThis.location.reload()
+          // globalThis.location.reload()
           /* Workaround to fix a bug, removes the transition animation
-            Supposed to be
-            navigate('/column-matching') */
-          globalThis.location.reload()
+            Supposed to be */
+          navigate('/column-matching')
+          // globalThis.location.reload()
           // eslint-disable-next-line functional/immutable-data
-          globalThis.location.href = '/column-matching'
+          // globalThis.location.href = '/column-matching'
         }),
       ),
     )()
@@ -166,7 +171,7 @@ export default function Upload() {
       <Card className={classes.card}>
         <CardHeader header={<Title2>Options</Title2>} />
 
-        <SheetUploadInput ref={sheetInputRef} toasterRef={toasterRef} />
+        <SheetUploadInput ref={sheetInputRef} toasterId={toasterId} />
 
         {hasSheet && !hasMultipleSheets && <SheetPickerInput />}
         {hasSheet && <VisitsInput />}
@@ -196,7 +201,7 @@ export default function Upload() {
           size="huge"
         />
       )}
-      <SimpleToaster ref={toasterRef} />
+      {/* <Toaster toasterId={toasterId} /> */}
     </section>
   )
 }

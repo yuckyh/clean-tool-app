@@ -22,7 +22,7 @@ const useClasses = makeStyles({
   },
 })
 
-export interface Props {
+interface Props {
   pos: number
 }
 
@@ -30,6 +30,7 @@ export interface Props {
  *
  * @param props
  * @param props.pos
+ * @example
  */
 export default function ScoreCell({ pos }: Readonly<Props>) {
   const classes = useClasses()

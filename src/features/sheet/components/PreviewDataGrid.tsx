@@ -3,7 +3,7 @@ import type { Props as SimpleDataGridProps } from '@/components/SimpleDataGrid'
 
 import { useAppSelector } from '@/lib/hooks'
 import { createLazyMemo } from '@/lib/utils'
-import { getColumnsLength } from '@/selectors/selectors'
+import { getColumnsLength } from '@/selectors/columns/selectors'
 import {
   Tag,
   TagGroup,
@@ -37,7 +37,7 @@ const useClasses = makeStyles({
   },
 })
 
-export interface Props {
+interface Props {
   isOriginal?: boolean
 }
 
@@ -45,6 +45,7 @@ export interface Props {
  *
  * @param props
  * @param props.isOriginal
+ * @example
  */
 function PreviewDataGrid({ isOriginal = false }: Readonly<Props>) {
   const classes = useClasses()

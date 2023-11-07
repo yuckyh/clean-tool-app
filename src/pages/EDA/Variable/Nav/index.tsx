@@ -16,7 +16,7 @@ import { arrLookup } from '@/lib/array'
 import { length } from '@/lib/fp'
 import { kebabToSnake } from '@/lib/fp/string'
 import { useAppDispatch, useAppSelector } from '@/lib/hooks'
-import { getColumnsLength } from '@/selectors/selectors'
+import { getColumnsLength } from '@/selectors/columns/selectors'
 import {
   Button,
   TabList,

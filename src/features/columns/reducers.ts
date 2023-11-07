@@ -19,7 +19,7 @@ import { fetchMatches, sliceName } from './actions'
 
 export type DataType = 'categorical' | 'none' | 'numerical'
 
-export interface State {
+interface State {
   dataTypes: readonly DataType[]
   matchColumns: readonly string[]
   matchVisits: readonly number[]

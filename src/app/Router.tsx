@@ -1,5 +1,11 @@
+/**
+ * @file This file is used as the application route definition.
+ */
+
+import type { RouterProviderProps } from 'react-router-dom'
+
 import App from '@/app'
-import { asTask } from '@/lib/fp'
+import { lazyComponentImport } from '@/lib/utils'
 import Layout from '@/pages/Layout'
 import {
   Route,
@@ -8,56 +14,42 @@ import {
 } from 'react-router-dom'
 
 /**
- * A helper function to import a component lazily from its default export.
- * @public
- * @template T - The component's prop type
- * @param path - Path to the component
- * @returns A {@link https://gcanti.github.io/fp-ts/modules/Task.ts.html `Task`} that resolves the default export of the component which can be used by the {@link https://reactrouter.com/en/main/route/lazy `lazy`} property for a route.
- */
-export function lazyComponentImport<T>(path: string) {
-  return asTask(async () => ({
-    Component: (
-      await (import(path) as Promise<{ default: React.ComponentType<T> }>)
-    ).default,
-  }))
-}
-
-/**
  * The application routes defined using JSX.
  *
- * Most of the routes are lazy loaded using the {@link lazyComponentImport | `lazyComponentImport`} helper.
+ * For lazy loading, it is recommended to default export the component and use the {@link lazyComponentImport  `lazyComponentImport`} helper, as there are no use of the data fetching api from `react-router`.
  */
 export const routes = createRoutesFromElements(
   <Route element={<App />}>
     <Route element={<Layout />}>
-      <Route index lazy={lazyComponentImport('@/pages')} />
-      <Route lazy={lazyComponentImport('@/pages/Upload')} path="upload" />
+      <Route index lazy={lazyComponentImport('../pages')} />
+      <Route lazy={lazyComponentImport('../pages/Upload')} path="upload" />
       <Route
-        lazy={lazyComponentImport('@/pages/ColumnMatching')}
+        lazy={lazyComponentImport('../pages/ColumnMatching')}
         path="column-matching"
       />
-      <Route lazy={lazyComponentImport('@/pages/EDA')} path="EDA">
+      <Route lazy={lazyComponentImport('../pages/EDA')} path="EDA">
         <Route path=":column">
-          <Route index lazy={lazyComponentImport('@/pages/EDA/Variable')} />
+          <Route index lazy={lazyComponentImport('../pages/EDA/Variable')} />
           <Route
-            lazy={lazyComponentImport('@/pages/EDA/Variable')}
+            lazy={lazyComponentImport('../pages/EDA/Variable')}
             path=":visit"
           />
         </Route>
       </Route>
-      <Route lazy={lazyComponentImport('@/pages/Download')} path="download" />
+      <Route lazy={lazyComponentImport('../pages/Download')} path="download" />
     </Route>
-    <Route lazy={lazyComponentImport('@/pages/NotFound')} path="*" />
+    <Route lazy={lazyComponentImport('../pages/NotFound')} path="*" />
   </Route>,
 )
 
 /**
  * The application router instance.
  *
- * This is used in the {@link https://reactrouter.com/en/main/route/router-provider `RouterProvider`} in {@link src/main}.
+ * This is used in the {@link https://reactrouter.com/en/main/routers/router-provider `RouterProvider`} in the main entry point of the application.
  */
-export const router = createBrowserRouter(routes, {
-  future: {
-    v7_normalizeFormMethod: true,
-  },
-} as const)
+export const router: Readonly<RouterProviderProps['router']> =
+  createBrowserRouter(routes, {
+    future: {
+      v7_normalizeFormMethod: true,
+    },
+  } as const)

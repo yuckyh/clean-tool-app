@@ -1,20 +1,31 @@
 import type { AppState } from '@/app/store'
+import type { ColumnResponse } from '@/workers/column'
+import type * as T from 'fp-ts/Task'
 
 import { getOriginalColumns } from '@/app/selectors'
-import { columnWorker, promisedWorker } from '@/app/workers'
+import { columnWorker } from '@/app/workers'
+import { dumpError } from '@/lib/fp/logger'
 import { add } from '@/lib/fp/number'
+import { promisedWorker } from '@/lib/utils'
 import { createAsyncThunk } from '@reduxjs/toolkit'
 import * as O from 'fp-ts/Option'
+import * as TE from 'fp-ts/TaskEither'
 import * as f from 'fp-ts/function'
 
 import { syncVisits } from '../sheet/reducers'
 
-const messagePromise = f.pipe(
-  ['message', columnWorker],
-  f.tupled(promisedWorker),
-  (p) => p.then(({ data }) => data),
-  f.constant,
-)
+const messagePromise: T.Task<ColumnResponse<'fail'> | ColumnResponse<'ok'>> =
+  f.pipe(
+    TE.tryCatch(() => promisedWorker('message', columnWorker), dumpError),
+    TE.matchW(
+      () =>
+        ({
+          error: new Error('columnWorker failed'),
+          status: 'fail',
+        }) as ColumnResponse<'fail'>,
+      ({ data }) => data as ColumnResponse<'ok'>,
+    ),
+  )
 
 export const sliceName = 'columns' as const
 

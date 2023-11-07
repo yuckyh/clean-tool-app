@@ -9,7 +9,7 @@ import { createSlice } from '@reduxjs/toolkit'
 
 export type Progress = 'explored' | 'matched' | 'none' | 'uploaded'
 
-export interface State {
+interface State {
   progress: Progress
 }
 
