@@ -8,9 +8,11 @@
 
 > **SheetRequest**: `object` \| `object` \| `object` & [`WorkerRequest`](../interfaces/WorkerRequest.md)
 
+The type of the worker's request.
+
 ## Source
 
-[Projects/clean-tool-app/src/workers/sheet.ts:7](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/workers/sheet.ts:16](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

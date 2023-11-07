@@ -22,7 +22,7 @@
 
 ## Source
 
-[Projects/clean-tool-app/src/lib/plotly.ts:43](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/lib/plotly.ts:42](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

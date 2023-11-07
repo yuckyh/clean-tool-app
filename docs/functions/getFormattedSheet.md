@@ -8,13 +8,17 @@
 
 > **getFormattedSheet**(`state`, ...`params`): `WorkSheet`
 
+Selector to get the formatted sheet from the app state
+
 ## Parameters
 
 ▪ **state**: `object`
 
-▪ **state.columns**: `Readonly`\<[`State`](../interfaces/State.md)\>
+The application state
 
-▪ **state.progress**: `Readonly`\<[`State`](../interfaces/State.md)\>
+▪ **state.columns**: `Readonly`\<`State`\>
+
+▪ **state.progress**: `Readonly`\<`State`\>
 
 ▪ **state.sheet**: `Readonly`\<[`State`](../interfaces/State.md)\>
 
@@ -23,6 +27,8 @@
 ## Returns
 
 `WorkSheet`
+
+- The formatted sheet
 
 ## Source
 

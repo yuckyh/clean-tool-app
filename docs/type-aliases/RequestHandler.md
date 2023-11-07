@@ -16,6 +16,8 @@
 | `Response` extends [`WorkerResponse`](WorkerResponse.md) | - |
 | `Method` extends `Request`\[`"method"`\] | `Request`\[`"method"`\] |
 
+The handler function that takes in the [request](../interfaces/WorkerRequest.md) and returns the response.
+
 ## Parameters
 
 ▪ **request**: `Readonly`\<`Request`\>
@@ -26,7 +28,7 @@
 
 ## Source
 
-[Projects/clean-tool-app/src/types/workers.d.ts:3](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/types/workers.d.ts:63](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

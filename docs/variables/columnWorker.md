@@ -6,11 +6,11 @@
 
 # Variable: columnWorker
 
-> **`const`** **columnWorker**: [`RequestWorker`](../interfaces/RequestWorker.md)\<[`ColumnRequest`](../interfaces/ColumnRequest.md), [`ColumnResponse`](../type-aliases/ColumnResponse.md)\>
+> **`const`** **columnWorker**: `Readonly`\<[`RequestWorker`](../interfaces/RequestWorker.md)\<[`ColumnRequest`](../type-aliases/ColumnRequest.md), [`ColumnResponse`](../type-aliases/ColumnResponse.md)\>\>
 
 ## Source
 
-[Projects/clean-tool-app/src/app/workers.ts:10](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/app/workers.ts:14](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

@@ -6,15 +6,15 @@
 
 # Function: getVisitsComparer()
 
-> **getVisitsComparer**(`state`, ...`params`): (`a`, `b`) => `number`
+> **getVisitsComparer**(`state`, ...`params`): (`a`, `b`) => `Ordering`
 
 ## Parameters
 
 ▪ **state**: `object`
 
-▪ **state.columns**: `Readonly`\<[`State`](../interfaces/State.md)\>
+▪ **state.columns**: `Readonly`\<`State`\>
 
-▪ **state.progress**: `Readonly`\<[`State`](../interfaces/State.md)\>
+▪ **state.progress**: `Readonly`\<`State`\>
 
 ▪ **state.sheet**: `Readonly`\<[`State`](../interfaces/State.md)\>
 
@@ -24,7 +24,7 @@
 
 `function`
 
-> > (`a`, `b`): `number`
+> > (`a`, `b`): `Ordering`
 >
 > ### Parameters
 >
@@ -34,11 +34,11 @@
 >
 > ### Returns
 >
-> `number`
+> `Ordering`
 >
 > ### Source
 >
-> [Projects/clean-tool-app/src/features/columns/selectors.ts:172](https://github.com/yuckyh/clean-tool-app/)
+> [Projects/clean-tool-app/src/features/columns/selectors.ts:193](https://github.com/yuckyh/clean-tool-app/)
 >
 
 ## Source

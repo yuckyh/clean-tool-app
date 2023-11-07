@@ -22,7 +22,7 @@
 
 ## Source
 
-[Projects/clean-tool-app/src/lib/logger.ts:38](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/lib/fp/logger.ts:38](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

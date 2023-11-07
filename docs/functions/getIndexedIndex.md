@@ -30,7 +30,7 @@ The index
 
 ## Source
 
-[Projects/clean-tool-app/src/lib/array.ts:56](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/lib/array.ts:66](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

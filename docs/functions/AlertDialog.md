@@ -12,7 +12,7 @@
 
 ## Parameters
 
-▪ **props**: [`Props`](../interfaces/Props.md) & `RefAttributes`\<[`AlertRef`](../interfaces/AlertRef.md)\>
+▪ **props**: `Props` & `RefAttributes`\<[`AlertRef`](../interfaces/AlertRef.md)\>
 
 ## Returns
 

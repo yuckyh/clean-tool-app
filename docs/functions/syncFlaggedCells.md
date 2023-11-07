@@ -13,7 +13,7 @@ return a [PayloadAction]([object Object]) of type `T` with a payload of `P`
 
 ## Parameters
 
-▪ **payload**: [`Flag`](../type-aliases/Flag.md)
+▪ **payload**: [`Flag`](../interfaces/Flag.md)
 
 ## Returns
 

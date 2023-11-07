@@ -17,13 +17,19 @@ This page is simply used to navigate to the upload page
 
 The component object
 
+## Example
+
+```tsx
+<Route lazy={lazyComponentImport('@/pages')} />
+```
+
 ## Todo
 
-Add an quick introduction text to the tool in this page
+Add a quick introduction text to the tool in this page
 
 ## Source
 
-[Projects/clean-tool-app/src/pages/index.tsx:37](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/pages/index.tsx:40](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

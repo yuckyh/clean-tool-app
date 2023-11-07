@@ -29,8 +29,6 @@ import * as S from 'fp-ts/string'
 
 import type { DataType } from './reducers'
 
-import { getFirstVisit } from '../sheet/selectors'
-
 const search = fuse.search.bind(fuse)
 
 const searchPos = (

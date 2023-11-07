@@ -6,11 +6,11 @@
 
 # Type alias: FlagReason
 
-> **FlagReason**: `"incorrect"` \| `"missing"` \| `"outlier"` \| `"suspected"`
+> **FlagReason**: `"incorrect"` \| `"missing"` \| `"none"` \| `"outlier"` \| `"suspected"`
 
 ## Source
 
-[Projects/clean-tool-app/src/features/sheet/reducers.ts:23](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/lib/fp/Flag.ts:7](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

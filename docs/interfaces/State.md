@@ -37,19 +37,19 @@ The type of the workbook. This determines whether to show the sheet picker input
 
 #### Source
 
-[Projects/clean-tool-app/src/features/sheet/reducers.ts:37](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/features/sheet/reducers.ts:38](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 
 ### data
 
-> **data**: readonly [`CellItem`](../type-aliases/CellItem.md)[]
+> **data**: readonly [`CellItem`](CellItem.md)\<[`Value`](../type-aliases/Value.md)\>[]
 
 The data from the selected sheet. The data is a list of records with keys as the column names.
 
 #### Source
 
-[Projects/clean-tool-app/src/features/sheet/reducers.ts:41](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/features/sheet/reducers.ts:42](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 
@@ -61,19 +61,19 @@ The name of the file.
 
 #### Source
 
-[Projects/clean-tool-app/src/features/sheet/reducers.ts:45](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/features/sheet/reducers.ts:46](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 
 ### flaggedCells
 
-> **flaggedCells**: readonly [`Flag`](../type-aliases/Flag.md)[]
+> **flaggedCells**: readonly [`Flag`](Flag.md)[]
 
 The list of flagged cells.
 
 #### Source
 
-[Projects/clean-tool-app/src/features/sheet/reducers.ts:49](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/features/sheet/reducers.ts:50](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 
@@ -85,7 +85,7 @@ The list of original column names.
 
 #### Source
 
-[Projects/clean-tool-app/src/features/sheet/reducers.ts:53](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/features/sheet/reducers.ts:54](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 
@@ -97,7 +97,7 @@ The name of the selected sheet.
 
 #### Source
 
-[Projects/clean-tool-app/src/features/sheet/reducers.ts:57](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/features/sheet/reducers.ts:58](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 
@@ -107,7 +107,7 @@ The name of the selected sheet.
 
 #### Source
 
-[Projects/clean-tool-app/src/features/sheet/reducers.ts:58](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/features/sheet/reducers.ts:59](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 
@@ -117,7 +117,7 @@ The name of the selected sheet.
 
 #### Source
 
-[Projects/clean-tool-app/src/features/sheet/reducers.ts:59](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/features/sheet/reducers.ts:60](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

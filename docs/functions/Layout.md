@@ -16,9 +16,15 @@ This component is used to render the progress navigation bar and the main conten
 
 The main layout component
 
+## Example
+
+```tsx
+<Layout />
+```
+
 ## Source
 
-[Projects/clean-tool-app/src/pages/Layout.tsx:32](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/pages/Layout.tsx:40](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

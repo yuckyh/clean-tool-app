@@ -6,11 +6,15 @@
 
 # Variable: router
 
-> **`const`** **router**: `Router`
+> **`const`** **router**: `Readonly`\<`RouterProviderProps`\[`"router"`\]\>
+
+The application router instance.
+
+This is used in the [`RouterProvider`](https://reactrouter.com/en/main/routers/router-provider) in the main entry point of the application.
 
 ## Source
 
-[Projects/clean-tool-app/src/app/Router.tsx:54](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/app/Router.tsx:50](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

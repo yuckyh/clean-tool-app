@@ -26,7 +26,7 @@ readonly `T`[]
 
 ## Source
 
-[Projects/clean-tool-app/src/lib/array.ts:5](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/lib/array.ts:9](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

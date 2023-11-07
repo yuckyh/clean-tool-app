@@ -6,19 +6,25 @@
 
 # Function: ColumnsDataGrid()
 
-> **ColumnsDataGrid**(`__namedParameters`): `Element`
+> **ColumnsDataGrid**(`props`): `Element`
 
 ## Parameters
 
-▪ **\_\_namedParameters**: `Readonly`\<[`Props`](../interfaces/Props.md)\>
+▪ **props**: `Readonly`\<`Props`\>
 
 ## Returns
 
 `Element`
 
+## Example
+
+```ts
+
+```
+
 ## Source
 
-[Projects/clean-tool-app/src/pages/ColumnMatching/ColumnsDataGrid.tsx:68](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/pages/ColumnMatching/ColumnsDataGrid.tsx:78](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

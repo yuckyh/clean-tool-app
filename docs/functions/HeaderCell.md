@@ -6,19 +6,25 @@
 
 # Function: HeaderCell()
 
-> **HeaderCell**(`__namedParameters`): `Element`
+> **HeaderCell**(`props`): `Element`
 
 ## Parameters
 
-▪ **\_\_namedParameters**: [`Props`](../interfaces/Props.md)
+▪ **props**: `Readonly`\<`Props`\>
 
 ## Returns
 
 `Element`
 
+## Example
+
+```ts
+
+```
+
 ## Source
 
-[Projects/clean-tool-app/src/pages/Download/HeaderCell.tsx:17](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/pages/Download/HeaderCell.tsx:23](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

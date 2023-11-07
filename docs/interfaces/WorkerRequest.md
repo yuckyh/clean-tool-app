@@ -6,15 +6,21 @@
 
 # Interface: WorkerRequest
 
+The base request object that is sent to the worker.
+
+For the sake of consistency, requests have a `method` property.
+
 ## Contents
 
-- [Extended By](WorkerRequest.md#extended-by)
+- [Remarks](WorkerRequest.md#remarks)
 - [Properties](WorkerRequest.md#properties)
   - [method](WorkerRequest.md#method)
 
-## Extended By
+## Remarks
 
-- [`ColumnRequest`](ColumnRequest.md)
+This ensures the worker works like dispatching actions to a reducer.
+
+The word method was used to with reference of the REST API.
 
 ## Properties
 
@@ -22,9 +28,11 @@
 
 > **method**: `string`
 
+The method of the request.
+
 #### Source
 
-[Projects/clean-tool-app/src/types/workers.d.ts:15](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/types/workers.d.ts:20](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

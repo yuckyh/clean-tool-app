@@ -12,13 +12,13 @@
 
 ▪ **Req** extends [`WorkerRequest`](../interfaces/WorkerRequest.md)
 
-▪ **Res** extends [`WorkerResponse`](../type-aliases/WorkerResponse.md)
+▪ **Res** extends [`WorkerResponse`](../type-aliases/WorkerResponse.md)\<[`ResponseStatus`](../type-aliases/ResponseStatus.md)\>
 
 ## Parameters
 
 ▪ **type**: `"message"` \| `"messageerror"`
 
-▪ **worker**: [`RequestWorker`](../interfaces/RequestWorker.md)\<`Req`, `Res`\>
+▪ **worker**: `Readonly`\<[`RequestWorker`](../interfaces/RequestWorker.md)\<`Req`, `Res`\>\>
 
 ▪ **options**: `AddEventListenerOptions`= `undefined`
 
@@ -28,7 +28,7 @@
 
 ## Source
 
-[Projects/clean-tool-app/src/app/workers.ts:13](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/lib/utils.ts:47](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

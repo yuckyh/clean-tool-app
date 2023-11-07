@@ -20,7 +20,7 @@
 >
 > ### Source
 >
-> [Projects/clean-tool-app/src/lib/utils.ts:28](https://github.com/yuckyh/clean-tool-app/)
+> [Projects/clean-tool-app/src/lib/fp/index.ts:57](https://github.com/yuckyh/clean-tool-app/)
 >
 
 ## Source

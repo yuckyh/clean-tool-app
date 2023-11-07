@@ -8,6 +8,8 @@
 
 > **Controller**\<`Request`, `Response`\>: `Record`\<`Request`\[`"method"`\], [`RequestHandler`](RequestHandler.md)\<`Request`, `Response`\>\>
 
+The controller object that maps the request method to the handler.
+
 ## Type parameters
 
 | Parameter |
@@ -17,7 +19,7 @@
 
 ## Source
 
-[Projects/clean-tool-app/src/types/workers.d.ts:9](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/types/workers.d.ts:72](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

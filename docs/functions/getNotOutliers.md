@@ -8,13 +8,17 @@
 
 > **getNotOutliers**(`state`, ...`params`): readonly readonly [`string`, `number`][]
 
+Function to select non outlier values from the given indexed numerical row.
+
 ## Parameters
 
 ▪ **state**: `object`
 
-▪ **state.columns**: `Readonly`\<[`State`](../interfaces/State.md)\>
+The application state [AppState](../type-aliases/AppState.md)
 
-▪ **state.progress**: `Readonly`\<[`State`](../interfaces/State.md)\>
+▪ **state.columns**: `Readonly`\<`State`\>
+
+▪ **state.progress**: `Readonly`\<`State`\>
 
 ▪ **state.sheet**: `Readonly`\<[`State`](../interfaces/State.md)\>
 
@@ -23,6 +27,8 @@
 ## Returns
 
 readonly readonly [`string`, `number`][]
+
+- An array of non outlier values
 
 ## Source
 

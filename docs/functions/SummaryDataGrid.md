@@ -6,19 +6,25 @@
 
 # Function: SummaryDataGrid()
 
-> **SummaryDataGrid**(`__namedParameters`): `Element`
+> **SummaryDataGrid**(`props`): `Element`
 
 ## Parameters
 
-▪ **\_\_namedParameters**: [`Props`](../interfaces/Props.md)
+▪ **props**: `Readonly`\<`Props`\>
 
 ## Returns
 
 `Element`
 
+## Example
+
+```ts
+
+```
+
 ## Source
 
-[Projects/clean-tool-app/src/pages/EDA/Variable/DataGrid/SummaryDataGrid.tsx:45](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/pages/EDA/Variable/DataGrid/SummaryDataGrid.tsx:53](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

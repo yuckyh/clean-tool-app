@@ -12,9 +12,9 @@
 
 ▪ **\_\_namedParameters**: `object`
 
-▪ **\_\_namedParameters.columns**: `Readonly`\<[`State`](../interfaces/State.md)\>
+▪ **\_\_namedParameters.columns**: `Readonly`\<`State`\>
 
-▪ **\_\_namedParameters.progress**: `Readonly`\<[`State`](../interfaces/State.md)\>
+▪ **\_\_namedParameters.progress**: `Readonly`\<`State`\>
 
 ▪ **\_\_namedParameters.sheet**: `Readonly`\<[`State`](../interfaces/State.md)\>
 
@@ -24,7 +24,7 @@ readonly `string`[]
 
 ## Source
 
-[Projects/clean-tool-app/src/app/selectors.ts:45](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/app/selectors.ts:88](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

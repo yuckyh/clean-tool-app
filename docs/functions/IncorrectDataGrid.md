@@ -6,19 +6,25 @@
 
 # Function: IncorrectDataGrid()
 
-> **IncorrectDataGrid**(`__namedParameters`): `Element`
+> **IncorrectDataGrid**(`props`): `Element`
 
 ## Parameters
 
-▪ **\_\_namedParameters**: [`Props`](../interfaces/Props.md)
+▪ **props**: `Readonly`\<`Props`\>
 
 ## Returns
 
 `Element`
 
+## Example
+
+```ts
+
+```
+
 ## Source
 
-[Projects/clean-tool-app/src/pages/EDA/Variable/DataGrid/IncorrectDataGrid.tsx:48](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/pages/EDA/Variable/DataGrid/IncorrectDataGrid.tsx:55](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

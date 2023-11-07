@@ -6,19 +6,25 @@
 
 # Function: Loader()
 
-> **Loader**(`__namedParameters`): `Element`
+> **Loader**(`props`): `Element`
 
 ## Parameters
 
-▪ **\_\_namedParameters**: `Props`
+▪ **props**: `Readonly`\<`Props`\>
 
 ## Returns
 
 `Element`
 
+## Example
+
+```ts
+
+```
+
 ## Source
 
-[Projects/clean-tool-app/src/components/Loader.tsx:9](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/components/Loader.tsx:16](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

@@ -4,19 +4,76 @@
 
 [CLEaN Tool](../exports.md) / ColumnResponse
 
-# Type alias: ColumnResponse
+# Type alias: ColumnResponse`<S>`
 
-> **ColumnResponse**: [`WorkerResponse`](WorkerResponse.md) & `object`
+> **ColumnResponse**\<`S`\>: [`WorkerResponse`](WorkerResponse.md)\<`S`\> & `object`
+
+The type of the worker's response.
+
+## Example
+
+```ts
+const response: ColumnResponse = {
+  matches: [
+    [
+      {
+        item: {
+          category: 'quux',
+          description: 'baz',
+          name: 'foo',
+          type: 'bar',
+          unit: 'qux',
+        },
+        refIndex: 0,
+        score: 0.5,
+      },
+      {
+        item: {
+          category: 'quux',
+          description: 'baz2',
+          name: 'foo2',
+          type: 'bar',
+          unit: 'qux',
+        },
+        refIndex: 1,
+        score: 0.4,
+      },
+    ],
+    [
+      {
+        item: {
+          category: 'quux',
+          description: 'baz',
+          name: 'foo2',
+          type: 'bar',
+          unit: 'qux',
+        },
+        refIndex: 1,
+        score: 0.5,
+      },
+    ],
+  ],
+  status: 'ok',
+}
+```
 
 ## Type declaration
 
 ### matches
 
-> **matches**: readonly readonly `Omit`\<`Fuse.FuseResult`\<[`CodebookEntry`](CodebookEntry.md)\>, `"matches"`\>[][]
+> **matches**: readonly readonly `MatchlessFuseResult`[][]
+
+The search results.
+
+## Type parameters
+
+| Parameter | Default |
+| :------ | :------ |
+| `S` extends [`ResponseStatus`](ResponseStatus.md) | [`ResponseStatus`](ResponseStatus.md) |
 
 ## Source
 
-[Projects/clean-tool-app/src/workers/column.ts:17](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/workers/column.ts:97](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

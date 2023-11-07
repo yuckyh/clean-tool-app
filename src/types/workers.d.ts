@@ -36,7 +36,7 @@ type ResponseStatus = 'fail' | 'ok'
  * }
  * ```
  */
-type WorkerResponse<S extends ResponseStatus> = (
+type WorkerResponse<S extends ResponseStatus = ResponseStatus> = (
   | {
       /**
        * The error object that signifies a failed response.

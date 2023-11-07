@@ -12,9 +12,9 @@
 
 ▪ **state**: `object`
 
-▪ **state.columns**: `Readonly`\<[`State`](../interfaces/State.md)\>
+▪ **state.columns**: `Readonly`\<`State`\>
 
-▪ **state.progress**: `Readonly`\<[`State`](../interfaces/State.md)\>
+▪ **state.progress**: `Readonly`\<`State`\>
 
 ▪ **state.sheet**: `Readonly`\<[`State`](../interfaces/State.md)\>
 
@@ -38,7 +38,7 @@
 >
 > ### Source
 >
-> [Projects/clean-tool-app/src/selectors/columnsSelectors.ts:27](https://github.com/yuckyh/clean-tool-app/)
+> [Projects/clean-tool-app/src/selectors/columns/selectors.ts:27](https://github.com/yuckyh/clean-tool-app/)
 >
 
 ## Source

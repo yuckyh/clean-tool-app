@@ -6,19 +6,25 @@
 
 # Function: PreviewDataGrid()
 
-> **PreviewDataGrid**(`__namedParameters`): `false` \| `Element`
+> **PreviewDataGrid**(`props`): `false` \| `Element`
 
 ## Parameters
 
-▪ **\_\_namedParameters**: [`Props`](../interfaces/Props.md)
+▪ **props**: `Readonly`\<`Props`\>
 
 ## Returns
 
 `false` \| `Element`
 
+## Example
+
+```ts
+
+```
+
 ## Source
 
-[Projects/clean-tool-app/src/features/sheet/components/PreviewDataGrid.tsx:44](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/features/sheet/components/PreviewDataGrid.tsx:50](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

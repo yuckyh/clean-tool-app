@@ -6,19 +6,25 @@
 
 # Function: AllDataGrid()
 
-> **AllDataGrid**(`__namedParameters`): `Element`
+> **AllDataGrid**(`props`): `Element`
 
 ## Parameters
 
-▪ **\_\_namedParameters**: `Readonly`\<[`Props`](../interfaces/Props.md)\>
+▪ **props**: `Readonly`\<`Props`\>
 
 ## Returns
 
 `Element`
 
+## Example
+
+```ts
+
+```
+
 ## Source
 
-[Projects/clean-tool-app/src/pages/EDA/Variable/DataGrid/AllDataGrid.tsx:78](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/pages/EDA/Variable/DataGrid/AllDataGrid.tsx:85](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

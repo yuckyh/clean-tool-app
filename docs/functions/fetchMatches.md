@@ -6,11 +6,11 @@
 
 # Function: fetchMatches()
 
-> **fetchMatches**(): `AsyncThunkAction`\<readonly readonly Omit\<FuseResult\<\{ name: string; description: string; category: string; type: string; unit: string; }\>, "matches"\>[][], `void`, `AsyncThunkConfig`\>
+> **fetchMatches**(): `AsyncThunkAction`\<readonly readonly MatchlessFuseResult[][], `void`, `AsyncThunkConfig`\>
 
 ## Returns
 
-`AsyncThunkAction`\<readonly readonly Omit\<FuseResult\<\{ name: string; description: string; category: string; type: string; unit: string; }\>, "matches"\>[][], `void`, `AsyncThunkConfig`\>
+`AsyncThunkAction`\<readonly readonly MatchlessFuseResult[][], `void`, `AsyncThunkConfig`\>
 
 ## Source
 

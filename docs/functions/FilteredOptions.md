@@ -6,19 +6,25 @@
 
 # Function: FilteredOptions()
 
-> **FilteredOptions**(`__namedParameters`): `Element`
+> **FilteredOptions**(`props`): `Element`
 
 ## Parameters
 
-▪ **\_\_namedParameters**: [`Props`](../interfaces/Props.md)
+▪ **props**: `Readonly`\<`Props`\>
 
 ## Returns
 
 `Element`
 
+## Example
+
+```ts
+
+```
+
 ## Source
 
-[Projects/clean-tool-app/src/features/columns/components/FilteredOptions.tsx:21](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/features/columns/components/FilteredOptions.tsx:30](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

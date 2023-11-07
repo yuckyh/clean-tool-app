@@ -10,11 +10,11 @@
 
 The application routes defined using JSX.
 
-Most of the routes are lazy loaded using the [`lazyComponentImport`](../functions/lazyComponentImport.md) helper.
+For lazy loading, it is recommended to default export the component and use the [`lazyComponentImport`](../functions/lazyComponentImport.md) helper, as there are no use of the data fetching api from `react-router`.
 
 ## Source
 
-[Projects/clean-tool-app/src/app/Router.tsx:30](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/app/Router.tsx:21](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

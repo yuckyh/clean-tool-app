@@ -35,7 +35,6 @@ import {
   getIndexColumnPos,
   getSearchedPos,
 } from '../columns/selectors'
-import { dump } from '@/lib/fp/logger'
 
 export const getVisit = createSelector(
   [getVisits, getColParam],

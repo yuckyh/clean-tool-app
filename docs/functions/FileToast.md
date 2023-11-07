@@ -6,19 +6,25 @@
 
 # Function: FileToast()
 
-> **FileToast**(`__namedParameters`): `Element`
+> **FileToast**(`props`): `Element`
 
 ## Parameters
 
-▪ **\_\_namedParameters**: [`Props`](../interfaces/Props.md)
+▪ **props**: `Readonly`\<`Props`\>
 
 ## Returns
 
 `Element`
 
+## Example
+
+```ts
+
+```
+
 ## Source
 
-[Projects/clean-tool-app/src/components/FileToast.tsx:10](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/components/FileToast.tsx:17](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

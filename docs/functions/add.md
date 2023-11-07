@@ -28,12 +28,12 @@
 >
 > ### Source
 >
-> [Projects/clean-tool-app/src/lib/number.ts:1](https://github.com/yuckyh/clean-tool-app/)
+> [Projects/clean-tool-app/src/lib/fp/number.ts:1](https://github.com/yuckyh/clean-tool-app/)
 >
 
 ## Source
 
-[Projects/clean-tool-app/src/lib/number.ts:1](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/lib/fp/number.ts:1](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

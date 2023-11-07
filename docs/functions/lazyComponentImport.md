@@ -26,11 +26,18 @@ Path to the component
 
 `Task`\<`object`\>
 
-A [`Task`](https://gcanti.github.io/fp-ts/modules/Task.ts.html) that resolves the default export of the component which can be used by the [`lazy`](https://reactrouter.com/en/main/route/lazy) property for a route.
+A [`Task`](https://gcanti.github.io/fp-ts/modules/Task.ts.html) that resolves the default export of the component which can be used by the [`lazy`](https://reactrouter.com/en/main/route/lazy) property for a [`route`](https://reactrouter.com/en/main/route/route).
+
+## Example
+
+To create a lazy import for the home page a route will be declared as such:
+```tsx
+<Route index lazy={lazyComponentImport('@/pages')} />
+```
 
 ## Source
 
-[Projects/clean-tool-app/src/app/Router.tsx:17](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/lib/utils.ts:40](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

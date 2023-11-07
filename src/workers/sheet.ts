@@ -8,7 +8,7 @@ import { dumpError } from '@/lib/fp/logger'
 import * as f from 'fp-ts/function'
 import XLSX from 'xlsx'
 
-type SheetMethod = 'get' | 'postFile' | 'remove'
+// type SheetMethod = 'get' | 'postFile' | 'remove'
 
 /**
  * The type of the worker's request.

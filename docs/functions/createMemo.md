@@ -6,7 +6,7 @@
 
 # Function: createMemo()
 
-> **createMemo**\<`T`\>(`displayName`, `component`): `MemoExoticComponent`\<`ComponentType`\<`T`\>\>
+> **createMemo**\<`T`\>(`displayName`, `component`): `NamedExoticComponent`\<`PropsWithoutRef`\<`T`\> & `RefAttributes`\<`Component`\<`T`, `any`, `any`\>\> \| `PropsWithRef`\<`T`\>\> & `object` & `object`
 
 ## Type parameters
 
@@ -20,11 +20,11 @@
 
 ## Returns
 
-`MemoExoticComponent`\<`ComponentType`\<`T`\>\>
+`NamedExoticComponent`\<`PropsWithoutRef`\<`T`\> & `RefAttributes`\<`Component`\<`T`, `any`, `any`\>\> \| `PropsWithRef`\<`T`\>\> & `object` & `object`
 
 ## Source
 
-[Projects/clean-tool-app/src/lib/utils.ts:7](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/lib/utils.ts:8](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

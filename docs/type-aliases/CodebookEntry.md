@@ -8,9 +8,23 @@
 
 > **CodebookEntry**: [`ArrayElement`](ArrayElement.md)\<*typeof* [`codebook`](../exports.md#codebook)\>
 
+The type of the [codebook](../exports.md#codebook) entries.
+
+## Example
+
+```ts
+const entry: CodebookEntry = {
+ category: 'quux',
+ description: 'baz',
+ name: 'foo',
+ type: 'bar',
+ unit: 'qux',
+}
+```
+
 ## Source
 
-[Projects/clean-tool-app/src/workers/column.ts:10](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/workers/column.ts:25](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

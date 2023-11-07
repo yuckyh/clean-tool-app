@@ -6,19 +6,25 @@
 
 # Function: VisitInput()
 
-> **VisitInput**(`__namedParameters`): `Element`
+> **VisitInput**(`props`): `Element`
 
 ## Parameters
 
-▪ **\_\_namedParameters**: [`Props`](../interfaces/Props.md)
+▪ **props**: `Readonly`\<`Props`\>
 
 ## Returns
 
 `Element`
 
+## Example
+
+```ts
+
+```
+
 ## Source
 
-[Projects/clean-tool-app/src/features/sheet/components/VisitInput.tsx:23](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/features/sheet/components/VisitInput.tsx:29](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

@@ -6,19 +6,25 @@
 
 # Function: Plot()
 
-> **Plot**(`__namedParameters`): `Element`
+> **Plot**(`props`): `Element`
 
 ## Parameters
 
-▪ **\_\_namedParameters**: [`Props`](../interfaces/Props.md)
+▪ **props**: `Readonly`\<`Props`\>
 
 ## Returns
 
 `Element`
 
+## Example
+
+```ts
+
+```
+
 ## Source
 
-[Projects/clean-tool-app/src/components/Plot.tsx:23](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/components/Plot.tsx:30](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

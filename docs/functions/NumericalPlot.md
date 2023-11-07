@@ -16,7 +16,7 @@ The y-axis is jittered to prevent the x's from overlapping.
 
 ## Parameters
 
-▪ **props**: `Readonly`\<[`Props`](../interfaces/Props.md)\>
+▪ **props**: `Readonly`\<`Props`\>
 
 The component's props
 
@@ -24,11 +24,22 @@ The component's props
 
 `Readonly`\<`JSX.Element`\>
 
-{JSX.Element} The numerical plot component
+The numerical plot component
+
+## Example
+
+A variable with column name `al_r` and visit `1` with unit `mm` will have variable `al_r_1` resulting to the following usage:
+```tsx
+<NumericalPlot
+  column="al_r"
+  unit="mm"
+  variable="al_r_1"
+  visit="1" />
+```
 
 ## Source
 
-[Projects/clean-tool-app/src/pages/EDA/Variable/Plot/NumericalPlot.tsx:51](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/pages/EDA/Variable/Plot/NumericalPlot.tsx:73](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

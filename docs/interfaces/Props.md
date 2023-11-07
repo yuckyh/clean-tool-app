@@ -4,81 +4,43 @@
 
 [CLEaN Tool](../exports.md) / Props
 
-# Interface: Props
-
-Props for the numerical plot component [NumericalPlot](../functions/NumericalPlot.md)
+# Interface: Props`<T>`
 
 ## Contents
 
-- [Param](Props.md#param)
-- [Param](Props.md#param-1)
-- [Param](Props.md#param-2)
-- [Param](Props.md#param-3)
+- [Extends](Props.md#extends)
+- [Type parameters](Props.md#type-parameters)
 - [Properties](Props.md#properties)
-  - [column](Props.md#column)
-  - [unit](Props.md#unit)
-  - [variable](Props.md#variable)
-  - [visit](Props.md#visit)
+  - [columns](Props.md#columns)
+  - [items](Props.md#items)
 
-## Param
+## Extends
 
-The column for the plot
+- `Partial`\<`Omit`\<`DataGridProps`, `"columns"` \| `"items"`\>\>
 
-## Param
+## Type parameters
 
-The unit of measurement for the variable
-
-## Param
-
-The variable name of the formatted column and visit for the plot
-
-## Param
-
-The visit for the plot
+▪ **T**
 
 ## Properties
 
-### column
+### columns
 
-> **column**: `string`
-
-The column used to get the row for plotting
+> **columns**: readonly `TableColumnDefinition`\<`T`\>[]
 
 #### Source
 
-[Projects/clean-tool-app/src/pages/EDA/Variable/Plot/NumericalPlot.tsx:29](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/components/SimpleDataGrid.tsx:48](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 
-### unit
+### items
 
-> **unit**: `string`
-
-The
+> **items**: readonly `T`[]
 
 #### Source
 
-[Projects/clean-tool-app/src/pages/EDA/Variable/Plot/NumericalPlot.tsx:31](https://github.com/yuckyh/clean-tool-app/)
-
-***
-
-### variable
-
-> **variable**: `string`
-
-#### Source
-
-[Projects/clean-tool-app/src/pages/EDA/Variable/Plot/NumericalPlot.tsx:33](https://github.com/yuckyh/clean-tool-app/)
-
-***
-
-### visit
-
-> **visit**: `string`
-
-#### Source
-
-[Projects/clean-tool-app/src/pages/EDA/Variable/Plot/NumericalPlot.tsx:35](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/components/SimpleDataGrid.tsx:49](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

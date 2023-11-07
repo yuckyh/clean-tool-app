@@ -6,19 +6,25 @@
 
 # Function: VisitsCell()
 
-> **VisitsCell**(`__namedParameters`): `Element`
+> **VisitsCell**(`props`): `Element`
 
 ## Parameters
 
-▪ **\_\_namedParameters**: [`Props`](../interfaces/Props.md)
+▪ **props**: `Readonly`\<`Props`\>
 
 ## Returns
 
 `Element`
 
+## Example
+
+```ts
+
+```
+
 ## Source
 
-[Projects/clean-tool-app/src/features/columns/components/VisitsCell.tsx:34](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/features/columns/components/VisitsCell.tsx:41](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

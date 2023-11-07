@@ -8,25 +8,42 @@
 
 > **getColumnParam**(`_state`, `column`): `string`
 
+Utility function to get the column parameter
+
 ## Parameters
 
 ▪ **\_state**: `object`
 
-▪ **\_state.columns**: `Readonly`\<[`State`](../interfaces/State.md)\>
+The application state [AppState](../type-aliases/AppState.md)
 
-▪ **\_state.progress**: `Readonly`\<[`State`](../interfaces/State.md)\>
+▪ **\_state.columns**: `Readonly`\<`State`\>
+
+▪ **\_state.progress**: `Readonly`\<`State`\>
 
 ▪ **\_state.sheet**: `Readonly`\<[`State`](../interfaces/State.md)\>
 
 ▪ **column**: `string`
 
+The column parameter
+
 ## Returns
 
 `string`
 
+The column parameter
+
+## Example
+
+```ts
+const originalColumn = createSelector(
+ [getOriginalColumn, getColumnParam],
+ (originalColumn, column) => data.map((row) => row[column]),
+)
+```
+
 ## Source
 
-[Projects/clean-tool-app/src/app/selectors.ts:15](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/app/selectors.ts:54](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

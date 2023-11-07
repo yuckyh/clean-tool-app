@@ -6,19 +6,25 @@
 
 # Function: OutlierDataGrid()
 
-> **OutlierDataGrid**(`__namedParameters`): `Element`
+> **OutlierDataGrid**(`props`): `Element`
 
 ## Parameters
 
-▪ **\_\_namedParameters**: [`Props`](../interfaces/Props.md)
+▪ **props**: `Readonly`\<`Props`\>
 
 ## Returns
 
 `Element`
 
+## Example
+
+```ts
+
+```
+
 ## Source
 
-[Projects/clean-tool-app/src/pages/EDA/Variable/DataGrid/OutlierDataGrid.tsx:47](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/pages/EDA/Variable/DataGrid/OutlierDataGrid.tsx:52](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

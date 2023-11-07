@@ -9,6 +9,7 @@
 > **App**(): `Element`
 
 This is the second entry point of the application.
+This is to be used inside the router.
 
 ## Returns
 
@@ -16,13 +17,15 @@ This is the second entry point of the application.
 
 The main app component
 
-## Remarks
+## Example
 
-This component could potentially be merged with [Layout](Layout.md)
+```tsx
+<Route element={<App />} />
+```
 
 ## Source
 
-[Projects/clean-tool-app/src/app/index.tsx:23](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/app/index.tsx:29](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

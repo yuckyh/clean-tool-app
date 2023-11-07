@@ -4,13 +4,41 @@
 
 [CLEaN Tool](../exports.md) / WorkerResponse
 
-# Type alias: WorkerResponse
+# Type alias: WorkerResponse`<S>`
 
-> **WorkerResponse**: `object` \| `object`
+> **WorkerResponse**\<`S`\>: `object` \| `object` & `object`
+
+The response object that is sent back to the main thread.
+
+## Example
+
+The two possible response types:
+```ts
+const okResponse: WorkerResponse = {
+  status: 'ok',
+}
+
+const failResponse: WorkerResponse = {
+  error: new Error('foo'),
+  status: 'fail',
+}
+```
+
+## Type declaration
+
+### status
+
+> **status**: `S`
+
+## Type parameters
+
+| Parameter | Default |
+| :------ | :------ |
+| `S` extends [`ResponseStatus`](ResponseStatus.md) | [`ResponseStatus`](ResponseStatus.md) |
 
 ## Source
 
-[Projects/clean-tool-app/src/types/workers.d.ts:18](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/types/workers.d.ts:39](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

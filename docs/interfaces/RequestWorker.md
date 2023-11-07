@@ -6,6 +6,8 @@
 
 # Interface: RequestWorker`<Req, Res>`
 
+The extended worker type with typed request and response based on the event type via the [event map](GenericWorkerEventMap.md).
+
 ## Contents
 
 - [Extends](RequestWorker.md#extends)
@@ -23,7 +25,7 @@
 
 ▪ **Req** extends [`WorkerRequest`](WorkerRequest.md)
 
-▪ **Res** extends [`WorkerResponse`](../type-aliases/WorkerResponse.md)
+▪ **Res** extends `BaseWorkerResponse`
 
 ## Properties
 
@@ -53,7 +55,7 @@ Worker.addEventListener
 
 #### Source
 
-[Projects/clean-tool-app/src/types/workers.d.ts:34](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/types/workers.d.ts:93](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 
@@ -87,7 +89,7 @@ Worker.postMessage
 
 #### Source
 
-[Projects/clean-tool-app/src/types/workers.d.ts:39](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/types/workers.d.ts:98](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 
@@ -117,7 +119,7 @@ Worker.removeEventListener
 
 #### Source
 
-[Projects/clean-tool-app/src/types/workers.d.ts:48](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/types/workers.d.ts:107](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

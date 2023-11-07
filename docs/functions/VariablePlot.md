@@ -6,19 +6,25 @@
 
 # Function: VariablePlot()
 
-> **VariablePlot**(`__namedParameters`): `Element`
+> **VariablePlot**(`props`): `Element`
 
 ## Parameters
 
-▪ **\_\_namedParameters**: `Readonly`\<[`Props`](../interfaces/Props.md)\>
+▪ **props**: `Readonly`\<`Props`\>
 
 ## Returns
 
 `Element`
 
+## Example
+
+```ts
+
+```
+
 ## Source
 
-[Projects/clean-tool-app/src/pages/EDA/Variable/Plot/index.tsx:14](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/pages/EDA/Variable/Plot/index.tsx:22](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

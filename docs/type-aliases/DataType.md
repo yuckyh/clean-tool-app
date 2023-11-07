@@ -6,7 +6,7 @@
 
 # Type alias: DataType
 
-> **DataType**: `"categorical"` \| `"numerical"`
+> **DataType**: `"categorical"` \| `"none"` \| `"numerical"`
 
 ## Source
 

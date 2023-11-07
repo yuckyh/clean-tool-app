@@ -4,9 +4,11 @@
 
 [CLEaN Tool](../exports.md) / SheetResponse
 
-# Type alias: SheetResponse
+# Type alias: SheetResponse`<S>`
 
-> **SheetResponse**: [`WorkerResponse`](WorkerResponse.md) & `object`
+> **SheetResponse**\<`S`\>: [`WorkerResponse`](WorkerResponse.md)\<`S`\> & `object`
+
+The type of the worker's response.
 
 ## Type declaration
 
@@ -18,9 +20,15 @@
 
 > **workbook**?: `WorkBook`
 
+## Type parameters
+
+| Parameter | Default |
+| :------ | :------ |
+| `S` extends [`ResponseStatus`](ResponseStatus.md) | [`ResponseStatus`](ResponseStatus.md) |
+
 ## Source
 
-[Projects/clean-tool-app/src/workers/sheet.ts:23](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/workers/sheet.ts:35](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

@@ -6,25 +6,31 @@
 
 # Function: getVisits()
 
-> **getVisits**(`__namedParameters`): readonly `string`[]
+> **getVisits**(`state`): readonly `string`[]
+
+Selector function to get the visits.
 
 ## Parameters
 
-▪ **\_\_namedParameters**: `object`
+▪ **state**: `object`
 
-▪ **\_\_namedParameters.columns**: `Readonly`\<[`State`](../interfaces/State.md)\>
+The application state [AppState](../type-aliases/AppState.md)
 
-▪ **\_\_namedParameters.progress**: `Readonly`\<[`State`](../interfaces/State.md)\>
+▪ **state.columns**: `Readonly`\<`State`\>
 
-▪ **\_\_namedParameters.sheet**: `Readonly`\<[`State`](../interfaces/State.md)\>
+▪ **state.progress**: `Readonly`\<`State`\>
+
+▪ **state.sheet**: `Readonly`\<[`State`](../interfaces/State.md)\>
 
 ## Returns
 
 readonly `string`[]
 
+The visits that has been specified by the user
+
 ## Source
 
-[Projects/clean-tool-app/src/app/selectors.ts:36](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/app/selectors.ts:80](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

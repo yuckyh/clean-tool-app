@@ -6,7 +6,7 @@
 
 # Function: createLazyMemo()
 
-> **createLazyMemo**\<`T`\>(`displayName`, `promise`): `MemoExoticComponent`\<`LazyExoticComponent`\<`ComponentType`\<`T`\>\>\>
+> **createLazyMemo**\<`T`\>(`displayName`, `promise`): `NamedExoticComponent`\<`any`\> & `object` & `object`
 
 ## Type parameters
 
@@ -20,11 +20,11 @@
 
 ## Returns
 
-`MemoExoticComponent`\<`LazyExoticComponent`\<`ComponentType`\<`T`\>\>\>
+`NamedExoticComponent`\<`any`\> & `object` & `object`
 
 ## Source
 
-[Projects/clean-tool-app/src/lib/utils.ts:18](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/lib/utils.ts:19](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

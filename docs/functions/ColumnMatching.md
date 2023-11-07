@@ -19,7 +19,7 @@ The component object
 
 ## Source
 
-[Projects/clean-tool-app/src/pages/ColumnMatching/index.tsx:49](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/pages/ColumnMatching/index.tsx:48](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

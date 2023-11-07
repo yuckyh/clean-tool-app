@@ -6,11 +6,14 @@
 
 # Interface: GenericWorkerEventMap`<T>`
 
+The event map for the worker events.
+
 ## Contents
 
 - [Extends](GenericWorkerEventMap.md#extends)
 - [Type parameters](GenericWorkerEventMap.md#type-parameters)
 - [Properties](GenericWorkerEventMap.md#properties)
+  - [error](GenericWorkerEventMap.md#error)
   - [message](GenericWorkerEventMap.md#message)
   - [messageerror](GenericWorkerEventMap.md#messageerror)
 
@@ -24,6 +27,20 @@
 
 ## Properties
 
+### error
+
+> **error**: `ErrorEvent`
+
+#### Overrides
+
+WorkerEventMap.error
+
+#### Source
+
+[Projects/clean-tool-app/src/types/workers.d.ts:81](https://github.com/yuckyh/clean-tool-app/)
+
+***
+
 ### message
 
 > **message**: `MessageEvent`\<`T`\>
@@ -34,7 +51,7 @@ WorkerEventMap.message
 
 #### Source
 
-[Projects/clean-tool-app/src/types/workers.d.ts:28](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/types/workers.d.ts:82](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 
@@ -48,7 +65,7 @@ WorkerEventMap.messageerror
 
 #### Source
 
-[Projects/clean-tool-app/src/types/workers.d.ts:29](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/types/workers.d.ts:83](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

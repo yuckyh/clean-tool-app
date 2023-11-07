@@ -6,15 +6,15 @@
 
 # Function: getCell()
 
-> **getCell**(`state`, ...`params`): `string`
+> **getCell**(`state`, ...`params`): [`Value`](../type-aliases/Value.md)
 
 ## Parameters
 
 ▪ **state**: `object`
 
-▪ **state.columns**: `Readonly`\<[`State`](../interfaces/State.md)\>
+▪ **state.columns**: `Readonly`\<`State`\>
 
-▪ **state.progress**: `Readonly`\<[`State`](../interfaces/State.md)\>
+▪ **state.progress**: `Readonly`\<`State`\>
 
 ▪ **state.sheet**: `Readonly`\<[`State`](../interfaces/State.md)\>
 
@@ -22,7 +22,7 @@
 
 ## Returns
 
-`string`
+[`Value`](../type-aliases/Value.md)
 
 ## Source
 

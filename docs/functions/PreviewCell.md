@@ -12,7 +12,7 @@ The cell in the [PreviewDataGrid](PreviewDataGrid.md) that displays the value of
 
 ## Parameters
 
-▪ **props**: `Readonly`\<[`Props`](../interfaces/Props.md)\>
+▪ **props**: `Readonly`\<`Props`\>
 
 The component's props
 
@@ -21,6 +21,12 @@ The component's props
 `Element`
 
 JSX.Element
+
+## Example
+
+```ts
+
+```
 
 ## Source
 

@@ -6,7 +6,7 @@
 
 # Function: SimpleDataGrid()
 
-> **SimpleDataGrid**\<`T`\>(`__namedParameters`): `Element`
+> **SimpleDataGrid**\<`T`\>(`props`): `Element`
 
 ## Type parameters
 
@@ -14,7 +14,7 @@
 
 ## Parameters
 
-▪ **\_\_namedParameters**: `Readonly`\<[`Props`](../interfaces/Props.md)\<`T`\>\>
+▪ **props**: `Readonly`\<[`Props`](../interfaces/Props.md)\<`T`\>\>
 
 ## Returns
 
@@ -22,7 +22,7 @@
 
 ## Source
 
-[Projects/clean-tool-app/src/components/SimpleDataGrid.tsx:52](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/components/SimpleDataGrid.tsx:58](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 
