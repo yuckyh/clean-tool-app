@@ -1,6 +1,10 @@
+import type * as Eq from 'fp-ts/Eq'
+
 import * as O from 'fp-ts/Option'
 import * as RA from 'fp-ts/ReadonlyArray'
 import * as f from 'fp-ts/function'
+
+import { equals } from './fp'
 
 export const indexDuplicateSearcher = <T extends readonly U[], U>(
   indices: readonly T[],
@@ -15,11 +19,7 @@ export const indexDuplicateSearcher = <T extends readonly U[], U>(
       ),
     ),
   )
-
-export const stringLookup = (arr: readonly string[]) => (pos: number) =>
-  f.pipe(RA.lookup(pos, arr), f.pipe('', f.constant, O.getOrElse))
-
-export const lookup =
+export const arrLookup =
   <T>(arr: readonly T[]) =>
   (defaultValue: T) =>
   (pos: number) =>
@@ -37,6 +37,16 @@ export const head =
    */
   (defaultValue: T) =>
     f.pipe(arr, RA.head, f.pipe(defaultValue, f.constant, O.getOrElse))
+
+export const findIndex =
+  <T>(arr: readonly T[]) =>
+  (eq: Eq.Eq<T>) =>
+  (value: T) =>
+    f.pipe(
+      arr,
+      RA.findIndex(equals(eq)(value)),
+      f.pipe(-1, f.constant, O.getOrElse),
+    )
 
 /**
  * Retrieves the value from an indexed tuple

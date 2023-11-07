@@ -17,16 +17,15 @@ import {
   getVisitsComparer,
 } from '@/features/columns/selectors'
 import { fetchSheet } from '@/features/sheet/actions'
-import { getColumnComparer } from '@/selectors/columnsSelectors'
-import { getColumnsLength } from '@/selectors/columnsSelectors'
-import { length, numEquals, promisedTask, promisedTaskOption } from '@/lib/fp'
+import { equals, length, promisedTask, promisedTaskOption } from '@/lib/fp'
+import { dumpError } from '@/lib/fp/logger'
 import {
   useAppDispatch,
   useAppSelector,
   useLoadingTransition,
 } from '@/lib/hooks'
-import { dumpError } from '@/lib/logger'
 import { createLazyMemo, createMemo } from '@/lib/utils'
+import { getColumnComparer, getColumnsLength } from '@/selectors/selectors'
 import {
   Spinner,
   Subtitle1,
@@ -36,6 +35,7 @@ import * as RA from 'fp-ts/ReadonlyArray'
 import * as T from 'fp-ts/Task'
 import * as TO from 'fp-ts/TaskOption'
 import * as f from 'fp-ts/function'
+import * as N from 'fp-ts/number'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 
 import HeaderCell from './HeaderCell'
@@ -65,6 +65,12 @@ export interface Props {
   infoAlertRef: RefObject<AlertRef>
 }
 
+/**
+ *
+ * @param props
+ * @param props.errorAlertRef
+ * @param props.infoAlertRef
+ */
 export default function ColumnsDataGrid({
   errorAlertRef,
   infoAlertRef,
@@ -173,7 +179,7 @@ export default function ColumnsDataGrid({
     f.pipe(
       matchVisits,
       length,
-      TO.fromPredicate(numEquals(0)),
+      TO.fromPredicate(equals(N.Eq)(0)),
       f.pipe(fetchSheet, f.constant, TO.map),
       TO.tap((x) => f.pipe(dispatch(x()), promisedTaskOption)),
       f.pipe(fetchMatches, f.constant, TO.map),

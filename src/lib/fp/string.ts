@@ -13,7 +13,10 @@ const kebabToTitle = (slug: string) =>
     RA.reduce('', (acc, cur) => S.Monoid.concat(acc, ` ${cur}`)),
   )
 
-// eslint-disable-next-line import/prefer-default-export
+export const kebabToSnake = S.replace(/-/g, '_')
+
+export const snakeToKebab = S.replace(/_/g, '-')
+
 export const getPathTitle = (path: string, depth = 1) => {
   const result = f.pipe(
     path,

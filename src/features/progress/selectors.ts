@@ -1,9 +1,9 @@
-import type { RootState } from '@/app/store'
+import type { AppState } from '@/app/store'
 
 import { routes } from '@/app/Router'
 import { getProgress } from '@/app/selectors'
-import { stringLookup } from '@/lib/array'
-import { getPathTitle } from '@/lib/string'
+import { arrLookup } from '@/lib/array'
+import { getPathTitle } from '@/lib/fp/string'
 import { createSelector } from '@reduxjs/toolkit'
 import * as O from 'fp-ts/Option'
 import * as P from 'fp-ts/Predicate'
@@ -15,13 +15,13 @@ import { matchRoutes, resolvePath } from 'react-router-dom'
 
 import type { Progress } from './reducers'
 
-const getLocationPathParam = (_: RootState, _1: string, locationPath: string) =>
+const getLocationPathParam = (_: AppState, _1: string, locationPath: string) =>
   locationPath
 
-const getComponentPathParam = (_: RootState, componentPath: string) =>
+const getComponentPathParam = (_: AppState, componentPath: string) =>
   componentPath
 
-const getPosParam = (_: RootState, _1: string, _2: string, pos: number) => pos
+const getPosParam = (_: AppState, _1: string, _2: string, pos: number) => pos
 
 export const getLocationPathWords = createSelector(
   [getLocationPathParam],
@@ -57,7 +57,7 @@ export const getPaths = createSelector(
 )
 
 export const getPath = createSelector([getPaths, getPosParam], (paths, pos) =>
-  stringLookup(paths)(pos),
+  arrLookup(paths)('')(pos),
 )
 
 export const getAllowedPaths = createSelector(
@@ -82,14 +82,19 @@ export const getPosition = createSelector(
     f.pipe(
       paths,
       RA.map(S.replace('/', '')),
-      RA.findIndex((x) => S.Eq.equals(x, stringLookup(locationPathWords)(0))),
+      RA.findIndex((x) => S.Eq.equals(x, arrLookup(locationPathWords)('')(0))),
       f.pipe(-1, f.constant, O.getOrElse),
     ),
 )
 
 const getLocationHasVisit = createSelector(
   [getLocationPathWords],
-  f.flow(f.flip(stringLookup)(2), (x) => parseInt(x, 10), P.not(Number.isNaN)),
+  f.flow(
+    f.flip(arrLookup)(''),
+    f.apply(2),
+    (x) => parseInt(x, 10),
+    P.not(Number.isNaN),
+  ),
 )
 
 const getIsAtEda = createSelector([getPosition], (position) => position === 3)
@@ -113,7 +118,7 @@ export const getShouldNavigateToAllowed = createSelector(
       RA.every(
         f.flow(
           S.replace('/', ''),
-          f.pipe(stringLookup(locationPathWords)(0), S.includes, P.not),
+          f.pipe(arrLookup(locationPathWords)('')(0), S.includes, P.not),
         ),
       ),
     ),

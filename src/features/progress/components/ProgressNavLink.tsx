@@ -1,5 +1,5 @@
+import { getPathTitle } from '@/lib/fp/string'
 import { useAppSelector } from '@/lib/hooks'
-import { getPathTitle } from '@/lib/string'
 import {
   Link,
   Subtitle2,
@@ -53,7 +53,14 @@ export interface Props {
   pos: number
 }
 
-export default function ProgressNavLink({ done, path, pos }: Props) {
+/**
+ *
+ * @param props
+ * @param props.done
+ * @param props.path
+ * @param props.pos
+ */
+export default function ProgressNavLink({ done, path, pos }: Readonly<Props>) {
   const classes = useClasses()
 
   const { pathname: locationPath } = useLocation()

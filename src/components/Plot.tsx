@@ -16,11 +16,17 @@ const PlotlyPlot = createPlotlyComponent(Plotly)
 
 // Plotly.register([Bar, Box])
 
-const defaultConfig: Partial<Config> = {
+const defaultConfig: Readonly<Partial<Config>> = {
   responsive: true,
 }
 
-export default function Plot({ config, layout, ...props }: Props) {
+/**
+ *
+ * @param props
+ * @param props.config
+ * @param props.layout
+ */
+export default function Plot({ config, layout, ...props }: Readonly<Props>) {
   const color = useTokenToHex(tokens.colorNeutralStrokeAccessible)
   const colorway = f.pipe(
     [
@@ -34,7 +40,7 @@ export default function Plot({ config, layout, ...props }: Props) {
     RA.map(useTokenToHex),
   ) as string[]
 
-  const defaultLayout: Partial<Layout> = {
+  const defaultLayout: Readonly<Partial<Layout>> = {
     colorway,
     font: {
       color,

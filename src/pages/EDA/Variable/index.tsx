@@ -1,11 +1,13 @@
-/* eslint-disable import/prefer-default-export */
+/* eslint-disable
+  functional/functional-parameters
+*/
 import { codebook } from '@/data'
 import { setDataType } from '@/features/columns/reducers'
 import { getSearchedPos } from '@/features/columns/selectors'
+import { kebabToSnake } from '@/lib/fp/string'
 import { useAppDispatch, useAppSelector } from '@/lib/hooks'
 import CategoricalPlot from '@/pages/EDA/Variable/Plot/CategoricalPlot'
 import NumericalPlot from '@/pages/EDA/Variable/Plot/NumericalPlot'
-/* eslint-disable functional/functional-parameters */
 import {
   Card,
   Field,
@@ -16,7 +18,6 @@ import {
 } from '@fluentui/react-components'
 import * as IO from 'fp-ts/IO'
 import * as f from 'fp-ts/function'
-import * as S from 'fp-ts/string'
 import { useParams } from 'react-router-dom'
 
 import AllDataGrid from './DataGrid/AllDataGrid'
@@ -80,7 +81,7 @@ export default function Variable() {
 
   const firstVisit = useAppSelector(({ sheet }) => sheet.visits[0] ?? '')
 
-  const column = S.replace(/-/g, '_')(params.column ?? '')
+  const column = kebabToSnake(params.column ?? '')
   const visit = params.visit ?? firstVisit
 
   const pos = useAppSelector((state) => getSearchedPos(state, column, visit))

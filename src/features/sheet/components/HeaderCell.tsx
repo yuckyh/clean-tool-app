@@ -1,4 +1,5 @@
 import { useAppSelector } from '@/lib/hooks'
+import { getOriginalColumn } from '@/selectors/selectors'
 import {
   makeStyles,
   mergeClasses,
@@ -7,7 +8,6 @@ import {
 } from '@fluentui/react-components'
 
 import { getDataType, getFormattedColumn } from '../../columns/selectors'
-import { getOriginalColumn } from '@/selectors/columnsSelectors'
 
 const useClasses = makeStyles({
   categoricalHeader: {
@@ -33,7 +33,13 @@ export interface Props {
   pos: number
 }
 
-export default function HeaderCell({ isOriginal, pos }: Props) {
+/**
+ *
+ * @param props
+ * @param props.isOriginal
+ * @param props.pos
+ */
+export default function HeaderCell({ isOriginal, pos }: Readonly<Props>) {
   const classes = useClasses()
 
   const column = useAppSelector((state) =>

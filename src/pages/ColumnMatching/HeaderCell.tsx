@@ -20,7 +20,13 @@ export interface Props {
   subtitle: string
 }
 
-export default function HeaderCell({ header, subtitle }: Props) {
+/**
+ *
+ * @param props
+ * @param props.header
+ * @param props.subtitle
+ */
+export default function HeaderCell({ header, subtitle }: Readonly<Props>) {
   const classes = useClasses()
 
   return (

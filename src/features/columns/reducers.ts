@@ -6,7 +6,7 @@ import type { PayloadAction } from '@reduxjs/toolkit'
 import type * as Ref from 'fp-ts/Refinement'
 
 import { codebook } from '@/data'
-import { strEquals } from '@/lib/fp'
+import { equals } from '@/lib/fp'
 import { getPersisted, setPersisted } from '@/lib/localStorage'
 import { createSlice } from '@reduxjs/toolkit'
 import * as O from 'fp-ts/Option'
@@ -17,7 +17,7 @@ import * as S from 'fp-ts/string'
 
 import { fetchMatches, sliceName } from './actions'
 
-export type DataType = 'categorical' | 'numerical'
+export type DataType = 'categorical' | 'none' | 'numerical'
 
 export interface State {
   dataTypes: readonly DataType[]
@@ -108,10 +108,10 @@ const columnsSlice = createSlice({
             RA.map((matchColumn) =>
               f.pipe(
                 codebook,
-                RA.findFirst(({ name }) => strEquals(name)(matchColumn)),
+                RA.findFirst(({ name }) => equals(S.Eq)(name)(matchColumn)),
                 O.map(({ type }) => type),
                 f.pipe('', f.constant, O.getOrElse),
-                strEquals,
+                equals(S.Eq),
                 RA.some,
                 f.apply(['whole_number', 'interval'] as const),
                 (isNumerical) => (isNumerical ? 'numerical' : 'categorical'),

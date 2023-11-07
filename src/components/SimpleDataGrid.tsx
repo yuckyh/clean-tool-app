@@ -49,6 +49,12 @@ export interface Props<T>
   items: readonly T[]
 }
 
+/**
+ *
+ * @param props
+ * @param props.columns
+ * @param props.items
+ */
 export default function SimpleDataGrid<T>({
   columns,
   items,

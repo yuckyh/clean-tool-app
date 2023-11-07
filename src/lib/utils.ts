@@ -1,17 +1,18 @@
 import type { ComponentType } from 'react'
 
-import * as IO from 'fp-ts/IO'
-import * as T from 'fp-ts/Task'
+import * as f from 'fp-ts/function'
 import { lazy, memo } from 'react'
+
+import { promisedTask } from './fp'
 
 export const createMemo = <T>(
   displayName: string,
-
+  // eslint-disable-next-line functional/prefer-immutable-types
   component: ComponentType<T>,
 ) => {
-  const memoized = memo(component)
-  // eslint-disable-next-line functional/immutable-data
-  memoized.displayName = displayName
+  const memoized = Object.assign(memo(component), {
+    displayName,
+  })
   return memoized
 }
 
@@ -19,12 +20,8 @@ export const createLazyMemo = <T>(
   displayName: string,
   promise: Promise<{ default: ComponentType<T> }>,
 ) => {
-  const component = memo(lazy(() => promise))
-  // eslint-disable-next-line functional/immutable-data
-  component.displayName = displayName
+  const component = Object.assign(f.pipe(promise, promisedTask, lazy, memo), {
+    displayName,
+  })
   return component
 }
-
-export const noOpIO: IO.IO<() => void> = IO.of(() => {})
-
-export const noOpTask: T.Task<() => void> = T.of(() => {})

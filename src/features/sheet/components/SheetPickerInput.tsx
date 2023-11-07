@@ -1,3 +1,6 @@
+/* eslint-disable
+  functional/functional-parameters
+*/
 import type { DropdownProps } from '@fluentui/react-components'
 
 import { useAppDispatch, useAppSelector } from '@/lib/hooks'
@@ -16,7 +19,9 @@ const useClasses = makeStyles({
   },
 })
 
-// eslint-disable-next-line functional/functional-parameters
+/**
+ *
+ */
 export default function SheetPickerInput() {
   const classes = useClasses()
 

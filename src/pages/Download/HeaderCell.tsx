@@ -14,7 +14,12 @@ export interface Props {
   header: string
 }
 
-export default function HeaderCell({ header }: Props) {
+/**
+ *
+ * @param props
+ * @param props.header
+ */
+export default function HeaderCell({ header }: Readonly<Props>) {
   const classes = useClasses()
 
   return <div className={classes.root}>{header}</div>

@@ -14,7 +14,12 @@ export interface Props {
   pos: number
 }
 
-export default function NavTab({ pos }: Props) {
+/**
+ *
+ * @param props
+ * @param props.pos
+ */
+export default function NavTab({ pos }: Readonly<Props>) {
   const classes = useClasses()
   const path = useAppSelector((state) => getColumnPath(state, pos))
 

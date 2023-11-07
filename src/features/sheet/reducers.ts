@@ -4,11 +4,14 @@
 */
 import type { RejectedAction } from '@/types/redux'
 import type { PayloadAction } from '@reduxjs/toolkit'
-import type * as Ref from 'fp-ts/Refinement'
 
-import { FlagEq } from '@/lib/fp'
+import { head } from '@/lib/array'
+import { equals } from '@/lib/fp'
+import * as CellItem from '@/lib/fp/CellItem'
+import * as Flag from '@/lib/fp/Flag'
+import { dumpError } from '@/lib/fp/logger'
+import { add } from '@/lib/fp/number'
 import { getPersisted, setPersisted } from '@/lib/localStorage'
-import { dumpError } from '@/lib/logger'
 import { createSlice } from '@reduxjs/toolkit'
 import * as E from 'fp-ts/Either'
 import * as O from 'fp-ts/Option'
@@ -20,9 +23,7 @@ import { type BookType, utils } from 'xlsx'
 
 import { deleteSheet, fetchSheet, postFile, sliceName } from './actions'
 
-export type FlagReason = 'incorrect' | 'missing' | 'outlier' | 'suspected'
-
-export type Flag = readonly [string, string, FlagReason]
+// export type Flag = readonly [string, string, FlagReason]
 
 /**
  * The state struct for the sheet slice.
@@ -38,7 +39,7 @@ export interface State {
   /**
    * The data from the selected sheet. The data is a list of records with keys as the column names.
    */
-  data: readonly CellItem[]
+  data: readonly CellItem.CellItem[]
   /**
    * The name of the file.
    */
@@ -46,7 +47,7 @@ export interface State {
   /**
    * The list of flagged cells.
    */
-  flaggedCells: readonly Flag[]
+  flaggedCells: readonly Flag.Flag[]
   /**
    * The list of original column names.
    */
@@ -63,23 +64,20 @@ const defaultValue = ''
 const listKeys = ['sheetNames', 'visits', 'originalColumns'] as const
 const fileNameKey = 'fileName'
 
-const isFlagReason: Ref.Refinement<string | undefined, FlagReason> = (
-  x,
-): x is FlagReason =>
-  x === 'incorrect' || x === 'missing' || x === 'outlier' || x === 'suspected'
-
-const isFlag: Ref.Refinement<readonly string[], Flag> = (x): x is Flag =>
-  x.length === 3 && isFlagReason(x[2])
-
 const initialState: Readonly<State> = {
-  data: JSON.parse(getPersisted('data', '[]')) as readonly CellItem[],
+  data: RA.map(CellItem.of)(
+    JSON.parse(
+      getPersisted('data', '[]'),
+    ) as readonly CellItem.CellItem['value'][],
+  ),
   fileName: getPersisted(fileNameKey, defaultValue),
   flaggedCells: f.pipe(
     getPersisted('flaggedCells', defaultValue),
     S.slice(1, -1),
     S.split('],['),
     RA.map(S.split(',')),
-    RA.filter(isFlag),
+    RA.filter(Flag.isFlagValue),
+    RA.map((arg) => Flag.of(...arg)),
   ),
   originalColumns: f.pipe(
     getPersisted(listKeys[2], defaultValue),
@@ -106,24 +104,30 @@ const sheetSlice = createSlice({
         const { SheetNames, Sheets, bookType } = payload
 
         if (
-          f.pipe(
-            [SheetNames, Sheets, bookType] as const,
-            RA.some(f.flow(O.fromNullable, O.isNone)),
-          )
+          RA.some(f.flow(O.fromNullable, O.isNone))([
+            SheetNames,
+            Sheets,
+            bookType,
+          ] as const)
         ) {
           return state
         }
 
-        state.sheetName ||= SheetNames?.[0] ?? defaultValue
-
         state.bookType = bookType
 
-        state.data = utils.sheet_to_json(Sheets?.[state.sheetName] ?? {})
+        state.sheetName ||= SheetNames?.[0] ?? defaultValue
 
-        state.originalColumns =
-          utils.sheet_to_json<string[]>(Sheets?.[state.sheetName] ?? {}, {
+        const sheet = Sheets?.[state.sheetName] ?? {}
+
+        state.data = utils.sheet_to_json(sheet)
+
+        state.originalColumns = f.pipe(
+          utils.sheet_to_json<string[]>(sheet, {
             header: 1,
-          })[0] ?? []
+          }),
+          head,
+          f.apply([]),
+        )
 
         return state
       })
@@ -192,7 +196,7 @@ const sheetSlice = createSlice({
       { payload }: Readonly<PayloadAction<{ pos: number; visit: string }>>,
     ) => {
       const { pos, visit } = payload
-      const visits = state.visits as readonly string[]
+      const visits = [...state.visits] as readonly string[]
 
       state.visits = f.pipe(
         visits,
@@ -202,22 +206,18 @@ const sheetSlice = createSlice({
 
       return state
     },
-    syncFlaggedCells: (state, { payload }: Readonly<PayloadAction<Flag>>) => {
-      const flaggedCells = state.flaggedCells as readonly Flag[]
+    syncFlaggedCells: (
+      state,
+      { payload }: Readonly<PayloadAction<Flag.Flag>>,
+    ) => {
       state.flaggedCells = f.pipe(
-        [...flaggedCells],
-        (cells) =>
-          f.pipe(
-            cells,
-            RA.some((cell) => FlagEq.equals(cell, payload)),
-          )
-            ? E.left(cells)
-            : E.right(cells),
+        [...state.flaggedCells] as readonly Flag.Flag[],
+        E.fromPredicate(RA.elem(Flag.Eq)(payload), f.identity),
         E.match(
-          f.flow(RA.filter((cell) => !FlagEq.equals(cell, payload))),
+          f.flow(RA.filter(P.not(equals(Flag.Eq)(payload)))),
           RA.append(payload),
         ),
-      ) as [string, string, FlagReason][]
+      ) as typeof state.flaggedCells
 
       return state
     },
@@ -225,15 +225,15 @@ const sheetSlice = createSlice({
       const visitsLengthDiff = payload - state.visits.length
 
       RA.makeBy(Math.abs(visitsLengthDiff), () => {
+        const visits = [...state.visits] as readonly string[]
         state.visits = f.pipe(
-          [...state.visits] as const,
-          visitsLengthDiff > 0
-            ? RA.insertAt(
-                state.visits.length,
-                (state.visits.length + 1).toString(),
-              )
-            : RA.deleteAt(state.visits.length - 1),
-          f.pipe([...state.visits] as const, f.constant, O.getOrElse),
+          visits,
+          E.fromPredicate(({ length }) => payload > length, f.identity),
+          E.match(
+            RA.insertAt(visits.length, add(1)(visits.length).toString()),
+            RA.deleteAt(visits.length - 1),
+          ),
+          f.pipe(visits, f.constant, O.getOrElse),
         ) as string[]
       })
 
@@ -242,16 +242,6 @@ const sheetSlice = createSlice({
   },
 })
 
-/**
- * The sheet slice actions
- * @member deleteVisits - Deletes the visits
- * @member saveSheetState - Saves the sheet state
- * @member setSheetName - Sets the sheet name
- * @member setVisit - Sets the visit
- * @member syncFlaggedCells - Syncs the flagged cells
- * @member syncVisits - Syncs the visits
- * @see {@link sheetSlice}
- */
 export const {
   deleteVisits,
   saveSheetState,

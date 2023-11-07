@@ -26,7 +26,12 @@ export interface Props {
   pos: number
 }
 
-export default function ScoreCell({ pos }: Props) {
+/**
+ *
+ * @param props
+ * @param props.pos
+ */
+export default function ScoreCell({ pos }: Readonly<Props>) {
   const classes = useClasses()
 
   const score = useAppSelector((state) => getScore(state, pos))

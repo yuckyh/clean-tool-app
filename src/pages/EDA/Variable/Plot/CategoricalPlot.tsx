@@ -14,7 +14,18 @@ export interface Props {
   visit: string
 }
 
-export default function CategoricalPlot({ column, variable, visit }: Props) {
+/**
+ *
+ * @param props
+ * @param props.column
+ * @param props.variable
+ * @param props.visit
+ */
+export default function CategoricalPlot({
+  column,
+  variable,
+  visit,
+}: Readonly<Props>) {
   const series = useAppSelector((state) => getIndexedRow(state, column, visit))
 
   const count = f.pipe(
@@ -28,7 +39,7 @@ export default function CategoricalPlot({ column, variable, visit }: Props) {
 
   const maxCount = Math.max(...Object.values(count))
 
-  const data: Partial<Data>[] = [
+  const data: readonly Readonly<Partial<Data>>[] = [
     {
       type: 'bar',
       x: Object.keys(count),
@@ -36,7 +47,7 @@ export default function CategoricalPlot({ column, variable, visit }: Props) {
     },
   ]
 
-  const layout: Partial<Layout> = {
+  const layout: Readonly<Partial<Layout>> = {
     xaxis: {
       type: 'category',
     },

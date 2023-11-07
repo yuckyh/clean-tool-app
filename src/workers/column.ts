@@ -1,8 +1,8 @@
 import type { codebook } from '@/data'
 import type Fuse from 'fuse.js'
 
+import { dumpError } from '@/lib/fp/logger'
 import fuse from '@/lib/fuse'
-import { dumpError } from '@/lib/logger'
 import * as RA from 'fp-ts/ReadonlyArray'
 
 const search = fuse.search.bind(fuse)

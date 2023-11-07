@@ -1,69 +1,93 @@
-import type { FlagReason } from '@/features/sheet/reducers'
+import type * as Flag from '@/lib/fp/Flag'
 
-import { stringLookup } from '@/lib/array'
-import * as O from 'fp-ts/Option'
-import * as RA from 'fp-ts/ReadonlyArray'
-import * as f from 'fp-ts/function'
+import * as Eq from 'fp-ts/Eq'
+import * as S from 'fp-ts/string'
 
-import type { RootState } from './store'
+import type { AppState } from './store'
 
-// Params selectors
-export const getColParam = (_state: RootState, col: number) => col
+/**
+ * Utility function to get the column position parameter
+ * @example
+ * ```ts
+ * const getOriginalColumn = createSelector(
+ *  [getOriginalColumns, getColParam],
+ *  (originalColumns, col) => originalColumns[col],
+ * )
+ * ```
+ * @param _state - The application state {@link AppState}
+ * @param col - The column position parameter
+ * @returns The column position parameter
+ */
+export const getColParam = (_state: AppState, col: number) => col
 
-export const getRowParam = (_state: RootState, _col: number, row: number) => row
+/**
+ * Utility function to get the column position parameter
+ *
+ * This function is to be used with the column position parameter to select a cell from the data array
+ * @example
+ * ```ts
+ * const originalColumn = createSelector(
+ *  [getOriginalColumn, getRowParam],
+ *  (originalColumn, row) => originalColumn[row],
+ * )
+ * ```
+ * @param _state - The application state {@link AppState}
+ * @param _col - The column position parameter
+ * @param row - The row position parameter
+ * @returns The row position parameter
+ */
+export const getRowParam = (_state: AppState, _col: number, row: number) => row
 
-export const getColumnParam = (_state: RootState, column: string) => column
+/**
+ * Utility function to get the column parameter
+ * @example
+ * ```ts
+ * const originalColumn = createSelector(
+ *  [getOriginalColumn, getColumnParam],
+ *  (originalColumn, column) => data.map((row) => row[column]),
+ * )
+ * ```
+ * @param _state - The application state {@link AppState}
+ * @param column - The column parameter
+ * @returns The column parameter
+ */
+export const getColumnParam = (_state: AppState, column: string) => column
 
 export const getVisitParam = (
-  _state: RootState,
+  _state: AppState,
   _column: string,
   visit: string,
 ) => visit
 
-export const getTitleParam = (_state: RootState, title: string) => title
+export const getTitleParam = (_state: AppState, title: string) => title
 
 export const getReasonParam = (
-  _state: RootState,
+  _state: AppState,
   _1: string,
-  reason: FlagReason,
+  reason: Flag.FlagReason,
 ) => reason
 
 // Slice Selectors
-export const getProgress = ({ progress }: RootState) => progress.progress
+export const getProgress = ({ progress }: AppState) => progress.progress
 
-export const getSheetName = ({ sheet }: RootState) => sheet.sheetName
+export const getSheetName = ({ sheet }: AppState) => sheet.sheetName
 
-export const getVisits = ({ sheet }: RootState) => sheet.visits
+export const getVisits = ({ sheet }: AppState) => sheet.visits
 
-export const getOriginalColumns = ({ sheet }: RootState) =>
-  sheet.originalColumns
+export const getOriginalColumns = ({ sheet }: AppState) => sheet.originalColumns
 
-export const getData = ({ sheet }: RootState) => sheet.data
+export const getData = ({ sheet }: AppState) => sheet.data
 
-export const getFlaggedCells = ({ sheet }: RootState) => sheet.flaggedCells
+export const getFlaggedCells = ({ sheet }: AppState) => sheet.flaggedCells
 
-export const getMatchColumns = ({ columns }: RootState) => columns.matchColumns
+export const getMatchColumns = ({ columns }: AppState) => columns.matchColumns
 
-export const getMatchVisits = ({ columns }: RootState) => columns.matchVisits
+export const getMatchVisits = ({ columns }: AppState) => columns.matchVisits
 
-export const getScoresList = ({ columns }: RootState) => columns.scoresList
+export const getScoresList = ({ columns }: AppState) => columns.scoresList
 
-export const getMatchesList = ({ columns }: RootState) => columns.matchesList
+export const getMatchesList = ({ columns }: AppState) => columns.matchesList
 
-export const getDataTypes = ({ columns }: RootState) => columns.dataTypes
+export const getDataTypes = ({ columns }: AppState) => columns.dataTypes
 
-export const searchPos = (
-  indices: readonly (readonly [string, number])[],
-  visits: readonly string[],
-  searchColumn: string,
-  searchVisit: string,
-) =>
-  f.pipe(
-    indices,
-    RA.findIndex(
-      ([matchColumn, matchVisit]) =>
-        searchColumn === matchColumn &&
-        searchVisit === stringLookup(visits)(matchVisit),
-    ),
-    O.getOrElse(f.constant(-1)),
-  )
+export const indexEq = Eq.tuple(S.Eq, S.Eq)

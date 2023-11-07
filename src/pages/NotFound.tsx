@@ -1,7 +1,5 @@
 /* eslint-disable
-  functional/immutable-data,
   functional/functional-parameters, 
-  import/prefer-default-export
 */
 import { Link, Subtitle1, Title1, makeStyles } from '@fluentui/react-components'
 import { useHref } from 'react-router-dom'

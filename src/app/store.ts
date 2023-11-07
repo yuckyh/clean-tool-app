@@ -7,7 +7,7 @@ const store = configureStore({
   reducer: { columns, progress, sheet },
 } as const)
 
-export type RootState = ReturnType<typeof store.getState>
+export type AppState = ReturnType<typeof store.getState>
 export type AppDispatch = typeof store.dispatch
 
 export default store

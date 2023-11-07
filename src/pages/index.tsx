@@ -1,5 +1,4 @@
 /* eslint-disable
-  import/prefer-default-export, 
   functional/functional-parameters,
   functional/immutable-data
 */

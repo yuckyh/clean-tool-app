@@ -4,8 +4,10 @@ import type { ComboboxProps } from '@fluentui/react-components'
 import { codebook } from '@/data'
 import { getRow } from '@/features/sheet/selectors'
 import { indexDuplicateSearcher } from '@/lib/array'
-import { isCorrectNumber, numEquals, strEquals } from '@/lib/fp'
+import { equals, isCorrectNumber } from '@/lib/fp'
 import { useAppDispatch, useAppSelector, useDebounced } from '@/lib/hooks'
+import { createMemo } from '@/lib/utils'
+import { getMatchColumn } from '@/selectors/selectors'
 import {
   Combobox,
   Option,
@@ -18,7 +20,9 @@ import * as IO from 'fp-ts/IO'
 import * as O from 'fp-ts/Option'
 import * as P from 'fp-ts/Predicate'
 import * as RA from 'fp-ts/ReadonlyArray'
+import * as B from 'fp-ts/boolean'
 import * as f from 'fp-ts/function'
+import * as N from 'fp-ts/number'
 import * as S from 'fp-ts/string'
 import { useCallback, useMemo, useState } from 'react'
 
@@ -33,8 +37,6 @@ import {
   getVisitByMatchVisit,
 } from '../selectors'
 import FilteredOptions from './FilteredOptions'
-import { getMatchColumn } from '@/selectors/columnsSelectors'
-import { createMemo } from '@/lib/utils'
 
 const MemoizedFilteredOptions = createMemo('FilteredOptions', FilteredOptions)
 
@@ -45,12 +47,21 @@ const useClasses = makeStyles({
   },
 })
 
+/**
+ *
+ */
 export interface Props {
   alertRef: React.RefObject<AlertRef>
   pos: number
 }
 
-export default function MatchCell({ alertRef, pos }: Props) {
+/**
+ *
+ * @param props
+ * @param props.alertRef
+ * @param props.pos
+ */
+export default function MatchCell({ alertRef, pos }: Readonly<Props>) {
   const classes = useClasses()
 
   const dispatch = useAppDispatch()
@@ -75,7 +86,7 @@ export default function MatchCell({ alertRef, pos }: Props) {
     () =>
       f.pipe(
         matches,
-        RA.filter(S.includes(deferredValue)),
+        f.pipe(deferredValue, S.includes, RA.filter<string>),
         RA.zip(scores),
         RA.map(([match, score]) => ({
           match,
@@ -106,7 +117,7 @@ export default function MatchCell({ alertRef, pos }: Props) {
         if (duplicates.length) {
           const newMatchVisit = f.pipe(
             RA.makeBy(visits.length, f.identity),
-            RA.findIndex(P.not(numEquals(matchVisit))),
+            RA.findIndex(P.not(equals(N.Eq)(matchVisit))),
             f.pipe(-1, f.constant, O.getOrElse),
           )
 
@@ -133,7 +144,7 @@ export default function MatchCell({ alertRef, pos }: Props) {
 
         const newDataType: DataType = f.pipe(
           codebook,
-          RA.findFirst(({ name }) => strEquals(name)(newMatchColumn)),
+          RA.findFirst(({ name }) => equals(S.Eq)(name)(newMatchColumn)),
           O.map(({ type }) =>
             f.pipe(
               type,
@@ -146,7 +157,7 @@ export default function MatchCell({ alertRef, pos }: Props) {
             () =>
               0.6 * row.length < f.pipe(row, RA.filter(isCorrectNumber)).length,
           ),
-          (isCategorical) => (isCategorical ? 'numerical' : 'categorical'),
+          B.match(f.constant('categorical'), f.constant('numerical')),
         )
 
         f.pipe(

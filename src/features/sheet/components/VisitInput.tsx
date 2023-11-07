@@ -20,7 +20,12 @@ export interface Props {
   pos: number
 }
 
-export default function VisitInput({ pos }: Props) {
+/**
+ *
+ * @param props
+ * @param props.pos
+ */
+export default function VisitInput({ pos }: Readonly<Props>) {
   const classes = useClasses()
 
   const dispatch = useAppDispatch()

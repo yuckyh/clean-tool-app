@@ -21,6 +21,11 @@
     "noFallthroughCasesInSwitch": true,
     "noUncheckedIndexedAccess": true
   },
-  "exclude": ["dev-dist", "src-tauri"],
+  "exclude": [
+    "dev-dist",
+    "src-tauri",
+    "dist",
+    "html-docs"
+  ],
   "include": ["*.config.ts", "*"]
 }

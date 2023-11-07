@@ -1,5 +1,4 @@
-import type { AppDispatch, RootState } from '@/app/store'
-import type { Flag, FlagReason } from '@/features/sheet/reducers'
+import type { AppDispatch, AppState } from '@/app/store'
 import type { ColorTokens, DataGridProps } from '@fluentui/react-components'
 import type { TypedUseSelectorHook } from 'react-redux'
 
@@ -31,10 +30,11 @@ import {
 import { useDispatch, useSelector } from 'react-redux'
 
 import { asIO, promisedTask, promisedTaskOption } from './fp'
-import { dumpError } from './logger'
+import * as Flag from './fp/Flag'
+import { dumpError } from './fp/logger'
 
 export const useAppDispatch: () => AppDispatch = useDispatch
-export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector
+export const useAppSelector: TypedUseSelectorHook<AppState> = useSelector
 
 export const useDebounced = <T>(value: T, delay = 100) => {
   const [debouncedValue, setDebouncedValue] = useState(value)
@@ -124,7 +124,7 @@ export const useStorage = () => {
 export const useGlobalStyles = makeStaticStyles(globalStyles)
 
 export const useSyncedSelectionHandler = (
-  reason: FlagReason,
+  reason: Flag.FlagReason,
   title: string,
   series: readonly (readonly [string, number | string])[],
 ) => {
@@ -160,12 +160,12 @@ export const useSyncedSelectionHandler = (
 
       const payloads = f.pipe(
         checkedPosList,
-        RA.map((currentIndex) => [currentIndex, title, reason] as Flag),
+        RA.map((currentIndex) => Flag.of(currentIndex, title, reason)),
       )
 
       const unfilteredPayloads = f.pipe(
         checkedPosList,
-        RA.map((currentIndex) => [currentIndex, title, 'outlier'] as Flag),
+        RA.map((currentIndex) => Flag.of(currentIndex, title, 'outlier')),
       )
 
       return f.pipe(

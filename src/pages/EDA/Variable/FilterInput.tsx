@@ -14,11 +14,18 @@ export interface Props {
   value: string
 }
 
+/**
+ *
+ * @param props
+ * @param props.handleChange
+ * @param props.label
+ * @param props.value
+ */
 export default function FilterInput({
   handleChange,
   label,
   value,
-}: Props) {
+}: Readonly<Props>) {
   const classes = useClasses()
 
   return (

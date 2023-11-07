@@ -25,6 +25,3 @@ type ArrayElement<T extends AnyArray> = T extends readonly (infer U)[]
 type ExcludeFirst<A> = A extends [unknown, ...infer U] ? U : never
 
 // XLSX support
-
-type CellItem = Record<Column, string>
-type Column = number | string

@@ -3,7 +3,7 @@
 */
 import type { DialogProps } from '@fluentui/react-components'
 
-import { noOpIO } from '@/lib/utils'
+import { noOpIO } from '@/lib/fp'
 import {
   Button,
   Dialog,

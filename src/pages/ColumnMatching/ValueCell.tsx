@@ -1,5 +1,5 @@
 import { useAppSelector } from '@/lib/hooks'
-import { getOriginalColumn } from '@/selectors/columnsSelectors'
+import { getOriginalColumn } from '@/selectors/selectors'
 import { makeStyles, shorthands, tokens } from '@fluentui/react-components'
 
 const useClasses = makeStyles({

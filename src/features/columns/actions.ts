@@ -1,8 +1,8 @@
-import type { RootState } from '@/app/store'
+import type { AppState } from '@/app/store'
 
 import { getOriginalColumns } from '@/app/selectors'
 import { columnWorker, promisedWorker } from '@/app/workers'
-import { add } from '@/lib/number'
+import { add } from '@/lib/fp/number'
 import { createAsyncThunk } from '@reduxjs/toolkit'
 import * as O from 'fp-ts/Option'
 import * as f from 'fp-ts/function'
@@ -21,7 +21,7 @@ export const sliceName = 'columns' as const
 export const fetchMatches = createAsyncThunk(
   `${sliceName}/fetchMatches`,
   async (_, { dispatch, getState }) => {
-    const columns = getOriginalColumns(getState() as RootState)
+    const columns = getOriginalColumns(getState() as AppState)
 
     columnWorker.postMessage({
       columns,
@@ -30,8 +30,8 @@ export const fetchMatches = createAsyncThunk(
 
     const result = (await messagePromise()).matches
 
-    const { matchVisits } = (getState() as RootState).columns
-    const { visits } = (getState() as RootState).sheet
+    const { matchVisits } = (getState() as AppState).columns
+    const { visits } = (getState() as AppState).sheet
 
     return f.pipe(
       matchVisits as number[],

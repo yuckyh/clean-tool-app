@@ -1,3 +1,6 @@
+/* eslint-disable
+  functional/functional-parameters
+*/
 import type { Progress } from '@/features/progress/reducers'
 
 import { getVisits } from '@/app/selectors'
@@ -7,9 +10,13 @@ import {
   getIndices,
 } from '@/features/columns/selectors'
 import { setProgress } from '@/features/progress/reducers'
-import { getColumnsLength } from '@/selectors/columnsSelectors'
-import { lookup, stringLookup } from '@/lib/array'
+import { getLocationPathWords } from '@/features/progress/selectors'
+import { getFirstVisit } from '@/features/sheet/selectors'
+import { arrLookup } from '@/lib/array'
+import { length } from '@/lib/fp'
+import { kebabToSnake } from '@/lib/fp/string'
 import { useAppDispatch, useAppSelector } from '@/lib/hooks'
+import { getColumnsLength } from '@/selectors/selectors'
 import {
   Button,
   TabList,
@@ -27,9 +34,6 @@ import { useCallback, useMemo } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 
 import NavTab from './Tab'
-import { getVisit } from '@/features/sheet/selectors'
-import { getLocationPathWords } from '@/features/progress/selectors'
-import { length } from '@/lib/fp'
 
 const useClasses = makeStyles({
   actionPositive: {
@@ -73,6 +77,9 @@ const useClasses = makeStyles({
   },
 })
 
+/**
+ *
+ */
 export default function Nav() {
   const classes = useClasses()
 
@@ -84,7 +91,7 @@ export default function Nav() {
   const columnsLength = useAppSelector(getColumnsLength)
   const indices = useAppSelector(getIndices)
   const visits = useAppSelector(getVisits)
-  const firstVisit = useAppSelector((state) => getVisit(state, 0))
+  const firstVisit = useAppSelector(getFirstVisit)
   const columnPaths = useAppSelector(getColumnPaths)
   const pathWords = useAppSelector((state) =>
     getLocationPathWords(state, '', pathname),
@@ -92,16 +99,10 @@ export default function Nav() {
   const depth = useMemo(() => length(pathWords), [pathWords])
 
   const column = useMemo(
-    () =>
-      f.pipe(
-        pathWords,
-        f.flip(lookup<string>)(''),
-        f.apply(1),
-        S.replace(/-/g, '_'),
-      ),
+    () => f.pipe(pathWords, f.flip(arrLookup)(''), f.apply(1), kebabToSnake),
     [pathWords],
   )
-  const visit = useMemo(() => stringLookup(pathWords)(2), [pathWords])
+  const visit = useMemo(() => arrLookup(pathWords)('')(2), [pathWords])
 
   const pos = useMemo(
     () =>
@@ -110,12 +111,12 @@ export default function Nav() {
         RA.findIndex(([matchColumn, matchVisit]) =>
           Eq.tuple(S.Eq, S.Eq).equals(
             [column, visit || firstVisit],
-            [matchColumn, stringLookup(visits)(matchVisit)],
+            [matchColumn, arrLookup(visits)('')(matchVisit)],
           ),
         ),
         f.pipe(-1, f.constant, O.getOrElse),
       ),
-    [column, indices, visit, visits],
+    [column, firstVisit, indices, visit, visits],
   )
 
   const prevColumnPath = useAppSelector((state) =>
@@ -127,11 +128,13 @@ export default function Nav() {
 
   const handlePrevVariable = useCallback(() => {
     if (depth === 2) {
-      navigate(stringLookup(columnPaths)(0))
+      navigate(arrLookup(columnPaths)('')(0))
       return undefined
     }
 
-    if (!f.pipe(prevColumnPath, S.split('/'), f.flip(stringLookup)(2))) {
+    if (
+      !f.pipe(prevColumnPath, S.split('/'), f.flip(arrLookup)(''), f.apply(2))
+    ) {
       return undefined
     }
 
@@ -141,11 +144,13 @@ export default function Nav() {
 
   const handleNextVariable = useCallback(() => {
     if (depth === 2) {
-      navigate(stringLookup(columnPaths)(0))
+      navigate(arrLookup(columnPaths)('')(0))
       return undefined
     }
 
-    if (!f.pipe(nextColumnPath, S.split('/'), f.flip(stringLookup)(2))) {
+    if (
+      !f.pipe(nextColumnPath, S.split('/'), f.flip(arrLookup)(''), f.apply(2))
+    ) {
       return undefined
     }
 
@@ -167,7 +172,7 @@ export default function Nav() {
 
   return (
     <div className={classes.root}>
-      <TabList vertical className={classes.tabList} selectedValue={pathname}>
+      <TabList className={classes.tabList} selectedValue={pathname} vertical>
         {RA.makeBy(columnsLength, (col) => (
           <NavTab key={col} pos={col} />
         ))}

@@ -1,5 +1,4 @@
 /* eslint-disable
-  import/prefer-default-export,
   functional/functional-parameters
 */
 
@@ -18,13 +17,13 @@ import SheetPickerInput from '@/features/sheet/components/SheetPickerInput'
 import SheetUploadInput from '@/features/sheet/components/SheetUploadInput'
 import VisitsInput from '@/features/sheet/components/VisitsInput'
 import { promisedTask } from '@/lib/fp'
+import { dumpError } from '@/lib/fp/logger'
 import {
   useAppDispatch,
   useAppSelector,
   useLoadingTransition,
 } from '@/lib/hooks'
-import { dumpError } from '@/lib/logger'
-import { getColumnsLength } from '@/selectors/columnsSelectors'
+import { getColumnsLength } from '@/selectors/selectors'
 import {
   Button,
   Card,

@@ -1,13 +1,14 @@
 /* eslint-disable
   functional/functional-parameters
 */
+
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import type Layout from '@/pages/Layout'
 
 import { author, description, keywords } from '@/../package.json'
 import store from '@/app/store'
+import { ioDump } from '@/lib/fp/logger'
 import { useGlobalStyles, useStorage, useThemePreference } from '@/lib/hooks'
-import { ioDump } from '@/lib/logger'
 import { FluentProvider } from '@fluentui/react-components'
 import { Helmet, HelmetProvider } from 'react-helmet-async'
 import { Provider } from 'react-redux'

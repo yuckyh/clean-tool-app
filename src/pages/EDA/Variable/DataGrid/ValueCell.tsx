@@ -13,7 +13,12 @@ export interface Props {
   value: number | string
 }
 
-export default function ValueCell({ value }: Props) {
+/**
+ *
+ * @param props
+ * @param props.value
+ */
+export default function ValueCell({ value }: Readonly<Props>) {
   const classes = useClasses()
 
   return <div className={classes.root}>{value}</div>

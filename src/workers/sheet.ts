@@ -1,6 +1,6 @@
 import type { WorkBook } from 'xlsx'
 
-import { dumpError } from '@/lib/logger'
+import { dumpError } from '@/lib/fp/logger'
 import * as f from 'fp-ts/function'
 import XLSX from 'xlsx'
 

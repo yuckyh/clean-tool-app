@@ -1,6 +1,5 @@
 /* eslint-disable
-  functional/functional-parameters,
-  import/prefer-default-export
+  functional/functional-parameters
 */
 import type { AlertRef } from '@/components/AlertDialog'
 import type { Progress } from '@/features/progress/reducers'

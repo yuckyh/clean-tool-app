@@ -7,7 +7,12 @@ export interface Props {
   fileTask: FileTaskType
 }
 
-export default function FileToast({ fileTask }: Props) {
+/**
+ *
+ * @param props
+ * @param props.fileTask
+ */
+export default function FileToast({ fileTask }: Readonly<Props>) {
   const fileName = useAppSelector(({ sheet }) => sheet.fileName)
 
   return (

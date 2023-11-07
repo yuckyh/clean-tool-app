@@ -1,10 +1,9 @@
-import type { Flag, FlagReason } from '@/features/sheet/reducers'
-
 import { getFlaggedCells } from '@/app/selectors'
 import { getFormattedColumn } from '@/features/columns/selectors'
 import { getCell, getIndexRow } from '@/features/sheet/selectors'
-import { stringLookup } from '@/lib/array'
-import { equals, stubEq, typedEq } from '@/lib/fp'
+import { arrLookup } from '@/lib/array'
+import { equals, refinedEq, stubEq } from '@/lib/fp'
+import * as Flag from '@/lib/fp/Flag'
 import { useAppSelector } from '@/lib/hooks'
 import {
   makeStyles,
@@ -65,7 +64,7 @@ export interface Props {
 const reasonInFlagEq = Eq.tuple(
   stubEq<string>(),
   stubEq<string>(),
-  typedEq<FlagReason, string>(S.Eq),
+  refinedEq<Flag.FlagReason, string>(S.Eq),
 )
 
 /**
@@ -84,14 +83,16 @@ export default function PreviewCell({ col, row }: Readonly<Props>) {
     getFormattedColumn(state, col),
   )
   const indexRow = useAppSelector(getIndexRow)
-  const index = stringLookup(indexRow)(row)
+  const index = arrLookup(indexRow)('')(row)
 
   const styleClass = useMemo(
     () =>
       f.pipe(
         flaggedCells,
         RA.filter(
-          equals(Eq.tuple(S.Eq, S.Eq, stubEq()))([index, formattedColumn, '']),
+          equals(Flag.getEq(Eq.tuple(S.Eq, S.Eq, stubEq())))(
+            Flag.of(index, formattedColumn, 'none'),
+          ),
         ),
         E.fromPredicate((flags) => flags.length === 1, f.identity),
         E.getOrElse(
@@ -99,15 +100,18 @@ export default function PreviewCell({ col, row }: Readonly<Props>) {
             O.fromPredicate((flags) => flags.length > 1),
             O.map(
               RA.filter(
-                f.pipe(['', '', 'outlier'] as Flag, equals(reasonInFlagEq)),
+                f.pipe(
+                  Flag.of('', '', 'outlier'),
+                  equals(Flag.getEq(reasonInFlagEq)),
+                ),
               ),
             ),
-            O.getOrElse(f.constant(RA.empty as readonly Flag[])),
+            O.getOrElse(f.constant(RA.empty as readonly Flag.Flag[])),
           ),
         ),
         RA.head,
-        O.getOrElse(f.constant(['', '', 'outlier'] as Flag)),
-        (flag) => RR.lookup(flag[2])(classes),
+        O.getOrElse(f.constant(Flag.of('', '', 'outlier'))),
+        ({ value }) => RR.lookup(value[2])(classes),
         f.pipe('', f.constant, O.getOrElse),
       ),
     [classes, flaggedCells, formattedColumn, index],

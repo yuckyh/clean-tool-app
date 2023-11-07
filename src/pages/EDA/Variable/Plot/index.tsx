@@ -11,6 +11,13 @@ export interface Props {
   variable: string
 }
 
+/**
+ *
+ * @param props
+ * @param props.data
+ * @param props.layout
+ * @param props.variable
+ */
 export default function VariablePlot({
   data,
   layout,

@@ -3,6 +3,7 @@ import type { Props as SimpleDataGridProps } from '@/components/SimpleDataGrid'
 
 import { useAppSelector } from '@/lib/hooks'
 import { createLazyMemo } from '@/lib/utils'
+import { getColumnsLength } from '@/selectors/selectors'
 import {
   Tag,
   TagGroup,
@@ -15,7 +16,6 @@ import * as RA from 'fp-ts/ReadonlyArray'
 import * as f from 'fp-ts/function'
 import { useMemo } from 'react'
 
-import { getColumnsLength } from '@/selectors/columnsSelectors'
 import HeaderCell from './HeaderCell'
 
 const MemoizedValueCell = createLazyMemo(
@@ -41,7 +41,12 @@ export interface Props {
   isOriginal?: boolean
 }
 
-function PreviewDataGrid({ isOriginal = false }: Props) {
+/**
+ *
+ * @param props
+ * @param props.isOriginal
+ */
+function PreviewDataGrid({ isOriginal = false }: Readonly<Props>) {
   const classes = useClasses()
 
   const columnsLength = useAppSelector(getColumnsLength)

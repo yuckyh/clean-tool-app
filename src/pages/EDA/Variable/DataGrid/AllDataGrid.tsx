@@ -1,4 +1,3 @@
-import type { Flag } from '@/features/sheet/reducers'
 import type {
   DataGridProps,
   InputProps,
@@ -20,6 +19,7 @@ import {
 } from '@/features/sheet/selectors'
 import { getIndexedIndex } from '@/lib/array'
 import { isCorrectNumber } from '@/lib/fp'
+import * as Flag from '@/lib/fp/Flag'
 import { useAppDispatch, useAppSelector } from '@/lib/hooks'
 import {
   Body2,
@@ -75,6 +75,12 @@ export interface Props {
   visit: string
 }
 
+/**
+ *
+ * @param props
+ * @param props.column
+ * @param props.visit
+ */
 export default function AllDataGrid({ column, visit }: Readonly<Props>) {
   const classes = useClasses()
 
@@ -124,24 +130,24 @@ export default function AllDataGrid({ column, visit }: Readonly<Props>) {
       subtractor,
       RS.difference(S.Eq)(subtractee),
       RS.toReadonlyArray(S.Ord),
-      RA.filter((checkedPos) => RA.elem(S.Eq)(checkedPos)(indices)),
+      RA.filter((checkedPos) => RA.elem(S.Eq)(checkedPos, indices)),
     )
 
     const payloads = f.pipe(
       checkedPosList,
-      RA.map((currentIndex) => [currentIndex, title, 'outlier'] as Flag),
+      RA.map((currentIndex) => Flag.of(currentIndex, title, 'outlier')),
     )
 
     const missingPayloads = f.pipe(
       checkedPosList,
-      RA.filter((checkedPos) => RA.elem(S.Eq)(checkedPos)(missingIndices)),
-      RA.map((currentIndex) => [currentIndex, title, 'missing'] as Flag),
+      RA.filter((checkedPos) => RA.elem(S.Eq)(checkedPos, missingIndices)),
+      RA.map((currentIndex) => Flag.of(currentIndex, title, 'missing')),
     )
 
     const incorrectPayloads = f.pipe(
       checkedPosList,
-      RA.filter((checkedPos) => RA.elem(S.Eq)(checkedPos)(incorrectIndices)),
-      RA.map((currentIndex) => [currentIndex, title, 'incorrect'] as Flag),
+      RA.filter((checkedPos) => RA.elem(S.Eq)(checkedPos, incorrectIndices)),
+      RA.map((currentIndex) => Flag.of(currentIndex, title, 'incorrect')),
     )
 
     return f.pipe(
@@ -181,42 +187,43 @@ export default function AllDataGrid({ column, visit }: Readonly<Props>) {
     [],
   )
 
-  const columnsDefinition: TableColumnDefinition<readonly [string, string]>[] =
-    useMemo(
-      () => [
-        createTableColumn({
-          columnId: 'index',
-          compare: ([indexA], [indexB]) => indexA.localeCompare(indexB),
-          renderCell: ([index]) => <ValueCell value={index} />,
-          renderHeaderCell: f.constant(
-            <div className={classes.columnHeader}>sno</div>,
-          ),
-        }),
-        createTableColumn({
-          columnId: title,
-          compare: ([, valueA], [, valueB]) => {
-            const values = [valueA, valueB] as const
-            const isBothNum = f.pipe(values, RA.every(isCorrectNumber))
+  const columnsDefinition: readonly TableColumnDefinition<
+    readonly [string, string]
+  >[] = useMemo(
+    () => [
+      createTableColumn({
+        columnId: 'index',
+        compare: ([indexA], [indexB]) => indexA.localeCompare(indexB),
+        renderCell: ([index]) => <ValueCell value={index} />,
+        renderHeaderCell: f.constant(
+          <div className={classes.columnHeader}>sno</div>,
+        ),
+      }),
+      createTableColumn({
+        columnId: title,
+        compare: ([, valueA], [, valueB]) => {
+          const values = [valueA, valueB] as const
+          const isBothNum = f.pipe(values, RA.every(isCorrectNumber))
 
-            if (dataType === 'numerical' && isBothNum) {
-              return f.pipe(
-                RA.map(parseFloat)(values) as [number, number],
-                f.tupled(N.Ord.compare),
-              )
-            }
-            if (dataType === 'categorical') {
-              return f.pipe(values as [string, string], f.tupled(S.Ord.compare))
-            }
-            return 0
-          },
-          renderCell: ([, value]) => <ValueCell value={value} />,
-          renderHeaderCell: f.constant(
-            <div className={classes.columnHeader}>{title}</div>,
-          ),
-        }),
-      ],
-      [classes.columnHeader, dataType, title],
-    )
+          if (dataType === 'numerical' && isBothNum) {
+            return f.pipe(
+              RA.map(parseFloat)(values) as [number, number],
+              f.tupled(N.Ord.compare),
+            )
+          }
+          if (dataType === 'categorical') {
+            return f.pipe(values as [string, string], f.tupled(S.Ord.compare))
+          }
+          return 0
+        },
+        renderCell: ([, value]) => <ValueCell value={value} />,
+        renderHeaderCell: f.constant(
+          <div className={classes.columnHeader}>{title}</div>,
+        ),
+      }),
+    ],
+    [classes.columnHeader, dataType, title],
+  )
 
   const handleValueFilter: Required<InputProps>['onChange'] = useCallback(
     ({ target }) => {

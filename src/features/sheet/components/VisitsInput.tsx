@@ -1,3 +1,4 @@
+/* eslint-disable functional/functional-parameters */
 import type { InputProps } from '@fluentui/react-components'
 
 import { useAppDispatch, useAppSelector } from '@/lib/hooks'
@@ -17,7 +18,9 @@ const useClasses = makeStyles({
   },
 })
 
-// eslint-disable-next-line functional/functional-parameters
+/**
+ *
+ */
 export default function VisitsInput() {
   const classes = useClasses()
 

@@ -119,7 +119,8 @@
     "ignorePatterns": [
       "dist",
       "dev-dist",
-      "src-tauri"
+      "src-tauri",
+      "html-docs"
     ],
     "parser": "@typescript-eslint/parser",
     "parserOptions": {
@@ -168,14 +169,10 @@
       "immutable/no-let": 2,
       "immutable/no-this": 2,
       "import/extensions": 0,
-      "import/order": 0,
       "import/no-cycle": 0,
       "import/no-extraneous-dependencies": 0,
+      "import/order": 0,
       "import/sort-imports": 0,
-      "react/jsx-props-no-spreading": 0,
-      "redux/no-let": 0,
-      "redux/no-mutation": 0,
-      "redux/no-this": 0,
       "jsdoc/check-tag-names": [
         2,
         {
@@ -185,7 +182,21 @@
             "remarks"
           ]
         }
-      ]
+      ],
+      "jsdoc/informative-docs": 2,
+      "jsdoc/require-asterisk-prefix": 2,
+      "jsdoc/require-description": 2,
+      "jsdoc/require-example": 2,
+      "jsdoc/require-file-overview": 2,
+      "jsdoc/require-hyphen-before-param-description": 2,
+      "jsdoc/require-throws": 2,
+      "jsdox/text-escaping": 2,
+      "react/jsx-props-no-spreading": 0,
+      "redux/no-let": 0,
+      "redux/no-mutation": 0,
+      "redux/no-this": 0,
+      "require-jsdoc": 2,
+      "valid-jsdoc": 2
     },
     "settings": {
       "import/parsers": {
@@ -236,8 +247,8 @@
     "build": "tsc && vite build",
     "dev": "vite",
     "doc": "typedoc",
-    "doc:git": "typedoc --options git-typedoc.json",
     "doc:all": "yarn doc && yarn doc:git",
+    "doc:git": "typedoc --options git-typedoc.json",
     "lint": "eslint . --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
     "preview:clean": "tsc && vite build && vite preview"

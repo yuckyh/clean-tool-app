@@ -1,15 +1,15 @@
-/* eslint-disable import/prefer-default-export */
-
-/* eslint-disable functional/functional-parameters */
+/* eslint-disable
+  functional/functional-parameters
+*/
 
 import type { TableColumnDefinition } from '@fluentui/react-components'
 
 import SimpleDataGrid from '@/components/SimpleDataGrid'
 import { getFormattedColumns } from '@/features/columns/selectors'
 import { getFormattedWorkbook } from '@/features/sheet/selectors'
-import { stringLookup } from '@/lib/array'
+import { arrLookup } from '@/lib/array'
 import { useAppSelector } from '@/lib/hooks'
-import { getColumnsLength } from '@/selectors/columnsSelectors'
+import { getColumnsLength } from '@/selectors/selectors'
 import {
   Button,
   Subtitle2,
@@ -75,10 +75,10 @@ export default function Download() {
     () =>
       RA.makeBy(columnsLength, (col) =>
         createTableColumn({
-          columnId: stringLookup(formattedColumns)(col),
+          columnId: arrLookup(formattedColumns)('')(col),
           renderCell: (row) => <PreviewCell col={col} row={row} />,
           renderHeaderCell: () => (
-            <HeaderCell header={stringLookup(formattedColumns)(col)} />
+            <HeaderCell header={arrLookup(formattedColumns)('')(col)} />
           ),
         }),
       ),

@@ -5,9 +5,9 @@ import {
   getIndexedNumericalRow,
   getIndexedRow,
 } from '@/features/sheet/selectors'
-import { getIndexedValue, lookup } from '@/lib/array'
+import { arrLookup, getIndexedValue } from '@/lib/array'
+import { add, divideBy } from '@/lib/fp/number'
 import { useAppSelector } from '@/lib/hooks'
-import { add, divideBy } from '@/lib/number'
 import {
   Card,
   CardHeader,
@@ -42,11 +42,18 @@ export interface Props {
   visit: string
 }
 
+/**
+ *
+ * @param props
+ * @param props.column
+ * @param props.isCategorical
+ * @param props.visit
+ */
 export default function SummaryDataGrid({
   column,
   isCategorical,
   visit,
-}: Props) {
+}: Readonly<Props>) {
   const classes = useClasses()
 
   const categoricalSeries = useAppSelector((state) =>
@@ -61,24 +68,25 @@ export default function SummaryDataGrid({
     [numericalSeries],
   )
 
-  const columnDefinition: TableColumnDefinition<SummaryStats>[] = useMemo(
-    () => [
-      createTableColumn({
-        columnId: 'statistic',
-        renderCell: ({ statistic }) => statistic,
-        renderHeaderCell: f.constant('Statistic'),
-      }),
-      createTableColumn({
-        columnId: 'value',
-        renderCell: ({ value }) => value,
-        renderHeaderCell: f.constant('Value'),
-      }),
-    ],
-    [],
-  )
+  const columnDefinition: readonly TableColumnDefinition<SummaryStats>[] =
+    useMemo(
+      () => [
+        createTableColumn({
+          columnId: 'statistic',
+          renderCell: ({ statistic }) => statistic,
+          renderHeaderCell: f.constant('Statistic'),
+        }),
+        createTableColumn({
+          columnId: 'value',
+          renderCell: ({ value }) => value,
+          renderHeaderCell: f.constant('Value'),
+        }),
+      ],
+      [],
+    )
 
   const dataSum = useMemo(
-    () => RA.reduce(0, N.MonoidSum.concat)(numericalValues),
+    () => RA.foldMap(N.MonoidSum)(f.identity<number>)(numericalValues),
     [numericalValues],
   )
 
@@ -90,7 +98,7 @@ export default function SummaryDataGrid({
   const dataMedian = useMemo(
     () =>
       f.pipe(numericalValues, RA.sort(N.Ord), (values) =>
-        lookup(values)(0)(Math.floor(values.length / 2)),
+        arrLookup(values)(0)(Math.floor(values.length / 2)),
       ),
     [numericalValues],
   )
@@ -99,8 +107,7 @@ export default function SummaryDataGrid({
     () =>
       f.pipe(
         numericalValues,
-        RA.map(f.flow(add(-1 * dataMean), (x) => x * x)),
-        RA.reduce(0, N.MonoidSum.concat),
+        RA.foldMap(N.MonoidSum)(f.flow(add(-1 * dataMean), (x) => x * x)),
         f.flip(divideBy)(numericalValues.length),
         Math.sqrt,
       ),
@@ -141,6 +148,7 @@ export default function SummaryDataGrid({
       isCategorical,
       categoricalSeries.length,
       numericalValues,
+      dataMedian,
       dataMean,
       dataStd,
     ],

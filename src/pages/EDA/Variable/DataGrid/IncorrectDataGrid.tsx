@@ -45,7 +45,13 @@ export interface Props {
   visit: string
 }
 
-export default function IncorrectDataGrid({ column, visit }: Props) {
+/**
+ *
+ * @param props
+ * @param props.column
+ * @param props.visit
+ */
+export default function IncorrectDataGrid({ column, visit }: Readonly<Props>) {
   const classes = useClasses()
 
   const pos = useAppSelector((state) => getSearchedPos(state, column, visit))
@@ -58,26 +64,27 @@ export default function IncorrectDataGrid({ column, visit }: Props) {
     getFlaggedRows(state, title, 'incorrect'),
   )
 
-  const columnDefinition: TableColumnDefinition<readonly [string, string]>[] =
-    useMemo(
-      () => [
-        createTableColumn({
-          columnId: 'index',
-          renderCell: ([index]) => <ValueCell value={index} />,
-          renderHeaderCell: f.constant(
-            <div className={classes.columnHeader}>sno</div>,
-          ),
-        }),
-        createTableColumn({
-          columnId: title,
-          renderCell: ([, value]) => <ValueCell value={value} />,
-          renderHeaderCell: f.constant(
-            <div className={classes.columnHeader}>{title}</div>,
-          ),
-        }),
-      ],
-      [classes.columnHeader, title],
-    )
+  const columnDefinition: Readonly<
+    TableColumnDefinition<readonly [string, string]>[]
+  > = useMemo(
+    () => [
+      createTableColumn({
+        columnId: 'index',
+        renderCell: ([index]) => <ValueCell value={index} />,
+        renderHeaderCell: f.constant(
+          <div className={classes.columnHeader}>sno</div>,
+        ),
+      }),
+      createTableColumn({
+        columnId: title,
+        renderCell: ([, value]) => <ValueCell value={value} />,
+        renderHeaderCell: f.constant(
+          <div className={classes.columnHeader}>{title}</div>,
+        ),
+      }),
+    ],
+    [classes.columnHeader, title],
+  )
 
   const handleSelectionChange = useSyncedSelectionHandler(
     'incorrect',

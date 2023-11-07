@@ -17,7 +17,13 @@ export interface Props {
   row: number
 }
 
-export default function ValueCell({ col, row }: Props) {
+/**
+ *
+ * @param props
+ * @param props.col
+ * @param props.row
+ */
+export default function ValueCell({ col, row }: Readonly<Props>) {
   const classes = useClasses()
 
   const cell = useAppSelector((state) => getCell(state, col, row))

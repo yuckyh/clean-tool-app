@@ -1,10 +1,12 @@
-import { strEquals } from '@/lib/fp'
+import { equals } from '@/lib/fp'
+import { add, multiply } from '@/lib/fp/number'
 import fuse from '@/lib/fuse'
-import { add, multiply } from '@/lib/number'
 import { Option } from '@fluentui/react-components'
 import * as O from 'fp-ts/Option'
+import * as P from 'fp-ts/Predicate'
 import * as RA from 'fp-ts/ReadonlyArray'
 import * as f from 'fp-ts/function'
+import * as S from 'fp-ts/string'
 
 const search = fuse.search.bind(fuse)
 
@@ -18,12 +20,20 @@ export interface Props {
   value: string
 }
 
-export default function FilteredOptions({ filteredMatches, value }: Props) {
-  const canCreateColumn = !RA.some(strEquals(value))(
-    f.pipe(
-      filteredMatches,
-      RA.map(({ match }) => match),
-    ),
+/**
+ *
+ * @param props
+ * @param props.filteredMatches
+ * @param props.value
+ */
+export default function FilteredOptions({
+  filteredMatches,
+  value,
+}: Readonly<Props>) {
+  const canCreateColumn = f.pipe(
+    filteredMatches,
+    RA.map(({ match }) => match),
+    f.pipe(equals(S.Eq)(value), P.not, RA.every<string>),
   )
 
   const customScore = f.pipe(

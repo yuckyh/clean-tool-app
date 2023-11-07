@@ -1,138 +1,164 @@
 import {
+  getColParam,
   getColumnParam,
   getDataTypes,
   getMatchColumns,
   getMatchVisits,
   getMatchesList,
-  getColParam,
   getScoresList,
   getVisitParam,
   getVisits,
-  searchPos,
+  indexEq,
 } from '@/app/selectors'
-import { lookup, stringLookup } from '@/lib/array'
-import { strEquals } from '@/lib/fp'
+import { arrLookup, findIndex } from '@/lib/array'
+import { dualMap, equals } from '@/lib/fp'
+import { snakeToKebab } from '@/lib/fp/string'
 import fuse from '@/lib/fuse'
-import { createSelector } from '@reduxjs/toolkit'
-import * as O from 'fp-ts/Option'
-import * as RA from 'fp-ts/ReadonlyArray'
-import * as f from 'fp-ts/function'
-import * as S from 'fp-ts/string'
-
-import type { DataType } from './reducers'
-import { getMatchColumn } from '@/selectors/columnsSelectors'
 import {
   getColumnDuplicates,
   getColumnDuplicatesList,
-} from '@/selectors/columnsSelectors'
+  getMatchColumn,
+} from '@/selectors/selectors'
+import { createSelector } from '@reduxjs/toolkit'
+import * as O from 'fp-ts/Option'
+import * as P from 'fp-ts/Predicate'
+import * as RA from 'fp-ts/ReadonlyArray'
+import * as f from 'fp-ts/function'
+import * as N from 'fp-ts/number'
+import * as S from 'fp-ts/string'
+
+import type { DataType } from './reducers'
+
+import { getFirstVisit } from '../sheet/selectors'
 
 const search = fuse.search.bind(fuse)
 
+const searchPos = (
+  indices: readonly (readonly [string, number])[],
+  visits: readonly string[],
+  searchColumn: string,
+  searchVisit: string,
+) =>
+  f.pipe(
+    indices,
+    RA.findIndex(([matchColumn, matchVisit]) =>
+      equals(indexEq)([searchColumn, searchVisit])([
+        matchColumn,
+        arrLookup(visits)('')(matchVisit),
+      ]),
+    ),
+    O.getOrElse(f.constant(-1)),
+  )
+
+const pathColumn = (shouldFormat: boolean, column: string, visit: string) =>
+  `/eda/${snakeToKebab(column)}${shouldFormat ? `/${visit}` : ''}`
+
+const formatColumn = (shouldFormat: boolean, column: string, visit: string) =>
+  shouldFormat ? `${column}_${visit}` : column
+
 export const getMatchVisit = createSelector(
   [getMatchVisits, getColParam],
-  (matchVisits, pos) => lookup(matchVisits)(0)(pos),
+  (matchVisits, pos) => arrLookup(matchVisits)(0)(pos),
 )
 
 export const getMatches = createSelector(
   [getMatchesList, getColParam],
-  (matchesList, pos) => matchesList[pos] ?? [],
+  (matchesList, pos) => arrLookup(matchesList)([] as readonly string[])(pos),
 )
 
 export const getScores = createSelector(
   [getScoresList, getColParam],
-  (scoresList, pos) => scoresList[pos] ?? [],
+  (scoresList, pos) => arrLookup(scoresList)([] as readonly number[])(pos),
 )
 
 export const getVisitByMatchVisit = createSelector(
   [getVisits, getMatchVisit],
-  (visits, matchVisit) => stringLookup(visits)(matchVisit),
+  (visits, matchVisit) => arrLookup(visits)('')(matchVisit),
 )
 
 export const getShouldFormat = createSelector(
   [getMatchVisit, getColumnDuplicates],
   (matchVisit, columnDuplicates) =>
-    columnDuplicates.length > 1 || matchVisit !== 0,
+    columnDuplicates.length > 1 || P.not(equals(N.Eq)(matchVisit))(0),
 )
 
 const getShouldFormatList = createSelector(
   [getMatchVisits, getColumnDuplicatesList],
   (matchVisits, columnDuplicatesList) =>
-    f.pipe(
+    RA.zipWith(
       matchVisits,
-      RA.zip(columnDuplicatesList),
-      RA.map(
-        ([matchVisit, columnDuplicates]) =>
-          columnDuplicates.length > 1 || matchVisit !== 0,
-      ),
+      columnDuplicatesList,
+      (matchVisit, columnDuplicates) =>
+        columnDuplicates.length > 1 || matchVisit !== 0,
     ),
-)
-
-export const getColumnPaths = createSelector(
-  [getMatchColumns, getShouldFormatList, getVisits, getMatchVisits],
-  (matchColumns, shouldFormatList, visits, matchVisits) =>
-    f.pipe(
-      matchColumns,
-      RA.zip(shouldFormatList),
-      RA.zip(matchVisits),
-      RA.map(
-        ([[matchColumn, shouldFormat], matchVisit]) =>
-          `/eda/${matchColumn.replace(/_/g, '-')}${
-            shouldFormat ? `/${stringLookup(visits)(matchVisit)}` : ''
-          }`,
-      ),
-    ),
-)
-
-export const getColumnPath = createSelector(
-  [getMatchColumn, getShouldFormat, getVisitByMatchVisit],
-  (matchColumn, shouldFormat, visit) =>
-    `/eda/${S.replace(/_/g, '-')(matchColumn)}${
-      shouldFormat ? `/${visit}` : ''
-    }`,
-)
-
-export const getFormattedColumn = createSelector(
-  [getMatchColumn, getShouldFormat, getVisitByMatchVisit],
-  (matchColumn, shouldFormat, visit) =>
-    shouldFormat ? `${matchColumn}_${visit}` : matchColumn,
 )
 
 export const getIndices = createSelector(
   [getMatchColumns, getMatchVisits],
-  (matchColumns, matchVisits) => RA.zip(matchVisits)(matchColumns),
+  RA.zip<string, number>,
+)
+
+const getResolvedVisits = createSelector(
+  [getVisits, getMatchVisits],
+  (visits, matchVisits) => RA.map(arrLookup(visits)(''))(matchVisits),
+)
+
+export const getResolvedIndices = createSelector(
+  [getMatchColumns, getResolvedVisits],
+  RA.zip<string, string>,
+)
+
+export const getColumnPaths = createSelector(
+  [getResolvedIndices, getShouldFormatList],
+  (resolvedIndices, shouldFormatList) =>
+    RA.zipWith(
+      resolvedIndices,
+      shouldFormatList,
+      ([column, visit], shouldFormat) =>
+        pathColumn(shouldFormat, column, visit),
+    ),
+)
+
+export const getColumnPath = createSelector(
+  [getShouldFormat, getMatchColumn, getVisitByMatchVisit],
+  pathColumn,
 )
 
 export const getFormattedColumns = createSelector(
-  [getIndices, getShouldFormatList, getVisits],
-  (indices, shouldFormatList, visits) =>
+  [getResolvedIndices, getShouldFormatList],
+  (resolvedIndices, shouldFormatList) =>
     RA.zipWith(
-      indices,
+      resolvedIndices,
       shouldFormatList,
-      ([matchColumn, matchVisit], shouldFormat) =>
-        shouldFormat
-          ? `${matchColumn}_${stringLookup(visits)(matchVisit)}`
-          : matchColumn,
+      ([column, visit], shouldFormat) =>
+        formatColumn(shouldFormat, column, visit),
     ),
+)
+
+export const getFormattedColumn = createSelector(
+  [getShouldFormat, getMatchColumn, getVisitByMatchVisit],
+  formatColumn,
 )
 
 export const getSearchedPos = createSelector(
   [getIndices, getVisits, getColumnParam, getVisitParam],
-  (indices, visits, column, visit) => searchPos(indices, visits, column, visit),
+  searchPos,
+)
+
+export const getIndexColumnPos = createSelector(
+  [getIndices, getVisits, getFirstVisit],
+  (indices, visits, firstVisit) =>
+    searchPos(indices, visits, 'sno', firstVisit),
 )
 
 export const getMatchIndex = createSelector(
   [getMatches, getMatchColumn],
-  (matches, matchColumn) =>
-    f.pipe(
-      matches,
-      f.pipe(matchColumn, strEquals, RA.findIndex),
-      f.pipe(-1, f.constant, O.getOrElse),
-    ),
+  (matches, matchColumn) => findIndex(matches)(S.Eq)(matchColumn),
 )
 
 export const getDataType = createSelector(
   [getDataTypes, getColParam],
-  (dataTypes, pos) => stringLookup(dataTypes)(pos),
+  (dataTypes, pos) => arrLookup(dataTypes)('none')(pos),
 )
 
 export const getSearchedDataType = createSelector(
@@ -157,23 +183,21 @@ export const getScore = createSelector(
 
 export const getMatchComparer = createSelector(
   [getMatchColumns],
-  (matchColumns) => (a: number, b: number) => {
-    return f.pipe(
-      [a, b] as const,
-      RA.map(stringLookup(matchColumns)),
-      (x) => f.identity(x) as [string, string],
+  (matchColumns) => (a: number, b: number) =>
+    f.pipe(
+      [a, b] as [number, number],
+      dualMap(arrLookup(matchColumns)('')),
       f.tupled(S.Ord.compare),
-    )
-  },
+    ),
 )
 
 export const getVisitsComparer = createSelector(
   [getMatchVisits],
   (matchVisits) => (a: number, b: number) =>
     f.pipe(
-      [a, b] as const,
-      RA.map(lookup(matchVisits)(0)),
-      RA.reduce(0, (acc, curr) => acc - curr),
+      [a, b] as [number, number],
+      dualMap(arrLookup(matchVisits)(0)),
+      f.tupled(N.Ord.compare),
     ),
 )
 
@@ -181,29 +205,19 @@ export const getScoreComparer = createSelector(
   [getMatchesList, getScoresList, getMatchColumns],
   (matchesList, scoresList, matchColumns) => (a: number, b: number) =>
     f.pipe(
-      [a, b] as const,
-      RA.map((pos) =>
+      [a, b] as [number, number],
+      dualMap(
         f.pipe(
           scoresList,
           RA.zip(matchesList),
           RA.zip(matchColumns),
           RA.map(([[scores, matches], matchColumn]) =>
-            f.pipe(
-              scores,
-              RA.lookup(
-                f.pipe(
-                  matches,
-                  f.pipe(matchColumn, strEquals, RA.findIndex),
-                  f.pipe(-1, f.constant, O.getOrElse),
-                ),
-              ),
-              f.pipe(1, f.constant, O.getOrElse),
-            ),
+            arrLookup(scores)(1)(findIndex(matches)(S.Eq)(matchColumn)),
           ),
-          RA.lookup(pos),
-          f.pipe(1, f.constant, O.getOrElse),
+          arrLookup,
+          f.apply(1),
         ),
       ),
-      RA.reduce(0, (acc, curr) => acc - curr),
+      f.tupled(N.Ord.compare),
     ),
 )

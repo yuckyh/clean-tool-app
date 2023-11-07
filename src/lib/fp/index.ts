@@ -1,14 +1,11 @@
-import type { Flag } from '@/features/sheet/reducers'
+import type * as Eq from 'fp-ts/Eq'
 import type * as P from 'fp-ts/Predicate'
-import type * as T from 'fp-ts/Task'
 
-import * as Eq from 'fp-ts/Eq'
 import * as IO from 'fp-ts/IO'
-import * as Ord from 'fp-ts/Ord'
+import * as T from 'fp-ts/Task'
 import * as TO from 'fp-ts/TaskOption'
+import * as Tup from 'fp-ts/Tuple'
 import * as f from 'fp-ts/function'
-import * as N from 'fp-ts/number'
-import * as S from 'fp-ts/string'
 
 export const promisedTask =
   <V>(promise: Promise<V>): T.Task<V> =>
@@ -33,30 +30,20 @@ export const asTask = <As extends readonly unknown[], V>(
 
 export const asIO = <As extends readonly unknown[], V>(
   fn: (...args: As) => V,
-) => IO.map(f.identity)(fn)
-
-export const strEquals = (str: string) => (other: string) =>
-  S.Eq.equals(str, other)
-
-export const numEquals = (num: number) => (other: number) =>
-  N.Eq.equals(num, other)
+): IO.IO<V> => fn
 
 export const isCorrectNumber = (val: string) =>
   !!val && !/[!,.?]{2,}/.test(val) && !Number.isNaN(parseFloat(val))
 
-export const toString = <V extends boolean | number | string>(val: V) =>
-  val.toString()
+export const toString = <V extends Primitive>(val: V) => val.toString()
 
 // eslint-disable-next-line functional/functional-parameters
 export const stubEq = <V>(): Eq.Eq<V> => ({
   equals: f.constTrue,
 })
 
-export const typedEq = <V extends K, K>(eq: Eq.Eq<K>) => eq as Eq.Eq<V>
+export const refinedEq = <V extends K, K>(eq: Eq.Eq<K>) => eq as Eq.Eq<V>
 export const typedIdentity = <V>(val: unknown) => val as V
-
-export const FlagEq: Eq.Eq<Flag> = Eq.tuple(S.Eq, S.Eq, S.Eq)
-export const FlagOrd: Ord.Ord<Flag> = Ord.tuple(S.Ord, S.Ord, S.Ord)
 
 export const length = <V extends ArrayLike<K> | string, K>(arrLike: V) =>
   arrLike.length
@@ -66,3 +53,12 @@ export const equals =
   (x: V): P.Predicate<V> =>
   (y: V) =>
     eq.equals(x, y)
+
+export const noOpIO: IO.IO<() => void> = IO.of(() => {})
+
+export const noOpTask: T.Task<() => void> = T.of(() => {})
+
+export const dualMap =
+  <A, B>(fn: (a: A) => B) =>
+  (tuple: readonly [A, A]) =>
+    Tup.bimap(fn, fn)(tuple as [A, A])

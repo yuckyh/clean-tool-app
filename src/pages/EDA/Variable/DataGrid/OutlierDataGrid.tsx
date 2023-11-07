@@ -1,6 +1,4 @@
-import type {
-  TableColumnDefinition,
-} from '@fluentui/react-components'
+import type { TableColumnDefinition } from '@fluentui/react-components'
 
 import SimpleDataGrid from '@/components/SimpleDataGrid'
 import {
@@ -44,7 +42,13 @@ export interface Props {
   visit: string
 }
 
-export default function OutlierDataGrid({ column, visit }: Props) {
+/**
+ *
+ * @param props
+ * @param props.column
+ * @param props.visit
+ */
+export default function OutlierDataGrid({ column, visit }: Readonly<Props>) {
   const classes = useClasses()
 
   const pos = useAppSelector((state) => getSearchedPos(state, column, visit))
@@ -55,26 +59,27 @@ export default function OutlierDataGrid({ column, visit }: Props) {
     getFlaggedRows(state, title, 'suspected'),
   )
 
-  const columnDefinition: TableColumnDefinition<readonly [string, number]>[] =
-    useMemo(
-      () => [
-        createTableColumn({
-          columnId: 'index',
-          renderCell: ([index]) => <ValueCell value={index} />,
-          renderHeaderCell: f.constant(
-            <div className={classes.columnHeader}>sno</div>,
-          ),
-        }),
-        createTableColumn({
-          columnId: title,
-          renderCell: ([, value]) => <ValueCell value={value} />,
-          renderHeaderCell: f.constant(
-            <div className={classes.columnHeader}>{title}</div>,
-          ),
-        }),
-      ],
-      [classes.columnHeader, title],
-    )
+  const columnDefinition: readonly TableColumnDefinition<
+    readonly [string, number]
+  >[] = useMemo(
+    () => [
+      createTableColumn({
+        columnId: 'index',
+        renderCell: ([index]) => <ValueCell value={index} />,
+        renderHeaderCell: f.constant(
+          <div className={classes.columnHeader}>sno</div>,
+        ),
+      }),
+      createTableColumn({
+        columnId: title,
+        renderCell: ([, value]) => <ValueCell value={value} />,
+        renderHeaderCell: f.constant(
+          <div className={classes.columnHeader}>{title}</div>,
+        ),
+      }),
+    ],
+    [classes.columnHeader, title],
+  )
 
   const handleSelectionChange = useSyncedSelectionHandler(
     'suspected',

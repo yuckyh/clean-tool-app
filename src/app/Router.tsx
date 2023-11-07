@@ -51,6 +51,11 @@ export const routes = createRoutesFromElements(
   </Route>,
 )
 
+/**
+ * The application router instance.
+ *
+ * This is used in the {@link https://reactrouter.com/en/main/route/router-provider `RouterProvider`} in {@link src/main}.
+ */
 export const router = createBrowserRouter(routes, {
   future: {
     v7_normalizeFormMethod: true,

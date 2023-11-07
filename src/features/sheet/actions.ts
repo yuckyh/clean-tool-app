@@ -1,8 +1,8 @@
-import type { RootState } from '@/app/store'
+import type { AppState } from '@/app/store'
 import type { SheetResponse } from '@/workers/sheet'
 
 import { promisedWorker, sheetWorker } from '@/app/workers'
-import { dumpError } from '@/lib/logger'
+import { dumpError } from '@/lib/fp/logger'
 import { createAsyncThunk } from '@reduxjs/toolkit'
 import * as T from 'fp-ts/Task'
 import * as TE from 'fp-ts/TaskEither'
@@ -25,7 +25,7 @@ const messagePromise = f.pipe(
 export const fetchSheet = createAsyncThunk(
   `${sliceName}/fetchSheet`,
   async (_, { getState }) => {
-    const { fileName } = (getState() as RootState).sheet
+    const { fileName } = (getState() as AppState).sheet
 
     sheetWorker.postMessage({ fileName, method: 'get' })
 
@@ -62,7 +62,7 @@ export const postFile = createAsyncThunk(
 export const deleteSheet = createAsyncThunk(
   `${sliceName}/deleteSheet`,
   async (_, { getState }) => {
-    const { fileName } = (getState() as RootState).sheet
+    const { fileName } = (getState() as AppState).sheet
     sheetWorker.postMessage({ fileName, method: 'remove' })
 
     await messagePromise()
