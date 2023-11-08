@@ -20,6 +20,7 @@ const useClasses = makeStyles({
 
 /**
  *
+ * @example
  */
 export default function VisitsInput() {
   const classes = useClasses()

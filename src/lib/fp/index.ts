@@ -23,6 +23,7 @@ export const promisedTaskOption = f.flow(promisedTask, TO.fromTask)
  * Converts a function that returns a promise into a task.
  * @param fn - The function that makes a promise.
  * @returns A task representing the function.
+ * @example
  */
 export const asTask = <As extends readonly unknown[], V>(
   fn: (...args: As) => Promise<V>,

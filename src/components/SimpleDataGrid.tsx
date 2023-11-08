@@ -54,6 +54,7 @@ export interface Props<T>
  * @param props
  * @param props.columns
  * @param props.items
+ * @example
  */
 export default function SimpleDataGrid<T>({
   columns,

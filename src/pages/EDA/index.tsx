@@ -16,6 +16,7 @@ const useClasses = makeStyles({
 
 /**
  *
+ * @example
  */
 export default function EDA() {
   const classes = useClasses()

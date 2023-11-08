@@ -79,6 +79,7 @@ const useClasses = makeStyles({
  * This page is also where the user can reset the cleaning process.
  * @category Page
  * @returns The component object
+ * @example
  */
 export default function Upload() {
   const classes = useClasses()
@@ -142,12 +143,12 @@ export default function Upload() {
             Supposed to be */
           navigate('/column-matching')
           // globalThis.location.reload()
-          // eslint-disable-next-line functional/immutable-data
+
           // globalThis.location.href = '/column-matching'
         }),
       ),
     )()
-  }, [dispatch])
+  }, [dispatch, navigate])
 
   useEffect(() => {
     f.pipe(

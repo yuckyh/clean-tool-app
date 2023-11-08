@@ -19,6 +19,7 @@ const useClasses = makeStyles({
  * @category Page
  * @group Component
  * @returns The component object
+ * @example
  */
 export default function NotFound() {
   const classes = useClasses()

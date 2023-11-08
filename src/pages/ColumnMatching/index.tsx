@@ -44,6 +44,7 @@ const useClasses = makeStyles({
  * The column matching page.
  * This page is responsible for matching the columns of the uploaded sheet to the columns from the codebook.
  * @returns The component object
+ * @example
  */
 export default function ColumnMatching() {
   const classes = useClasses()

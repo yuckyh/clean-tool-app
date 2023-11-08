@@ -62,6 +62,7 @@ const useClasses = makeStyles({
 
 /**
  *
+ * @example
  */
 export default function Download() {
   const classes = useClasses()

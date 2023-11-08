@@ -79,6 +79,7 @@ const useClasses = makeStyles({
 
 /**
  *
+ * @example
  */
 export default function Nav() {
   const classes = useClasses()

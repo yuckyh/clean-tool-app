@@ -1,7 +1,7 @@
 import { useAppSelector } from '@/lib/hooks'
 import { Toast, ToastBody, ToastTitle } from '@fluentui/react-components'
 
-export type FileTaskType = 'deleted' | 'downloaded' | 'uploaded'
+export type FileTaskType = 'deleted' | 'downloaded' | 'none' | 'uploaded'
 
 interface Props {
   fileTask: FileTaskType

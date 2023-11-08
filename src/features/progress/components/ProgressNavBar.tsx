@@ -30,6 +30,7 @@ const useClasses = makeStyles({
  * @category Component
  * @group Progress slice
  * @returns The component object
+ * @example
  */
 export default function ProgressNavBar() {
   const classes = useClasses()

@@ -28,12 +28,14 @@ export const arrLookup =
 /**
  * @param arr - The array
  * @returns A function that returns the first element of the array or the provided default value
+ * @example
  */
 export const head =
   <T>(arr: readonly T[]) =>
   /**
    * @param defaultValue - The default value
    * @returns The first element of the array or the provided default value
+   * @example
    */
   (defaultValue: T) =>
     f.pipe(arr, RA.head, f.pipe(defaultValue, f.constant, O.getOrElse))
@@ -54,6 +56,7 @@ export const findIndex =
  * @param tuple.0 - The index
  * @param tuple.1 - The value
  * @returns The value
+ * @example
  */
 export const getIndexedValue = <I, V>([, value]: readonly [I, V]) => value
 
@@ -62,5 +65,6 @@ export const getIndexedValue = <I, V>([, value]: readonly [I, V]) => value
  * @param tuple - The indexed tuple
  * @param tuple.0 - The index
  * @returns The index
+ * @example
  */
 export const getIndexedIndex = <I, V>([index]: readonly [I, V]) => index

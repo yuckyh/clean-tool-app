@@ -71,6 +71,7 @@ const useClasses = makeStyles({
 
 /**
  *
+ * @example
  */
 export default function Variable() {
   const classes = useClasses()
