@@ -75,7 +75,9 @@ export const getSheetName = ({ sheet }: AppState) => sheet.sheetName
 /**
  * Selector function to get the visits.
  * @param state - The application state {@link AppState}
+ * @param state.sheet
  * @returns The visits that has been specified by the user
+ * @example
  */
 export const getVisits = ({ sheet }: AppState) => sheet.visits
 

@@ -1,5 +1,4 @@
 /* eslint-disable
-  functional/prefer-immutable-types,
   import/default
 */
 import type { ColumnRequest, ColumnResponse } from '@/workers/column'
