@@ -8,7 +8,7 @@ import type { DropzoneOptions } from 'react-dropzone'
 
 import { sheetWorker } from '@/app/workers'
 import FileToast from '@/components/FileToast'
-import { asIO } from '@/lib/fp'
+import { asIO, equals } from '@/lib/fp'
 import { dumpError } from '@/lib/fp/logger'
 import { useAppDispatch, useAppSelector } from '@/lib/hooks'
 import {
@@ -17,8 +17,11 @@ import {
   makeStyles,
   useToastController,
 } from '@fluentui/react-components'
+import * as IOO from 'fp-ts/IOOption'
+import * as P from 'fp-ts/Predicate'
 import * as T from 'fp-ts/Task'
 import * as f from 'fp-ts/function'
+import * as S from 'fp-ts/string'
 import {
   forwardRef,
   useCallback,
@@ -32,7 +35,7 @@ import { useDropzone } from 'react-dropzone'
 import { fetchSheet, postFile } from '../actions'
 
 export interface SheetInputRef {
-  setFileTask: Dispatch<SetStateAction<FileTaskType | undefined>>
+  setFileTask: Dispatch<SetStateAction<FileTaskType>>
 }
 
 const useClasses = makeStyles({
@@ -57,7 +60,7 @@ const SheetUploadInput = forwardRef<SheetInputRef, Props>(
     const fileName = useAppSelector(({ sheet }) => sheet.fileName)
     const dataLength = useAppSelector(({ sheet }) => sheet.data.length)
 
-    const [fileTask, setFileTask] = useState<FileTaskType | undefined>()
+    const [fileTask, setFileTask] = useState<FileTaskType>('none')
 
     const { dispatchToast } = useToastController(toasterId)
 
@@ -92,11 +95,18 @@ const SheetUploadInput = forwardRef<SheetInputRef, Props>(
     const { getInputProps, getRootProps } = useDropzone(zoneOptions)
 
     const toastNotify = useCallback(() => {
-      if (fileTask) {
-        dispatchToast(<FileToast fileTask={fileTask} />, {
-          intent: 'success',
-        })
-      }
+      f.pipe(
+        fileTask,
+        IOO.fromPredicate(P.not(equals(S.Eq)('none'))),
+        IOO.match(
+          () => {},
+          (task) => {
+            dispatchToast(<FileToast fileTask={task} />, {
+              intent: 'success',
+            })
+          },
+        ),
+      )()
     }, [fileTask, dispatchToast])
 
     useImperativeHandle(ref, () => ({
@@ -110,7 +120,7 @@ const SheetUploadInput = forwardRef<SheetInputRef, Props>(
         const isTask = data.fileName && !data.workbook
 
         if (!isTask) {
-          setFileTask(undefined)
+          setFileTask('none')
           return
         }
 
