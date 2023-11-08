@@ -116,7 +116,8 @@ const sheetSlice = createSlice({
 
         state.bookType = bookType
 
-        state.sheetName ||= SheetNames?.[0] ?? defaultValue
+        state.sheetNames = SheetNames ?? []
+        state.sheetName ||= state.sheetNames[0] ?? defaultValue
 
         const sheet = Sheets?.[state.sheetName] ?? {}
 
