@@ -30,6 +30,7 @@ The CLEaN Tool is a tool with four core functions which are:
 
     - [x] Upload data
     - [x] Configure visits
+    - [x] Data type detection
     - [x] Load wide data
     - [ ] Load long data
 
@@ -41,16 +42,17 @@ The CLEaN Tool is a tool with four core functions which are:
 
 2. Logging
 
-    - [ ] Flaggable data errors
-    - [ ] Download preview
+    - [x] Flaggable data errors
+    - [x] Download preview
 
 3. Evaluation
 
-    - [ ]
+    - [x] Fuzzy score column name matching score
+    - [ ] mDQI score
 
 4. Nesting
 
-    - [ ] Column name matching
+    - [X] Column name matching
     - [ ] Long to wide reshaping
 
 ## Before Starting
