@@ -230,7 +230,7 @@
     "essilor",
     "data"
   ],
-  "license": "AGPL-3.0-or-later",
+  "license": "UNLICENSED",
   "name": "clean-tool-app",
   "overrides": {
     "rollup-plugin-terser": "@rollup/plugin-terser"
@@ -250,7 +250,7 @@
   "scripts": {
     "build": "tsc && vite build",
     "dev": "vite",
-    "doc": "typedoc",
+    "doc": "typedoc --options typedoc.json",
     "doc:all": "yarn doc && yarn doc:git",
     "doc:git": "typedoc --options git-typedoc.json",
     "lint": "eslint . --report-unused-disable-directives --max-warnings 0",
