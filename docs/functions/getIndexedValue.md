@@ -28,9 +28,15 @@ The indexed tuple
 
 The value
 
+## Example
+
+```ts
+
+```
+
 ## Source
 
-[Projects/clean-tool-app/src/lib/array.ts:58](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/lib/array.ts:115](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

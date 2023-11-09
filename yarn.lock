@@ -4473,6 +4473,7 @@ __metadata:
     typedoc-plugin-frontmatter: "npm:^0.0.2"
     typedoc-plugin-markdown: "npm:^4.0.0-next.25"
     typedoc-plugin-merge-modules: "npm:^5.1.0"
+    typedoc-plugin-missing-exports: "npm:^2.1.0"
     typedoc-theme-hierarchy: "npm:^4.1.2"
     typescript: "npm:^5.2.2"
     vite: "npm:^4.5.0"
@@ -9085,6 +9086,15 @@ __metadata:
   peerDependencies:
     typedoc: 0.24.x || 0.25.x
   checksum: 4ff170c03cf0942eb2184515ffb1ddb4bfb7990ee7d7d51b5a0fcf63297f997dba72321696abe57237887b28b5e9d2902806f3d450a1171923f78551042cf5d7
+  languageName: node
+  linkType: hard
+
+"typedoc-plugin-missing-exports@npm:^2.1.0":
+  version: 2.1.0
+  resolution: "typedoc-plugin-missing-exports@npm:2.1.0"
+  peerDependencies:
+    typedoc: 0.24.x || 0.25.x
+  checksum: 05eaa9f249b146dcdf791c63088452e70f734805d84faa691228b8474b4c806fba7691fd1a51bb039a2b1901af2c02db3bae17853cf4b102ee4fda0a195308fb
   languageName: node
   linkType: hard
 

@@ -3,6 +3,7 @@
 */
 import { saveColumnState } from '@/features/columns/reducers'
 import { saveSheetState } from '@/features/sheet/reducers'
+import { tail } from '@/lib/array'
 import { asIO } from '@/lib/fp'
 import { useAppDispatch, useAppSelector } from '@/lib/hooks'
 import {
@@ -12,7 +13,6 @@ import {
   useThemeClassName,
 } from '@fluentui/react-components'
 import * as IO from 'fp-ts/IO'
-import * as O from 'fp-ts/Option'
 import * as RA from 'fp-ts/ReadonlyArray'
 import * as f from 'fp-ts/function'
 import * as S from 'fp-ts/string'
@@ -94,13 +94,7 @@ export default function ProgressNav() {
       return
     }
 
-    navigate(
-      f.pipe(
-        allowedPaths,
-        RA.lookup(allowedPaths.length - 1),
-        f.pipe('/', f.constant, O.getOrElse),
-      ),
-    )
+    navigate(tail(allowedPaths)('/'))
   }, [allowedPaths, navigate, shouldNavigateToAllowed])
 
   useEffect(() => {

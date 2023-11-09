@@ -1,7 +1,7 @@
 import { getFlaggedCells } from '@/app/selectors'
 import { getFormattedColumn } from '@/features/columns/selectors'
 import { getCell, getIndexRow } from '@/features/sheet/selectors'
-import { arrLookup } from '@/lib/array'
+import { arrayLookup } from '@/lib/array'
 import { equals, refinedEq, stubEq } from '@/lib/fp'
 import * as Flag from '@/lib/fp/Flag'
 import { useAppSelector } from '@/lib/hooks'
@@ -19,6 +19,8 @@ import * as RR from 'fp-ts/ReadonlyRecord'
 import * as f from 'fp-ts/function'
 import * as S from 'fp-ts/string'
 import { useMemo } from 'react'
+
+// import Download from './index'
 
 const useClasses = makeStyles({
   incorrect: {
@@ -48,7 +50,7 @@ const useClasses = makeStyles({
 })
 
 /**
- * The props for {@link PreviewCell}
+ * The props for {@link pages/Download Download}.
  */
 interface Props {
   /**
@@ -68,7 +70,7 @@ const reasonInFlagEq = Eq.tuple(
 )
 
 /**
- * The cell in the {@link PreviewDataGrid} that displays the value of the data value with the flag formatting
+ * The cell in the {@link components/SimpleDataGrid SimpleDataGrid} that displays the value of the data value with the flag formatting
  * @param props - The component's props
  * @param props.col - The column index
  * @param props.row - The row index
@@ -84,15 +86,18 @@ export default function PreviewCell({ col, row }: Readonly<Props>) {
     getFormattedColumn(state, col),
   )
   const indexRow = useAppSelector(getIndexRow)
-  const index = arrLookup(indexRow)('')(row)
+  const index = arrayLookup(indexRow)('')(row)
 
   const styleClass = useMemo(
     () =>
       f.pipe(
         flaggedCells,
         RA.filter(
-          equals(Flag.getEq(Eq.tuple(S.Eq, S.Eq, stubEq())))(
-            Flag.of(index, formattedColumn, 'none'),
+          f.pipe(
+            Eq.tuple(S.Eq, S.Eq, stubEq()),
+            Flag.getEq,
+            equals,
+            f.apply(Flag.of(index, formattedColumn, 'none')),
           ),
         ),
         E.fromPredicate((flags) => flags.length === 1, f.identity),
@@ -111,7 +116,7 @@ export default function PreviewCell({ col, row }: Readonly<Props>) {
           ),
         ),
         RA.head,
-        O.getOrElse(f.constant(Flag.of('', '', 'outlier'))),
+        O.getOrElse(() => Flag.of('', '', 'outlier')),
         ({ value }) => RR.lookup(value[2])(classes),
         f.pipe('', f.constant, O.getOrElse),
       ),

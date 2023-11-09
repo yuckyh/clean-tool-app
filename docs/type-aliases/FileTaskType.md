@@ -6,7 +6,7 @@
 
 # Type alias: FileTaskType
 
-> **FileTaskType**: `"deleted"` \| `"downloaded"` \| `"uploaded"`
+> **FileTaskType**: `"deleted"` \| `"downloaded"` \| `"none"` \| `"uploaded"`
 
 ## Source
 

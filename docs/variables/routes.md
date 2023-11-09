@@ -10,7 +10,7 @@
 
 The application routes defined using JSX.
 
-For lazy loading, it is recommended to default export the component and use the [`lazyComponentImport`](../functions/lazyComponentImport.md) helper, as there are no use of the data fetching api from `react-router`.
+For lazy loading, it is recommended to default export the component and use the [`defaultLazyComponent`](../functions/defaultLazyComponent.md) helper, as there are no use of the data fetching api from `react-router`.
 
 ## Source
 

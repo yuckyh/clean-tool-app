@@ -20,7 +20,7 @@ The component object
 ## Example
 
 ```tsx
-<Route lazy={lazyComponentImport('@/pages')} />
+<Route lazy={defaultLazyComponent(import('@/pages'))} />
 ```
 
 ## Todo

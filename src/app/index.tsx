@@ -1,5 +1,6 @@
 /**
- * @file This is a component file for the App component.
+ * @file This file contains the main app component declaration.
+ * @module app
  */
 
 /* eslint-disable

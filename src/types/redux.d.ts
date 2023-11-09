@@ -1,3 +1,8 @@
+/**
+ * @file This file contains the type definitions for redux.
+ * @module types/redux
+ */
+
 import type { AppDispatch } from '@/store'
 import type { AsyncThunk } from '@reduxjs/toolkit'
 

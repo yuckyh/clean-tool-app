@@ -12,7 +12,7 @@ import {
 import { setProgress } from '@/features/progress/reducers'
 import { getLocationPathWords } from '@/features/progress/selectors'
 import { getFirstVisit } from '@/features/sheet/selectors'
-import { arrLookup } from '@/lib/array'
+import { arrayLookup } from '@/lib/array'
 import { length } from '@/lib/fp'
 import { kebabToSnake } from '@/lib/fp/string'
 import { useAppDispatch, useAppSelector } from '@/lib/hooks'
@@ -100,10 +100,10 @@ export default function Nav() {
   const depth = useMemo(() => length(pathWords), [pathWords])
 
   const column = useMemo(
-    () => f.pipe(pathWords, f.flip(arrLookup)(''), f.apply(1), kebabToSnake),
+    () => f.pipe(pathWords, arrayLookup, f.apply(''), f.apply(1), kebabToSnake),
     [pathWords],
   )
-  const visit = useMemo(() => arrLookup(pathWords)('')(2), [pathWords])
+  const visit = useMemo(() => arrayLookup(pathWords)('')(2), [pathWords])
 
   const pos = useMemo(
     () =>
@@ -112,7 +112,7 @@ export default function Nav() {
         RA.findIndex(([matchColumn, matchVisit]) =>
           Eq.tuple(S.Eq, S.Eq).equals(
             [column, visit || firstVisit],
-            [matchColumn, arrLookup(visits)('')(matchVisit)],
+            [matchColumn, arrayLookup(visits)('')(matchVisit)],
           ),
         ),
         f.pipe(-1, f.constant, O.getOrElse),
@@ -129,34 +129,28 @@ export default function Nav() {
 
   const handlePrevVariable = useCallback(() => {
     if (depth === 2) {
-      navigate(arrLookup(columnPaths)('')(0))
-      return undefined
+      navigate(arrayLookup(columnPaths)('')(0))
+      return
     }
 
-    if (
-      !f.pipe(prevColumnPath, S.split('/'), f.flip(arrLookup)(''), f.apply(2))
-    ) {
-      return undefined
+    if (!f.pipe(prevColumnPath, S.split('/'), arrayLookup)('')(2)) {
+      return
     }
 
     navigate(prevColumnPath)
-    return undefined
   }, [columnPaths, depth, navigate, prevColumnPath])
 
   const handleNextVariable = useCallback(() => {
     if (depth === 2) {
-      navigate(arrLookup(columnPaths)('')(0))
-      return undefined
+      navigate(arrayLookup(columnPaths)('')(0))
+      return
     }
 
-    if (
-      !f.pipe(nextColumnPath, S.split('/'), f.flip(arrLookup)(''), f.apply(2))
-    ) {
-      return undefined
+    if (!f.pipe(nextColumnPath, S.split('/'), arrayLookup)('')(2)) {
+      return
     }
 
     navigate(nextColumnPath)
-    return undefined
   }, [columnPaths, depth, navigate, nextColumnPath])
 
   const handleDone = useCallback(() => {

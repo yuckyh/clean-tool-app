@@ -38,14 +38,26 @@ A function that returns the first element of the array or the provided default v
 >
 > The first element of the array or the provided default value
 >
+> ### Example
+>
+> ```ts
+>
+> ```
+>
 > ### Source
 >
-> [Projects/clean-tool-app/src/lib/array.ts:38](https://github.com/yuckyh/clean-tool-app/)
+> [Projects/clean-tool-app/src/lib/array.ts:73](https://github.com/yuckyh/clean-tool-app/)
 >
+
+## Example
+
+```ts
+
+```
 
 ## Source
 
-[Projects/clean-tool-app/src/lib/array.ts:33](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/lib/array.ts:67](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

@@ -16,7 +16,7 @@ The y-axis is jittered to prevent the x's from overlapping.
 
 ## Parameters
 
-▪ **props**: `Readonly`\<`Props`\>
+▪ **props**: `Readonly`\<[`Props`](../private/interfaces/Props.md)\>
 
 The component's props
 

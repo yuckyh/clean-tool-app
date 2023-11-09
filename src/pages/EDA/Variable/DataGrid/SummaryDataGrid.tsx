@@ -5,7 +5,7 @@ import {
   getIndexedNumericalRow,
   getIndexedRow,
 } from '@/features/sheet/selectors'
-import { arrLookup, getIndexedValue } from '@/lib/array'
+import { arrayLookup, getIndexedValue } from '@/lib/array'
 import { add, divideBy } from '@/lib/fp/number'
 import { useAppSelector } from '@/lib/hooks'
 import {
@@ -99,7 +99,7 @@ export default function SummaryDataGrid({
   const dataMedian = useMemo(
     () =>
       f.pipe(numericalValues, RA.sort(N.Ord), (values) =>
-        arrLookup(values)(0)(Math.floor(values.length / 2)),
+        arrayLookup(values)(0)(Math.floor(values.length / 2)),
       ),
     [numericalValues],
   )

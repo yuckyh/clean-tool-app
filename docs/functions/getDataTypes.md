@@ -6,25 +6,31 @@
 
 # Function: getDataTypes()
 
-> **getDataTypes**(`__namedParameters`): readonly [`DataType`](../type-aliases/DataType.md)[]
+> **getDataTypes**(`param0`): readonly [`DataType`](../type-aliases/DataType.md)[]
 
 ## Parameters
 
-▪ **\_\_namedParameters**: `object`
+▪ **param0**: `object`
 
-▪ **\_\_namedParameters.columns**: `Readonly`\<`State`\>
+▪ **param0.columns**: `Readonly`\<[`State`](../private/interfaces/State.md)\>
 
-▪ **\_\_namedParameters.progress**: `Readonly`\<`State`\>
+▪ **param0.progress**: `Readonly`\<[`State`](../private/interfaces/State.md)\>
 
-▪ **\_\_namedParameters.sheet**: `Readonly`\<[`State`](../interfaces/State.md)\>
+▪ **param0.sheet**: `Readonly`\<[`State`](../interfaces/State.md)\>
 
 ## Returns
 
 readonly [`DataType`](../type-aliases/DataType.md)[]
 
+## Example
+
+```ts
+
+```
+
 ## Source
 
-[Projects/clean-tool-app/src/app/selectors.ts:96](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/app/selectors.ts:190](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

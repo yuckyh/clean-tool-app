@@ -6,25 +6,31 @@
 
 # Function: getProgress()
 
-> **getProgress**(`__namedParameters`): [`Progress`](../type-aliases/Progress.md)
+> **getProgress**(`param0`): [`Progress`](../type-aliases/Progress.md)
 
 ## Parameters
 
-▪ **\_\_namedParameters**: `object`
+▪ **param0**: `object`
 
-▪ **\_\_namedParameters.columns**: `Readonly`\<`State`\>
+▪ **param0.columns**: `Readonly`\<[`State`](../private/interfaces/State.md)\>
 
-▪ **\_\_namedParameters.progress**: `Readonly`\<`State`\>
+▪ **param0.progress**: `Readonly`\<[`State`](../private/interfaces/State.md)\>
 
-▪ **\_\_namedParameters.sheet**: `Readonly`\<[`State`](../interfaces/State.md)\>
+▪ **param0.sheet**: `Readonly`\<[`State`](../interfaces/State.md)\>
 
 ## Returns
 
 [`Progress`](../type-aliases/Progress.md)
 
+## Example
+
+```ts
+
+```
+
 ## Source
 
-[Projects/clean-tool-app/src/app/selectors.ts:71](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/app/selectors.ts:100](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

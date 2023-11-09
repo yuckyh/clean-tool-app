@@ -13,6 +13,7 @@ import {
   webLightTheme,
 } from '@fluentui/react-components'
 import * as IO from 'fp-ts/IO'
+import * as O from 'fp-ts/Option'
 import * as RA from 'fp-ts/ReadonlyArray'
 import * as RS from 'fp-ts/ReadonlySet'
 import * as T from 'fp-ts/Task'
@@ -29,7 +30,7 @@ import {
 } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
-import { asIO, promisedTask, promisedTaskOption } from './fp'
+import { asIO } from './fp'
 import * as Flag from './fp/Flag'
 import { dumpError } from './fp/logger'
 
@@ -113,10 +114,10 @@ export const useTokenToHex = (token: Property<ColorTokens>) => {
 export const useStorage = () => {
   useEffect(() => {
     f.pipe(
-      promisedTask(navigator.storage.persisted()),
-      T.flatMap((persisted) =>
-        persisted ? TO.none : promisedTaskOption(navigator.storage.persist()),
-      ),
+      () => navigator.storage.persisted(),
+      T.map(f.flow(f.constant, O.fromPredicate)),
+      TO.fromTask,
+      TO.map(() => navigator.storage.persist()),
     )().catch(dumpError)
   }, [])
 }

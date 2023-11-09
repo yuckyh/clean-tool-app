@@ -29,24 +29,24 @@ export const createLazyMemo = <T>(
 /**
  * A helper function to import a component lazily from its default export.
  * @public
- * @template T - The component's prop type
- * @param path - Path to the component
+ * @template T - The component's prop type.
+ * @param promise - A promise that resolves the default export of the component.
  * @returns A {@link https://gcanti.github.io/fp-ts/modules/Task.ts.html `Task`} that resolves the default export of the component which can be used by the {@link https://reactrouter.com/en/main/route/lazy `lazy`} property for a {@link https://reactrouter.com/en/main/route/route `route`}.
  * @example To create a lazy import for the home page a route will be declared as such:
  * ```tsx
- * <Route index lazy={lazyComponentImport('@/pages')} />
+ * <Route index lazy={defaultLazyComponent(import('@/pages'))} />
  * ```
  */
-export const lazyComponentImport = <T>(path: string) =>
+export const defaultLazyComponent = <T>(
+  promise: Promise<{ default: React.ComponentType<T> }>,
+) =>
   asTask(async () => ({
-    Component: (
-      await (import(path) as Promise<{ default: React.ComponentType<T> }>)
-    ).default,
+    Component: (await promise).default,
   }))
 
 export const promisedWorker = <
   Req extends WorkerRequest,
-  Res extends WorkerResponse,
+  Res extends WorkerResponse<string>,
 >(
   type: keyof Omit<GenericWorkerEventMap<Res>, 'error'>,
   worker: Readonly<RequestWorker<Req, Res>>,

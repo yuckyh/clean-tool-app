@@ -31,9 +31,7 @@ const progressSlice = createSlice({
       return state
     },
     saveProgressState: (state) => {
-      const { progress } = state
-
-      setPersisted(sliceName, progress)
+      setPersisted(sliceName, state.progress)
 
       return state
     },

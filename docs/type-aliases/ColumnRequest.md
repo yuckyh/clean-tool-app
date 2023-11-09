@@ -6,7 +6,7 @@
 
 # Type alias: ColumnRequest
 
-> **ColumnRequest**: `object` & [`WorkerRequest`](../interfaces/WorkerRequest.md)
+> **ColumnRequest**: `object` & [`WorkerRequest`](WorkerRequest.md)\<`"get"`\>
 
 The type of the worker's request.
 
@@ -26,12 +26,6 @@ const request: ColumnRequest = {
 > **columns**: readonly `string`[]
 
 The columns to search.
-
-### method
-
-> **method**: `"get"`
-
-The worker method.
 
 ## Source
 

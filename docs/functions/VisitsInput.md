@@ -12,9 +12,15 @@
 
 `Element`
 
+## Example
+
+```ts
+
+```
+
 ## Source
 
-[Projects/clean-tool-app/src/features/sheet/components/VisitsInput.tsx:24](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/features/sheet/components/VisitsInput.tsx:28](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

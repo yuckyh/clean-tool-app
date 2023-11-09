@@ -27,8 +27,14 @@ const messagePromise: T.Task<ColumnResponse<'fail'> | ColumnResponse<'ok'>> =
     ),
   )
 
+/**
+ *
+ */
 export const sliceName = 'columns' as const
 
+/**
+ *
+ */
 export const fetchMatches = createAsyncThunk(
   `${sliceName}/fetchMatches`,
   async (_, { dispatch, getState }) => {
@@ -58,7 +64,7 @@ export const fetchMatches = createAsyncThunk(
           f.constant(result),
         ),
       ),
-      f.pipe(result, f.constant, O.getOrElse),
+      O.getOrElse(() => result),
     )
   },
 )

@@ -1,3 +1,8 @@
+/**
+ * @file This file contains the simple data grid component.
+ * @module components/SimpleDataGrid
+ */
+
 import type {
   DataGridBodyProps,
   DataGridProps,

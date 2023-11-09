@@ -37,7 +37,7 @@ WorkerEventMap.error
 
 #### Source
 
-[Projects/clean-tool-app/src/types/workers.d.ts:81](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/types/workers.d.ts:91](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 
@@ -51,7 +51,7 @@ WorkerEventMap.message
 
 #### Source
 
-[Projects/clean-tool-app/src/types/workers.d.ts:82](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/types/workers.d.ts:92](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 
@@ -65,7 +65,7 @@ WorkerEventMap.messageerror
 
 #### Source
 
-[Projects/clean-tool-app/src/types/workers.d.ts:83](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/types/workers.d.ts:93](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

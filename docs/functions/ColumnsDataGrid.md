@@ -10,7 +10,7 @@
 
 ## Parameters
 
-▪ **props**: `Readonly`\<`Props`\>
+▪ **props**: `Readonly`\<[`Props`](../private/interfaces/Props.md)\>
 
 ## Returns
 
@@ -24,7 +24,7 @@
 
 ## Source
 
-[Projects/clean-tool-app/src/pages/ColumnMatching/ColumnsDataGrid.tsx:78](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/pages/ColumnMatching/ColumnsDataGrid.tsx:79](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

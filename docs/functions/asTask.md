@@ -28,9 +28,15 @@ The function that makes a promise.
 
 A task representing the function.
 
+## Example
+
+```ts
+
+```
+
 ## Source
 
-[Projects/clean-tool-app/src/lib/fp/index.ts:27](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/lib/fp/index.ts:28](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

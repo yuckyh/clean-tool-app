@@ -10,7 +10,7 @@ import { equals } from '@/lib/fp'
 import * as CellItem from '@/lib/fp/CellItem'
 import * as Flag from '@/lib/fp/Flag'
 import { dumpError } from '@/lib/fp/logger'
-import { add } from '@/lib/fp/number'
+import { lt } from '@/lib/fp/number'
 import { getPersisted, setPersisted } from '@/lib/localStorage'
 import { createSlice } from '@reduxjs/toolkit'
 import * as E from 'fp-ts/Either'
@@ -219,7 +219,7 @@ const sheetSlice = createSlice({
         [...state.flaggedCells] as readonly Flag.Flag[],
         E.fromPredicate(RA.elem(Flag.Eq)(payload), f.identity),
         E.match(
-          f.flow(RA.filter(P.not(equals(Flag.Eq)(payload)))),
+          f.pipe(equals(Flag.Eq)(payload), P.not, RA.filter<Flag.Flag>),
           RA.append(payload),
         ),
       ) as typeof state.flaggedCells
@@ -229,18 +229,27 @@ const sheetSlice = createSlice({
     syncVisits: (state, { payload }: Readonly<PayloadAction<number>>) => {
       const visitsLengthDiff = payload - state.visits.length
 
-      RA.makeBy(Math.abs(visitsLengthDiff), () => {
-        const visits = [...state.visits] as readonly string[]
-        state.visits = f.pipe(
-          visits,
-          E.fromPredicate(({ length }) => payload > length, f.identity),
-          E.match(
-            RA.insertAt(visits.length, add(1)(visits.length).toString()),
-            RA.deleteAt(visits.length - 1),
+      state.visits = f.pipe(
+        visitsLengthDiff,
+        E.fromPredicate(lt(0), f.identity),
+        E.match(f.flow(Math.abs, RA.dropRight), (diff) =>
+          f.pipe(
+            RA.makeBy(diff, (i) => (i + 1 + state.visits.length).toString()),
+            RA.concat,
           ),
-          f.pipe(visits, f.constant, O.getOrElse),
-        ) as string[]
-      })
+        ),
+        f.apply([...state.visits] as readonly string[]),
+      ) as string[]
+
+      // RA.makeBy(Math.abs(visitsLengthDiff), (i) => {
+      //   state.visits = f.pipe(
+      //     [...state.visits] as readonly string[],
+      //     E.fromPredicate(({ length }) => payload < length, f.identity),
+      //     E.match((visits) => {
+      //       return RA.append(add(1)(visits.length).toString())(visits)
+      //     }, RA.dropRight(1)),
+      //   ) as string[]
+      // })
 
       return state
     },

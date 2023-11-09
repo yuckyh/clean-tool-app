@@ -1,11 +1,12 @@
 /**
- * @file This file is used as the application route definition.
+ * @file This file contains the router configuration.
+ * @module app/Router
  */
 
 import type { RouterProviderProps } from 'react-router-dom'
 
 import App from '@/app'
-import { lazyComponentImport } from '@/lib/utils'
+import { defaultLazyComponent } from '@/lib/utils'
 import Layout from '@/pages/Layout'
 import {
   Route,
@@ -16,29 +17,38 @@ import {
 /**
  * The application routes defined using JSX.
  *
- * For lazy loading, it is recommended to default export the component and use the {@link lazyComponentImport  `lazyComponentImport`} helper, as there are no use of the data fetching api from `react-router`.
+ * For lazy loading, it is recommended to default export the component and use the {@link defaultLazyComponent  `defaultLazyComponent`} helper, as there are no use of the data fetching api from `react-router`.
  */
 export const routes = createRoutesFromElements(
   <Route element={<App />}>
     <Route element={<Layout />}>
-      <Route index lazy={lazyComponentImport('../pages')} />
-      <Route lazy={lazyComponentImport('../pages/Upload')} path="upload" />
+      <Route index lazy={defaultLazyComponent(import('../pages'))} />
       <Route
-        lazy={lazyComponentImport('../pages/ColumnMatching')}
+        lazy={defaultLazyComponent(import('../pages/Upload'))}
+        path="upload"
+      />
+      <Route
+        lazy={defaultLazyComponent(import('../pages/ColumnMatching'))}
         path="column-matching"
       />
-      <Route lazy={lazyComponentImport('../pages/EDA')} path="EDA">
+      <Route lazy={defaultLazyComponent(import('../pages/EDA'))} path="EDA">
         <Route path=":column">
-          <Route index lazy={lazyComponentImport('../pages/EDA/Variable')} />
           <Route
-            lazy={lazyComponentImport('../pages/EDA/Variable')}
+            index
+            lazy={defaultLazyComponent(import('../pages/EDA/Variable'))}
+          />
+          <Route
+            lazy={defaultLazyComponent(import('../pages/EDA/Variable'))}
             path=":visit"
           />
         </Route>
       </Route>
-      <Route lazy={lazyComponentImport('../pages/Download')} path="download" />
+      <Route
+        lazy={defaultLazyComponent(import('../pages/Download'))}
+        path="download"
+      />
     </Route>
-    <Route lazy={lazyComponentImport('../pages/NotFound')} path="*" />
+    <Route lazy={defaultLazyComponent(import('../pages/NotFound'))} path="*" />
   </Route>,
 )
 

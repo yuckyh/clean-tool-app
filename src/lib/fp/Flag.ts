@@ -2,6 +2,7 @@ import type * as Ref from 'fp-ts/Refinement'
 
 import * as _Eq from 'fp-ts/Eq'
 import * as _Ord from 'fp-ts/Ord'
+import * as RA from 'fp-ts/ReadonlyArray'
 import * as S from 'fp-ts/string'
 
 export type FlagReason =
@@ -32,11 +33,15 @@ export const Ord: _Ord.Ord<Flag> = _Ord.contramap(
   ({ value }: Readonly<Flag>) => value,
 )(_Ord.tuple(S.Ord, S.Ord, S.Ord as _Ord.Ord<FlagReason>))
 
-const isFlagReason: Ref.Refinement<string | undefined, FlagReason> = (
-  x,
-): x is FlagReason =>
-  x === 'incorrect' || x === 'missing' || x === 'outlier' || x === 'suspected'
+const isFlagReason: Ref.Refinement<string, FlagReason> = (x): x is FlagReason =>
+  RA.elem(S.Eq)(x)(['incorrect', 'missing', 'none', 'outlier', 'suspected'])
+
+export const isFlagTuple: Ref.Refinement<
+  readonly string[],
+  readonly [string, string, string]
+> = (x): x is readonly [string, string, string] =>
+  x.length === 3 && S.isString(x[0]) && S.isString(x[1]) && S.isString(x[2])
 
 export const isFlagValue: Ref.Refinement<readonly string[], Flag['value']> = (
   x,
-): x is Flag['value'] => x.length === 3 && isFlagReason(x[2])
+): x is Flag['value'] => isFlagTuple(x) && isFlagReason(x[2])

@@ -1,3 +1,8 @@
+/**
+ * @file This file is for the columns data grid component.
+ * @module pages/ColumnMatching/ColumnsDataGrid
+ */
+
 import type { AlertRef } from '@/components/AlertDialog'
 import type { Props as SimpleDataGridProps } from '@/components/SimpleDataGrid'
 import type {
@@ -17,7 +22,7 @@ import {
   getVisitsComparer,
 } from '@/features/columns/selectors'
 import { fetchSheet } from '@/features/sheet/actions'
-import { equals, length, promisedTask, promisedTaskOption } from '@/lib/fp'
+import { equals, length } from '@/lib/fp'
 import { dumpError } from '@/lib/fp/logger'
 import {
   useAppDispatch,
@@ -34,6 +39,7 @@ import {
   Subtitle1,
   createTableColumn,
 } from '@fluentui/react-components'
+import * as IO from 'fp-ts/IO'
 import * as RA from 'fp-ts/ReadonlyArray'
 import * as T from 'fp-ts/Task'
 import * as TO from 'fp-ts/TaskOption'
@@ -63,17 +69,36 @@ const MemoizedDataGrid = createMemo<SimpleDataGridProps<number>>(
 
 const focusMode: DataGridFocusMode = 'composite'
 
+/**
+ * The props for {@link ColumnsDataGrid}.
+ */
 interface Props {
+  /**
+   * The alert ref for the error alert used by the {@link pages/ColumnMatching ColumnMatching} page.
+   */
   errorAlertRef: RefObject<AlertRef>
+  /**
+   * The alert ref for the info alert used by the {@link pages/ColumnMatching ColumnMatching} page.
+   */
   infoAlertRef: RefObject<AlertRef>
 }
 
 /**
- *
- * @param props
- * @param props.errorAlertRef
- * @param props.infoAlertRef
+ * This data grid provides the special column matching functionality.
+ * It consists of 4 columns:
+ * 1. The original column names
+ * 2. The possible replacements
+ * 3. The matching visit number
+ * 4. The fuzzy search score
+ * @category Component
+ * @param props - The props {@link Props}
+ * @param props.errorAlertRef - The alert ref for the error alert used by the {@link pages/ColumnMatching ColumnMatching} page.
+ * @param props.infoAlertRef - The alert ref for the info alert used by the {@link pages/ColumnMatching ColumnMatching} page.
+ * @returns A data grid for the user to match columns
  * @example
+ * ```ts
+ * <ColumnsDataGrid errorAlertRef={errorAlertRef} infoAlertRef={infoAlertRef} />
+ * ```
  */
 export default function ColumnsDataGrid({
   errorAlertRef,
@@ -84,7 +109,6 @@ export default function ColumnsDataGrid({
   const columnsLength = useAppSelector(getColumnsLength)
   const matchVisits = useAppSelector(getMatchVisits)
   const visits = useAppSelector(getVisits)
-
   const columnComparer = useAppSelector(getColumnComparer)
   const matchComparer = useAppSelector(getMatchComparer)
   const visitsComparer = useAppSelector(getVisitsComparer)
@@ -184,19 +208,16 @@ export default function ColumnsDataGrid({
       matchVisits,
       length,
       TO.fromPredicate(equals(N.Eq)(0)),
-      f.pipe(fetchSheet, f.constant, TO.map),
-      TO.tap((x) => f.pipe(dispatch(x()), promisedTaskOption)),
-      f.pipe(fetchMatches, f.constant, TO.map),
-      f.pipe(fetchMatches, T.of, f.constant, TO.getOrElse),
-      T.flatMap((x) => f.pipe(dispatch(x()), promisedTask)),
-      T.tap(() =>
-        T.of(
-          Math.max(...matchVisits) > visits.length && visits.length > 0
-            ? infoAlertRef.current?.open()
-            : undefined,
-        ),
+      TO.map(fetchSheet),
+      TO.map((x) => dispatch(x)),
+      TO.match(fetchMatches, fetchMatches),
+      T.map((x) => dispatch(x)),
+      IO.tap(() =>
+        Math.max(...matchVisits) > visits.length && visits.length > 0
+          ? infoAlertRef.current?.open ?? IO.Do
+          : IO.Do,
       ),
-      T.tapIO(f.constant(stopLoading)),
+      IO.tap(() => stopLoading),
     )().catch(dumpError)
     return undefined
   }, [

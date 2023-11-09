@@ -5,7 +5,7 @@ import * as RA from 'fp-ts/ReadonlyArray'
 import * as f from 'fp-ts/function'
 import * as S from 'fp-ts/string'
 
-import { divideBy } from './fp/number'
+import { add, divideBy } from './fp/number'
 import { useTokenToHex } from './hooks'
 
 type ColorToken = Property<ColorTokens>
@@ -14,9 +14,9 @@ type Diff = readonly [number, number]
 type TransposedRgbDiff = readonly [Diff, Diff, Diff]
 
 const splitHexString = (hexString: string) =>
-  f.pipe(
-    [1, 3, 5] as const,
-    RA.map(f.flow((x) => S.slice(x, x + 2), f.apply(hexString))),
+  RA.makeBy(
+    3,
+    f.flow(add(1), (x) => S.slice(x, x + 2)(hexString)),
   ) as readonly [string, string, string]
 
 const hexToRgb = (hexString: string) =>
@@ -35,7 +35,7 @@ const interpolate =
 
 const timeToColorStep = (t: number) => (rgbDiffs: TransposedRgbDiff) => [
   t,
-  f.pipe(rgbDiffs, RA.map(f.flow(interpolate, f.apply(t), numToHex))).join(''),
+  RA.map(f.flow(interpolate, f.apply(t), numToHex))(rgbDiffs).join(''),
 ]
 
 // eslint-disable-next-line import/prefer-default-export
@@ -50,10 +50,8 @@ export const useFluentColorScale = (
     (rgbs) => RA.zip(...(rgbs as [Rgb, Rgb])),
   ) as TransposedRgbDiff
 
-  return f.pipe(
-    RA.makeBy(
-      n,
-      f.flow(divideBy, f.apply(n - 1), timeToColorStep, f.apply(rgbDiffs)),
-    ),
+  return RA.makeBy(
+    n,
+    f.flow(divideBy, f.apply(n - 1), timeToColorStep, f.apply(rgbDiffs)),
   ) as ColorScale
 }

@@ -16,9 +16,9 @@ Selector function to get the visits.
 
 The application state [AppState](../type-aliases/AppState.md)
 
-▪ **state.columns**: `Readonly`\<`State`\>
+▪ **state.columns**: `Readonly`\<[`State`](../private/interfaces/State.md)\>
 
-▪ **state.progress**: `Readonly`\<`State`\>
+▪ **state.progress**: `Readonly`\<[`State`](../private/interfaces/State.md)\>
 
 ▪ **state.sheet**: `Readonly`\<[`State`](../interfaces/State.md)\>
 
@@ -28,9 +28,15 @@ readonly `string`[]
 
 The visits that has been specified by the user
 
+## Example
+
+```ts
+
+```
+
 ## Source
 
-[Projects/clean-tool-app/src/app/selectors.ts:80](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/app/selectors.ts:118](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

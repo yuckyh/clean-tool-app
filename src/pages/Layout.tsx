@@ -1,5 +1,6 @@
 /**
- * @file This is a component file for the Layout component.
+ * @file This file is for the main layout component.
+ * @module pages/Layout
  */
 
 /* eslint-disable

@@ -8,9 +8,12 @@ import * as RA from 'fp-ts/ReadonlyArray'
 import * as f from 'fp-ts/function'
 import { useCallback, useState } from 'react'
 
-import { deleteVisits, syncVisits } from '../reducers'
+import { syncVisits } from '../reducers'
 import VisitInput from './VisitInput'
 
+/**
+ *
+ */
 const useClasses = makeStyles({
   input: {
     minWidth: 'initial',
@@ -35,14 +38,15 @@ export default function VisitsInput() {
     (_event, { value }) => {
       const newVisitsLength = parseInt(value, 10)
       setVisitsValue(newVisitsLength)
+
       if (Number.isNaN(newVisitsLength)) {
         return
       }
 
-      if (newVisitsLength === 1) {
-        f.pipe(deleteVisits(), (x) => dispatch(x), IO.of)()
-        return
-      }
+      // if (newVisitsLength === 1) {
+      //   f.pipe(deleteVisits(), (x) => dispatch(x), IO.of)()
+      //   return
+      // }
 
       f.pipe(newVisitsLength, syncVisits, (x) => dispatch(x), IO.of)()
     },

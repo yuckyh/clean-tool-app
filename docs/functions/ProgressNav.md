@@ -22,9 +22,15 @@ The component object
 
 [ProgressNavBar](ProgressNavBar.md) for details on the bar's functionality
 
+## Example
+
+```ts
+
+```
+
 ## Source
 
-[Projects/clean-tool-app/src/features/progress/components/ProgressNav.tsx:62](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/features/progress/components/ProgressNav.tsx:65](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

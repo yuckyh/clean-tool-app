@@ -18,9 +18,15 @@ This page is also where the user can reset the cleaning process.
 
 The component object
 
+## Example
+
+```ts
+
+```
+
 ## Source
 
-[Projects/clean-tool-app/src/pages/Upload.tsx:83](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/pages/Upload.tsx:84](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

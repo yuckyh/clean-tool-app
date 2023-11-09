@@ -14,12 +14,12 @@ The controller object that maps the request method to the handler.
 
 | Parameter |
 | :------ |
-| `Request` extends [`WorkerRequest`](../interfaces/WorkerRequest.md) |
+| `Request` extends [`WorkerRequest`](WorkerRequest.md) |
 | `Response` extends [`WorkerResponse`](WorkerResponse.md) |
 
 ## Source
 
-[Projects/clean-tool-app/src/types/workers.d.ts:72](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/types/workers.d.ts:82](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

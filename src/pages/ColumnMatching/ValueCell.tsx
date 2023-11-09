@@ -22,7 +22,7 @@ interface Props {
 }
 
 /**
- * A cell in the {@link ColumnsDataGrid} that displays the value of the original column
+ * A cell in the {@link pages/ColumnMatching/ColumnsDataGrid ColumnsDataGrid} that displays the value of the original column
  * @param props - The component's props
  * @param props.pos - The column index
  * @returns The component object

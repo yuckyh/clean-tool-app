@@ -18,9 +18,9 @@ This function is to be used with the column position parameter to select a cell 
 
 The application state [AppState](../type-aliases/AppState.md)
 
-▪ **\_state.columns**: `Readonly`\<`State`\>
+▪ **\_state.columns**: `Readonly`\<[`State`](../private/interfaces/State.md)\>
 
-▪ **\_state.progress**: `Readonly`\<`State`\>
+▪ **\_state.progress**: `Readonly`\<[`State`](../private/interfaces/State.md)\>
 
 ▪ **\_state.sheet**: `Readonly`\<[`State`](../interfaces/State.md)\>
 

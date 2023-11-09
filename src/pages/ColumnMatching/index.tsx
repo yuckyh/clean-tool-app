@@ -1,3 +1,8 @@
+/**
+ * @file This file contains the column matching page component declaration.
+ * @module pages/ColumnMatching
+ */
+
 /* eslint-disable
   functional/functional-parameters
 */

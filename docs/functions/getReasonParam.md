@@ -12,9 +12,9 @@
 
 ▪ **\_state**: `object`
 
-▪ **\_state.columns**: `Readonly`\<`State`\>
+▪ **\_state.columns**: `Readonly`\<[`State`](../private/interfaces/State.md)\>
 
-▪ **\_state.progress**: `Readonly`\<`State`\>
+▪ **\_state.progress**: `Readonly`\<[`State`](../private/interfaces/State.md)\>
 
 ▪ **\_state.sheet**: `Readonly`\<[`State`](../interfaces/State.md)\>
 
@@ -26,9 +26,15 @@
 
 [`FlagReason`](../type-aliases/FlagReason.md)
 
+## Example
+
+```ts
+
+```
+
 ## Source
 
-[Projects/clean-tool-app/src/app/selectors.ts:64](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/app/selectors.ts:87](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

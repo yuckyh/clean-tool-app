@@ -32,12 +32,12 @@
 >
 > ### Source
 >
-> [Projects/clean-tool-app/src/lib/fp/index.ts:53](https://github.com/yuckyh/clean-tool-app/)
+> [Projects/clean-tool-app/src/lib/fp/index.ts:54](https://github.com/yuckyh/clean-tool-app/)
 >
 
 ## Source
 
-[Projects/clean-tool-app/src/lib/fp/index.ts:52](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/lib/fp/index.ts:53](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

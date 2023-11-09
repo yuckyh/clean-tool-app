@@ -3,7 +3,7 @@ import type { ComboboxProps } from '@fluentui/react-components'
 
 import { codebook } from '@/data'
 import { getRow } from '@/features/sheet/selectors'
-import { indexDuplicateSearcher } from '@/lib/array'
+import { findIndex, indexDuplicateSearcher } from '@/lib/array'
 import { equals, isCorrectNumber } from '@/lib/fp'
 import { useAppDispatch, useAppSelector, useDebounced } from '@/lib/hooks'
 import { createMemo } from '@/lib/utils'
@@ -18,7 +18,6 @@ import {
 } from '@fluentui/react-components'
 import * as IO from 'fp-ts/IO'
 import * as O from 'fp-ts/Option'
-import * as P from 'fp-ts/Predicate'
 import * as RA from 'fp-ts/ReadonlyArray'
 import * as B from 'fp-ts/boolean'
 import * as f from 'fp-ts/function'
@@ -118,9 +117,8 @@ export default function MatchCell({ alertRef, pos }: Readonly<Props>) {
         if (duplicates.length) {
           const newMatchVisit = f.pipe(
             RA.makeBy(visits.length, f.identity),
-            RA.findIndex(P.not(equals(N.Eq)(matchVisit))),
-            f.pipe(-1, f.constant, O.getOrElse),
-          )
+            findIndex,
+          )(N.Eq)(matchVisit)
 
           if (newMatchVisit === -1) {
             alertRef.current?.open()
@@ -151,8 +149,7 @@ export default function MatchCell({ alertRef, pos }: Readonly<Props>) {
               type,
               S.includes,
               RA.some,
-              f.apply(['whole_number', 'interval'] as const),
-            ),
+            )(['whole_number', 'interval'] as const),
           ),
           O.getOrElse(
             () =>

@@ -15,11 +15,11 @@
 
 ### setFileTask
 
-> **setFileTask**: `Dispatch`\<`SetStateAction`\<`undefined` \| [`FileTaskType`](../type-aliases/FileTaskType.md)\>\>
+> **setFileTask**: `Dispatch`\<`SetStateAction`\<[`FileTaskType`](../type-aliases/FileTaskType.md)\>\>
 
 #### Source
 
-[Projects/clean-tool-app/src/features/sheet/components/SheetUploadInput.tsx:35](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/features/sheet/components/SheetUploadInput.tsx:38](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

@@ -42,17 +42,23 @@
 > >
 > > #### Source
 > >
-> > [Projects/clean-tool-app/src/lib/array.ts:44](https://github.com/yuckyh/clean-tool-app/)
+> > [Projects/clean-tool-app/src/lib/array.ts:100](https://github.com/yuckyh/clean-tool-app/)
 > >
 >
 > ### Source
 >
-> [Projects/clean-tool-app/src/lib/array.ts:43](https://github.com/yuckyh/clean-tool-app/)
+> [Projects/clean-tool-app/src/lib/array.ts:99](https://github.com/yuckyh/clean-tool-app/)
 >
+
+## Example
+
+```ts
+
+```
 
 ## Source
 
-[Projects/clean-tool-app/src/lib/array.ts:42](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/lib/array.ts:98](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

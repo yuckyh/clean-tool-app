@@ -2,10 +2,18 @@ import type * as Eq from 'fp-ts/Eq'
 
 import * as O from 'fp-ts/Option'
 import * as RA from 'fp-ts/ReadonlyArray'
+import * as RR from 'fp-ts/ReadonlyRecord'
 import * as f from 'fp-ts/function'
 
 import { equals } from './fp'
 
+/**
+ *
+ * @param indices
+ * @param filterIndex
+ * @returns
+ * @example
+ */
 export const indexDuplicateSearcher = <T extends readonly U[], U>(
   indices: readonly T[],
   filterIndex: T,
@@ -19,11 +27,36 @@ export const indexDuplicateSearcher = <T extends readonly U[], U>(
       ),
     ),
   )
-export const arrLookup =
+
+/**
+ *
+ * @param arr
+ * @returns
+ * @example
+ */
+export const arrayLookup =
   <T>(arr: readonly T[]) =>
   (defaultValue: T) =>
   (pos: number) =>
-    f.pipe(RA.lookup(pos, arr), f.pipe(defaultValue, f.constant, O.getOrElse))
+    f.pipe(
+      RA.lookup(pos, arr),
+      O.getOrElse(() => defaultValue),
+    )
+
+/**
+ *
+ * @param record
+ * @returns
+ * @example
+ */
+export const recordLookup =
+  <K extends string, T>(record: RR.ReadonlyRecord<K, T>) =>
+  (defaultValue: T) =>
+  (key: K) =>
+    f.pipe(
+      RR.lookup(key, record),
+      O.getOrElse(() => defaultValue),
+    )
 
 /**
  * @param arr - The array
@@ -38,8 +71,26 @@ export const head =
    * @example
    */
   (defaultValue: T) =>
-    f.pipe(arr, RA.head, f.pipe(defaultValue, f.constant, O.getOrElse))
+    f.pipe(
+      arr,
+      RA.head,
+      O.getOrElse(() => defaultValue),
+    )
 
+/**
+ *
+ * @param arr
+ * @returns
+ * @example
+ */
+export const tail = <T>(arr: readonly T[]) => f.pipe(arr, RA.takeRight(1), head)
+
+/**
+ *
+ * @param arr
+ * @returns
+ * @example
+ */
 export const findIndex =
   <T>(arr: readonly T[]) =>
   (eq: Eq.Eq<T>) =>
@@ -47,7 +98,7 @@ export const findIndex =
     f.pipe(
       arr,
       RA.findIndex(equals(eq)(value)),
-      f.pipe(-1, f.constant, O.getOrElse),
+      O.getOrElse(() => -1),
     )
 
 /**

@@ -4,11 +4,17 @@
 
 [CLEaN Tool](../exports.md) / SheetRequest
 
-# Type alias: SheetRequest
+# Type alias: SheetRequest`<Method>`
 
-> **SheetRequest**: `object` \| `object` \| `object` & [`WorkerRequest`](../interfaces/WorkerRequest.md)
+> **SheetRequest**\<`Method`\>: `object` \| `object` \| `object` & [`WorkerRequest`](WorkerRequest.md)\<`Method`\>
 
 The type of the worker's request.
+
+## Type parameters
+
+| Parameter | Default |
+| :------ | :------ |
+| `Method` extends [`SheetMethod`](SheetMethod.md) | [`SheetMethod`](SheetMethod.md) |
 
 ## Source
 

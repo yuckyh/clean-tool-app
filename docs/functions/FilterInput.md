@@ -10,7 +10,7 @@
 
 ## Parameters
 
-▪ **props**: `Readonly`\<`Props`\>
+▪ **props**: `Readonly`\<[`Props`](../private/interfaces/Props.md)\>
 
 ## Returns
 

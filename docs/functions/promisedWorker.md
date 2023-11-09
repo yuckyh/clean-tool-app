@@ -10,9 +10,9 @@
 
 ## Type parameters
 
-▪ **Req** extends [`WorkerRequest`](../interfaces/WorkerRequest.md)
+▪ **Req** extends [`WorkerRequest`](../type-aliases/WorkerRequest.md)\<`string`\>
 
-▪ **Res** extends [`WorkerResponse`](../type-aliases/WorkerResponse.md)\<[`ResponseStatus`](../type-aliases/ResponseStatus.md)\>
+▪ **Res** extends [`WorkerResponse`](../type-aliases/WorkerResponse.md)\<`string`, [`ResponseStatus`](../type-aliases/ResponseStatus.md)\>
 
 ## Parameters
 

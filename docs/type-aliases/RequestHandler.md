@@ -4,19 +4,18 @@
 
 [CLEaN Tool](../exports.md) / RequestHandler
 
-# Type alias: RequestHandler`<Request, Response, Method>`
+# Type alias: RequestHandler`<Request, Response>`
 
-> **RequestHandler**\<`Request`, `Response`, `Method`\>: (`request`) => `Readonly`\<`Promise`\<`Response`\> \| `Response`\>
+> **RequestHandler**\<`Request`, `Response`\>: (`request`) => `Readonly`\<`Promise`\<`Response`\> \| `Response`\>
 
 ## Type parameters
 
-| Parameter | Default |
-| :------ | :------ |
-| `Request` extends [`WorkerRequest`](../interfaces/WorkerRequest.md) & `object` | - |
-| `Response` extends [`WorkerResponse`](WorkerResponse.md) | - |
-| `Method` extends `Request`\[`"method"`\] | `Request`\[`"method"`\] |
+| Parameter |
+| :------ |
+| `Request` extends [`WorkerRequest`](WorkerRequest.md) |
+| `Response` extends [`WorkerResponse`](WorkerResponse.md) |
 
-The handler function that takes in the [request](../interfaces/WorkerRequest.md) and returns the response.
+The handler function that takes in the [request](WorkerRequest.md) and returns the response.
 
 ## Parameters
 
@@ -28,7 +27,7 @@ The handler function that takes in the [request](../interfaces/WorkerRequest.md)
 
 ## Source
 
-[Projects/clean-tool-app/src/types/workers.d.ts:63](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/types/workers.d.ts:74](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

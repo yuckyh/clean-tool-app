@@ -97,7 +97,7 @@ const SheetUploadInput = forwardRef<SheetInputRef, Props>(
     const toastNotify = useCallback(() => {
       f.pipe(
         fileTask,
-        IOO.fromPredicate(P.not(equals(S.Eq)('none'))),
+        f.pipe('none', equals(S.Eq), P.not, IOO.fromPredicate<FileTaskType>),
         IOO.match(
           () => {},
           (task) => {
@@ -115,15 +115,12 @@ const SheetUploadInput = forwardRef<SheetInputRef, Props>(
 
     useEffect(() => {
       const handleWorkerLoad = ({
-        data,
+        data: { status },
       }: Readonly<MessageEvent<SheetResponse>>) => {
-        const isTask = data.fileName && !data.workbook
-
-        if (!isTask) {
+        if (status === 'fail') {
           setFileTask('none')
           return
         }
-
         toastNotify()
       }
 

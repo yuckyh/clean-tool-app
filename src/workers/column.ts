@@ -1,5 +1,5 @@
 /**
- * @file Web worker for the column search.
+ * @file This file contains the column worker's controller.
  */
 
 import type { codebook } from '@/data'
@@ -40,11 +40,7 @@ export type ColumnRequest = {
    * The columns to search.
    */
   columns: readonly string[]
-  /**
-   * The worker method.
-   */
-  method: 'get'
-} & WorkerRequest
+} & WorkerRequest<'get'>
 
 /**
  * The type of the worker's response.
@@ -95,18 +91,18 @@ export type ColumnRequest = {
  * ```
  */
 export type ColumnResponse<S extends ResponseStatus = ResponseStatus> =
-  WorkerResponse<S> & {
+  WorkerResponse<'get', S> & {
     /**
      * The search results.
      */
     matches: readonly (readonly MatchlessFuseResult[])[]
   }
 
-type Handler<Method extends ColumnRequest['method'] = ColumnRequest['method']> =
-  RequestHandler<ColumnRequest & { method: Method }, ColumnResponse, Method>
+type Handler = RequestHandler<ColumnRequest, ColumnResponse>
 
-const get: Handler = ({ columns }) => ({
+const get: Handler = ({ columns, method }) => ({
   matches: RA.map(fuse.search.bind(fuse))(columns),
+  method,
   status: 'ok',
 })
 

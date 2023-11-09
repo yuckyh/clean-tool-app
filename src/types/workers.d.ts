@@ -1,8 +1,13 @@
 /**
- * @file Type definitions for Web Workers
+ * @file This file contains the type definitions for the project's web workers API.
+ * @module types/workers
+ * @name Web Workers
+ * @namespace workers
  */
 
 /// <reference lib="webworker" />
+
+type RequestMethod = string
 
 /**
  * The base request object that is sent to the worker.
@@ -13,7 +18,9 @@
  * The word method was used to with reference of the REST API.
  * @internal
  */
-interface WorkerRequest {
+type WorkerRequest<Method extends RequestMethod = string> = {
+  method: Method
+} & {
   /**
    * The method of the request.
    */
@@ -21,6 +28,26 @@ interface WorkerRequest {
 }
 
 type ResponseStatus = 'fail' | 'ok'
+
+interface WorkerOkResponse {
+  method: RequestMethod
+  /**
+   * The status of the response. When the status is `ok`, the response will not have an error object.
+   */
+  status: 'ok'
+}
+
+interface WorkerFailResponse {
+  /**
+   * The error object that signifies a failed response.
+   */
+  error: Error
+  method: RequestMethod
+  /**
+   * The status of the response. When the status is `fail`, the response will have an error object.
+   */
+  status: 'fail'
+}
 
 /**
  * The response object that is sent back to the main thread.
@@ -36,24 +63,11 @@ type ResponseStatus = 'fail' | 'ok'
  * }
  * ```
  */
-type WorkerResponse<S extends ResponseStatus = ResponseStatus> = (
-  | {
-      /**
-       * The error object that signifies a failed response.
-       */
-      error: Error
-      /**
-       * The status of the response. When the status is `fail`, the response will have an error object.
-       */
-      status: 'fail'
-    }
-  | {
-      /**
-       * The status of the response. When the status is `ok`, the response will not have an error object.
-       */
-      status: 'ok'
-    }
-) & {
+type WorkerResponse<
+  M extends RequestMethod,
+  S extends ResponseStatus = ResponseStatus,
+> = (WorkerFailResponse | WorkerOkResponse) & {
+  method: M
   status: S
 }
 
@@ -61,9 +75,8 @@ type WorkerResponse<S extends ResponseStatus = ResponseStatus> = (
  * The handler function that takes in the {@link WorkerRequest | request} and returns the response.
  */
 type RequestHandler<
-  Request extends WorkerRequest & { method: Method },
+  Request extends WorkerRequest,
   Response extends WorkerResponse,
-  Method extends Request['method'] = Request['method'],
 > = (request: Readonly<Request>) => Readonly<Promise<Response> | Response>
 
 /**
@@ -86,10 +99,8 @@ interface GenericWorkerEventMap<T> extends WorkerEventMap {
 /**
  * The extended worker type with typed request and response based on the event type via the {@link GenericWorkerEventMap | event map}.
  */
-interface RequestWorker<
-  Req extends WorkerRequest,
-  Res extends BaseWorkerResponse,
-> extends Worker {
+interface RequestWorker<Req extends WorkerRequest, Res extends WorkerResponse>
+  extends Worker {
   addEventListener: <K extends keyof GenericWorkerEventMap<Res>>(
     type: K,
     listener: (ev: GenericWorkerEventMap<Res>[K]) => void,

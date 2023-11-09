@@ -1,3 +1,8 @@
+/**
+ * @file This file contains the project's utility type definitions.
+ * @module types/utils
+ */
+
 type Property<T> = T[keyof T]
 
 type Prettify<T> = {

@@ -79,7 +79,12 @@ const columnsSlice = createSlice({
         ? matchColumns
         : (f.pipe(
             matchesList,
-            RA.map(f.flow(RA.head, f.pipe('', f.constant, O.getOrElse))),
+            RA.map(
+              f.flow(
+                RA.head,
+                O.getOrElse(() => ''),
+              ),
+            ),
           ) as string[])
 
       state.matchVisits = matchVisits.length
@@ -110,7 +115,7 @@ const columnsSlice = createSlice({
                 codebook,
                 RA.findFirst(({ name }) => equals(S.Eq)(name)(matchColumn)),
                 O.map(({ type }) => type),
-                f.pipe('', f.constant, O.getOrElse),
+                O.getOrElse(() => 'none'),
                 equals(S.Eq),
                 RA.some,
                 f.apply(['whole_number', 'interval'] as const),

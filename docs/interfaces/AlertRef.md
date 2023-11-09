@@ -17,7 +17,7 @@
 
 ### open
 
-> **open**: `IO`\<`boolean`\>
+> **open**: `IO`\<`void`\>
 
 #### Source
 

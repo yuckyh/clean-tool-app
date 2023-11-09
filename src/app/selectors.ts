@@ -53,23 +53,59 @@ export const getRowParam = (_state: AppState, _col: number, row: number) => row
  */
 export const getColumnParam = (_state: AppState, column: string) => column
 
+/**
+ *
+ * @param _state
+ * @param _column
+ * @param visit
+ * @returns
+ * @example
+ */
 export const getVisitParam = (
   _state: AppState,
   _column: string,
   visit: string,
 ) => visit
 
+/**
+ *
+ * @param _state
+ * @param title
+ * @returns
+ * @example
+ */
 export const getTitleParam = (_state: AppState, title: string) => title
 
+/**
+ *
+ * @param _state
+ * @param _1
+ * @param reason
+ * @returns
+ * @example
+ */
 export const getReasonParam = (
   _state: AppState,
   _1: string,
   reason: Flag.FlagReason,
 ) => reason
 
-// Slice Selectors
+/**
+ *
+ * @param param0
+ * @param param0.progress
+ * @returns
+ * @example
+ */
 export const getProgress = ({ progress }: AppState) => progress.progress
 
+/**
+ *
+ * @param param0
+ * @param param0.sheet
+ * @returns
+ * @example
+ */
 export const getSheetName = ({ sheet }: AppState) => sheet.sheetName
 
 /**
@@ -81,20 +117,79 @@ export const getSheetName = ({ sheet }: AppState) => sheet.sheetName
  */
 export const getVisits = ({ sheet }: AppState) => sheet.visits
 
+/**
+ *
+ * @param param0
+ * @param param0.sheet
+ * @returns
+ * @example
+ */
 export const getOriginalColumns = ({ sheet }: AppState) => sheet.originalColumns
 
+/**
+ *
+ * @param param0
+ * @param param0.sheet
+ * @returns
+ * @example
+ */
 export const getData = ({ sheet }: AppState) => sheet.data
 
+/**
+ *
+ * @param param0
+ * @param param0.sheet
+ * @returns
+ * @example
+ */
 export const getFlaggedCells = ({ sheet }: AppState) => sheet.flaggedCells
 
+/**
+ *
+ * @param param0
+ * @param param0.columns
+ * @returns
+ * @example
+ */
 export const getMatchColumns = ({ columns }: AppState) => columns.matchColumns
 
+/**
+ *
+ * @param param0
+ * @param param0.columns
+ * @returns
+ * @example
+ */
 export const getMatchVisits = ({ columns }: AppState) => columns.matchVisits
 
+/**
+ *
+ * @param param0
+ * @param param0.columns
+ * @returns
+ * @example
+ */
 export const getScoresList = ({ columns }: AppState) => columns.scoresList
 
+/**
+ *
+ * @param param0
+ * @param param0.columns
+ * @returns
+ * @example
+ */
 export const getMatchesList = ({ columns }: AppState) => columns.matchesList
 
+/**
+ *
+ * @param param0
+ * @param param0.columns
+ * @returns
+ * @example
+ */
 export const getDataTypes = ({ columns }: AppState) => columns.dataTypes
 
+/**
+ *
+ */
 export const indexEq = Eq.tuple(S.Eq, S.Eq)

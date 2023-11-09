@@ -45,10 +45,10 @@ export default function FilteredOptions({
       f.flow(
         ({ score }) => score,
         O.fromNullable,
-        f.pipe(1, f.constant, O.getOrElse),
+        O.getOrElse(() => 1),
       ),
     ),
-    f.pipe(1, f.constant, O.getOrElse),
+    O.getOrElse(() => 1),
     multiply(-1),
     add(1),
     (score) => score.toFixed(2),

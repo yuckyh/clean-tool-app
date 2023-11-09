@@ -1,3 +1,8 @@
+/**
+ * @file This file contains the download page component declaration.
+ * @module pages/Download
+ */
+
 /* eslint-disable
   functional/functional-parameters
 */
@@ -7,7 +12,7 @@ import type { TableColumnDefinition } from '@fluentui/react-components'
 import SimpleDataGrid from '@/components/SimpleDataGrid'
 import { getFormattedColumns } from '@/features/columns/selectors'
 import { getFormattedWorkbook } from '@/features/sheet/selectors'
-import { arrLookup } from '@/lib/array'
+import { arrayLookup } from '@/lib/array'
 import { useAppSelector } from '@/lib/hooks'
 import { getColumnsLength } from '@/selectors/columns/selectors'
 import {
@@ -76,10 +81,10 @@ export default function Download() {
     () =>
       RA.makeBy(columnsLength, (col) =>
         createTableColumn({
-          columnId: arrLookup(formattedColumns)('')(col),
+          columnId: arrayLookup(formattedColumns)('')(col),
           renderCell: (row) => <PreviewCell col={col} row={row} />,
           renderHeaderCell: () => (
-            <HeaderCell header={arrLookup(formattedColumns)('')(col)} />
+            <HeaderCell header={arrayLookup(formattedColumns)('')(col)} />
           ),
         }),
       ),

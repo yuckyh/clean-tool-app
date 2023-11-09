@@ -6,25 +6,31 @@
 
 # Function: getData()
 
-> **getData**(`__namedParameters`): readonly [`CellItem`](../interfaces/CellItem.md)\<[`Value`](../type-aliases/Value.md)\>[]
+> **getData**(`param0`): readonly [`CellItem`](../interfaces/CellItem.md)\<[`Value`](../type-aliases/Value.md)\>[]
 
 ## Parameters
 
-▪ **\_\_namedParameters**: `object`
+▪ **param0**: `object`
 
-▪ **\_\_namedParameters.columns**: `Readonly`\<`State`\>
+▪ **param0.columns**: `Readonly`\<[`State`](../private/interfaces/State.md)\>
 
-▪ **\_\_namedParameters.progress**: `Readonly`\<`State`\>
+▪ **param0.progress**: `Readonly`\<[`State`](../private/interfaces/State.md)\>
 
-▪ **\_\_namedParameters.sheet**: `Readonly`\<[`State`](../interfaces/State.md)\>
+▪ **param0.sheet**: `Readonly`\<[`State`](../interfaces/State.md)\>
 
 ## Returns
 
 readonly [`CellItem`](../interfaces/CellItem.md)\<[`Value`](../type-aliases/Value.md)\>[]
 
+## Example
+
+```ts
+
+```
+
 ## Source
 
-[Projects/clean-tool-app/src/app/selectors.ts:84](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/app/selectors.ts:136](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

@@ -1,5 +1,7 @@
 import type * as RR from 'fp-ts/ReadonlyRecord'
 
+import * as f from 'fp-ts/function'
+
 export type Value = number | string
 
 export interface CellItem<V extends Value = Value> {
@@ -23,7 +25,7 @@ export const recordMap =
     fn: (a: RR.ReadonlyRecord<string, A>) => RR.ReadonlyRecord<string, B>,
   ) =>
   (cellItem: Readonly<CellItem<A>>): Readonly<CellItem<B>> =>
-    of(fn(unwrap(cellItem)))
+    f.pipe(cellItem, unwrap, fn, of)
 
 export const fold =
   <A extends Value, T>(fn: (a: CellItem<A>['value']) => T) =>

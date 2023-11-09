@@ -12,7 +12,7 @@
 
 ## Parameters
 
-▪ **props**: `Props` & `RefAttributes`\<[`SheetInputRef`](../interfaces/SheetInputRef.md)\>
+▪ **props**: [`Props`](../private/interfaces/Props.md) & `RefAttributes`\<[`SheetInputRef`](../interfaces/SheetInputRef.md)\>
 
 ## Returns
 

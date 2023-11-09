@@ -11,10 +11,12 @@ import { getDataType, getFormattedColumn } from '../../columns/selectors'
 
 const useClasses = makeStyles({
   categoricalHeader: {
-    backgroundColor: tokens.colorBrandBackground,
+    backgroundColor: tokens.colorBrandBackground2,
+    color: tokens.colorBrandForeground2,
   },
   numericalHeader: {
-    backgroundColor: tokens.colorPaletteRedBackground3,
+    backgroundColor: tokens.colorPaletteRedBackground2,
+    color: tokens.colorPaletteRedForeground2,
   },
   root: {
     alignItems: 'center',

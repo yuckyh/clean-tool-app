@@ -16,9 +16,15 @@ The 404 page component
 
 The component object
 
+## Example
+
+```ts
+
+```
+
 ## Source
 
-[Projects/clean-tool-app/src/pages/NotFound.tsx:23](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/pages/NotFound.tsx:24](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

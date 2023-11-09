@@ -6,15 +6,15 @@
 
 # Function: getSearchedDataType()
 
-> **getSearchedDataType**(`state`, ...`params`): [`DataType`](../type-aliases/DataType.md)
+> **getSearchedDataType**(`state`, ...`params`): `string`
 
 ## Parameters
 
 ▪ **state**: `object`
 
-▪ **state.columns**: `Readonly`\<`State`\>
+▪ **state.columns**: `Readonly`\<[`State`](../private/interfaces/State.md)\>
 
-▪ **state.progress**: `Readonly`\<`State`\>
+▪ **state.progress**: `Readonly`\<[`State`](../private/interfaces/State.md)\>
 
 ▪ **state.sheet**: `Readonly`\<[`State`](../interfaces/State.md)\>
 
@@ -22,7 +22,7 @@
 
 ## Returns
 
-[`DataType`](../type-aliases/DataType.md)
+`string`
 
 ## Source
 

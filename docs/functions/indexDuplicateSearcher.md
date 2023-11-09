@@ -24,9 +24,15 @@
 
 readonly `T`[]
 
+## Example
+
+```ts
+
+```
+
 ## Source
 
-[Projects/clean-tool-app/src/lib/array.ts:9](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/lib/array.ts:17](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

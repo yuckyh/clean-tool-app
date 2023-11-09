@@ -19,7 +19,7 @@ import * as f from 'fp-ts/function'
 import { forwardRef, useImperativeHandle, useState } from 'react'
 
 export interface AlertRef {
-  open: IO.IO<boolean>
+  open: IO.IO<void>
   setContent: (content: string) => string
   setTitle: (title: string) => string
 }
@@ -45,12 +45,7 @@ const AlertDialog = forwardRef<AlertRef, Props>(
         open: f.pipe(
           setOpen,
           IO.of,
-          IO.flatMap((fn) =>
-            IO.as(true)(() => {
-              fn(true)
-              return true
-            }),
-          ),
+          IO.flap(true),
         ),
         setContent: (newContent) => {
           setContent(newContent)
