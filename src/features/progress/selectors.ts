@@ -1,8 +1,10 @@
 import type { AppState } from '@/app/store'
+import type { RouteObject } from 'react-router-dom'
 
 import { routes } from '@/app/Router'
 import { getProgress } from '@/app/selectors'
 import { arrayLookup, findIndex, recordLookup } from '@/lib/array'
+import { equals } from '@/lib/fp'
 import { getPathTitle } from '@/lib/fp/string'
 import { createSelector } from '@reduxjs/toolkit'
 import * as O from 'fp-ts/Option'
@@ -10,12 +12,11 @@ import * as P from 'fp-ts/Predicate'
 import * as RA from 'fp-ts/ReadonlyArray'
 import * as RR from 'fp-ts/ReadonlyRecord'
 import * as f from 'fp-ts/function'
-import * as S from 'fp-ts/string'
 import * as N from 'fp-ts/number'
-import { RouteObject, matchRoutes, resolvePath } from 'react-router-dom'
+import * as S from 'fp-ts/string'
+import { matchRoutes, resolvePath } from 'react-router-dom'
 
 import type { Progress } from './reducers'
-import { equals } from '@/lib/fp'
 
 /**
  *
@@ -23,6 +24,7 @@ import { equals } from '@/lib/fp'
  * @param _1
  * @param locationPath
  * @returns
+ * @example
  */
 const getLocationPathParam = (_: AppState, _1: string, locationPath: string) =>
   locationPath
@@ -32,6 +34,7 @@ const getLocationPathParam = (_: AppState, _1: string, locationPath: string) =>
  * @param _
  * @param componentPath
  * @returns
+ * @example
  */
 const getComponentPathParam = (_: AppState, componentPath: string) =>
   componentPath
@@ -43,6 +46,7 @@ const getComponentPathParam = (_: AppState, componentPath: string) =>
  * @param _2
  * @param pos
  * @returns
+ * @example
  */
 const getPosParam = (_: AppState, _1: string, _2: string, pos: number) => pos
 
@@ -96,6 +100,7 @@ export const getAllowedPaths = createSelector(
    * @param paths
    * @param progress
    * @returns
+   * @example
    */
   (paths, progress) =>
     f.pipe(
@@ -116,6 +121,7 @@ export const getDisabled = createSelector(
    * @param path
    * @param allowedPaths
    * @returns
+   * @example
    */
   (path, allowedPaths) => P.not(RA.elem(S.Eq)(path))(allowedPaths),
 )
@@ -127,6 +133,7 @@ export const getPosition = createSelector(
    * @param locationPathWords
    * @param paths
    * @returns
+   * @example
    */
   (locationPathWords, paths) =>
     f.pipe(paths, RA.map(S.replace('/', '')), findIndex)(S.Eq)(
@@ -164,6 +171,7 @@ export const getTitle = createSelector(
    * @param locationHasVisit
    * @param isAtEda
    * @returns
+   * @example
    */
   (locationPath, locationHasVisit, isAtEda) =>
     getPathTitle(locationPath, locationHasVisit && isAtEda ? 2 : 1),

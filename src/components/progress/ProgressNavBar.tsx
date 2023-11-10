@@ -1,6 +1,7 @@
 /* eslint-disable
   functional/functional-parameters
 */
+import { getPosition, getProgressValue } from '@/features/progress/selectors'
 import { useAppSelector } from '@/lib/hooks'
 import {
   ProgressBar,
@@ -9,8 +10,6 @@ import {
   shorthands,
 } from '@fluentui/react-components'
 import { useLocation, useResolvedPath } from 'react-router-dom'
-
-import { getPosition, getProgressValue } from '../../features/progress/selectors'
 
 const useClasses = makeStyles({
   initialRoot: {

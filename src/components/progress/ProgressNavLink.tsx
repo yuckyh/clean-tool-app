@@ -1,3 +1,4 @@
+import { getDisabled } from '@/features/progress/selectors'
 import { getPathTitle } from '@/lib/fp/string'
 import { useAppSelector } from '@/lib/hooks'
 import {
@@ -16,8 +17,6 @@ import {
   useLocation,
   useResolvedPath,
 } from 'react-router-dom'
-
-import { getDisabled } from '../../features/progress/selectors'
 
 const useClasses = makeStyles({
   activeStepThumb: {

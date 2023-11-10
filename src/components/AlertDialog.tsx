@@ -42,11 +42,7 @@ const AlertDialog = forwardRef<AlertRef, Props>(
     useImperativeHandle(
       ref,
       () => ({
-        open: f.pipe(
-          setOpen,
-          IO.of,
-          IO.flap(true),
-        ),
+        open: f.pipe(setOpen, IO.of, IO.flap(true)),
         setContent: (newContent) => {
           setContent(newContent)
           return newContent

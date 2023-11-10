@@ -1,6 +1,3 @@
-/* eslint-disable
-  functional/functional-parameters
-  */
 import { getTitle } from '@/features/progress/selectors'
 import { useAppSelector } from '@/lib/hooks'
 import { Helmet } from 'react-helmet-async'

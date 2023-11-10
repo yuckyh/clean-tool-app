@@ -2,6 +2,13 @@
   functional/functional-parameters
 */
 import { saveColumnState } from '@/features/columns/reducers'
+import { saveProgressState } from '@/features/progress/reducers'
+import {
+  getAllowedPaths,
+  getPaths,
+  getPosition,
+  getShouldNavigateToAllowed,
+} from '@/features/progress/selectors'
 import { saveSheetState } from '@/features/sheet/reducers'
 import { tail } from '@/lib/array'
 import { asIO, equals, refinedEq } from '@/lib/fp'
@@ -26,13 +33,6 @@ import {
   useResolvedPath,
 } from 'react-router-dom'
 
-import { saveProgressState } from '../../../features/progress/reducers'
-import {
-  getAllowedPaths,
-  getPaths,
-  getPosition,
-  getShouldNavigateToAllowed,
-} from '../../../features/progress/selectors'
 import ProgressNavBar from '../ProgressNavBar'
 import ProgressNavLink from '../ProgressNavLink'
 import ProgressNavPageTitle from './PageTitle'
