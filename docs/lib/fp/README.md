@@ -21,7 +21,9 @@
 - [promisedTask](functions/promisedTask.md)
 - [promisedTaskOption](functions/promisedTaskOption.md)
 - [refinedEq](functions/refinedEq.md)
+- [refinedOrd](functions/refinedOrd.md)
 - [stubEq](functions/stubEq.md)
+- [stubOrd](functions/stubOrd.md)
 - [toString](functions/toString.md)
 - [typedIdentity](functions/typedIdentity.md)
 

@@ -1,7 +1,6 @@
 /* eslint-disable functional/functional-parameters */
 import type { InputProps } from '@fluentui/react-components'
 
-import { dump } from '@/lib/fp/logger'
 import { useAppDispatch, useAppSelector } from '@/lib/hooks'
 import { Field, Input, makeStyles } from '@fluentui/react-components'
 import * as IO from 'fp-ts/IO'
@@ -31,7 +30,7 @@ export default function VisitsInput() {
 
   const dispatch = useAppDispatch()
 
-  const visitsLength = useAppSelector(({ sheet }) => dump(sheet.visits).length)
+  const visitsLength = useAppSelector(({ sheet }) => sheet.visits.length)
 
   const [visitsValue, setVisitsValue] = useState(visitsLength)
 

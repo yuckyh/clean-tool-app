@@ -2,11 +2,11 @@
 
 ***
 
-[CLEaN Tool](../../../modules.md) / [lib/fp](../README.md) / stubEq
+[CLEaN Tool](../../../modules.md) / [lib/fp](../README.md) / stubOrd
 
-# Function: stubEq()
+# Function: stubOrd()
 
-> **stubEq**\<`V`\>(): `Eq`\<`V`\>
+> **stubOrd**\<`V`\>(): `Ord`\<`V`\>
 
 ## Type parameters
 
@@ -14,11 +14,11 @@
 
 ## Returns
 
-`Eq`\<`V`\>
+`Ord`\<`V`\>
 
 ## Source
 
-[Projects/clean-tool-app/src/lib/fp/index.ts:43](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/lib/fp/index.ts:50](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

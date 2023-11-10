@@ -10,7 +10,7 @@
 
 ## Source
 
-[Projects/clean-tool-app/src/features/columns/reducers.ts:20](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/features/columns/reducers.ts:23](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

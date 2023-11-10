@@ -21,6 +21,7 @@
 - [fold](functions/fold.md)
 - [of](functions/of.md)
 - [recordMap](functions/recordMap.md)
+- [unwrap](functions/unwrap.md)
 
 ***
 

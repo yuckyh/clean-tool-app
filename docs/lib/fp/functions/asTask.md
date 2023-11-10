@@ -36,7 +36,7 @@ A task representing the function.
 
 ## Source
 
-[Projects/clean-tool-app/src/lib/fp/index.ts:28](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/lib/fp/index.ts:29](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

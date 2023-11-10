@@ -2,11 +2,11 @@
 
 ***
 
-[CLEaN Tool](../../../modules.md) / [lib/fp](../README.md) / refinedEq
+[CLEaN Tool](../../../modules.md) / [lib/fp](../README.md) / refinedOrd
 
-# Function: refinedEq()
+# Function: refinedOrd()
 
-> **refinedEq**\<`V`, `K`\>(`eq`): `Eq`\<`V`\>
+> **refinedOrd**\<`V`, `K`\>(`ord`): `Ord`\<`V`\>
 
 ## Type parameters
 
@@ -16,15 +16,15 @@
 
 ## Parameters
 
-▪ **eq**: `Eq`\<`K`\>
+▪ **ord**: `Ord`\<`K`\>
 
 ## Returns
 
-`Eq`\<`V`\>
+`Ord`\<`V`\>
 
 ## Source
 
-[Projects/clean-tool-app/src/lib/fp/index.ts:47](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/lib/fp/index.ts:55](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 
