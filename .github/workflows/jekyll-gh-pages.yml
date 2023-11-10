@@ -38,7 +38,6 @@ jobs:
         with:
           source: ./docs/
           destination: ./_site
-          working-directory: '${{ github.workspace }}/docs'
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v2
 
