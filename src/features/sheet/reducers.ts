@@ -6,10 +6,10 @@ import type { RejectedAction } from '@/types/redux'
 import type { PayloadAction } from '@reduxjs/toolkit'
 
 import { head } from '@/lib/array'
-import { equals } from '@/lib/fp'
+import { equals, typedIdentity } from '@/lib/fp'
 import * as CellItem from '@/lib/fp/CellItem'
 import * as Flag from '@/lib/fp/Flag'
-import { dumpError } from '@/lib/fp/logger'
+import { dump, dumpError } from '@/lib/fp/logger'
 import { lt } from '@/lib/fp/number'
 import { getPersisted, setPersisted } from '@/lib/localStorage'
 import { createSlice } from '@reduxjs/toolkit'
@@ -119,6 +119,8 @@ const sheetSlice = createSlice({
         state.sheetNames = SheetNames ?? []
         state.sheetName ||= state.sheetNames[0] ?? defaultValue
 
+        state.visits = state.visits.length ? state.visits : ['1']
+
         const sheet = Sheets?.[state.sheetName] ?? {}
 
         state.data = f.pipe(
@@ -182,10 +184,18 @@ const sheetSlice = createSlice({
 
       setPersisted(sliceName, sheetName)
       setPersisted(fileNameKey, fileName)
-      setPersisted('data', JSON.stringify(data))
-      ;([sheetNames, visits, originalColumns] as const).forEach((value, i) => {
-        setPersisted(listKeys[i] ?? '', value.join(','))
-      })
+      setPersisted(
+        'data',
+        f.pipe(CellItem.unwrap, RA.map, f.apply(data), JSON.stringify),
+      )
+
+      f.pipe(
+        [sheetNames, visits, originalColumns] as const,
+        RA.map((x) => x.join(',')),
+        RA.zip(listKeys),
+        typedIdentity<[string, string][]>,
+        RA.map(f.tupled(setPersisted)),
+      )
 
       setPersisted('flaggedCells', `[${flaggedCells.join('],[')}]`)
 
@@ -206,7 +216,7 @@ const sheetSlice = createSlice({
       state.visits = f.pipe(
         visits,
         RA.modifyAt(pos, f.constant(visit)),
-        f.pipe(visits, f.constant, O.getOrElse),
+        O.getOrElse(() => visits),
       ) as string[]
 
       return state
@@ -216,7 +226,7 @@ const sheetSlice = createSlice({
       { payload }: Readonly<PayloadAction<Flag.Flag>>,
     ) => {
       state.flaggedCells = f.pipe(
-        [...state.flaggedCells] as readonly Flag.Flag[],
+        [...state.flaggedCells],
         E.fromPredicate(RA.elem(Flag.Eq)(payload), f.identity),
         E.match(
           f.pipe(equals(Flag.Eq)(payload), P.not, RA.filter<Flag.Flag>),
@@ -238,18 +248,7 @@ const sheetSlice = createSlice({
             RA.concat,
           ),
         ),
-        f.apply([...state.visits] as readonly string[]),
-      ) as string[]
-
-      // RA.makeBy(Math.abs(visitsLengthDiff), (i) => {
-      //   state.visits = f.pipe(
-      //     [...state.visits] as readonly string[],
-      //     E.fromPredicate(({ length }) => payload < length, f.identity),
-      //     E.match((visits) => {
-      //       return RA.append(add(1)(visits.length).toString())(visits)
-      //     }, RA.dropRight(1)),
-      //   ) as string[]
-      // })
+      )([...state.visits]) as string[]
 
       return state
     },

@@ -142,11 +142,10 @@ export default function NumericalPlot({
 
   const data: readonly Readonly<Partial<Data>>[] = [
     {
-      // customdata: RA.map(getIndexedIndex)(series) as string[],
       boxmean: true,
       boxpoints: 'outliers',
+      hovertemplate: `%{customdata}: %{x} ${unit}`,
       jitter: 0.3,
-      // hovertemplate: `%{customdata}: %{x} ${unit}`,
       marker: {
         opacity: 0,
       },

@@ -91,34 +91,32 @@ export default function PreviewCell({ col, row }: Readonly<Props>) {
   const styleClass = useMemo(
     () =>
       f.pipe(
-        flaggedCells,
-        RA.filter(
-          f.pipe(
-            Eq.tuple(S.Eq, S.Eq, stubEq()),
-            Flag.getEq,
-            equals,
-            f.apply(Flag.of(index, formattedColumn, 'none')),
-          ),
-        ),
+        Eq.tuple(S.Eq, S.Eq, stubEq()),
+        Flag.getEq,
+        equals,
+        f.apply(Flag.of(index, formattedColumn, 'none')),
+        RA.filter<Flag.Flag>,
+        f.apply(flaggedCells),
         E.fromPredicate((flags) => flags.length === 1, f.identity),
         E.getOrElse(
           f.flow(
             O.fromPredicate((flags) => flags.length > 1),
             O.map(
-              RA.filter(
-                f.pipe(
-                  Flag.of('', '', 'outlier'),
-                  equals(Flag.getEq(reasonInFlagEq)),
-                ),
+              f.pipe(
+                reasonInFlagEq,
+                Flag.getEq,
+                equals,
+                f.apply(Flag.of('', '', 'outlier')),
+                RA.filter<Flag.Flag>,
               ),
             ),
-            O.getOrElse(f.constant(RA.empty as readonly Flag.Flag[])),
+            O.getOrElse(f.constant([] as readonly Flag.Flag[])),
           ),
         ),
         RA.head,
         O.getOrElse(() => Flag.of('', '', 'outlier')),
         ({ value }) => RR.lookup(value[2])(classes),
-        f.pipe('', f.constant, O.getOrElse),
+        O.getOrElse(() => ''),
       ),
     [classes, flaggedCells, formattedColumn, index],
   )

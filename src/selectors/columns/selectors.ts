@@ -36,7 +36,7 @@ export const getColumnComparer = createSelector(
 export const getColumnDuplicates = createSelector(
   [getMatchColumns, getMatchColumn],
   (matchColumns, matchColumn) =>
-    indexDuplicateSearcher(f.pipe(matchColumns, RA.map(RA.of)), [matchColumn]),
+    indexDuplicateSearcher(RA.map(RA.of)(matchColumns), [matchColumn]),
 )
 
 export const getColumnDuplicatesList = createSelector(
@@ -45,9 +45,7 @@ export const getColumnDuplicatesList = createSelector(
     f.pipe(
       matchColumns,
       RA.map((matchColumn) =>
-        indexDuplicateSearcher(f.pipe(matchColumns, RA.map(RA.of)), [
-          matchColumn,
-        ]),
+        indexDuplicateSearcher(RA.map(RA.of)(matchColumns), [matchColumn]),
       ),
     ),
 )

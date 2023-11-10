@@ -135,10 +135,7 @@ export const useSyncedSelectionHandler = (
     getFlaggedRows(state, title, reason),
   )
 
-  const indices = useMemo(
-    () => f.pipe(series, RA.map(getIndexedIndex)),
-    [series],
-  )
+  const indices = useMemo(() => RA.map(getIndexedIndex)(series), [series])
 
   return useCallback<Required<DataGridProps>['onSelectionChange']>(
     (_1, { selectedItems }) => {

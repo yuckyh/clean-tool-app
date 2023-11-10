@@ -10,7 +10,7 @@ import {
 } from '@fluentui/react-components'
 import { useLocation, useResolvedPath } from 'react-router-dom'
 
-import { getPosition, getProgressValue } from '../selectors'
+import { getPosition, getProgressValue } from '../../features/progress/selectors'
 
 const useClasses = makeStyles({
   initialRoot: {

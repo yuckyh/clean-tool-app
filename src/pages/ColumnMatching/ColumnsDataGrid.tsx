@@ -208,8 +208,7 @@ export default function ColumnsDataGrid({
       matchVisits,
       length,
       TO.fromPredicate(equals(N.Eq)(0)),
-      TO.map(fetchSheet),
-      TO.map((x) => dispatch(x)),
+      TO.map(f.flow(fetchSheet, (x) => dispatch(x))),
       TO.match(fetchMatches, fetchMatches),
       T.map((x) => dispatch(x)),
       IO.tap(() =>

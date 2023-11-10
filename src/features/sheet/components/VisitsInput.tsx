@@ -1,12 +1,13 @@
 /* eslint-disable functional/functional-parameters */
 import type { InputProps } from '@fluentui/react-components'
 
+import { dump } from '@/lib/fp/logger'
 import { useAppDispatch, useAppSelector } from '@/lib/hooks'
 import { Field, Input, makeStyles } from '@fluentui/react-components'
 import * as IO from 'fp-ts/IO'
 import * as RA from 'fp-ts/ReadonlyArray'
 import * as f from 'fp-ts/function'
-import { useCallback, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 
 import { syncVisits } from '../reducers'
 import VisitInput from './VisitInput'
@@ -30,28 +31,31 @@ export default function VisitsInput() {
 
   const dispatch = useAppDispatch()
 
-  const visitsLength = useAppSelector(({ sheet }) => sheet.visits.length)
+  const visitsLength = useAppSelector(({ sheet }) => dump(sheet.visits).length)
 
-  const [visitsValue, setVisitsValue] = useState(visitsLength || 1)
+  const [visitsValue, setVisitsValue] = useState(visitsLength)
 
   const handleNoOfVisitChange: Required<InputProps>['onChange'] = useCallback(
     (_event, { value }) => {
       const newVisitsLength = parseInt(value, 10)
       setVisitsValue(newVisitsLength)
 
-      if (Number.isNaN(newVisitsLength)) {
+      if (
+        Number.isNaN(newVisitsLength) ||
+        newVisitsLength < 0 ||
+        newVisitsLength === visitsLength
+      ) {
         return
       }
 
-      // if (newVisitsLength === 1) {
-      //   f.pipe(deleteVisits(), (x) => dispatch(x), IO.of)()
-      //   return
-      // }
-
       f.pipe(newVisitsLength, syncVisits, (x) => dispatch(x), IO.of)()
     },
-    [dispatch],
+    [dispatch, visitsLength],
   )
+
+  useEffect(() => {
+    setVisitsValue(visitsLength)
+  }, [visitsLength])
 
   return (
     <>
@@ -64,7 +68,7 @@ export default function VisitsInput() {
           value={visitsValue.toString()}
         />
       </Field>
-      {visitsLength > 1 &&
+      {visitsLength > 0 &&
         RA.makeBy(visitsLength, (pos) => <VisitInput key={pos} pos={pos} />)}
     </>
   )

@@ -4,7 +4,7 @@
 import { saveColumnState } from '@/features/columns/reducers'
 import { saveSheetState } from '@/features/sheet/reducers'
 import { tail } from '@/lib/array'
-import { asIO } from '@/lib/fp'
+import { asIO, equals, refinedEq } from '@/lib/fp'
 import { useAppDispatch, useAppSelector } from '@/lib/hooks'
 import {
   makeStyles,
@@ -13,11 +13,11 @@ import {
   useThemeClassName,
 } from '@fluentui/react-components'
 import * as IO from 'fp-ts/IO'
+import * as O from 'fp-ts/Option'
 import * as RA from 'fp-ts/ReadonlyArray'
 import * as f from 'fp-ts/function'
 import * as S from 'fp-ts/string'
 import { useCallback, useEffect, useMemo } from 'react'
-import { Helmet } from 'react-helmet-async'
 import {
   useBeforeUnload,
   useLocation,
@@ -26,16 +26,16 @@ import {
   useResolvedPath,
 } from 'react-router-dom'
 
-import { saveProgressState } from '../reducers'
+import { saveProgressState } from '../../../features/progress/reducers'
 import {
   getAllowedPaths,
   getPaths,
   getPosition,
   getShouldNavigateToAllowed,
-  getTitle,
-} from '../selectors'
-import ProgressNavBar from './ProgressNavBar'
-import ProgressNavLink from './ProgressNavLink'
+} from '../../../features/progress/selectors'
+import ProgressNavBar from '../ProgressNavBar'
+import ProgressNavLink from '../ProgressNavLink'
+import ProgressNavPageTitle from './PageTitle'
 
 const useClasses = makeStyles({
   linkContainer: {
@@ -49,6 +49,22 @@ const useClasses = makeStyles({
     ...shorthands.padding(tokens.spacingVerticalS, 0),
   },
 })
+
+const useUnloadSaveState = () => {
+  const dispatch = useAppDispatch()
+
+  useBeforeUnload(
+    useCallback(
+      () =>
+        f.pipe(
+          [saveSheetState, saveColumnState, saveProgressState] as const,
+          RA.map(f.flow((x) => dispatch(x()), IO.of)),
+          IO.sequenceArray,
+        )(),
+      [dispatch],
+    ),
+  )
+}
 
 /**
  * The progress navigation component
@@ -72,7 +88,7 @@ export default function ProgressNav() {
   const { pathname: locationPath } = useLocation()
 
   const params = useMemo(
-    () => [componentPath, locationPath] as [string, string],
+    () => [componentPath, locationPath] as const,
     [componentPath, locationPath],
   )
 
@@ -83,8 +99,6 @@ export default function ProgressNav() {
     getAllowedPaths(state, componentPath),
   )
   const position = useAppSelector((state) => getPosition(state, ...params))
-  const title = useAppSelector((state) => getTitle(state, ...params))
-
   const shouldNavigateToAllowed = useAppSelector((state) =>
     getShouldNavigateToAllowed(state, ...params),
   )
@@ -107,34 +121,31 @@ export default function ProgressNav() {
   }, [themeClasses])
 
   useEffect(() => {
-    if (navState === 'loading') {
-      f.pipe(
-        [saveSheetState, saveColumnState, saveProgressState] as const,
-        RA.map(f.flow((x) => dispatch(x()), IO.of)),
-        IO.sequenceArray,
-      )()
-      return undefined
-    }
-    return undefined
+    f.pipe(
+      S.Eq,
+      refinedEq,
+      equals,
+      f.apply('loading' as typeof navState),
+      O.fromPredicate<typeof navState>,
+      f.apply(navState),
+      O.map(
+        f.flow(
+          () => [saveSheetState, saveColumnState, saveProgressState] as const,
+          IO.traverseArray(f.flow((x) => dispatch(x()), IO.of)),
+          (x) => x(),
+        ),
+      ),
+    )
   }, [dispatch, navState])
 
-  useBeforeUnload(
-    useCallback(
-      () =>
-        f.pipe(
-          [saveSheetState, saveColumnState, saveProgressState] as const,
-          RA.map(f.flow((x) => dispatch(x()), IO.of)),
-          IO.sequenceArray,
-        )(),
-      [dispatch],
-    ),
-  )
+  useUnloadSaveState()
 
   return (
     <div className={classes.root}>
-      <Helmet>
-        <title>{title}</title>
-      </Helmet>
+      <ProgressNavPageTitle
+        componentPath={componentPath}
+        locationPath={locationPath}
+      />
       <ProgressNavBar />
       <div className={classes.linkContainer}>
         {f.pipe(

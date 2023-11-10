@@ -16,7 +16,7 @@ export const of = <V extends Value>(
   value,
 })
 
-const unwrap = <V extends Value>({
+export const unwrap = <V extends Value>({
   value,
 }: Readonly<CellItem<V>>): RR.ReadonlyRecord<string, V> => value
 

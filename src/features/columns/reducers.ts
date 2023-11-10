@@ -6,13 +6,17 @@ import type { PayloadAction } from '@reduxjs/toolkit'
 import type * as Ref from 'fp-ts/Refinement'
 
 import { codebook } from '@/data'
-import { equals } from '@/lib/fp'
+import { arrayLookup, getIndexedValue } from '@/lib/array'
+import { equals, stubOrd } from '@/lib/fp'
+import { dump } from '@/lib/fp/logger'
 import { getPersisted, setPersisted } from '@/lib/localStorage'
 import { createSlice } from '@reduxjs/toolkit'
 import * as O from 'fp-ts/Option'
+import * as Ord from 'fp-ts/Ord'
 import * as P from 'fp-ts/Predicate'
 import * as RA from 'fp-ts/ReadonlyArray'
 import * as f from 'fp-ts/function'
+import * as N from 'fp-ts/number'
 import * as S from 'fp-ts/string'
 
 import { fetchMatches, sliceName } from './actions'
@@ -87,24 +91,45 @@ const columnsSlice = createSlice({
             ),
           ) as string[])
 
-      state.matchVisits = matchVisits.length
-        ? matchVisits
-        : state.matchColumns
-            .map((x, i) => [x, i] as const) // Save the original index
-            .sort(([a], [b]) => a.localeCompare(b)) // Sort by name to detect duplicates
-            .map(([match, i], sortedI, arr) => {
-              const prevMatch = arr[sortedI - 1]?.[0] ?? ''
-              const prevPrevMatch = arr[sortedI - 2]?.[0] ?? ''
-              const prevIncrement = Number(prevMatch === prevPrevMatch)
-              const increment = Number(match === prevMatch)
+      const sorted =
+        !matchVisits.length &&
+        f.pipe(
+          [...state.matchColumns],
+          RA.mapWithIndex((i, x) => [i, x] as const),
+          RA.sort(Ord.tuple(stubOrd(), S.Ord)),
+        )
 
-              return [
-                increment + (increment === 1 ? prevIncrement : 0),
-                i,
-              ] as const
-            }) // Mark the duplicates with ones
-            .sort(([, a], [, b]) => a - b) // Sort by the original index
-            .map(([match]) => match) // Remove the original index
+      state.matchVisits = !sorted
+        ? matchVisits
+        : (f.pipe(
+            sorted,
+            RA.mapWithIndex(
+              f.flow(
+                (sortedIdx, [originalIdx, x]) =>
+                  [originalIdx, sortedIdx, x] as const,
+                ([originalIdx, sortedIdx, x]) =>
+                  [
+                    originalIdx,
+                    arrayLookup(sorted)([sortedIdx - 1, ''])(sortedIdx - 1)[1],
+                    arrayLookup(sorted)([sortedIdx - 2, ''])(sortedIdx - 2)[1],
+                    x,
+                  ] as const,
+                ([originalIdx, prevMatch, prevPrevMatch, x]) =>
+                  [
+                    originalIdx,
+                    Number(equals(S.Eq)(x)(prevMatch)),
+                    Number(equals(S.Eq)(prevMatch)(prevPrevMatch)),
+                  ] as const,
+                ([originalIdx, increment, prevIncrement]) =>
+                  [
+                    originalIdx,
+                    increment + (increment === 1 ? prevIncrement : 0),
+                  ] as const,
+              ),
+            ),
+            RA.sort(Ord.tuple(N.Ord, stubOrd())),
+            RA.map(getIndexedValue),
+          ) as number[])
 
       state.dataTypes = dataType.length
         ? dataType
