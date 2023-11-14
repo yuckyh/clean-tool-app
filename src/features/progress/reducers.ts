@@ -8,16 +8,16 @@ import { getPersisted, setPersisted } from '@/lib/localStorage'
 import { createSlice } from '@reduxjs/toolkit'
 
 /**
- * 
+ *
  */
 export type Progress = 'explored' | 'matched' | 'none' | 'uploaded'
 
 /**
- * 
+ *
  */
 interface State {
   /**
-   * 
+   *
    */
   progress: Progress
 }

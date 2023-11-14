@@ -69,7 +69,10 @@ export const useLoadingTransition = asIO(() => {
 })
 
 /**
- * 
+ *
+ * @param dark
+ * @param light
+ * @example
  */
 export const useThemePreference = (
   dark = webDarkTheme,
@@ -94,7 +97,9 @@ export const useThemePreference = (
 }
 
 /**
- * 
+ *
+ * @param token
+ * @example
  */
 export const useTokenToHex = (token: Property<ColorTokens>) => {
   const [color, setColor] = useState('#000')
@@ -135,21 +140,23 @@ export const useStorage = () => {
 export const useGlobalStyles = makeStaticStyles(globalStyles)
 
 /**
- * 
- * @param title 
- * @param reason 
- * @returns 
+ *
+ * @param title
+ * @param reason
+ * @returns
+ * @example
  */
 const selectFlaggedRows =
   (title: string, reason: Flag.FlagReason) => (state: AppState) =>
     getFlaggedRows(state, title, reason)
 
 /**
- * 
- * @param reason 
- * @param title 
- * @param series 
- * @returns 
+ *
+ * @param reason
+ * @param title
+ * @param series
+ * @returns
+ * @example
  */
 export const useSyncedSelectionHandler = (
   reason: Flag.FlagReason,

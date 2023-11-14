@@ -17,7 +17,9 @@ const handledTask: T.Task<SheetResponse> = createHandledTask(
 )
 
 /**
- * 
+ *
+ * @param result
+ * @example
  */
 const isSuccessful: Ref.Refinement<
   SheetResponse,
