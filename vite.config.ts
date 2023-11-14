@@ -98,9 +98,6 @@ export default defineConfig(({ mode }) => {
         '@': resolveDir`src`,
       },
     },
-    rollupOptions: {
-      external: /\/html-docs\/.*/,
-    },
     // Tauri expects a fixed port, fail if that port is not available
     server: {
       cors: false,

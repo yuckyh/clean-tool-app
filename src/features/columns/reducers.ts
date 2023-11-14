@@ -7,7 +7,7 @@ import type * as Ref from 'fp-ts/Refinement'
 
 import { codebook } from '@/data'
 import { arrayLookup, getIndexedValue } from '@/lib/array'
-import { equals, stubOrd } from '@/lib/fp'
+import { equals, stubOrd, typedIdentity } from '@/lib/fp'
 import { getPersisted, setPersisted } from '@/lib/localStorage'
 import { createSlice } from '@reduxjs/toolkit'
 import * as O from 'fp-ts/Option'
@@ -168,10 +168,11 @@ const columnsSlice = createSlice({
 
       f.pipe(
         [matchColumns, matchVisits, dataTypes] as const,
-        RA.zip(keys),
-        RA.map(([value, key]) => {
-          return setPersisted(key, value.join(','))
-        }),
+        RA.map((x) => x.join(',')),
+        RA.zip<string>,
+        f.apply(keys),
+        typedIdentity<[ArrayElement<typeof keys>, string][]>,
+        RA.map(f.tupled(setPersisted)),
       )
 
       return state

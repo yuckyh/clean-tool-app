@@ -18,6 +18,7 @@ import {
 } from '@fluentui/react-components'
 import * as IO from 'fp-ts/IO'
 import * as f from 'fp-ts/function'
+import * as S from 'fp-ts/string'
 import { useParams } from 'react-router-dom'
 
 import AllDataGrid from './DataGrid/AllDataGrid'
@@ -25,6 +26,8 @@ import IncorrectDataGrid from './DataGrid/IncorrectDataGrid'
 import BlankDataGrid from './DataGrid/MissingDataGrid'
 import OutlierDataGrid from './DataGrid/OutlierDataGrid'
 import SummaryDataGrid from './DataGrid/SummaryDataGrid'
+import { arrayLookup } from '@/lib/array'
+import { equals } from '@/lib/fp'
 
 const useClasses = makeStyles({
   actions: {
@@ -80,17 +83,17 @@ export default function Variable() {
 
   const dispatch = useAppDispatch()
 
-  const firstVisit = useAppSelector(({ sheet }) => sheet.visits[0] ?? '')
+  const firstVisit = useAppSelector(({ sheet }) => arrayLookup(sheet.visits)('')(0))
 
   const column = kebabToSnake(params.column ?? '')
   const visit = params.visit ?? firstVisit
 
   const pos = useAppSelector((state) => getSearchedPos(state, column, visit))
-  const dataType = useAppSelector(({ columns }) => columns.dataTypes[pos] ?? '')
+  const dataType = useAppSelector(({ columns }) => arrayLookup(columns.dataTypes)('none')(pos))
 
   const title = `${column}${visit && visit !== '1' ? `_${visit}` : ''}`
 
-  const codebookVariable = codebook.find(({ name }) => column === name) ?? {
+  const codebookVariable = codebook.find(({ name }) => equals(S.Eq)(name)) ?? {
     category: '',
     description: '',
     name: '',

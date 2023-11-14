@@ -21,6 +21,7 @@ import {
 import { equals, isCorrectNumber, refinedEq, stubEq, toString } from '@/lib/fp'
 import * as CellItem from '@/lib/fp/CellItem'
 import * as Flag from '@/lib/fp/Flag'
+import { dump } from '@/lib/fp/logger'
 import { add, divideBy, multiply } from '@/lib/fp/number'
 import { getOriginalColumn } from '@/selectors/columns/selectors'
 import { createSelector } from '@reduxjs/toolkit'
@@ -81,9 +82,15 @@ export const getVisit = createSelector(
 /**
  *
  */
-export const getFirstVisit = createSelector([getVisits], (visits) =>
-  head(visits)(''),
+export const getFirstVisit = createSelector(
+  [getVisits],
+  f.flow(head, f.apply('')),
 )
+
+/**
+ *
+ */
+export const getVisitsLength = createSelector([getVisits], RA.size)
 
 /**
  *
@@ -260,6 +267,7 @@ export const getIndexedNumericalRow = createSelector(
   [getBlanklessRow],
   f.flow(
     RA.filter(f.flow(getIndexedValue, isCorrectNumber)),
+    dump,
     RA.map(([index, val]) => [index, parseFloat(val)] as const),
   ),
 )

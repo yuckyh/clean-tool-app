@@ -61,7 +61,7 @@ export interface State {
 }
 
 const defaultValue = ''
-const listKeys = ['sheetNames', 'visits', 'originalColumns'] as const
+const keys = ['sheetNames', 'visits', 'originalColumns'] as const
 const fileNameKey = 'fileName'
 
 const initialState: Readonly<State> = {
@@ -81,18 +81,18 @@ const initialState: Readonly<State> = {
     RA.map((arg) => Flag.of(...arg)),
   ),
   originalColumns: f.pipe(
-    getPersisted(listKeys[2], defaultValue),
+    getPersisted(keys[2], defaultValue),
     S.split(','),
     RA.filter(P.not(S.isEmpty)),
   ),
   sheetName: getPersisted(sliceName, defaultValue),
   sheetNames: f.pipe(
-    getPersisted(listKeys[0], defaultValue),
+    getPersisted(keys[0], defaultValue),
     S.split(','),
     RA.filter(P.not(S.isEmpty)),
   ),
   visits: f.pipe(
-    getPersisted(listKeys[1], defaultValue),
+    getPersisted(keys[1], defaultValue),
     S.split(','),
     RA.filter(P.not(S.isEmpty)),
   ),
@@ -192,8 +192,9 @@ const sheetSlice = createSlice({
       f.pipe(
         [sheetNames, visits, originalColumns] as const,
         RA.map((x) => x.join(',')),
-        RA.zip(listKeys),
-        typedIdentity<[string, string][]>,
+        RA.zip<string>,
+        f.apply(keys),
+        typedIdentity<[ArrayElement<typeof keys>, string][]>,
         RA.map(f.tupled(setPersisted)),
       )
 

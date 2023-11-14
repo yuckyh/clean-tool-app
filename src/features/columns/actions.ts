@@ -56,13 +56,7 @@ export const fetchMatches = createAsyncThunk(
         (value) => value.length > 0 && Math.max(...value) > visits.length,
       ),
       O.map(
-        f.flow(
-          f.tupled(Math.max),
-          add(1),
-          syncVisits,
-          dispatch,
-          f.constant(result),
-        ),
+        f.flow(f.tupled(Math.max), add(1), syncVisits, dispatch, () => result),
       ),
       O.getOrElse(() => result),
     )

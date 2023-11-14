@@ -31,7 +31,7 @@ import {
   Subtitle1,
   Title1,
   Title2,
-  // Toaster,
+  Toaster,
   makeStyles,
   shorthands,
   tokens,
@@ -123,9 +123,7 @@ export default function Upload() {
       T.of,
       T.tap((x) => f.pipe(dispatch(x()), promisedTask)),
       T.tapIO(
-        IO.of(() => {
-          localStorage.clear()
-        }),
+        () => localStorage.clear,
       ),
     )().catch(dumpError)
   }, [dispatch])
@@ -138,13 +136,7 @@ export default function Upload() {
       IO.of,
       IO.tap(
         IO.of(() => {
-          // globalThis.location.reload()
-          /* Workaround to fix a bug, removes the transition animation
-            Supposed to be */
           navigate('/column-matching')
-          // globalThis.location.reload()
-
-          // globalThis.location.href = '/column-matching'
         }),
       ),
     )()
@@ -202,7 +194,7 @@ export default function Upload() {
           size="huge"
         />
       )}
-      {/* <Toaster toasterId={toasterId} /> */}
+      <Toaster toasterId={toasterId} />
     </section>
   )
 }

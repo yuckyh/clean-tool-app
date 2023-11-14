@@ -12,7 +12,7 @@ import type {
 } from '@fluentui/react-components'
 import type { RefObject } from 'react'
 
-import { getMatchVisits, getVisits } from '@/app/selectors'
+import { getMatchVisits } from '@/app/selectors'
 import Loader from '@/components/Loader'
 import SimpleDataGrid from '@/components/SimpleDataGrid'
 import { fetchMatches } from '@/features/columns/actions'
@@ -21,8 +21,7 @@ import {
   getScoreComparer,
   getVisitsComparer,
 } from '@/features/columns/selectors'
-import { fetchSheet } from '@/features/sheet/actions'
-import { equals, length } from '@/lib/fp'
+import { getVisitsLength } from '@/features/sheet/selectors'
 import { dumpError } from '@/lib/fp/logger'
 import {
   useAppDispatch,
@@ -40,11 +39,10 @@ import {
   createTableColumn,
 } from '@fluentui/react-components'
 import * as IO from 'fp-ts/IO'
+import * as IOO from 'fp-ts/IOOption'
 import * as RA from 'fp-ts/ReadonlyArray'
 import * as T from 'fp-ts/Task'
-import * as TO from 'fp-ts/TaskOption'
 import * as f from 'fp-ts/function'
-import * as N from 'fp-ts/number'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 
 import HeaderCell from './HeaderCell'
@@ -108,7 +106,7 @@ export default function ColumnsDataGrid({
 
   const columnsLength = useAppSelector(getColumnsLength)
   const matchVisits = useAppSelector(getMatchVisits)
-  const visits = useAppSelector(getVisits)
+  const visitsLength = useAppSelector(getVisitsLength)
   const columnComparer = useAppSelector(getColumnComparer)
   const matchComparer = useAppSelector(getMatchComparer)
   const visitsComparer = useAppSelector(getVisitsComparer)
@@ -132,101 +130,79 @@ export default function ColumnsDataGrid({
     [columnsLength],
   )
 
-  const columnsDefinition: readonly TableColumnDefinition<number>[] =
-    useMemo(() => {
-      const initial = [
-        createTableColumn({
-          columnId: 'original',
-          compare: columnComparer,
-          renderCell: (pos) => <ValueCell pos={pos} />,
-          renderHeaderCell: f.constant(
-            <HeaderCell
-              header="Original"
-              subtitle="The loaded column names (raw)"
-            />,
-          ),
-        }),
-        createTableColumn({
-          columnId: 'matches',
-          compare: matchComparer,
-          renderCell: (pos) => (
-            <MemoizedMatchCell alertRef={errorAlertRef} pos={pos} />
-          ),
-          renderHeaderCell: f.constant(
-            <HeaderCell
-              header="Replacement"
-              subtitle="List of possible replacements (sorted by score)"
-            />,
-          ),
-        }),
-      ]
-      const withVisits =
-        visits.length > 1
-          ? [
-              ...initial,
-              createTableColumn({
-                columnId: 'visit',
-                compare: visitsComparer,
-                renderCell: (pos) => (
-                  <MemoizedVisitsCell alertRef={errorAlertRef} pos={pos} />
-                ),
-                renderHeaderCell: f.constant(
-                  <HeaderCell
-                    header="Visit"
-                    subtitle="The matching visit number"
-                  />,
-                ),
-              }),
-            ]
-          : initial
-
-      return [
-        ...withVisits,
-        createTableColumn({
-          columnId: 'score',
-          compare: scoreComparer,
-          renderCell: (pos) => <MemoizedScoreCell pos={pos} />,
-          renderHeaderCell: f.constant(
-            <HeaderCell
-              header="Score"
-              subtitle="The fuzzy search score (1 indicates a perfect match)"
-            />,
-          ),
-        }),
-      ]
-    }, [
+  const columnsDefinition: readonly TableColumnDefinition<number>[] = useMemo(
+    () => [
+      createTableColumn({
+        columnId: 'original',
+        compare: columnComparer,
+        renderCell: (pos) => <ValueCell pos={pos} />,
+        renderHeaderCell: f.constant(
+          <HeaderCell
+            header="Original"
+            subtitle="The loaded column names (raw)"
+          />,
+        ),
+      }),
+      createTableColumn({
+        columnId: 'matches',
+        compare: matchComparer,
+        renderCell: (pos) => (
+          <MemoizedMatchCell alertRef={errorAlertRef} pos={pos} />
+        ),
+        renderHeaderCell: f.constant(
+          <HeaderCell
+            header="Replacement"
+            subtitle="List of possible replacements (sorted by score)"
+          />,
+        ),
+      }),
+      createTableColumn({
+        columnId: 'visit',
+        compare: visitsComparer,
+        renderCell: (pos) => (
+          <MemoizedVisitsCell alertRef={errorAlertRef} pos={pos} />
+        ),
+        renderHeaderCell: f.constant(
+          <HeaderCell header="Visit" subtitle="The matching visit number" />,
+        ),
+      }),
+      createTableColumn({
+        columnId: 'score',
+        compare: scoreComparer,
+        renderCell: (pos) => <MemoizedScoreCell pos={pos} />,
+        renderHeaderCell: f.constant(
+          <HeaderCell
+            header="Score"
+            subtitle="The fuzzy search score (1 indicates a perfect match)"
+          />,
+        ),
+      }),
+    ],
+    [
       columnComparer,
       matchComparer,
-      visits.length,
       visitsComparer,
       scoreComparer,
       errorAlertRef,
-    ])
+    ],
+  )
 
   useEffect(() => {
     f.pipe(
-      matchVisits,
-      length,
-      TO.fromPredicate(equals(N.Eq)(0)),
-      TO.map(f.flow(fetchSheet, (x) => dispatch(x))),
-      TO.match(fetchMatches, fetchMatches),
+      fetchMatches,
+      T.of,
       T.map((x) => dispatch(x)),
-      IO.tap(() =>
-        Math.max(...matchVisits) > visits.length && visits.length > 0
-          ? infoAlertRef.current?.open ?? IO.Do
-          : IO.Do,
-      ),
-      IO.tap(() => stopLoading),
+      T.tapIO(() => stopLoading),
     )().catch(dumpError)
-    return undefined
-  }, [
-    dispatch,
-    columnsLength,
-    stopLoading,
-    matchVisits,
-    visits.length,
-    infoAlertRef,
-  ])
+  }, [dispatch, stopLoading, columnsLength])
+
+  useEffect(() => {
+    f.pipe(
+      visitsLength,
+      IOO.fromPredicate((x) => Math.max(...matchVisits) > x && x > 0),
+      IOO.flatMapIO(() => infoAlertRef.current?.open ?? IO.of(() => {})),
+    )
+  }, [infoAlertRef, matchVisits, visitsLength])
 
   return !isLoading ? (
     <Loader

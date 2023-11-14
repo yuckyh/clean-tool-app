@@ -20,8 +20,8 @@ import { forwardRef, useImperativeHandle, useState } from 'react'
 
 export interface AlertRef {
   open: IO.IO<void>
-  setContent: (content: string) => string
-  setTitle: (title: string) => string
+  setContent: (content: string) => void
+  setTitle: (title: string) => void
 }
 
 interface Props {
@@ -35,22 +35,16 @@ const AlertDialog = forwardRef<AlertRef, Props>(
     const [content, setContent] = useState('')
     const [title, setTitle] = useState('')
 
-    const handleOpen: DialogProps['onOpenChange'] = (_event, data) => {
-      setOpen(data.open)
+    const handleOpen: DialogProps['onOpenChange'] = (_event, { open }) => {
+      setOpen(open)
     }
 
     useImperativeHandle(
       ref,
       () => ({
         open: f.pipe(setOpen, IO.of, IO.flap(true)),
-        setContent: (newContent) => {
-          setContent(newContent)
-          return newContent
-        },
-        setTitle: (newTitle) => {
-          setTitle(newTitle)
-          return newTitle
-        },
+        setContent,
+        setTitle,
       }),
       [],
     )

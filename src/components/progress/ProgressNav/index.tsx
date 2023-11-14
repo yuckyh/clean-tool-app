@@ -17,6 +17,7 @@ import {
   makeStyles,
   shorthands,
   tokens,
+  useRestoreFocusTarget,
   useThemeClassName,
 } from '@fluentui/react-components'
 import * as IO from 'fp-ts/IO'
@@ -103,6 +104,8 @@ export default function ProgressNav() {
     getShouldNavigateToAllowed(state, ...params),
   )
 
+  const restoreFocusTargetAttribute = useRestoreFocusTarget()
+
   useEffect(() => {
     if (!shouldNavigateToAllowed) {
       return
@@ -146,7 +149,7 @@ export default function ProgressNav() {
         componentPath={componentPath}
         locationPath={locationPath}
       />
-      <ProgressNavBar />
+      <ProgressNavBar {...restoreFocusTargetAttribute} />
       <div className={classes.linkContainer}>
         {f.pipe(
           paths,
