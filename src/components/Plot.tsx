@@ -4,7 +4,6 @@ import type { PlotParams } from 'react-plotly.js'
 import { useTokenToHex } from '@/lib/hooks'
 import { tokens } from '@fluentui/react-components'
 import * as RA from 'fp-ts/ReadonlyArray'
-import * as f from 'fp-ts/function'
 import Plotly from 'plotly.js-cartesian-dist'
 import createPlotlyComponent from 'react-plotly.js/factory'
 

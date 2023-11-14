@@ -7,7 +7,6 @@
   functional/functional-parameters
 */
 
-import type { AppState } from '@/app/store'
 import type { TableColumnDefinition } from '@fluentui/react-components'
 
 import { getDataLength, getFileName } from '@/app/selectors'

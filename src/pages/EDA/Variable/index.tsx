@@ -6,12 +6,10 @@ import type { AppState } from '@/app/store'
 import { codebook } from '@/data'
 import { setDataType } from '@/features/columns/reducers'
 import {
-  getDataType,
   getSearchedDataType,
   getSearchedPos,
 } from '@/features/columns/selectors'
 import { getFirstVisit } from '@/features/sheet/selectors'
-import { arrayLookup } from '@/lib/array'
 import { equals } from '@/lib/fp'
 import { kebabToSnake } from '@/lib/fp/string'
 import { useAppDispatch, useAppSelector } from '@/lib/hooks'
