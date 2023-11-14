@@ -24,6 +24,7 @@
 - [getOutliers](functions/getOutliers.md)
 - [getRow](functions/getRow.md)
 - [getVisit](functions/getVisit.md)
+- [getVisitsLength](functions/getVisitsLength.md)
 
 ***
 

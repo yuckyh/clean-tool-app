@@ -6,17 +6,17 @@
 
 # Function: getData()
 
-> **getData**(`param0`): readonly [`CellItem`](../../../lib/fp/CellItem/interfaces/CellItem.md)\<[`Value`](../../../lib/fp/CellItem/type-aliases/Value.md)\>[]
+> **getData**(`state`): readonly [`CellItem`](../../../lib/fp/CellItem/interfaces/CellItem.md)\<[`Value`](../../../lib/fp/CellItem/type-aliases/Value.md)\>[]
 
 ## Parameters
 
-▪ **param0**: `object`
+▪ **state**: `object`
 
-▪ **param0.columns**: `Readonly`\<[`State`](../../../selectors/columns/selectors/private/interfaces/State.md)\>
+▪ **state.columns**: `Readonly`\<[`State`](../../../selectors/columns/selectors/private/interfaces/State.md)\>
 
-▪ **param0.progress**: `Readonly`\<[`State`](../../../selectors/columns/selectors/private/interfaces/State.md)\>
+▪ **state.progress**: `Readonly`\<[`State`](../../../selectors/columns/selectors/private/interfaces/State.md)\>
 
-▪ **param0.sheet**: `Readonly`\<[`State`](../../../features/sheet/reducers/interfaces/State.md)\>
+▪ **state.sheet**: `Readonly`\<[`State`](../../../features/sheet/reducers/interfaces/State.md)\>
 
 ## Returns
 
@@ -30,7 +30,7 @@ readonly [`CellItem`](../../../lib/fp/CellItem/interfaces/CellItem.md)\<[`Value`
 
 ## Source
 
-[Projects/clean-tool-app/src/app/selectors.ts:136](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/app/selectors.ts:153](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

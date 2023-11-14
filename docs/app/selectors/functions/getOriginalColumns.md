@@ -6,17 +6,17 @@
 
 # Function: getOriginalColumns()
 
-> **getOriginalColumns**(`param0`): readonly `string`[]
+> **getOriginalColumns**(`state`): readonly `string`[]
 
 ## Parameters
 
-▪ **param0**: `object`
+▪ **state**: `object`
 
-▪ **param0.columns**: `Readonly`\<[`State`](../../../selectors/columns/selectors/private/interfaces/State.md)\>
+▪ **state.columns**: `Readonly`\<[`State`](../../../selectors/columns/selectors/private/interfaces/State.md)\>
 
-▪ **param0.progress**: `Readonly`\<[`State`](../../../selectors/columns/selectors/private/interfaces/State.md)\>
+▪ **state.progress**: `Readonly`\<[`State`](../../../selectors/columns/selectors/private/interfaces/State.md)\>
 
-▪ **param0.sheet**: `Readonly`\<[`State`](../../../features/sheet/reducers/interfaces/State.md)\>
+▪ **state.sheet**: `Readonly`\<[`State`](../../../features/sheet/reducers/interfaces/State.md)\>
 
 ## Returns
 
@@ -30,7 +30,7 @@ readonly `string`[]
 
 ## Source
 
-[Projects/clean-tool-app/src/app/selectors.ts:127](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/app/selectors.ts:144](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

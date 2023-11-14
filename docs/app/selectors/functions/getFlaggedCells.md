@@ -6,17 +6,17 @@
 
 # Function: getFlaggedCells()
 
-> **getFlaggedCells**(`param0`): readonly [`Flag`](../../../lib/fp/Flag/interfaces/Flag.md)[]
+> **getFlaggedCells**(`state`): readonly [`Flag`](../../../lib/fp/Flag/interfaces/Flag.md)[]
 
 ## Parameters
 
-▪ **param0**: `object`
+▪ **state**: `object`
 
-▪ **param0.columns**: `Readonly`\<[`State`](../../../selectors/columns/selectors/private/interfaces/State.md)\>
+▪ **state.columns**: `Readonly`\<[`State`](../../../selectors/columns/selectors/private/interfaces/State.md)\>
 
-▪ **param0.progress**: `Readonly`\<[`State`](../../../selectors/columns/selectors/private/interfaces/State.md)\>
+▪ **state.progress**: `Readonly`\<[`State`](../../../selectors/columns/selectors/private/interfaces/State.md)\>
 
-▪ **param0.sheet**: `Readonly`\<[`State`](../../../features/sheet/reducers/interfaces/State.md)\>
+▪ **state.sheet**: `Readonly`\<[`State`](../../../features/sheet/reducers/interfaces/State.md)\>
 
 ## Returns
 
@@ -30,7 +30,7 @@ readonly [`Flag`](../../../lib/fp/Flag/interfaces/Flag.md)[]
 
 ## Source
 
-[Projects/clean-tool-app/src/app/selectors.ts:145](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/app/selectors.ts:162](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

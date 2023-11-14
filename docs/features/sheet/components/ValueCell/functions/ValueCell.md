@@ -24,7 +24,7 @@
 
 ## Source
 
-[Projects/clean-tool-app/src/features/sheet/components/ValueCell.tsx:27](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/features/sheet/components/ValueCell.tsx:41](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

@@ -19,7 +19,7 @@ The type of the worker's response.
 
 ## Source
 
-[Projects/clean-tool-app/src/workers/sheet.ts:42](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/workers/sheet.ts:43](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

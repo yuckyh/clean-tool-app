@@ -39,7 +39,7 @@ A variable with column name `al_r` and visit `1` with unit `mm` will have variab
 
 ## Source
 
-[Projects/clean-tool-app/src/pages/EDA/Variable/Plot/NumericalPlot.tsx:73](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/pages/EDA/Variable/Plot/NumericalPlot.tsx:119](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

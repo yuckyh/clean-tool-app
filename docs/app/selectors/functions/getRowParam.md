@@ -49,7 +49,7 @@ const originalColumn = createSelector(
 
 ## Source
 
-[Projects/clean-tool-app/src/app/selectors.ts:39](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/app/selectors.ts:38](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

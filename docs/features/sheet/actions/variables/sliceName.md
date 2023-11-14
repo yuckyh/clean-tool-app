@@ -10,7 +10,7 @@
 
 ## Source
 
-[Projects/clean-tool-app/src/features/sheet/actions.ts:16](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/features/sheet/actions.ts:12](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

@@ -30,7 +30,7 @@ ProgressNav for details of the overall navigation component
 
 ## Source
 
-[Projects/clean-tool-app/src/components/progress/ProgressNavBar.tsx:35](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/components/progress/ProgressNavBar.tsx:51](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

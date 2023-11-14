@@ -6,7 +6,7 @@
 
 # Type alias: ColumnResponse`<S>`
 
-> **ColumnResponse**\<`S`\>: [`WorkerResponse`](../../../types/workers/type-aliases/WorkerResponse.md)\<`"get"`, `S`\> & `object`
+> **ColumnResponse**\<`S`\>: [`WorkerResponse`](../../../types/workers/type-aliases/WorkerResponse.md)\<`"get"`, `S`\> & [`ColumnOkResponse`](../private/type-aliases/ColumnOkResponse.md)
 
 The type of the worker's response.
 
@@ -57,14 +57,6 @@ const response: ColumnResponse = {
 }
 ```
 
-## Type declaration
-
-### matches
-
-> **matches**: readonly readonly [`MatchlessFuseResult`](../private/type-aliases/MatchlessFuseResult.md)[][]
-
-The search results.
-
 ## Type parameters
 
 | Parameter | Default |
@@ -73,7 +65,7 @@ The search results.
 
 ## Source
 
-[Projects/clean-tool-app/src/workers/column.ts:93](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/workers/column.ts:100](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

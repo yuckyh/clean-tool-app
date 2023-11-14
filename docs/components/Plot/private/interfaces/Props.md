@@ -28,7 +28,7 @@ Partial.data
 
 #### Source
 
-[Projects/clean-tool-app/src/components/Plot.tsx:12](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/components/Plot.tsx:11](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

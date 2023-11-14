@@ -30,7 +30,7 @@ JSX.Element
 
 ## Source
 
-[Projects/clean-tool-app/src/pages/Download/PreviewCell.tsx:80](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/pages/Download/PreviewCell.tsx:117](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

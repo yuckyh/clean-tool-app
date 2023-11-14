@@ -10,6 +10,7 @@
 
 ### Type Aliases
 
+- [ColumnOkResponse](type-aliases/ColumnOkResponse.md)
 - [MatchlessFuseResult](type-aliases/MatchlessFuseResult.md)
 
 ***

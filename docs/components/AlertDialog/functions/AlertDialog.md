@@ -20,7 +20,7 @@
 
 ## Source
 
-AppData/Local/Yarn/Berry/cache/@types-react-npm-18.2.33-aad7d56562-10.zip/node\_modules/@types/react/index.d.ts:395
+AppData/Local/Yarn/Berry/cache/@types-react-npm-18.2.37-3fa76216da-10.zip/node\_modules/@types/react/index.d.ts:395
 
 ***
 

@@ -6,17 +6,17 @@
 
 # Function: getSheetName()
 
-> **getSheetName**(`param0`): `string`
+> **getSheetName**(`state`): `string`
 
 ## Parameters
 
-▪ **param0**: `object`
+▪ **state**: `object`
 
-▪ **param0.columns**: `Readonly`\<[`State`](../../../selectors/columns/selectors/private/interfaces/State.md)\>
+▪ **state.columns**: `Readonly`\<[`State`](../../../selectors/columns/selectors/private/interfaces/State.md)\>
 
-▪ **param0.progress**: `Readonly`\<[`State`](../../../selectors/columns/selectors/private/interfaces/State.md)\>
+▪ **state.progress**: `Readonly`\<[`State`](../../../selectors/columns/selectors/private/interfaces/State.md)\>
 
-▪ **param0.sheet**: `Readonly`\<[`State`](../../../features/sheet/reducers/interfaces/State.md)\>
+▪ **state.sheet**: `Readonly`\<[`State`](../../../features/sheet/reducers/interfaces/State.md)\>
 
 ## Returns
 
@@ -30,7 +30,7 @@
 
 ## Source
 
-[Projects/clean-tool-app/src/app/selectors.ts:109](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/app/selectors.ts:117](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

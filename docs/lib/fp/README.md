@@ -8,6 +8,10 @@
 
 ## Index
 
+### Variables
+
+- [indexEq](variables/indexEq.md)
+
 ### Functions
 
 - [asIO](functions/asIO.md)

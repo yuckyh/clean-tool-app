@@ -23,7 +23,7 @@ The column index
 
 #### Source
 
-[Projects/clean-tool-app/src/pages/ColumnMatching/ValueCell.tsx:21](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/pages/ColumnMatching/ValueCell.tsx:22](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

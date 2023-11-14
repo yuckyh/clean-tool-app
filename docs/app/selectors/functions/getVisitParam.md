@@ -34,7 +34,7 @@
 
 ## Source
 
-[Projects/clean-tool-app/src/app/selectors.ts:64](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/app/selectors.ts:63](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

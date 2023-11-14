@@ -27,7 +27,7 @@
 
 ### setContent
 
-> **setContent**: (`content`) => `string`
+> **setContent**: (`content`) => `void`
 
 #### Parameters
 
@@ -35,7 +35,7 @@
 
 #### Returns
 
-`string`
+`void`
 
 #### Source
 
@@ -45,7 +45,7 @@
 
 ### setTitle
 
-> **setTitle**: (`title`) => `string`
+> **setTitle**: (`title`) => `void`
 
 #### Parameters
 
@@ -53,7 +53,7 @@
 
 #### Returns
 
-`string`
+`void`
 
 #### Source
 

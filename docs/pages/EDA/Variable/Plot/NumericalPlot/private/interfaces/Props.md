@@ -37,7 +37,7 @@ The column used to get the row for plotting.
 
 #### Source
 
-[Projects/clean-tool-app/src/pages/EDA/Variable/Plot/NumericalPlot.tsx:35](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/pages/EDA/Variable/Plot/NumericalPlot.tsx:42](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 
@@ -49,7 +49,7 @@ The measurement unit.
 
 #### Source
 
-[Projects/clean-tool-app/src/pages/EDA/Variable/Plot/NumericalPlot.tsx:39](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/pages/EDA/Variable/Plot/NumericalPlot.tsx:46](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 
@@ -61,7 +61,7 @@ The variable name of the formatted column and visit for the plot.
 
 #### Source
 
-[Projects/clean-tool-app/src/pages/EDA/Variable/Plot/NumericalPlot.tsx:43](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/pages/EDA/Variable/Plot/NumericalPlot.tsx:50](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 
@@ -73,7 +73,7 @@ The visit for the plot.
 
 #### Source
 
-[Projects/clean-tool-app/src/pages/EDA/Variable/Plot/NumericalPlot.tsx:47](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/pages/EDA/Variable/Plot/NumericalPlot.tsx:54](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

@@ -18,7 +18,7 @@
 
 ## Source
 
-[Projects/clean-tool-app/src/lib/fp/index.ts:37](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/lib/fp/index.ts:38](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

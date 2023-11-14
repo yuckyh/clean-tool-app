@@ -8,17 +8,17 @@
 
 ## Index
 
-### Variables
-
-- [indexEq](variables/indexEq.md)
-
 ### Functions
 
 - [getColParam](functions/getColParam.md)
 - [getColumnParam](functions/getColumnParam.md)
 - [getData](functions/getData.md)
+- [getDataLength](functions/getDataLength.md)
 - [getDataTypes](functions/getDataTypes.md)
+- [getFileName](functions/getFileName.md)
 - [getFlaggedCells](functions/getFlaggedCells.md)
+- [getHasMultipleSheets](functions/getHasMultipleSheets.md)
+- [getHasSheet](functions/getHasSheet.md)
 - [getMatchColumns](functions/getMatchColumns.md)
 - [getMatchVisits](functions/getMatchVisits.md)
 - [getMatchesList](functions/getMatchesList.md)
@@ -28,6 +28,7 @@
 - [getRowParam](functions/getRowParam.md)
 - [getScoresList](functions/getScoresList.md)
 - [getSheetName](functions/getSheetName.md)
+- [getSheetNames](functions/getSheetNames.md)
 - [getTitleParam](functions/getTitleParam.md)
 - [getVisitParam](functions/getVisitParam.md)
 - [getVisits](functions/getVisits.md)

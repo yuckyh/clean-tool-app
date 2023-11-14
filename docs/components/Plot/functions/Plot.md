@@ -24,7 +24,7 @@
 
 ## Source
 
-[Projects/clean-tool-app/src/components/Plot.tsx:30](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/components/Plot.tsx:29](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

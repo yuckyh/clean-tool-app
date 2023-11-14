@@ -20,7 +20,7 @@
 
 #### Source
 
-[Projects/clean-tool-app/src/features/sheet/components/ValueCell.tsx:16](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/features/sheet/components/ValueCell.tsx:18](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 
@@ -30,7 +30,7 @@
 
 #### Source
 
-[Projects/clean-tool-app/src/features/sheet/components/ValueCell.tsx:17](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/features/sheet/components/ValueCell.tsx:19](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

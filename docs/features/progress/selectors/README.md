@@ -11,7 +11,7 @@
 ### Functions
 
 - [getAllowedPaths](functions/getAllowedPaths.md)
-- [getDisabled](functions/getDisabled.md)
+- [getIsDisabled](functions/getIsDisabled.md)
 - [getLocationPathWords](functions/getLocationPathWords.md)
 - [getPaths](functions/getPaths.md)
 - [getPosition](functions/getPosition.md)

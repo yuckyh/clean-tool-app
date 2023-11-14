@@ -24,7 +24,7 @@
 
 ## Source
 
-[Projects/clean-tool-app/src/pages/EDA/Variable/DataGrid/OutlierDataGrid.tsx:52](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/pages/EDA/Variable/DataGrid/OutlierDataGrid.tsx:96](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

@@ -21,7 +21,7 @@
 
 #### Source
 
-[Projects/clean-tool-app/src/pages/EDA/Variable/DataGrid/SummaryDataGrid.tsx:40](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/pages/EDA/Variable/DataGrid/SummaryDataGrid.tsx:55](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 
@@ -31,7 +31,7 @@
 
 #### Source
 
-[Projects/clean-tool-app/src/pages/EDA/Variable/DataGrid/SummaryDataGrid.tsx:41](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/pages/EDA/Variable/DataGrid/SummaryDataGrid.tsx:59](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 
@@ -41,7 +41,7 @@
 
 #### Source
 
-[Projects/clean-tool-app/src/pages/EDA/Variable/DataGrid/SummaryDataGrid.tsx:42](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/pages/EDA/Variable/DataGrid/SummaryDataGrid.tsx:63](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

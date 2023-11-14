@@ -49,7 +49,7 @@ const failResponse: WorkerResponse = {
 
 #### Source
 
-[Projects/clean-tool-app/src/workers/sheet.ts:34](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/workers/sheet.ts:35](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 
@@ -63,7 +63,7 @@ WorkerResponse.method
 
 #### Source
 
-[Projects/clean-tool-app/src/workers/sheet.ts:35](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/workers/sheet.ts:36](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 
@@ -89,7 +89,7 @@ WorkerResponse.status
 
 #### Source
 
-[Projects/clean-tool-app/src/workers/sheet.ts:36](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/workers/sheet.ts:37](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

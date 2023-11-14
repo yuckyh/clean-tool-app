@@ -6,17 +6,17 @@
 
 # Function: getDataTypes()
 
-> **getDataTypes**(`param0`): readonly [`DataType`](../../../features/columns/reducers/type-aliases/DataType.md)[]
+> **getDataTypes**(`state`): readonly [`DataType`](../../../features/columns/reducers/type-aliases/DataType.md)[]
 
 ## Parameters
 
-▪ **param0**: `object`
+▪ **state**: `object`
 
-▪ **param0.columns**: `Readonly`\<[`State`](../../../selectors/columns/selectors/private/interfaces/State.md)\>
+▪ **state.columns**: `Readonly`\<[`State`](../../../selectors/columns/selectors/private/interfaces/State.md)\>
 
-▪ **param0.progress**: `Readonly`\<[`State`](../../../selectors/columns/selectors/private/interfaces/State.md)\>
+▪ **state.progress**: `Readonly`\<[`State`](../../../selectors/columns/selectors/private/interfaces/State.md)\>
 
-▪ **param0.sheet**: `Readonly`\<[`State`](../../../features/sheet/reducers/interfaces/State.md)\>
+▪ **state.sheet**: `Readonly`\<[`State`](../../../features/sheet/reducers/interfaces/State.md)\>
 
 ## Returns
 
@@ -30,7 +30,7 @@ readonly [`DataType`](../../../features/columns/reducers/type-aliases/DataType.m
 
 ## Source
 
-[Projects/clean-tool-app/src/app/selectors.ts:190](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/app/selectors.ts:229](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

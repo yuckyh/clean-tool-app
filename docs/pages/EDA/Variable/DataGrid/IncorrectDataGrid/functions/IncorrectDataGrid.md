@@ -24,7 +24,7 @@
 
 ## Source
 
-[Projects/clean-tool-app/src/pages/EDA/Variable/DataGrid/IncorrectDataGrid.tsx:55](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/pages/EDA/Variable/DataGrid/IncorrectDataGrid.tsx:91](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

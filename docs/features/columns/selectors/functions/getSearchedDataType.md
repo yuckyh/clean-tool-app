@@ -6,7 +6,7 @@
 
 # Function: getSearchedDataType()
 
-> **getSearchedDataType**(`state`, ...`params`): `string`
+> **getSearchedDataType**(`state`, ...`params`): [`DataType`](../../reducers/type-aliases/DataType.md)
 
 ## Parameters
 
@@ -22,7 +22,7 @@
 
 ## Returns
 
-`string`
+[`DataType`](../../reducers/type-aliases/DataType.md)
 
 ## Source
 

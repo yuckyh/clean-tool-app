@@ -19,7 +19,7 @@
 
 #### Source
 
-[Projects/clean-tool-app/src/pages/EDA/Variable/Nav/Tab.tsx:14](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/pages/EDA/Variable/Nav/Tab.tsx:37](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

@@ -10,7 +10,7 @@
 
 ## Source
 
-[Projects/clean-tool-app/src/features/columns/actions.ts:33](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/features/columns/actions.ts:22](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

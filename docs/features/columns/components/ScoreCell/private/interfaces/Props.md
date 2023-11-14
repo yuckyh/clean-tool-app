@@ -19,7 +19,7 @@
 
 #### Source
 
-[Projects/clean-tool-app/src/features/columns/components/ScoreCell.tsx:26](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/features/columns/components/ScoreCell.tsx:34](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 
