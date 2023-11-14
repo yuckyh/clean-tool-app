@@ -16,6 +16,9 @@ const handledTask: T.Task<SheetResponse> = createHandledTask(
   'sheetWorker failed',
 )
 
+/**
+ * 
+ */
 const isSuccessful: Ref.Refinement<
   SheetResponse,
   SheetResponse<SheetMethod, 'ok'>

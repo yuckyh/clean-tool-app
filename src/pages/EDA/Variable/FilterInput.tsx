@@ -8,9 +8,21 @@ const useClasses = makeStyles({
   },
 })
 
+/**
+ *
+ */
 interface Props {
+  /**
+   *
+   */
   handleChange: InputProps['onChange']
+  /**
+   *
+   */
   label: string
+  /**
+   *
+   */
   value: string
 }
 

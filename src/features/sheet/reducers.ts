@@ -56,7 +56,13 @@ export interface State {
    * The name of the selected sheet.
    */
   sheetName: string
+  /**
+   *
+   */
   sheetNames: readonly string[]
+  /**
+   *
+   */
   visits: readonly string[]
 }
 

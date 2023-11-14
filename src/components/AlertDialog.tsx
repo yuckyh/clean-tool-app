@@ -18,14 +18,37 @@ import * as IO from 'fp-ts/IO'
 import * as f from 'fp-ts/function'
 import { forwardRef, useImperativeHandle, useState } from 'react'
 
+/**
+ *
+ */
 export interface AlertRef {
+  /**
+   *
+   */
   open: IO.IO<void>
+  /**
+   *
+   */
   setContent: (content: string) => void
+  /**
+   *
+   * @param title
+   * @returns
+   */
   setTitle: (title: string) => void
 }
 
+/**
+ *
+ */
 interface Props {
+  /**
+   *
+   */
   noCancel?: boolean
+  /**
+   *
+   */
   onConfirm?: IO.IO<void>
 }
 

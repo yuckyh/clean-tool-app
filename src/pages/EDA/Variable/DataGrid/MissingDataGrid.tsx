@@ -41,8 +41,17 @@ const useClasses = makeStyles({
   },
 })
 
+/**
+ *
+ */
 interface Props {
+  /**
+   *
+   */
   column: string
+  /**
+   *
+   */
   visit: string
 }
 

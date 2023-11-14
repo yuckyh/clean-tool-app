@@ -102,6 +102,14 @@ export type ColumnResponse<S extends ResponseStatus = ResponseStatus> =
 
 type Handler = RequestHandler<ColumnRequest, ColumnResponse>
 
+/**
+ *
+ * @param props
+ * @param props.columns
+ * @param props.method
+ * @returns
+ * @example
+ */
 const get: Handler = ({ columns, method }) => ({
   matches: RA.map(fuse.search.bind(fuse))(columns),
   method,

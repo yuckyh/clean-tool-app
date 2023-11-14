@@ -53,7 +53,13 @@ const useClasses = makeStyles({
  *
  */
 interface Props {
+  /**
+   *
+   */
   alertRef: React.RefObject<AlertRef>
+  /**
+   *
+   */
   pos: number
 }
 

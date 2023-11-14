@@ -32,8 +32,17 @@ const useClasses = makeStyles({
   },
 })
 
+/**
+ *
+ */
 interface Props {
+  /**
+   *
+   */
   isOriginal: boolean
+  /**
+   *
+   */
   pos: number
 }
 

@@ -7,6 +7,9 @@
 
 /// <reference lib="webworker" />
 
+/**
+ * The base type for the worker request method.
+ */
 type RequestMethod = string
 
 /**
@@ -27,9 +30,18 @@ type WorkerRequest<Method extends RequestMethod = string> = {
   method: string
 }
 
+/**
+ * The possible response statuses.
+ */
 type ResponseStatus = 'fail' | 'ok'
 
+/**
+ * The successful response object.
+ */
 interface WorkerOkResponse {
+  /**
+   * The request method of the sent request for debugging purposes.
+   */
   method: RequestMethod
   /**
    * The status of the response. When the status is `ok`, the response will not have an error object.
@@ -37,11 +49,17 @@ interface WorkerOkResponse {
   status: 'ok'
 }
 
+/**
+ * The failed response object.
+ */
 interface WorkerFailResponse {
   /**
    * The error object that signifies a failed response.
    */
   error: Error
+  /**
+   * The request method of the sent request for debugging purposes.
+   */
   method: RequestMethod
   /**
    * The status of the response. When the status is `fail`, the response will have an error object.
@@ -91,8 +109,17 @@ type Controller<
  * The event map for the worker events.
  */
 interface GenericWorkerEventMap<T> extends WorkerEventMap {
+  /**
+   * The error event.
+   */
   error: ErrorEvent
+  /**
+   * The message event.
+   */
   message: MessageEvent<T>
+  /**
+   * The error message event.
+   */
   messageerror: MessageEvent<T>
 }
 

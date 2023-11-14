@@ -37,7 +37,13 @@ const useClasses = makeStyles({
   },
 })
 
+/**
+ *
+ */
 interface Props {
+  /**
+   *
+   */
   isOriginal?: boolean
 }
 

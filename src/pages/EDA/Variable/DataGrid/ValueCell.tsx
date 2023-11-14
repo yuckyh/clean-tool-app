@@ -1,3 +1,5 @@
+import type * as CellItem from '@/lib/fp/CellItem'
+
 import { makeStyles, shorthands, tokens } from '@fluentui/react-components'
 
 const useClasses = makeStyles({
@@ -9,8 +11,14 @@ const useClasses = makeStyles({
   },
 })
 
+/**
+ *
+ */
 interface Props {
-  value: number | string
+  /**
+   *
+   */
+  value: CellItem.Value
 }
 
 /**

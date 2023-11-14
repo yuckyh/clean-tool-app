@@ -48,9 +48,18 @@ const useClasses = makeStyles({
   },
 })
 
+/**
+ *
+ */
 export interface Props<T>
   extends Partial<Omit<DataGridProps, 'columns' | 'items'>> {
+  /**
+   *
+   */
   columns: readonly TableColumnDefinition<T>[]
+  /**
+   *
+   */
   items: readonly T[]
 }
 

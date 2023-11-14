@@ -10,13 +10,31 @@ import * as S from 'fp-ts/string'
 
 const search = fuse.search.bind(fuse)
 
+/**
+ *
+ */
 interface ColumnMatch {
+  /**
+   *
+   */
   match: string
+  /**
+   *
+   */
   score: number
 }
 
+/**
+ *
+ */
 interface Props {
+  /**
+   *
+   */
   filteredMatches: readonly ColumnMatch[]
+  /**
+   *
+   */
   value: string
 }
 

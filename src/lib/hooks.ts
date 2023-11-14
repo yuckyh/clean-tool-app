@@ -68,6 +68,9 @@ export const useLoadingTransition = asIO(() => {
   return [isLoading || isPending, stopLoading] as const
 })
 
+/**
+ * 
+ */
 export const useThemePreference = (
   dark = webDarkTheme,
   light = webLightTheme,
@@ -90,6 +93,9 @@ export const useThemePreference = (
   return theme ? dark : light
 }
 
+/**
+ * 
+ */
 export const useTokenToHex = (token: Property<ColorTokens>) => {
   const [color, setColor] = useState('#000')
 
@@ -110,6 +116,10 @@ export const useTokenToHex = (token: Property<ColorTokens>) => {
   return color
 }
 
+/**
+ * @returns
+ * @example
+ */
 // eslint-disable-next-line functional/functional-parameters
 export const useStorage = () => {
   useEffect(() => {
@@ -124,10 +134,23 @@ export const useStorage = () => {
 
 export const useGlobalStyles = makeStaticStyles(globalStyles)
 
+/**
+ * 
+ * @param title 
+ * @param reason 
+ * @returns 
+ */
 const selectFlaggedRows =
   (title: string, reason: Flag.FlagReason) => (state: AppState) =>
     getFlaggedRows(state, title, reason)
 
+/**
+ * 
+ * @param reason 
+ * @param title 
+ * @param series 
+ * @returns 
+ */
 export const useSyncedSelectionHandler = (
   reason: Flag.FlagReason,
   title: string,

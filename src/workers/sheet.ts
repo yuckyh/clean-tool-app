@@ -30,10 +30,22 @@ export type SheetRequest<Method extends SheetMethod = SheetMethod> = (
 ) &
   WorkerRequest<Method>
 
+/**
+ *
+ */
 interface SheetOkResponse<M extends SheetMethod>
   extends WorkerResponse<M, 'ok'> {
+  /**
+   * The name of the file.
+   */
   fileName: string
+  /**
+   * The request method of the sent request for debugging purposes.
+   */
   method: M
+  /**
+   * The workbook object.
+   */
   workbook?: WorkBook
 }
 
@@ -53,6 +65,13 @@ const getRootHandle: T.Task<FileSystemDirectoryHandle> = f.constant(
   navigator.storage.getDirectory(),
 )
 
+/**
+ *
+ * @param fileName
+ * @param create
+ * @returns
+ * @example
+ */
 const getRootFileHandle = (fileName: string, create?: boolean) =>
   f.pipe(
     getRootHandle,

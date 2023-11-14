@@ -1,4 +1,5 @@
-import { AppState } from '@/app/store'
+import type { AppState } from '@/app/store'
+
 import { getColumnPath, getFormattedColumn } from '@/features/columns/selectors'
 import { useAppSelector } from '@/lib/hooks'
 import { Link, Tab, makeStyles } from '@fluentui/react-components'
@@ -15,6 +16,7 @@ const useClasses = makeStyles({
  *
  * @param pos
  * @returns
+ * @example
  */
 const selectPath = (pos: number) => (state: AppState) =>
   getColumnPath(state, pos)
@@ -23,6 +25,7 @@ const selectPath = (pos: number) => (state: AppState) =>
  *
  * @param pos
  * @returns
+ * @example
  */
 const selectLabel = (pos: number) => (state: AppState) =>
   getFormattedColumn(state, pos)

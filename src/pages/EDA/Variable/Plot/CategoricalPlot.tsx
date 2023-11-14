@@ -9,9 +9,21 @@ import * as f from 'fp-ts/function'
 
 import VariablePlot from '.'
 
+/**
+ *
+ */
 interface Props {
+  /**
+   *
+   */
   column: string
+  /**
+   *
+   */
   variable: string
+  /**
+   *
+   */
   visit: string
 }
 

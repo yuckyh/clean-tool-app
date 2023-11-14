@@ -1,4 +1,5 @@
-import { AppState } from '@/app/store'
+import type { AppState } from '@/app/store'
+
 import { useAppSelector } from '@/lib/hooks'
 import { getOriginalColumn } from '@/selectors/columns/selectors'
 import { makeStyles, shorthands, tokens } from '@fluentui/react-components'

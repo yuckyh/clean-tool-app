@@ -354,8 +354,6 @@ export const getMatchComparer = createSelector(
   /**
    *
    * @param matchColumns
-   * @param a
-   * @param b
    * @returns
    * @example
    */
@@ -375,8 +373,6 @@ export const getVisitsComparer = createSelector(
   /**
    *
    * @param matchVisits
-   * @param a
-   * @param b
    * @returns
    * @example
    */
@@ -398,8 +394,6 @@ export const getScoreComparer = createSelector(
    * @param matchesList
    * @param scoresList
    * @param matchColumns
-   * @param a
-   * @param b
    * @returns
    * @example
    */

@@ -14,8 +14,17 @@ const useClasses = makeStyles({
   },
 })
 
+/**
+ *
+ */
 interface Props {
+  /**
+   *
+   */
   col: number
+  /**
+   *
+   */
   row: number
 }
 

@@ -60,9 +60,21 @@ const selectIsDisabled =
   (state: AppState) =>
     getIsDisabled(state, componentPath, locationPath, pos)
 
+/**
+ *
+ */
 interface Props {
+  /**
+   *
+   */
   done: boolean
+  /**
+   *
+   */
   path: string
+  /**
+   *
+   */
   pos: number
 }
 

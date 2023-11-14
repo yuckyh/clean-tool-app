@@ -13,12 +13,22 @@ type Rgb = readonly [number, number, number]
 type Diff = readonly [number, number]
 type TransposedRgbDiff = readonly [Diff, Diff, Diff]
 
+/**
+ * 
+ * @param hexString 
+ * @returns 
+ */
 const splitHexString = (hexString: string) =>
   RA.makeBy(
     3,
     f.flow(add(1), (x) => S.slice(x, x + 2)(hexString)),
   ) as readonly [string, string, string]
 
+/**
+ * 
+ * @param hexString 
+ * @returns 
+ */
 const hexToRgb = (hexString: string) =>
   f.pipe(
     hexString,
@@ -26,18 +36,38 @@ const hexToRgb = (hexString: string) =>
     RA.map((hex) => parseInt(hex, 16)),
   ) as Rgb
 
+/**
+ * 
+ * @param x 
+ * @returns 
+ */
 const numToHex = (x: number) => x.toString(16).padStart(2, '0')
 
+/**
+ * 
+ */
 const interpolate =
   ([start, end]: Diff) =>
   (time: number) =>
     Math.round(start + time * (end - start))
 
+/**
+ * 
+ * @param t 
+ * @returns 
+ */
 const timeToColorStep = (t: number) => (rgbDiffs: TransposedRgbDiff) => [
   t,
   RA.map(f.flow(interpolate, f.apply(t), numToHex))(rgbDiffs).join(''),
 ]
 
+/**
+ * 
+ * @param color1Token 
+ * @param color2Token 
+ * @param n 
+ * @returns 
+ */
 // eslint-disable-next-line import/prefer-default-export
 export const useFluentColorScale = (
   color1Token: ColorToken,

@@ -35,7 +35,13 @@ import { useDropzone } from 'react-dropzone'
 
 import { fetchSheet, postFile } from '../actions'
 
+/**
+ *
+ */
 export interface SheetInputRef {
+  /**
+   *
+   */
   setFileTask: Dispatch<SetStateAction<FileTaskType>>
 }
 
@@ -48,7 +54,13 @@ const useClasses = makeStyles({
   },
 })
 
+/**
+ *
+ */
 interface Props {
+  /**
+   *
+   */
   toasterId: string
 }
 
