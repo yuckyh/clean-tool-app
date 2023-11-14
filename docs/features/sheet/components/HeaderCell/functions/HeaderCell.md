@@ -24,7 +24,7 @@
 
 ## Source
 
-[Projects/clean-tool-app/src/features/sheet/components/HeaderCell.tsx:70](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/features/sheet/components/HeaderCell.tsx:79](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

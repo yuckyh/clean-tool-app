@@ -20,7 +20,7 @@
 
 #### Source
 
-[Projects/clean-tool-app/src/features/columns/components/MatchCell.tsx:56](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/features/columns/components/MatchCell.tsx:59](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 
@@ -30,7 +30,7 @@
 
 #### Source
 
-[Projects/clean-tool-app/src/features/columns/components/MatchCell.tsx:57](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/features/columns/components/MatchCell.tsx:63](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

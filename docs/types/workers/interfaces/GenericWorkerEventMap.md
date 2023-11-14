@@ -31,13 +31,15 @@ The event map for the worker events.
 
 > **error**: `ErrorEvent`
 
+The error event.
+
 #### Overrides
 
 WorkerEventMap.error
 
 #### Source
 
-[Projects/clean-tool-app/src/types/workers.d.ts:94](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/types/workers.d.ts:115](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 
@@ -45,13 +47,15 @@ WorkerEventMap.error
 
 > **message**: `MessageEvent`\<`T`\>
 
+The message event.
+
 #### Overrides
 
 WorkerEventMap.message
 
 #### Source
 
-[Projects/clean-tool-app/src/types/workers.d.ts:95](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/types/workers.d.ts:119](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 
@@ -59,13 +63,15 @@ WorkerEventMap.message
 
 > **messageerror**: `MessageEvent`\<`T`\>
 
+The error message event.
+
 #### Overrides
 
 WorkerEventMap.messageerror
 
 #### Source
 
-[Projects/clean-tool-app/src/types/workers.d.ts:96](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/types/workers.d.ts:123](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

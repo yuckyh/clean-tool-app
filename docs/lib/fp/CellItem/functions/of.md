@@ -20,9 +20,15 @@
 
 `Readonly`\<[`CellItem`](../interfaces/CellItem.md)\<`V`\>\>
 
+## Example
+
+```ts
+
+```
+
 ## Source
 
-[Projects/clean-tool-app/src/lib/fp/CellItem.ts:12](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/lib/fp/CellItem.ts:30](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

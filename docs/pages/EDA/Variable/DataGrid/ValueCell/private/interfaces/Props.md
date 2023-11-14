@@ -15,11 +15,11 @@
 
 ### value
 
-> **value**: `string` \| `number`
+> **value**: [`Value`](../../../../../../../lib/fp/CellItem/type-aliases/Value.md)
 
 #### Source
 
-[Projects/clean-tool-app/src/pages/EDA/Variable/DataGrid/ValueCell.tsx:13](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/pages/EDA/Variable/DataGrid/ValueCell.tsx:21](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

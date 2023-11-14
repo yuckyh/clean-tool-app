@@ -12,9 +12,15 @@
 
 `void`
 
+## Example
+
+```ts
+
+```
+
 ## Source
 
-[Projects/clean-tool-app/src/lib/hooks.ts:114](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/lib/hooks.ts:124](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

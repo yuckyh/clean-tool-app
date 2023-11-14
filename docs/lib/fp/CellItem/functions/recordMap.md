@@ -34,12 +34,18 @@
 >
 > ### Source
 >
-> [Projects/clean-tool-app/src/lib/fp/CellItem.ts:27](https://github.com/yuckyh/clean-tool-app/)
+> [Projects/clean-tool-app/src/lib/fp/CellItem.ts:58](https://github.com/yuckyh/clean-tool-app/)
 >
+
+## Example
+
+```ts
+
+```
 
 ## Source
 
-[Projects/clean-tool-app/src/lib/fp/CellItem.ts:24](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/lib/fp/CellItem.ts:55](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

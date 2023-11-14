@@ -25,7 +25,7 @@
 
 #### Source
 
-[Projects/clean-tool-app/src/lib/fp/CellItem.ts:8](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/lib/fp/CellItem.ts:17](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 
@@ -35,7 +35,7 @@
 
 #### Source
 
-[Projects/clean-tool-app/src/lib/fp/CellItem.ts:9](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/lib/fp/CellItem.ts:21](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

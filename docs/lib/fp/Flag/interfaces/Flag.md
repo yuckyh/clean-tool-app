@@ -20,7 +20,7 @@
 
 #### Source
 
-[Projects/clean-tool-app/src/lib/fp/Flag.ts:16](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/lib/fp/Flag.ts:25](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 
@@ -30,7 +30,7 @@
 
 #### Source
 
-[Projects/clean-tool-app/src/lib/fp/Flag.ts:17](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/lib/fp/Flag.ts:29](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

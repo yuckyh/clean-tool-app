@@ -30,7 +30,7 @@ The component object
 
 ## Source
 
-[Projects/clean-tool-app/src/components/progress/ProgressNav/index.tsx:126](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/components/progress/ProgressNav/index.tsx:127](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

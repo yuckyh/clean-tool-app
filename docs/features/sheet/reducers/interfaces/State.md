@@ -107,7 +107,7 @@ The name of the selected sheet.
 
 #### Source
 
-[Projects/clean-tool-app/src/features/sheet/reducers.ts:59](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/features/sheet/reducers.ts:62](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 
@@ -117,7 +117,7 @@ The name of the selected sheet.
 
 #### Source
 
-[Projects/clean-tool-app/src/features/sheet/reducers.ts:60](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/features/sheet/reducers.ts:66](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

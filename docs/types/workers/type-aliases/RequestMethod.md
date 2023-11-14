@@ -8,9 +8,11 @@
 
 > **RequestMethod**: `string`
 
+The base type for the worker request method.
+
 ## Source
 
-[Projects/clean-tool-app/src/types/workers.d.ts:10](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/types/workers.d.ts:13](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

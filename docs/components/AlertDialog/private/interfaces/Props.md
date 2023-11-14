@@ -20,7 +20,7 @@
 
 #### Source
 
-[Projects/clean-tool-app/src/components/AlertDialog.tsx:28](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/components/AlertDialog.tsx:48](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 
@@ -30,7 +30,7 @@
 
 #### Source
 
-[Projects/clean-tool-app/src/components/AlertDialog.tsx:29](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/components/AlertDialog.tsx:52](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

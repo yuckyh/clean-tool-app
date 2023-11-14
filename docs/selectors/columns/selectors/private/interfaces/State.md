@@ -19,7 +19,7 @@
 
 #### Source
 
-[Projects/clean-tool-app/src/features/progress/reducers.ts:13](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/features/progress/reducers.ts:22](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

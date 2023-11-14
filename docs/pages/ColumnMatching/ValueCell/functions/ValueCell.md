@@ -30,7 +30,7 @@ The component object
 
 ## Source
 
-[Projects/clean-tool-app/src/pages/ColumnMatching/ValueCell.tsx:37](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/pages/ColumnMatching/ValueCell.tsx:38](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

@@ -6,6 +6,8 @@
 
 # Interface: WorkerOkResponse
 
+The successful response object.
+
 ## Contents
 
 - [Properties](WorkerOkResponse.md#properties)
@@ -18,9 +20,11 @@
 
 > **method**: `string`
 
+The request method of the sent request for debugging purposes.
+
 #### Source
 
-[Projects/clean-tool-app/src/types/workers.d.ts:33](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/types/workers.d.ts:45](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 
@@ -32,7 +36,7 @@ The status of the response. When the status is `ok`, the response will not have 
 
 #### Source
 
-[Projects/clean-tool-app/src/types/workers.d.ts:37](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/types/workers.d.ts:49](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

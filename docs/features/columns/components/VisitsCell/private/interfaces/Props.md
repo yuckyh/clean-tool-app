@@ -20,7 +20,7 @@
 
 #### Source
 
-[Projects/clean-tool-app/src/features/columns/components/VisitsCell.tsx:32](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/features/columns/components/VisitsCell.tsx:38](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 
@@ -30,7 +30,7 @@
 
 #### Source
 
-[Projects/clean-tool-app/src/features/columns/components/VisitsCell.tsx:33](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/features/columns/components/VisitsCell.tsx:42](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

@@ -6,6 +6,8 @@
 
 # Interface: WorkerFailResponse
 
+The failed response object.
+
 ## Contents
 
 - [Properties](WorkerFailResponse.md#properties)
@@ -23,7 +25,7 @@ The error object that signifies a failed response.
 
 #### Source
 
-[Projects/clean-tool-app/src/types/workers.d.ts:44](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/types/workers.d.ts:59](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 
@@ -31,9 +33,11 @@ The error object that signifies a failed response.
 
 > **method**: `string`
 
+The request method of the sent request for debugging purposes.
+
 #### Source
 
-[Projects/clean-tool-app/src/types/workers.d.ts:45](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/types/workers.d.ts:63](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 
@@ -45,7 +49,7 @@ The status of the response. When the status is `fail`, the response will have an
 
 #### Source
 
-[Projects/clean-tool-app/src/types/workers.d.ts:49](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/types/workers.d.ts:67](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

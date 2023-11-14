@@ -27,7 +27,7 @@ The handler function that takes in the [request](WorkerRequest.md) and returns t
 
 ## Source
 
-[Projects/clean-tool-app/src/types/workers.d.ts:77](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/types/workers.d.ts:95](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

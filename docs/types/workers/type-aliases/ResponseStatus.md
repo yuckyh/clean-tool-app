@@ -8,9 +8,11 @@
 
 > **ResponseStatus**: `"fail"` \| `"ok"`
 
+The possible response statuses.
+
 ## Source
 
-[Projects/clean-tool-app/src/types/workers.d.ts:30](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/types/workers.d.ts:36](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

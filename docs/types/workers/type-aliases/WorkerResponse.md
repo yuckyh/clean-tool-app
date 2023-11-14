@@ -43,7 +43,7 @@ const failResponse: WorkerResponse = {
 
 ## Source
 
-[Projects/clean-tool-app/src/types/workers.d.ts:66](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/types/workers.d.ts:84](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

@@ -24,7 +24,7 @@
 
 ## Source
 
-[Projects/clean-tool-app/src/features/columns/components/VisitsCell.tsx:79](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/features/columns/components/VisitsCell.tsx:88](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

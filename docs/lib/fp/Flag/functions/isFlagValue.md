@@ -16,6 +16,12 @@
 
 `a is readonly [string, string, FlagReason]`
 
+## Example
+
+```ts
+
+```
+
 ## Source
 
 AppData/Local/Yarn/Berry/cache/fp-ts-npm-2.16.1-8deb3ec2d6-10.zip/node\_modules/fp-ts/lib/Refinement.d.ts:10

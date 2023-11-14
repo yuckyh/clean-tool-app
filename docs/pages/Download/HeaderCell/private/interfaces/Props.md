@@ -19,7 +19,7 @@
 
 #### Source
 
-[Projects/clean-tool-app/src/pages/Download/HeaderCell.tsx:14](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/pages/Download/HeaderCell.tsx:20](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

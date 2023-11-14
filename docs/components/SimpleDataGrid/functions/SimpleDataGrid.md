@@ -28,7 +28,7 @@
 
 ## Source
 
-[Projects/clean-tool-app/src/components/SimpleDataGrid.tsx:64](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/components/SimpleDataGrid.tsx:73](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

@@ -6,7 +6,7 @@
 
 # Function: unwrap()
 
-> **unwrap**\<`V`\>(`__namedParameters`): `Readonly`\<`Record`\<`string`, `V`\>\>
+> **unwrap**\<`V`\>(`cellItem`): `Readonly`\<`Record`\<`string`, `V`\>\>
 
 ## Type parameters
 
@@ -14,15 +14,21 @@
 
 ## Parameters
 
-▪ **\_\_namedParameters**: `Readonly`\<[`CellItem`](../interfaces/CellItem.md)\<`V`\>\>
+▪ **cellItem**: `Readonly`\<[`CellItem`](../interfaces/CellItem.md)\<`V`\>\>
 
 ## Returns
 
 `Readonly`\<`Record`\<`string`, `V`\>\>
 
+## Example
+
+```ts
+
+```
+
 ## Source
 
-[Projects/clean-tool-app/src/lib/fp/CellItem.ts:19](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/lib/fp/CellItem.ts:44](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

@@ -40,7 +40,7 @@ The method of the request.
 
 ## Source
 
-[Projects/clean-tool-app/src/types/workers.d.ts:21](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/types/workers.d.ts:24](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

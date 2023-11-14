@@ -18,9 +18,15 @@
 
 `string`
 
+## Example
+
+```ts
+
+```
+
 ## Source
 
-[Projects/clean-tool-app/src/lib/fp/string.ts:20](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/lib/fp/string.ts:45](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

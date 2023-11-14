@@ -21,7 +21,7 @@
 
 #### Source
 
-[Projects/clean-tool-app/src/pages/EDA/Variable/Plot/index.tsx:9](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/pages/EDA/Variable/Plot/index.tsx:15](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 
@@ -31,7 +31,7 @@
 
 #### Source
 
-[Projects/clean-tool-app/src/pages/EDA/Variable/Plot/index.tsx:10](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/pages/EDA/Variable/Plot/index.tsx:19](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 
@@ -41,7 +41,7 @@
 
 #### Source
 
-[Projects/clean-tool-app/src/pages/EDA/Variable/Plot/index.tsx:11](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/pages/EDA/Variable/Plot/index.tsx:23](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

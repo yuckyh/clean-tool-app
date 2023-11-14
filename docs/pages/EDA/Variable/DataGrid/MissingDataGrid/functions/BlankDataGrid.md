@@ -24,7 +24,7 @@
 
 ## Source
 
-[Projects/clean-tool-app/src/pages/EDA/Variable/DataGrid/MissingDataGrid.tsx:90](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/pages/EDA/Variable/DataGrid/MissingDataGrid.tsx:99](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

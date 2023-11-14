@@ -19,7 +19,7 @@ The controller object that maps the request method to the handler.
 
 ## Source
 
-[Projects/clean-tool-app/src/types/workers.d.ts:85](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/types/workers.d.ts:103](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

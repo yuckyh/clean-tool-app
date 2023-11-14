@@ -6,11 +6,8 @@
 
 # Interface: SheetOkResponse`<M>`
 
-The response object that is sent back to the main thread.
-
 ## Contents
 
-- [Example](SheetOkResponse.md#example)
 - [Extends](SheetOkResponse.md#extends)
 - [Type parameters](SheetOkResponse.md#type-parameters)
 - [Properties](SheetOkResponse.md#properties)
@@ -18,20 +15,6 @@ The response object that is sent back to the main thread.
   - [method](SheetOkResponse.md#method)
   - [status](SheetOkResponse.md#status)
   - [workbook](SheetOkResponse.md#workbook)
-
-## Example
-
-The two possible response types:
-```ts
-const okResponse: WorkerResponse = {
-  status: 'ok',
-}
-
-const failResponse: WorkerResponse = {
-  error: new Error('foo'),
-  status: 'fail',
-}
-```
 
 ## Extends
 
@@ -47,9 +30,11 @@ const failResponse: WorkerResponse = {
 
 > **fileName**: `string`
 
+The name of the file.
+
 #### Source
 
-[Projects/clean-tool-app/src/workers/sheet.ts:35](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/workers/sheet.ts:41](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 
@@ -57,13 +42,15 @@ const failResponse: WorkerResponse = {
 
 > **method**: `M`
 
+The request method of the sent request for debugging purposes.
+
 #### Overrides
 
 WorkerResponse.method
 
 #### Source
 
-[Projects/clean-tool-app/src/workers/sheet.ts:36](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/workers/sheet.ts:45](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 
@@ -79,7 +66,7 @@ WorkerResponse.status
 
 #### Source
 
-[Projects/clean-tool-app/src/types/workers.d.ts:37](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/types/workers.d.ts:49](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 
@@ -87,9 +74,11 @@ WorkerResponse.status
 
 > **workbook**?: `WorkBook`
 
+The workbook object.
+
 #### Source
 
-[Projects/clean-tool-app/src/workers/sheet.ts:37](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/workers/sheet.ts:49](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

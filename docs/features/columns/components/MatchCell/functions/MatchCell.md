@@ -24,7 +24,7 @@
 
 ## Source
 
-[Projects/clean-tool-app/src/features/columns/components/MatchCell.tsx:140](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/features/columns/components/MatchCell.tsx:146](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 
