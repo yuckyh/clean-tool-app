@@ -14,8 +14,8 @@ type Primitive = boolean | number | string
 type IsArray<T> = T extends unknown[]
   ? T
   : T extends readonly unknown[]
-  ? T
-  : never
+    ? T
+    : never
 
 type AsArray<T> = T extends readonly unknown[] ? T : T[] | readonly T[]
 

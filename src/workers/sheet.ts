@@ -5,6 +5,7 @@
 import type { WorkBook } from 'xlsx'
 
 import { dumpError } from '@/lib/fp/logger'
+import * as T from 'fp-ts/Task'
 import * as f from 'fp-ts/function'
 import XLSX from 'xlsx'
 
@@ -48,46 +49,50 @@ export type SheetResponse<
 type Handler<Method extends SheetRequest['method'] = SheetRequest['method']> =
   RequestHandler<SheetRequest<Method>, SheetResponse<Method>>
 
-const getRootHandle = f.constant(navigator.storage.getDirectory())
+const getRootHandle: T.Task<FileSystemDirectoryHandle> = f.constant(
+  navigator.storage.getDirectory(),
+)
 
 const getRootFileHandle = (fileName: string, create?: boolean) =>
-  getRootHandle().then((dir) =>
-    dir.getFileHandle(fileName, {
-      create,
-    }),
+  f.pipe(
+    getRootHandle,
+    T.flatMap((dir) =>
+      f.constant(
+        dir.getFileHandle(fileName, {
+          create,
+        }),
+      ),
+    ),
   )
 
 const get: Handler<'get'> = async ({ fileName, method }) => {
-  const fileHandle = await getRootFileHandle(fileName)
-
-  const workbook = await fileHandle
-    .getFile()
-    .then((file) => file.arrayBuffer())
-    .then(XLSX.read)
-
-  return {
+  const workbook = await f.pipe(
     fileName,
-    method,
-    status: 'ok',
-    workbook,
-  }
+    getRootFileHandle,
+    T.flatMap((handle) => f.constant(handle.getFile())),
+    T.flatMap((file) => f.constant(file.arrayBuffer())),
+    T.map(XLSX.read),
+  )()
+
+  return { fileName, method, status: 'ok', workbook }
 }
 
 const postFile: Handler<'postFile'> = async ({ file, method }) => {
-  const writableStream = await getRootFileHandle(file.name, true).then(
-    (handle) => handle.createWritable(),
-  )
+  const writableStream = await f.pipe(
+    getRootFileHandle(file.name, true),
+    T.flatMap((handle) => f.constant(handle.createWritable())),
+  )()
 
-  await writableStream
-    .write(file)
-    .then(() => writableStream.close())
-    .catch(dumpError)
+  await writableStream.write(file).then(() => writableStream.close())
 
   return { fileName: file.name, method, status: 'ok' }
 }
 
 const remove: Handler<'remove'> = async ({ fileName, method }) => {
-  await getRootHandle().then((root) => root.removeEntry(fileName))
+  await f.pipe(
+    getRootHandle,
+    T.map((dir) => dir.removeEntry(fileName)),
+  )()
 
   return { fileName, method, status: 'ok' }
 }

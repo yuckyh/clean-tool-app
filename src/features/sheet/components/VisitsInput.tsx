@@ -9,6 +9,7 @@ import * as f from 'fp-ts/function'
 import { useCallback, useEffect, useState } from 'react'
 
 import { syncVisits } from '../reducers'
+import { getVisitsLength } from '../selectors'
 import VisitInput from './VisitInput'
 
 /**
@@ -30,7 +31,7 @@ export default function VisitsInput() {
 
   const dispatch = useAppDispatch()
 
-  const visitsLength = useAppSelector(({ sheet }) => sheet.visits.length)
+  const visitsLength = useAppSelector(getVisitsLength)
 
   const [visitsValue, setVisitsValue] = useState(visitsLength)
 

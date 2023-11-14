@@ -17,6 +17,7 @@ interface Props {
  *
  * @param props
  * @param props.value
+ * @returns
  * @example
  */
 export default function ValueCell({ value }: Readonly<Props>) {

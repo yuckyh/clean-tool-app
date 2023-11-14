@@ -3,38 +3,15 @@ import type { SheetMethod, SheetResponse } from '@/workers/sheet'
 import type * as Ref from 'fp-ts/Refinement'
 import type * as T from 'fp-ts/Task'
 
-import { sheetWorker } from '@/app/workers'
-import { dumpError } from '@/lib/fp/logger'
-import { promisedWorker } from '@/lib/utils'
+import { createHandledTask, sheetWorker } from '@/app/workers'
 import { createAsyncThunk } from '@reduxjs/toolkit'
-import * as TE from 'fp-ts/TaskEither'
-import * as f from 'fp-ts/function'
 
 /**
  *
  */
 export const sliceName = 'sheet'
 
-const genericHandledTask = <
-  Request extends WorkerRequest,
-  Response extends WorkerResponse<Request['method']>,
->(
-  worker: Readonly<RequestWorker<Request, Response>>,
-  errorMsg: string,
-): T.Task<Response> =>
-  f.pipe(
-    TE.tryCatch(() => promisedWorker('message', worker), dumpError),
-    TE.match(
-      () =>
-        ({
-          error: new Error(errorMsg),
-          status: 'fail',
-        }) as Response,
-      ({ data }) => data,
-    ),
-  )
-
-const handledTask: T.Task<SheetResponse> = genericHandledTask(
+const handledTask: T.Task<SheetResponse> = createHandledTask(
   sheetWorker,
   'sheetWorker failed',
 )

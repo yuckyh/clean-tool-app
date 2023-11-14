@@ -1,3 +1,4 @@
+import type { AppState } from '@/app/store'
 import type { TableColumnDefinition } from '@fluentui/react-components'
 
 import SimpleDataGrid from '@/components/SimpleDataGrid'
@@ -22,8 +23,17 @@ import * as f from 'fp-ts/function'
 import * as N from 'fp-ts/number'
 import { useMemo } from 'react'
 
+/**
+ *
+ */
 interface SummaryStats {
+  /**
+   *
+   */
   statistic: string
+  /**
+   *
+   */
   value: string
 }
 
@@ -35,10 +45,21 @@ const useClasses = makeStyles({
     ...shorthands.padding(tokens.spacingHorizontalXXXL, '5%'),
   },
 })
-
+/**
+ *
+ */
 interface Props {
+  /**
+   *
+   */
   column: string
+  /**
+   *
+   */
   isCategorical: boolean
+  /**
+   *
+   */
   visit: string
 }
 
@@ -46,28 +67,41 @@ interface Props {
  *
  * @param props
  * @param props.column
- * @param props.isCategorical
  * @param props.visit
+ * @returns
  * @example
  */
-export default function SummaryDataGrid({
-  column,
-  isCategorical,
-  visit,
-}: Readonly<Props>) {
+const selectCategoricalSeries =
+  ({ column, visit }: Readonly<Props>) =>
+  (state: AppState) =>
+    getIndexedRow(state, column, visit)
+
+/**
+ *
+ * @param props
+ * @param props.column
+ * @param props.visit
+ * @returns
+ * @example
+ */
+const selectNumericalValues =
+  ({ column, visit }: Readonly<Props>) =>
+  (state: AppState) =>
+    RA.map(getIndexedValue)(getIndexedNumericalRow(state, column, visit))
+
+/**
+ *
+ * @param props
+ * @returns
+ * @example
+ */
+export default function SummaryDataGrid(props: Readonly<Props>) {
   const classes = useClasses()
 
-  const categoricalSeries = useAppSelector((state) =>
-    getIndexedRow(state, column, visit),
-  )
-  const numericalSeries = useAppSelector((state) =>
-    getIndexedNumericalRow(state, column, visit),
-  )
+  const { isCategorical } = props
 
-  const numericalValues = useMemo(
-    () => RA.map(getIndexedValue)(numericalSeries),
-    [numericalSeries],
-  )
+  const categoricalSeries = useAppSelector(selectCategoricalSeries(props))
+  const numericalValues = useAppSelector(selectNumericalValues(props))
 
   const columnDefinition: readonly TableColumnDefinition<SummaryStats>[] =
     useMemo(

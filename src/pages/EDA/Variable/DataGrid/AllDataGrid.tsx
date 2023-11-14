@@ -1,3 +1,4 @@
+import type { AppState } from '@/app/store'
 import type {
   DataGridProps,
   InputProps,
@@ -70,8 +71,17 @@ const useClasses = makeStyles({
   },
 })
 
+/**
+ *
+ */
 interface Props {
+  /**
+   *
+   */
   column: string
+  /**
+   *
+   */
   visit: string
 }
 
@@ -80,29 +90,95 @@ interface Props {
  * @param props
  * @param props.column
  * @param props.visit
+ * @returns
  * @example
  */
-export default function AllDataGrid({ column, visit }: Readonly<Props>) {
+const selectTitle =
+  ({ column, visit }: Readonly<Props>) =>
+  (state: AppState) =>
+    getFormattedColumn(state, getSearchedPos(state, column, visit))
+
+/**
+ *
+ * @param props
+ * @param props.column
+ * @param props.visit
+ * @returns
+ * @example
+ */
+const selectSeries =
+  ({ column, visit }: Readonly<Props>) =>
+  (state: AppState) =>
+    getIndexedRow(state, column, visit)
+
+/**
+ *
+ * @param props
+ * @param props.column
+ * @param props.visit
+ * @returns
+ * @example
+ */
+const selectMissingSeries =
+  ({ column, visit }: Readonly<Props>) =>
+  (state: AppState) =>
+    getIndexedRowMissings(state, column, visit)
+
+/**
+ *
+ * @param props
+ * @param props.column
+ * @param props.visit
+ * @returns
+ * @example
+ */
+const selectIncorrectSeries =
+  ({ column, visit }: Readonly<Props>) =>
+  (state: AppState) =>
+    getIndexedRowIncorrects(state, column, visit)
+
+/**
+ *
+ * @param props
+ * @param props.column
+ * @param props.visit
+ * @returns
+ * @example
+ */
+const selectDataType =
+  ({ column, visit }: Readonly<Props>) =>
+  (state: AppState) =>
+    getSearchedDataType(state, column, visit)
+
+/**
+ *
+ * @param title
+ * @returns
+ * @example
+ */
+const selectFlaggedRows = (title: string) => (state: AppState) =>
+  getFlaggedRows(state, title, 'outlier')
+
+/**
+ *
+ * @param props
+ * @param props.column
+ * @param props.visit
+ * @example
+ */
+export default function AllDataGrid(props: Readonly<Props>) {
   const classes = useClasses()
 
-  const pos = useAppSelector((state) => getSearchedPos(state, column, visit))
-  const title = useAppSelector((state) => getFormattedColumn(state, pos))
+  const title = useAppSelector(selectTitle(props))
 
   const dispatch = useAppDispatch()
 
-  const flaggedRows = useAppSelector((state) =>
-    getFlaggedRows(state, title, 'outlier'),
-  )
-  const series = useAppSelector((state) => getIndexedRow(state, column, visit))
-  const missingSeries = useAppSelector((state) =>
-    getIndexedRowMissings(state, column, visit),
-  )
-  const incorrectSeries = useAppSelector((state) =>
-    getIndexedRowIncorrects(state, column, visit),
-  )
-  const dataType = useAppSelector((state) =>
-    getSearchedDataType(state, column, visit),
-  )
+  const flaggedRows = useAppSelector(selectFlaggedRows(title))
+  const series = useAppSelector(selectSeries(props))
+  const missingSeries = useAppSelector(selectMissingSeries(props))
+  const incorrectSeries = useAppSelector(selectIncorrectSeries(props))
+
+  const dataType = useAppSelector(selectDataType(props))
 
   const indices = useMemo(() => RA.map(getIndexedIndex)(series), [series])
   const missingIndices = useMemo(
@@ -119,17 +195,12 @@ export default function AllDataGrid({ column, visit }: Readonly<Props>) {
     { selectedItems },
   ) => {
     const shouldAdd = flaggedRows.size < selectedItems.size
-    const subtractor = (
-      shouldAdd ? selectedItems : flaggedRows
-    ) as ReadonlySet<string>
-
-    const subtractee = (
-      shouldAdd ? flaggedRows : selectedItems
-    ) as ReadonlySet<string>
 
     const checkedPosList = f.pipe(
-      subtractor,
-      RS.difference(S.Eq)(subtractee),
+      (shouldAdd ? selectedItems : flaggedRows) as ReadonlySet<string>,
+      RS.difference(S.Eq)(
+        (shouldAdd ? flaggedRows : selectedItems) as ReadonlySet<string>,
+      ),
       RS.toReadonlyArray(S.Ord),
       RA.filter((checkedPos) => RA.elem(S.Eq)(checkedPos, indices)),
     )

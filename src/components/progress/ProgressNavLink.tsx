@@ -1,4 +1,6 @@
-import { getDisabled } from '@/features/progress/selectors'
+import type { AppState } from '@/app/store'
+
+import { getIsDisabled } from '@/features/progress/selectors'
 import { getPathTitle } from '@/lib/fp/string'
 import { useAppSelector } from '@/lib/hooks'
 import {
@@ -10,7 +12,6 @@ import {
   shorthands,
   tokens,
 } from '@fluentui/react-components'
-import { useMemo } from 'react'
 import {
   useHref,
   useLinkClickHandler,
@@ -46,6 +47,19 @@ const useClasses = makeStyles({
   },
 })
 
+/**
+ *
+ * @param componentPath
+ * @param locationPath
+ * @param pos
+ * @returns
+ * @example
+ */
+const selectIsDisabled =
+  (componentPath: string, locationPath: string, pos: number) =>
+  (state: AppState) =>
+    getIsDisabled(state, componentPath, locationPath, pos)
+
 interface Props {
   done: boolean
   path: string
@@ -66,16 +80,11 @@ export default function ProgressNavLink({ done, path, pos }: Readonly<Props>) {
   const { pathname: locationPath } = useLocation()
   const { pathname: componentPath } = useResolvedPath('')
 
-  const params = useMemo(
-    () => [componentPath, locationPath, pos] as const,
-    [componentPath, locationPath, pos],
+  const isDisabled = useAppSelector(
+    selectIsDisabled(componentPath, locationPath, pos),
   )
-
-  const disabled = useAppSelector((state) => getDisabled(state, ...params))
-  const href = useHref(disabled ? '#' : path)
+  const href = useHref(isDisabled ? '#' : path)
   const handleLinkClick = useLinkClickHandler(path)
-
-  // const selectedPath = useAppSelector((state) => getPath(state, ...params))
 
   const label = getPathTitle(path)
   const isActive = useLocation().pathname === path
@@ -85,7 +94,7 @@ export default function ProgressNavLink({ done, path, pos }: Readonly<Props>) {
       <Link
         appearance="subtle"
         className={classes.link}
-        disabled={disabled}
+        disabled={isDisabled}
         href={href}
         onClick={handleLinkClick}>
         <div

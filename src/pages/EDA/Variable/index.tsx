@@ -1,9 +1,18 @@
 /* eslint-disable
   functional/functional-parameters
 */
+import type { AppState } from '@/app/store'
+
 import { codebook } from '@/data'
 import { setDataType } from '@/features/columns/reducers'
-import { getSearchedPos } from '@/features/columns/selectors'
+import {
+  getDataType,
+  getSearchedDataType,
+  getSearchedPos,
+} from '@/features/columns/selectors'
+import { getFirstVisit } from '@/features/sheet/selectors'
+import { arrayLookup } from '@/lib/array'
+import { equals } from '@/lib/fp'
 import { kebabToSnake } from '@/lib/fp/string'
 import { useAppDispatch, useAppSelector } from '@/lib/hooks'
 import CategoricalPlot from '@/pages/EDA/Variable/Plot/CategoricalPlot'
@@ -17,6 +26,8 @@ import {
   tokens,
 } from '@fluentui/react-components'
 import * as IO from 'fp-ts/IO'
+import * as O from 'fp-ts/Option'
+import * as RA from 'fp-ts/ReadonlyArray'
 import * as f from 'fp-ts/function'
 import * as S from 'fp-ts/string'
 import { useParams } from 'react-router-dom'
@@ -26,8 +37,6 @@ import IncorrectDataGrid from './DataGrid/IncorrectDataGrid'
 import BlankDataGrid from './DataGrid/MissingDataGrid'
 import OutlierDataGrid from './DataGrid/OutlierDataGrid'
 import SummaryDataGrid from './DataGrid/SummaryDataGrid'
-import { arrayLookup } from '@/lib/array'
-import { equals } from '@/lib/fp'
 
 const useClasses = makeStyles({
   actions: {
@@ -74,6 +83,38 @@ const useClasses = makeStyles({
 
 /**
  *
+ * @param column
+ * @param visit
+ * @returns
+ * @example
+ */
+const selectSearchedPos =
+  (column: string, visit: string) => (state: AppState) =>
+    getSearchedPos(state, column, visit)
+
+/**
+ *
+ * @param column
+ * @param visit
+ * @returns
+ * @example
+ */
+const selectIsCategorical =
+  (column: string, visit: string) => (state: AppState) =>
+    getSearchedDataType(state, column, visit) === 'categorical'
+
+/**
+ *
+ * @param visit
+ * @returns
+ * @example
+ */
+const selectVisit = (visit?: string) => (state: AppState) =>
+  visit ?? getFirstVisit(state)
+
+/**
+ *
+ * @returns
  * @example
  */
 export default function Variable() {
@@ -83,28 +124,35 @@ export default function Variable() {
 
   const dispatch = useAppDispatch()
 
-  const firstVisit = useAppSelector(({ sheet }) => arrayLookup(sheet.visits)('')(0))
+  const column = f.pipe(
+    params.column,
+    O.fromNullable,
+    O.map(kebabToSnake),
+    O.getOrElse(() => ''),
+  )
+  const visit = useAppSelector(selectVisit(params.visit))
 
-  const column = kebabToSnake(params.column ?? '')
-  const visit = params.visit ?? firstVisit
-
-  const pos = useAppSelector((state) => getSearchedPos(state, column, visit))
-  const dataType = useAppSelector(({ columns }) => arrayLookup(columns.dataTypes)('none')(pos))
+  const pos = useAppSelector(selectSearchedPos(column, visit))
+  const isCategorical = useAppSelector(selectIsCategorical(column, visit))
 
   const title = `${column}${visit && visit !== '1' ? `_${visit}` : ''}`
 
-  const codebookVariable = codebook.find(({ name }) => equals(S.Eq)(name)) ?? {
-    category: '',
-    description: '',
-    name: '',
-    type: '',
-    unit: '',
-  }
-  const isUser = !codebookVariable.name
+  const codebookVariable = f.pipe(
+    codebook,
+    RA.findFirst(({ name }) => equals(S.Eq)(name)(column)),
+    O.map(({ name, unit }) => ({
+      name,
+      unit,
+    })),
+    O.getOrElse(() => ({
+      name: '',
+      unit: '',
+    })),
+  )
 
-  const { unit } = codebookVariable
+  const { name, unit } = codebookVariable
 
-  const isCategorical = dataType === 'categorical'
+  const isUser = !name
 
   return (
     <section className={classes.root}>

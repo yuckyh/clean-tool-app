@@ -13,10 +13,9 @@ import {
   getScoresList,
   getVisitParam,
   getVisits,
-  indexEq,
 } from '@/app/selectors'
 import { arrayLookup, findIndex, head } from '@/lib/array'
-import { dualMap, equals } from '@/lib/fp'
+import { dualMap, equals, indexEq } from '@/lib/fp'
 import { add, multiply } from '@/lib/fp/number'
 import { snakeToKebab } from '@/lib/fp/string'
 import fuse from '@/lib/fuse'
@@ -319,12 +318,7 @@ export const getSearchedDataType = createSelector(
    * @returns
    * @example
    */
-  (dataTypes, pos) =>
-    f.pipe(
-      dataTypes,
-      RA.lookup(pos),
-      O.getOrElse(() => 'none'),
-    ),
+  (dataTypes, pos) => arrayLookup(dataTypes)('none')(pos),
 )
 
 /**

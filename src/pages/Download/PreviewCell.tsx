@@ -1,3 +1,5 @@
+import type { AppState } from '@/app/store'
+
 import { getFlaggedCells } from '@/app/selectors'
 import { getFormattedColumn } from '@/features/columns/selectors'
 import { getCell, getIndexRow } from '@/features/sheet/selectors'
@@ -49,6 +51,12 @@ const useClasses = makeStyles({
   },
 })
 
+const reasonInFlagEq = Eq.tuple(
+  stubEq<string>(),
+  stubEq<string>(),
+  refinedEq<Flag.FlagReason, string>(S.Eq),
+)
+
 /**
  * The props for {@link pages/Download Download}.
  */
@@ -63,30 +71,56 @@ interface Props {
   row: number
 }
 
-const reasonInFlagEq = Eq.tuple(
-  stubEq<string>(),
-  stubEq<string>(),
-  refinedEq<Flag.FlagReason, string>(S.Eq),
-)
+/**
+ *
+ * @param props
+ * @param props.col
+ * @param props.row
+ * @returns
+ * @example
+ */
+const selectCell =
+  ({ col, row }: Readonly<Props>) =>
+  (state: AppState) =>
+    getCell(state, col, row)
+
+/**
+ *
+ * @param props
+ * @param props.col
+ * @returns
+ * @example
+ */
+const selectFormattedColumn =
+  ({ col }: Readonly<Props>) =>
+  (state: AppState) =>
+    getFormattedColumn(state, col)
+
+/**
+ *
+ * @param props
+ * @param props.row
+ * @returns
+ * @example
+ */
+const selectIndex =
+  ({ row }: Readonly<Props>) =>
+  (state: AppState) =>
+    arrayLookup(getIndexRow(state))('')(row)
 
 /**
  * The cell in the {@link components/SimpleDataGrid SimpleDataGrid} that displays the value of the data value with the flag formatting
  * @param props - The component's props
- * @param props.col - The column index
- * @param props.row - The row index
  * @returns JSX.Element
  * @example
  */
-export default function PreviewCell({ col, row }: Readonly<Props>) {
+export default function PreviewCell(props: Readonly<Props>) {
   const classes = useClasses()
 
-  const cell = useAppSelector((state) => getCell(state, col, row))
+  const cell = useAppSelector(selectCell(props))
   const flaggedCells = useAppSelector(getFlaggedCells)
-  const formattedColumn = useAppSelector((state) =>
-    getFormattedColumn(state, col),
-  )
-  const indexRow = useAppSelector(getIndexRow)
-  const index = arrayLookup(indexRow)('')(row)
+  const formattedColumn = useAppSelector(selectFormattedColumn(props))
+  const index = useAppSelector(selectIndex(props))
 
   const styleClass = useMemo(
     () =>

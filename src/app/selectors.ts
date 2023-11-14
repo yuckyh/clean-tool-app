@@ -1,7 +1,6 @@
 import type * as Flag from '@/lib/fp/Flag'
 
-import * as Eq from 'fp-ts/Eq'
-import * as S from 'fp-ts/string'
+import * as f from 'fp-ts/function'
 
 import type { AppState } from './store'
 
@@ -92,8 +91,8 @@ export const getReasonParam = (
 
 /**
  *
- * @param param0
- * @param param0.progress
+ * @param state
+ * @param state.progress
  * @returns
  * @example
  */
@@ -101,12 +100,30 @@ export const getProgress = ({ progress }: AppState) => progress.progress
 
 /**
  *
- * @param param0
- * @param param0.sheet
+ * @param state
+ * @param state.sheet
+ * @returns
+ * @example
+ */
+export const getFileName = ({ sheet }: AppState) => sheet.fileName
+
+/**
+ *
+ * @param state
+ * @param state.sheet
  * @returns
  * @example
  */
 export const getSheetName = ({ sheet }: AppState) => sheet.sheetName
+
+/**
+ *
+ * @param state
+ * @param state.sheet
+ * @returns
+ * @example
+ */
+export const getSheetNames = ({ sheet }: AppState) => sheet.sheetNames
 
 /**
  * Selector function to get the visits.
@@ -119,8 +136,8 @@ export const getVisits = ({ sheet }: AppState) => sheet.visits
 
 /**
  *
- * @param param0
- * @param param0.sheet
+ * @param state
+ * @param state.sheet
  * @returns
  * @example
  */
@@ -128,8 +145,8 @@ export const getOriginalColumns = ({ sheet }: AppState) => sheet.originalColumns
 
 /**
  *
- * @param param0
- * @param param0.sheet
+ * @param state
+ * @param state.sheet
  * @returns
  * @example
  */
@@ -137,8 +154,8 @@ export const getData = ({ sheet }: AppState) => sheet.data
 
 /**
  *
- * @param param0
- * @param param0.sheet
+ * @param state
+ * @param state.sheet
  * @returns
  * @example
  */
@@ -146,8 +163,30 @@ export const getFlaggedCells = ({ sheet }: AppState) => sheet.flaggedCells
 
 /**
  *
- * @param param0
- * @param param0.columns
+ * @param state
+ * @param state.sheet
+ * @returns
+ * @example
+ */
+export const getDataLength = ({ sheet }: AppState) => sheet.data.length
+
+/**
+ *
+ */
+export const getHasSheet = f.flow(getDataLength, Boolean)
+
+/**
+ *
+ * @param state
+ * @returns
+ * @example
+ */
+export const getHasMultipleSheets = (state: AppState) => !state.sheet.bookType
+
+/**
+ *
+ * @param state
+ * @param state.columns
  * @returns
  * @example
  */
@@ -155,8 +194,8 @@ export const getMatchColumns = ({ columns }: AppState) => columns.matchColumns
 
 /**
  *
- * @param param0
- * @param param0.columns
+ * @param state
+ * @param state.columns
  * @returns
  * @example
  */
@@ -164,8 +203,8 @@ export const getMatchVisits = ({ columns }: AppState) => columns.matchVisits
 
 /**
  *
- * @param param0
- * @param param0.columns
+ * @param state
+ * @param state.columns
  * @returns
  * @example
  */
@@ -173,8 +212,8 @@ export const getScoresList = ({ columns }: AppState) => columns.scoresList
 
 /**
  *
- * @param param0
- * @param param0.columns
+ * @param state
+ * @param state.columns
  * @returns
  * @example
  */
@@ -182,14 +221,9 @@ export const getMatchesList = ({ columns }: AppState) => columns.matchesList
 
 /**
  *
- * @param param0
- * @param param0.columns
+ * @param state
+ * @param state.columns
  * @returns
  * @example
  */
 export const getDataTypes = ({ columns }: AppState) => columns.dataTypes
-
-/**
- *
- */
-export const indexEq = Eq.tuple(S.Eq, S.Eq)

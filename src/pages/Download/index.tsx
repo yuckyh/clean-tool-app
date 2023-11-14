@@ -7,8 +7,10 @@
   functional/functional-parameters
 */
 
+import type { AppState } from '@/app/store'
 import type { TableColumnDefinition } from '@fluentui/react-components'
 
+import { getDataLength, getFileName } from '@/app/selectors'
 import SimpleDataGrid from '@/components/SimpleDataGrid'
 import { getFormattedColumns } from '@/features/columns/selectors'
 import { getFormattedWorkbook } from '@/features/sheet/selectors'
@@ -72,7 +74,7 @@ const useClasses = makeStyles({
 export default function Download() {
   const classes = useClasses()
 
-  const dataLength = useAppSelector(({ sheet }) => sheet.data.length)
+  const dataLength = useAppSelector(getDataLength)
   const columnsLength = useAppSelector(getColumnsLength)
   const formattedColumns = useAppSelector(getFormattedColumns)
 
@@ -91,7 +93,7 @@ export default function Download() {
     [columnsLength, formattedColumns],
   )
 
-  const fileName = useAppSelector(({ sheet }) => sheet.fileName)
+  const fileName = useAppSelector(getFileName)
   const workbook = useAppSelector(getFormattedWorkbook)
 
   const handleFileDownload = () => {

@@ -1,6 +1,7 @@
 /* eslint-disable
   functional/functional-parameters
 */
+import type { AppState } from '@/app/store'
 import type { Progress } from '@/features/progress/reducers'
 
 import { getVisits } from '@/app/selectors'
@@ -12,7 +13,7 @@ import {
 import { setProgress } from '@/features/progress/reducers'
 import { getLocationPathWords } from '@/features/progress/selectors'
 import { getFirstVisit } from '@/features/sheet/selectors'
-import { arrayLookup } from '@/lib/array'
+import { arrayLookup, findIndex } from '@/lib/array'
 import { length } from '@/lib/fp'
 import { kebabToSnake } from '@/lib/fp/string'
 import { useAppDispatch, useAppSelector } from '@/lib/hooks'
@@ -26,7 +27,6 @@ import {
 } from '@fluentui/react-components'
 import * as Eq from 'fp-ts/Eq'
 import * as IO from 'fp-ts/IO'
-import * as O from 'fp-ts/Option'
 import * as RA from 'fp-ts/ReadonlyArray'
 import * as f from 'fp-ts/function'
 import * as S from 'fp-ts/string'
@@ -79,6 +79,34 @@ const useClasses = makeStyles({
 
 /**
  *
+ * @param pathname
+ * @returns
+ * @example
+ */
+const selectPathWords = (pathname: string) => (state: AppState) =>
+  getLocationPathWords(state, '', pathname)
+
+/**
+ *
+ * @param pos
+ * @returns
+ * @example
+ */
+const selectPrevVariablePath = (pos: number) => (state: AppState) =>
+  getColumnPath(state, pos - 1)
+
+/**
+ *
+ * @param pos
+ * @returns
+ * @example
+ */
+const selectNextVariablePath = (pos: number) => (state: AppState) =>
+  getColumnPath(state, pos + 1)
+
+/**
+ *
+ * @returns
  * @example
  */
 export default function Nav() {
@@ -94,9 +122,7 @@ export default function Nav() {
   const visits = useAppSelector(getVisits)
   const firstVisit = useAppSelector(getFirstVisit)
   const columnPaths = useAppSelector(getColumnPaths)
-  const pathWords = useAppSelector((state) =>
-    getLocationPathWords(state, '', pathname),
-  )
+  const pathWords = useAppSelector(selectPathWords(pathname))
   const depth = useMemo(() => length(pathWords), [pathWords])
 
   const column = useMemo(
@@ -109,23 +135,19 @@ export default function Nav() {
     () =>
       f.pipe(
         indices,
-        RA.findIndex(([matchColumn, matchVisit]) =>
-          Eq.tuple(S.Eq, S.Eq).equals(
-            [column, visit || firstVisit],
-            [matchColumn, arrayLookup(visits)('')(matchVisit)],
-          ),
+        RA.map(
+          ([matchColumn, matchVisit]) =>
+            [matchColumn, arrayLookup(visits)('')(matchVisit)] as const,
         ),
-        f.pipe(-1, f.constant, O.getOrElse),
+        findIndex,
+        f.apply(Eq.tuple(S.Eq, S.Eq)),
+        f.apply([column, visit || firstVisit] as const),
       ),
     [column, firstVisit, indices, visit, visits],
   )
 
-  const prevColumnPath = useAppSelector((state) =>
-    getColumnPath(state, pos - 1),
-  )
-  const nextColumnPath = useAppSelector((state) =>
-    getColumnPath(state, pos + 1),
-  )
+  const prevColumnPath = useAppSelector(selectPrevVariablePath(pos))
+  const nextColumnPath = useAppSelector(selectNextVariablePath(pos))
 
   const handlePrevVariable = useCallback(() => {
     if (depth === 2) {

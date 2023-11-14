@@ -1,31 +1,20 @@
 import type { AppState } from '@/app/store'
-import type { ColumnResponse } from '@/workers/column'
+import type { ColumnRequest, ColumnResponse } from '@/workers/column'
 import type * as T from 'fp-ts/Task'
 
 import { getOriginalColumns } from '@/app/selectors'
-import { columnWorker } from '@/app/workers'
-import { dumpError } from '@/lib/fp/logger'
+import { columnWorker, createHandledTask } from '@/app/workers'
 import { add } from '@/lib/fp/number'
-import { promisedWorker } from '@/lib/utils'
 import { createAsyncThunk } from '@reduxjs/toolkit'
 import * as O from 'fp-ts/Option'
-import * as TE from 'fp-ts/TaskEither'
 import * as f from 'fp-ts/function'
 
 import { syncVisits } from '../sheet/reducers'
 
-const messagePromise: T.Task<ColumnResponse<'fail'> | ColumnResponse<'ok'>> =
-  f.pipe(
-    TE.tryCatch(() => promisedWorker('message', columnWorker), dumpError),
-    TE.matchW(
-      () =>
-        ({
-          error: new Error('columnWorker failed'),
-          status: 'fail',
-        }) as ColumnResponse<'fail'>,
-      ({ data }) => data as ColumnResponse<'ok'>,
-    ),
-  )
+const handledTask: T.Task<ColumnResponse> = createHandledTask<
+  ColumnRequest,
+  ColumnResponse
+>(columnWorker, 'columnWorker failed')
 
 /**
  *
@@ -45,7 +34,7 @@ export const fetchMatches = createAsyncThunk(
       method: 'get',
     })
 
-    const result = (await messagePromise()).matches
+    const result = (await handledTask()).matches
 
     const { matchVisits } = (getState() as AppState).columns
     const { visits } = (getState() as AppState).sheet
@@ -55,10 +44,11 @@ export const fetchMatches = createAsyncThunk(
       O.fromPredicate(
         (value) => value.length > 0 && Math.max(...value) > visits.length,
       ),
-      O.map(
-        f.flow(f.tupled(Math.max), add(1), syncVisits, dispatch, () => result),
+      O.map(f.flow(f.tupled(Math.max), add(1), syncVisits, dispatch)),
+      O.match(
+        () => result,
+        () => result,
       ),
-      O.getOrElse(() => result),
     )
   },
 )

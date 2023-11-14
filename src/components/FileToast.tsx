@@ -1,3 +1,4 @@
+import { getFileName } from '@/app/selectors'
 import { useAppSelector } from '@/lib/hooks'
 import { Toast, ToastBody, ToastTitle } from '@fluentui/react-components'
 
@@ -15,7 +16,7 @@ interface Props {
  * @example
  */
 export default function FileToast({ fileTask }: Readonly<Props>) {
-  const fileName = useAppSelector(({ sheet }) => sheet.fileName)
+  const fileName = useAppSelector(getFileName)
 
   return (
     <Toast>

@@ -124,6 +124,10 @@ export const useStorage = () => {
 
 export const useGlobalStyles = makeStaticStyles(globalStyles)
 
+const selectFlaggedRows =
+  (title: string, reason: Flag.FlagReason) => (state: AppState) =>
+    getFlaggedRows(state, title, reason)
+
 export const useSyncedSelectionHandler = (
   reason: Flag.FlagReason,
   title: string,
@@ -131,9 +135,7 @@ export const useSyncedSelectionHandler = (
 ) => {
   const dispatch = useAppDispatch()
 
-  const flaggedRows = useAppSelector((state) =>
-    getFlaggedRows(state, title, reason),
-  )
+  const flaggedRows = useAppSelector(selectFlaggedRows(title, reason))
 
   const indices = useMemo(() => RA.map(getIndexedIndex)(series), [series])
 

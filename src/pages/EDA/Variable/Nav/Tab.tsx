@@ -1,3 +1,4 @@
+import { AppState } from '@/app/store'
 import { getColumnPath, getFormattedColumn } from '@/features/columns/selectors'
 import { useAppSelector } from '@/lib/hooks'
 import { Link, Tab, makeStyles } from '@fluentui/react-components'
@@ -10,7 +11,29 @@ const useClasses = makeStyles({
   },
 })
 
+/**
+ *
+ * @param pos
+ * @returns
+ */
+const selectPath = (pos: number) => (state: AppState) =>
+  getColumnPath(state, pos)
+
+/**
+ *
+ * @param pos
+ * @returns
+ */
+const selectLabel = (pos: number) => (state: AppState) =>
+  getFormattedColumn(state, pos)
+
+/**
+ *
+ */
 interface Props {
+  /**
+   *
+   */
   pos: number
 }
 
@@ -22,9 +45,9 @@ interface Props {
  */
 export default function NavTab({ pos }: Readonly<Props>) {
   const classes = useClasses()
-  const path = useAppSelector((state) => getColumnPath(state, pos))
+  const path = useAppSelector(selectPath(pos))
 
-  const label = useAppSelector((state) => getFormattedColumn(state, pos))
+  const label = useAppSelector(selectLabel(pos))
   const href = useHref(path)
 
   const handleLinkClick = useLinkClickHandler(path)

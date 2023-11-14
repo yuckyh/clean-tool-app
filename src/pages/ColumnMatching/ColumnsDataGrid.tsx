@@ -190,18 +190,18 @@ export default function ColumnsDataGrid({
   useEffect(() => {
     f.pipe(
       fetchMatches,
+      (x) => dispatch(x()),
       T.of,
-      T.map((x) => dispatch(x)),
       T.tapIO(() => stopLoading),
     )().catch(dumpError)
-  }, [dispatch, stopLoading, columnsLength])
+  }, [dispatch, stopLoading])
 
   useEffect(() => {
     f.pipe(
       visitsLength,
       IOO.fromPredicate((x) => Math.max(...matchVisits) > x && x > 0),
       IOO.flatMapIO(() => infoAlertRef.current?.open ?? IO.of(() => {})),
-    )
+    )()
   }, [infoAlertRef, matchVisits, visitsLength])
 
   return !isLoading ? (

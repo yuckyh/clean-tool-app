@@ -46,18 +46,18 @@ export const ioDumpName = <T>(obj: Readonly<Record<string, T>>) =>
     RR.toReadonlyArray,
     RA.map(([name, value]) =>
       f.pipe(
-        value,
+        name,
         IO.of,
-        IO.tap(() => fpConsole.log(name)),
+        IO.tap(fpConsole.log),
+        IO.map(() => value),
         IO.flatMap(ioDumpTrace),
       ),
     ),
     IO.sequenceArray,
   )
 
-export const dumpName = <T>(obj: Readonly<Record<string, T>>) => {
-  return ioDumpName(obj)()[0] as T
-}
+export const dumpName = <T>(obj: Readonly<Record<string, T>>) =>
+  ioDumpName(obj)()[0] as T
 
 export const useLoggerEffect = <T extends ArrayElement<DependencyList>>(
   dep: Record<string, T>,

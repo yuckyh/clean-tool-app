@@ -1,10 +1,13 @@
+import type { AppState } from '@/app/store'
 import type { AlertRef } from '@/components/AlertDialog'
 import type { ComboboxProps } from '@fluentui/react-components'
 
+import { getVisits } from '@/app/selectors'
 import { codebook } from '@/data'
 import { getRow } from '@/features/sheet/selectors'
 import { findIndex, indexDuplicateSearcher } from '@/lib/array'
 import { equals, isCorrectNumber } from '@/lib/fp'
+import { useLoggerEffect } from '@/lib/fp/logger'
 import { useAppDispatch, useAppSelector, useDebounced } from '@/lib/hooks'
 import { createMemo } from '@/lib/utils'
 import { getMatchColumn } from '@/selectors/columns/selectors'
@@ -57,23 +60,99 @@ interface Props {
 /**
  *
  * @param props
+ * @param props.pos
+ * @returns
+ * @example
+ */
+const selectMatchColumn =
+  ({ pos }: Readonly<Props>) =>
+  (state: AppState) =>
+    getMatchColumn(state, pos)
+
+/**
+ *
+ * @param props
+ * @param props.pos
+ * @returns
+ * @example
+ */
+const selectMatchVisit =
+  ({ pos }: Readonly<Props>) =>
+  (state: AppState) =>
+    getMatchVisit(state, pos)
+
+/**
+ *
+ * @param props
+ * @param props.pos
+ * @returns
+ * @example
+ */
+const selectMatches =
+  ({ pos }: Readonly<Props>) =>
+  (state: AppState) =>
+    getMatches(state, pos)
+
+/**
+ *
+ * @param props
+ * @param props.pos
+ * @returns
+ * @example
+ */
+const selectScores =
+  ({ pos }: Readonly<Props>) =>
+  (state: AppState) =>
+    getScores(state, pos)
+
+/**
+ *
+ * @param props
+ * @param props.pos
+ * @returns
+ * @example
+ */
+const selectVisitByMatchVisit =
+  ({ pos }: Readonly<Props>) =>
+  (state: AppState) =>
+    getVisitByMatchVisit(state, pos)
+
+/**
+ *
+ * @param props
+ * @returns
+ * @example
+ */
+const selectRow = (props: Readonly<Props>) => (state: AppState) =>
+  getRow(
+    state,
+    selectMatchColumn(props)(state),
+    selectVisitByMatchVisit(props)(state),
+  )
+
+/**
+ *
+ * @param props
  * @param props.alertRef
  * @param props.pos
  * @example
  */
-export default function MatchCell({ alertRef, pos }: Readonly<Props>) {
+export default function MatchCell(props: Readonly<Props>) {
   const classes = useClasses()
+
+  const { alertRef, pos } = props
 
   const dispatch = useAppDispatch()
 
-  const visits = useAppSelector(({ sheet }) => sheet.visits)
-  const matchColumn = useAppSelector((state) => getMatchColumn(state, pos))
-  const matchVisit = useAppSelector((state) => getMatchVisit(state, pos))
-  const matches = useAppSelector((state) => getMatches(state, pos))
-  const scores = useAppSelector((state) => getScores(state, pos))
-  const visit = useAppSelector((state) => getVisitByMatchVisit(state, pos))
-  const row = useAppSelector((state) => getRow(state, matchColumn, visit))
+  const visits = useAppSelector(getVisits)
+  const matchColumn = useAppSelector(selectMatchColumn(props))
+  const matchVisit = useAppSelector(selectMatchVisit(props))
+  const matches = useAppSelector(selectMatches(props))
+  const scores = useAppSelector(selectScores(props))
+  const row = useAppSelector(selectRow(props))
   const indices = useAppSelector(getIndices)
+
+  useLoggerEffect({ matchColumn })
 
   const [comboboxOpen, setComboboxOpen] = useState(false)
   const [value, setValue] = useState(matchColumn)

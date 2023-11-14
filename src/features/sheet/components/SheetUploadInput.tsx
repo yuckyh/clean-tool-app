@@ -6,6 +6,7 @@ import type { SheetResponse } from '@/workers/sheet'
 import type { Dispatch, SetStateAction } from 'react'
 import type { DropzoneOptions } from 'react-dropzone'
 
+import { getDataLength, getFileName } from '@/app/selectors'
 import { sheetWorker } from '@/app/workers'
 import FileToast from '@/components/FileToast'
 import { asIO, equals } from '@/lib/fp'
@@ -57,8 +58,8 @@ const SheetUploadInput = forwardRef<SheetInputRef, Props>(
 
     const dispatch = useAppDispatch()
 
-    const fileName = useAppSelector(({ sheet }) => sheet.fileName)
-    const dataLength = useAppSelector(({ sheet }) => sheet.data.length)
+    const fileName = useAppSelector(getFileName)
+    const dataLength = useAppSelector(getDataLength)
 
     const [fileTask, setFileTask] = useState<FileTaskType>('none')
 

@@ -99,8 +99,8 @@ const getColumnsByData = createSelector(
   [getData],
   f.flow(
     RA.map(RR.keys),
-    RA.head,
-    f.pipe([] as readonly string[], f.constant, O.getOrElse),
+    head,
+    f.apply([] as readonly (keyof CellItem.CellItem)[]),
   ),
 )
 
@@ -157,7 +157,7 @@ export const getCell = createSelector(
     f.pipe(
       arrayLookup(data)(CellItem.of({}))(row),
       CellItem.fold(RR.lookup(column)),
-      f.pipe('' as CellItem.Value, f.constant, O.getOrElse),
+      O.getOrElse(() => '' as CellItem.Value),
     ),
 )
 
@@ -169,7 +169,6 @@ export const getIndexRow = createSelector(
   /**
    *
    * @param data
-   * @param columns
    * @param originalColumns
    * @param pos
    * @returns
@@ -198,7 +197,6 @@ export const getRow = createSelector(
   /**
    *
    * @param data
-   * @param columns
    * @param originalColumns
    * @param pos
    * @returns
@@ -227,6 +225,9 @@ export const getIndexedRow = createSelector(
   RA.zip<string, string>,
 )
 
+/**
+ *
+ */
 export const getIndexedRowMissings = createSelector(
   [getIndexedRow],
   RA.filter(
@@ -238,6 +239,9 @@ export const getIndexedRowMissings = createSelector(
   ),
 )
 
+/**
+ *
+ */
 const getBlanklessRow = createSelector(
   [getIndexedRow],
   RA.filter(
@@ -250,6 +254,12 @@ const getBlanklessRow = createSelector(
   ),
 )
 
+/**
+ *
+ * @param str
+ * @returns
+ * @example
+ */
 const blankless = (str: string) => /[!,.?]{2,}/.test(str)
 
 /**
@@ -455,7 +465,7 @@ const getFormattedData = createSelector(
                   Object.entries<CellItem.Value>,
                   RA.insertAt(pos, [value, '' as CellItem.Value] as const),
                   O.map(RR.fromEntries),
-                  f.pipe(acc, f.constant, O.getOrElse),
+                  O.getOrElse(() => acc),
                 ),
               ),
             ),
@@ -540,11 +550,7 @@ export const getFormattedSheet = createSelector(
       flaggedCellsAddresses,
       RA.reduce(renamedSheet, (acc, [addr, reason]) =>
         RR.upsertAt(addr, {
-          ...f.pipe(
-            renamedSheet,
-            RR.lookup(addr),
-            f.pipe({ t: 's', v: '' }, f.constant, O.getOrElse),
-          ),
+          ...recordLookup(renamedSheet)({ t: 's', v: '' })(addr),
           s: {
             fill: {
               fgColor: {

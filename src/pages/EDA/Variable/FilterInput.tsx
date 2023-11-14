@@ -20,6 +20,7 @@ interface Props {
  * @param props.handleChange
  * @param props.label
  * @param props.value
+ * @returns
  * @example
  */
 export default function FilterInput({

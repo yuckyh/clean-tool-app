@@ -3,7 +3,7 @@
  */
 
 import type { codebook } from '@/data'
-import type Fuse from 'fuse.js'
+import type * as Fuse from 'fuse.js'
 
 import { dumpError } from '@/lib/fp/logger'
 import fuse from '@/lib/fuse'
@@ -41,6 +41,13 @@ export type ColumnRequest = {
    */
   columns: readonly string[]
 } & WorkerRequest<'get'>
+
+type ColumnOkResponse = WorkerResponse<'get', 'ok'> & {
+  /**
+   * The search results.
+   */
+  matches: readonly (readonly MatchlessFuseResult[])[]
+}
 
 /**
  * The type of the worker's response.
@@ -91,12 +98,7 @@ export type ColumnRequest = {
  * ```
  */
 export type ColumnResponse<S extends ResponseStatus = ResponseStatus> =
-  WorkerResponse<'get', S> & {
-    /**
-     * The search results.
-     */
-    matches: readonly (readonly MatchlessFuseResult[])[]
-  }
+  WorkerResponse<'get', S> & ColumnOkResponse
 
 type Handler = RequestHandler<ColumnRequest, ColumnResponse>
 

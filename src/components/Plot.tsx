@@ -29,17 +29,14 @@ const defaultConfig: Readonly<Partial<Config>> = {
  */
 export default function Plot({ config, layout, ...props }: Readonly<Props>) {
   const color = useTokenToHex(tokens.colorNeutralStrokeAccessible)
-  const colorway = f.pipe(
-    [
-      tokens.colorBrandBackground,
-      tokens.colorPaletteGreenBackground3,
-      tokens.colorPaletteBerryBackground3,
-      tokens.colorPaletteBerryBackground3,
-      tokens.colorPaletteRedBackground3,
-      tokens.colorPaletteYellowBackground3,
-    ] as const,
-    RA.map(useTokenToHex),
-  ) as string[]
+  const colorway = RA.map(useTokenToHex)([
+    tokens.colorBrandBackground,
+    tokens.colorPaletteGreenBackground3,
+    tokens.colorPaletteBerryBackground3,
+    tokens.colorPaletteBerryBackground3,
+    tokens.colorPaletteRedBackground3,
+    tokens.colorPaletteYellowBackground3,
+  ] as const) as string[]
 
   const defaultLayout: Readonly<Partial<Layout>> = {
     colorway,

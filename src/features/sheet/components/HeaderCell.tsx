@@ -1,3 +1,5 @@
+import type { AppState } from '@/app/store'
+
 import { useAppSelector } from '@/lib/hooks'
 import { getOriginalColumn } from '@/selectors/columns/selectors'
 import {
@@ -40,16 +42,39 @@ interface Props {
  * @param props
  * @param props.isOriginal
  * @param props.pos
+ * @returns
  * @example
  */
-export default function HeaderCell({ isOriginal, pos }: Readonly<Props>) {
+const selectColumn =
+  ({ isOriginal, pos }: Readonly<Props>) =>
+  (state: AppState) =>
+    isOriginal ? getOriginalColumn(state, pos) : getFormattedColumn(state, pos)
+
+/**
+ *
+ * @param props
+ * @param props.pos
+ * @returns
+ * @example
+ */
+const selectDataType =
+  ({ pos }: Readonly<Props>) =>
+  (state: AppState) =>
+    getDataType(state, pos)
+
+/**
+ *
+ * @param props
+ * @example
+ */
+export default function HeaderCell(props: Readonly<Props>) {
   const classes = useClasses()
 
-  const column = useAppSelector((state) =>
-    isOriginal ? getOriginalColumn(state, pos) : getFormattedColumn(state, pos),
-  )
+  const { isOriginal } = props
 
-  const dataType = useAppSelector((state) => getDataType(state, pos))
+  const column = useAppSelector(selectColumn(props))
+
+  const dataType = useAppSelector(selectDataType(props))
 
   const isCategorical = dataType === 'categorical'
 

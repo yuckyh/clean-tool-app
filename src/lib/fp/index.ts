@@ -1,12 +1,16 @@
-import type * as Eq from 'fp-ts/Eq'
 import type * as Ord from 'fp-ts/Ord'
 import type * as P from 'fp-ts/Predicate'
 
+import * as Eq from 'fp-ts/Eq'
+import * as Eq from 'fp-ts/Eq'
+import * as Eq from 'fp-ts/Eq'
 import * as IO from 'fp-ts/IO'
 import * as T from 'fp-ts/Task'
 import * as TO from 'fp-ts/TaskOption'
 import * as Tup from 'fp-ts/Tuple'
 import * as f from 'fp-ts/function'
+import * as S from 'fp-ts/string'
+import * as S from 'fp-ts/string'
 
 export const promisedTask =
   <V>(promise: Promise<V>): T.Task<V> =>
@@ -73,3 +77,8 @@ export const dualMap =
   <A, B>(fn: (a: A) => B) =>
   (tuple: readonly [A, A]) =>
     Tup.bimap(fn, fn)(tuple as [A, A])
+/**
+ *
+ */
+
+export const indexEq = Eq.tuple(S.Eq, S.Eq)

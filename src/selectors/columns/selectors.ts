@@ -10,11 +10,17 @@ import * as RA from 'fp-ts/ReadonlyArray'
 import * as f from 'fp-ts/function'
 import * as S from 'fp-ts/string'
 
+/**
+ *
+ */
 export const getOriginalColumn = createSelector(
   [getOriginalColumns, getColParam],
   (columns, pos) => arrayLookup(columns)('')(pos),
 )
 
+/**
+ *
+ */
 export const getMatchColumn = createSelector(
   [getMatchColumns, getColParam],
   (matchColumns, pos) => arrayLookup(matchColumns)('')(pos),

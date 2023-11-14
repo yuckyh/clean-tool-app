@@ -1,3 +1,4 @@
+import type { AppState } from '@/app/store'
 import type { InputProps } from '@fluentui/react-components'
 
 import { useAppDispatch, useAppSelector } from '@/lib/hooks'
@@ -20,18 +21,25 @@ interface Props {
   pos: number
 }
 
+const selectVisit =
+  ({ pos }: Readonly<Props>) =>
+  (state: AppState) =>
+    getVisit(state, pos)
+
 /**
  *
  * @param props
  * @param props.pos
  * @example
  */
-export default function VisitInput({ pos }: Readonly<Props>) {
+export default function VisitInput(props: Readonly<Props>) {
   const classes = useClasses()
+
+  const { pos } = props
 
   const dispatch = useAppDispatch()
 
-  const visit = useAppSelector((state) => getVisit(state, pos))
+  const visit = useAppSelector(selectVisit(props))
 
   const handleVisitChange: Required<InputProps>['onChange'] = useCallback(
     ({ target }) => {

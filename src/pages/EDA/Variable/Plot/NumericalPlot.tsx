@@ -1,3 +1,4 @@
+import type { AppState } from '@/app/store'
 import type { Data, Layout } from 'plotly.js-cartesian-dist'
 
 import {
@@ -15,6 +16,12 @@ import VariablePlot from '.'
 
 const jitterPower = 0.3
 
+/**
+ *
+ * @param jitter
+ * @returns
+ * @example
+ */
 const jitterY = (jitter: number) => Math.random() * jitter * 2 - jitter
 
 /**
@@ -48,6 +55,45 @@ interface Props {
 }
 
 /**
+ *
+ * @param props
+ * @param props.column
+ * @param props.visit
+ * @returns
+ * @example
+ */
+const selectSeries =
+  ({ column, visit }: Readonly<Props>) =>
+  (state: AppState) =>
+    getIndexedNumericalRow(state, column, visit)
+
+/**
+ *
+ * @param props
+ * @param props.column
+ * @param props.visit
+ * @returns
+ * @example
+ */
+const selectOutliers =
+  ({ column, visit }: Readonly<Props>) =>
+  (state: AppState) =>
+    getOutliers(state, column, visit)
+
+/**
+ *
+ * @param props
+ * @param props.column
+ * @param props.visit
+ * @returns
+ * @example
+ */
+const selectNonOutliers =
+  ({ column, visit }: Readonly<Props>) =>
+  (state: AppState) =>
+    getNotOutliers(state, column, visit)
+
+/**
  * The function to generate render the numerical plot. The plot is currently configured to render only a box plot.
  *
  * The box plot is rendered with the outliers as red x's and the non-outliers as blue x's.
@@ -70,21 +116,16 @@ interface Props {
  *   visit="1" />
  * ```
  */
-export default function NumericalPlot({
-  column,
-  unit,
-  variable,
-  visit,
-}: Readonly<Props>): Readonly<JSX.Element> {
-  const series = useAppSelector((state) =>
-    getIndexedNumericalRow(state, column, visit),
-  )
+export default function NumericalPlot(
+  props: Readonly<Props>,
+): Readonly<JSX.Element> {
+  const { unit, variable } = props
 
-  const outliers = useAppSelector((state) => getOutliers(state, column, visit))
+  const series = useAppSelector(selectSeries(props))
 
-  const notOutliers = useAppSelector((state) =>
-    getNotOutliers(state, column, visit),
-  )
+  const outliers = useAppSelector(selectOutliers(props))
+
+  const notOutliers = useAppSelector(selectNonOutliers(props))
 
   const values = useMemo(
     () => RA.map(getIndexedValue)(series) as number[],

@@ -3,6 +3,7 @@
 */
 import type { DropdownProps } from '@fluentui/react-components'
 
+import { getSheetName, getSheetNames } from '@/app/selectors'
 import { useAppDispatch, useAppSelector } from '@/lib/hooks'
 import { Dropdown, Field, Option, makeStyles } from '@fluentui/react-components'
 import * as IO from 'fp-ts/IO'
@@ -32,8 +33,8 @@ export default function SheetPickerInput() {
 
   const dispatch = useAppDispatch()
 
-  const sheetName = useAppSelector(({ sheet }) => sheet.sheetName)
-  const sheetNames = useAppSelector(({ sheet }) => sheet.sheetNames)
+  const sheetName = useAppSelector(getSheetName)
+  const sheetNames = useAppSelector(getSheetNames)
 
   const handleSheetSelect: Required<DropdownProps>['onOptionSelect'] =
     useCallback(

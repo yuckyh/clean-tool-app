@@ -6,6 +6,7 @@ import type { AlertRef } from '@/components/AlertDialog'
 import type { Progress } from '@/features/progress/reducers'
 import type { SheetInputRef } from '@/features/sheet/components/SheetUploadInput'
 
+import { getHasMultipleSheets, getHasSheet } from '@/app/selectors'
 import AlertDialog from '@/components/AlertDialog'
 import { deleteColumns } from '@/features/columns/reducers'
 import { deleteProgressState, setProgress } from '@/features/progress/reducers'
@@ -88,8 +89,8 @@ export default function Upload() {
 
   const dispatch = useAppDispatch()
 
-  const hasSheet = useAppSelector(({ sheet }) => !!sheet.data.length)
-  const hasMultipleSheets = useAppSelector(({ sheet }) => !sheet.bookType)
+  const hasSheet = useAppSelector(getHasSheet)
+  const hasMultipleSheets = useAppSelector(getHasMultipleSheets)
   const columnsLength = useAppSelector(getColumnsLength)
 
   const [isLoading, stopLoading] = useLoadingTransition()
@@ -122,8 +123,10 @@ export default function Upload() {
       () => deleteSheet,
       T.of,
       T.tap((x) => f.pipe(dispatch(x()), promisedTask)),
-      T.tapIO(
-        () => localStorage.clear,
+      T.tapIO(() =>
+        IO.of(() => {
+          localStorage.clear()
+        }),
       ),
     )().catch(dumpError)
   }, [dispatch])

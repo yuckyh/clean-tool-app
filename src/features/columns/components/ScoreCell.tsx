@@ -1,3 +1,5 @@
+import type { AppState } from '@/app/store'
+
 import Plot from '@/components/Plot'
 import { useAppSelector } from '@/lib/hooks'
 import { useFluentColorScale } from '@/lib/plotly'
@@ -22,20 +24,37 @@ const useClasses = makeStyles({
   },
 })
 
+/**
+ *
+ */
 interface Props {
+  /**
+   *
+   */
   pos: number
 }
 
 /**
  *
- * @param props
- * @param props.pos
+ * @param param0
+ * @param param0.pos
+ * @returns
  * @example
  */
-export default function ScoreCell({ pos }: Readonly<Props>) {
+const selectScore =
+  ({ pos }: Readonly<Props>) =>
+  (state: AppState) =>
+    getScore(state, pos)
+
+/**
+ *
+ * @param props
+ * @example
+ */
+export default function ScoreCell(props: Readonly<Props>) {
   const classes = useClasses()
 
-  const score = useAppSelector((state) => getScore(state, pos))
+  const score = useAppSelector(selectScore(props))
 
   const colorscale = useFluentColorScale(
     tokens.colorStatusDangerForegroundInverted,

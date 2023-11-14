@@ -1,3 +1,4 @@
+import type { AppState } from '@/app/store'
 import type { TableColumnDefinition } from '@fluentui/react-components'
 
 import SimpleDataGrid from '@/components/SimpleDataGrid'
@@ -37,8 +38,17 @@ const useClasses = makeStyles({
   },
 })
 
+/**
+ *
+ */
 interface Props {
+  /**
+   *
+   */
   column: string
+  /**
+   *
+   */
   visit: string
 }
 
@@ -47,18 +57,48 @@ interface Props {
  * @param props
  * @param props.column
  * @param props.visit
+ * @returns
  * @example
  */
-export default function OutlierDataGrid({ column, visit }: Readonly<Props>) {
+const selectTitle =
+  ({ column, visit }: Readonly<Props>) =>
+  (state: AppState) =>
+    getFormattedColumn(state, getSearchedPos(state, column, visit))
+
+/**
+ *
+ * @param props
+ * @param props.column
+ * @param props.visit
+ * @returns
+ * @example
+ */
+const selectSeries =
+  ({ column, visit }: Readonly<Props>) =>
+  (state: AppState) =>
+    getOutliers(state, column, visit)
+
+/**
+ *
+ * @param title
+ * @returns
+ * @example
+ */
+const selectFlaggedRows = (title: string) => (state: AppState) =>
+  getFlaggedRows(state, title, 'suspected')
+
+/**
+ *
+ * @param props
+ * @returns
+ * @example
+ */
+export default function OutlierDataGrid(props: Readonly<Props>) {
   const classes = useClasses()
 
-  const pos = useAppSelector((state) => getSearchedPos(state, column, visit))
-  const title = useAppSelector((state) => getFormattedColumn(state, pos))
-
-  const series = useAppSelector((state) => getOutliers(state, column, visit))
-  const flaggedRows = useAppSelector((state) =>
-    getFlaggedRows(state, title, 'suspected'),
-  )
+  const title = useAppSelector(selectTitle(props))
+  const series = useAppSelector(selectSeries(props))
+  const flaggedRows = useAppSelector(selectFlaggedRows(title))
 
   const columnDefinition: readonly TableColumnDefinition<
     readonly [string, number]

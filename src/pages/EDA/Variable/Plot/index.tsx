@@ -17,6 +17,7 @@ interface Props {
  * @param props.data
  * @param props.layout
  * @param props.variable
+ * @returns
  * @example
  */
 export default function VariablePlot({

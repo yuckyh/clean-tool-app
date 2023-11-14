@@ -114,7 +114,7 @@ export const getAllowedPaths = createSelector(
 /**
  *
  */
-export const getDisabled = createSelector(
+export const getIsDisabled = createSelector(
   [getPath, getAllowedPaths],
   /**
    *

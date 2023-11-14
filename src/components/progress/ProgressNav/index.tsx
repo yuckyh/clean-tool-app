@@ -1,6 +1,8 @@
 /* eslint-disable
   functional/functional-parameters
 */
+import type { AppState } from '@/app/store'
+
 import { saveColumnState } from '@/features/columns/reducers'
 import { saveProgressState } from '@/features/progress/reducers'
 import {
@@ -51,6 +53,10 @@ const useClasses = makeStyles({
   },
 })
 
+/**
+ *
+ * @example
+ */
 const useUnloadSaveState = () => {
   const dispatch = useAppDispatch()
 
@@ -68,6 +74,46 @@ const useUnloadSaveState = () => {
 }
 
 /**
+ *
+ * @param componentPath
+ * @returns
+ * @example
+ */
+const selectPaths = (componentPath: string) => (state: AppState) =>
+  getPaths(state, componentPath)
+
+/**
+ *
+ * @param componentPath
+ * @returns
+ * @example
+ */
+const selectAllowedPaths = (componentPath: string) => (state: AppState) =>
+  getAllowedPaths(state, componentPath)
+
+/**
+ *
+ * @param componentPath
+ * @param locationPath
+ * @returns
+ * @example
+ */
+const selectPosition =
+  (componentPath: string, locationPath: string) => (state: AppState) =>
+    getPosition(state, componentPath, locationPath)
+
+/**
+ *
+ * @param componentPath
+ * @param locationPath
+ * @returns
+ * @example
+ */
+const selectShouldNavigateToAllowed =
+  (componentPath: string, locationPath: string) => (state: AppState) =>
+    getShouldNavigateToAllowed(state, componentPath, locationPath)
+
+/**
  * The progress navigation component
  *
  * This components is used as the main navigation with the functionality of showing the user's progress
@@ -79,6 +125,7 @@ const useUnloadSaveState = () => {
  */
 export default function ProgressNav() {
   const classes = useClasses()
+  const themeClasses = useThemeClassName()
 
   const navigate = useNavigate()
   const { state: navState } = useNavigation()
@@ -88,20 +135,11 @@ export default function ProgressNav() {
   const { pathname: componentPath } = useResolvedPath('')
   const { pathname: locationPath } = useLocation()
 
-  const params = useMemo(
-    () => [componentPath, locationPath] as const,
-    [componentPath, locationPath],
-  )
-
-  const themeClasses = useThemeClassName()
-
-  const paths = useAppSelector((state) => getPaths(state, componentPath))
-  const allowedPaths = useAppSelector((state) =>
-    getAllowedPaths(state, componentPath),
-  )
-  const position = useAppSelector((state) => getPosition(state, ...params))
-  const shouldNavigateToAllowed = useAppSelector((state) =>
-    getShouldNavigateToAllowed(state, ...params),
+  const paths = useAppSelector(selectPaths(componentPath))
+  const allowedPaths = useAppSelector(selectAllowedPaths(componentPath))
+  const position = useAppSelector(selectPosition(componentPath, locationPath))
+  const shouldNavigateToAllowed = useAppSelector(
+    selectShouldNavigateToAllowed(componentPath, locationPath),
   )
 
   const restoreFocusTargetAttribute = useRestoreFocusTarget()

@@ -1,3 +1,4 @@
+import type { AppState } from '@/app/store'
 import type { Data, Layout } from 'plotly.js-cartesian-dist'
 
 import { getIndexedRow } from '@/features/sheet/selectors'
@@ -14,20 +15,19 @@ interface Props {
   visit: string
 }
 
+const selectSeries =
+  ({ column, visit }: Readonly<Props>) =>
+  (state: AppState) =>
+    getIndexedRow(state, column, visit)
+
 /**
  *
  * @param props
- * @param props.column
- * @param props.variable
- * @param props.visit
  * @example
  */
-export default function CategoricalPlot({
-  column,
-  variable,
-  visit,
-}: Readonly<Props>) {
-  const series = useAppSelector((state) => getIndexedRow(state, column, visit))
+export default function CategoricalPlot(props: Readonly<Props>) {
+  const { variable } = props
+  const series = useAppSelector(selectSeries(props))
 
   const count = f.pipe(
     series,

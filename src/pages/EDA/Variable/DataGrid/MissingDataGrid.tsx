@@ -1,3 +1,4 @@
+import type { AppState } from '@/app/store'
 import type { TableColumnDefinition } from '@fluentui/react-components'
 
 import SimpleDataGrid from '@/components/SimpleDataGrid'
@@ -50,20 +51,48 @@ interface Props {
  * @param props
  * @param props.column
  * @param props.visit
+ * @returns
  * @example
  */
-export default function BlankDataGrid({ column, visit }: Readonly<Props>) {
+const selectTitle =
+  ({ column, visit }: Readonly<Props>) =>
+  (state: AppState) =>
+    getFormattedColumn(state, getSearchedPos(state, column, visit))
+
+/**
+ *
+ * @param props
+ * @param props.column
+ * @param props.visit
+ * @returns
+ * @example
+ */
+const selectSeries =
+  ({ column, visit }: Readonly<Props>) =>
+  (state: AppState) =>
+    getIndexedRowBlanks(state, column, visit)
+
+/**
+ *
+ * @param title
+ * @returns
+ * @example
+ */
+const selectFlaggedRows = (title: string) => (state: AppState) =>
+  getFlaggedRows(state, title, 'missing')
+
+/**
+ *
+ * @param props
+ * @returns
+ * @example
+ */
+export default function BlankDataGrid(props: Readonly<Props>) {
   const classes = useClasses()
 
-  const pos = useAppSelector((state) => getSearchedPos(state, column, visit))
-  const title = useAppSelector((state) => getFormattedColumn(state, pos))
-
-  const series = useAppSelector((state) =>
-    getIndexedRowBlanks(state, column, visit),
-  )
-  const flaggedRows = useAppSelector((state) =>
-    getFlaggedRows(state, title, 'missing'),
-  )
+  const title = useAppSelector(selectTitle(props))
+  const series = useAppSelector(selectSeries(props))
+  const flaggedRows = useAppSelector(selectFlaggedRows(title))
 
   const columnDefinition: readonly TableColumnDefinition<
     readonly [string, string]

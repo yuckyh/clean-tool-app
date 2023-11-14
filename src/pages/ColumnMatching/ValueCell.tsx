@@ -1,3 +1,4 @@
+import { AppState } from '@/app/store'
 import { useAppSelector } from '@/lib/hooks'
 import { getOriginalColumn } from '@/selectors/columns/selectors'
 import { makeStyles, shorthands, tokens } from '@fluentui/react-components'
@@ -21,6 +22,11 @@ interface Props {
   pos: number
 }
 
+const selectOriginalColumn =
+  ({ pos }: Readonly<Props>) =>
+  (state: AppState) =>
+    getOriginalColumn(state, pos)
+
 /**
  * A cell in the {@link pages/ColumnMatching/ColumnsDataGrid ColumnsDataGrid} that displays the value of the original column
  * @param props - The component's props
@@ -28,10 +34,10 @@ interface Props {
  * @returns The component object
  * @example
  */
-export default function ValueCell({ pos }: Readonly<Props>) {
+export default function ValueCell(props: Readonly<Props>) {
   const classes = useClasses()
 
-  const cell = useAppSelector((state) => getOriginalColumn(state, pos))
+  const cell = useAppSelector(selectOriginalColumn(props))
 
   return <div className={classes.root}>{cell}</div>
 }

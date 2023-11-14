@@ -1,6 +1,8 @@
+import type { AppState } from '@/app/store'
 import type { AlertRef } from '@/components/AlertDialog'
 import type { DropdownProps } from '@fluentui/react-components'
 
+import { getVisits } from '@/app/selectors'
 import { indexDuplicateSearcher } from '@/lib/array'
 import { useAppDispatch, useAppSelector } from '@/lib/hooks'
 import { getMatchColumn } from '@/selectors/columns/selectors'
@@ -34,19 +36,57 @@ interface Props {
 /**
  *
  * @param props
+ * @param props.pos
+ * @returns
+ * @example
+ */
+const selectMatchColumn =
+  ({ pos }: Readonly<Props>) =>
+  (state: AppState) =>
+    getMatchColumn(state, pos)
+
+/**
+ *
+ * @param props
+ * @param props.pos
+ * @returns
+ * @example
+ */
+const selectMatchVisit =
+  ({ pos }: Readonly<Props>) =>
+  (state: AppState) =>
+    getMatchVisit(state, pos)
+
+/**
+ *
+ * @param props
+ * @param props.pos
+ * @returns
+ * @example
+ */
+const selectVisitByMatchVisit =
+  ({ pos }: Readonly<Props>) =>
+  (state: AppState) =>
+    getVisitByMatchVisit(state, pos)
+
+/**
+ *
+ * @param props
  * @param props.alertRef
  * @param props.pos
  * @example
  */
-export default function VisitsCell({ alertRef, pos }: Readonly<Props>) {
+export default function VisitsCell(props: Readonly<Props>) {
   const classes = useClasses()
+
+  const { alertRef, pos } = props
 
   const dispatch = useAppDispatch()
 
-  const visits = useAppSelector(({ sheet }) => sheet.visits)
-  const matchColumn = useAppSelector((state) => getMatchColumn(state, pos))
-  const matchVisit = useAppSelector((state) => getMatchVisit(state, pos))
-  const visit = useAppSelector((state) => getVisitByMatchVisit(state, pos))
+  const visits = useAppSelector(getVisits)
+  const matchColumn = useAppSelector(selectMatchColumn(props))
+  const matchVisit = useAppSelector(selectMatchVisit(props))
+  const visit = useAppSelector(selectVisitByMatchVisit(props))
   const indices = useAppSelector(getIndices)
 
   const handleOptionSelect: Required<DropdownProps>['onOptionSelect'] =

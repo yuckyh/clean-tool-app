@@ -1,3 +1,5 @@
+import type { AppState } from '@/app/store'
+
 import { getTitle } from '@/features/progress/selectors'
 import { useAppSelector } from '@/lib/hooks'
 import { Helmet } from 'react-helmet-async'
@@ -16,21 +18,19 @@ interface Props {
   locationPath: string
 }
 
+const selectTitle =
+  ({ componentPath, locationPath }: Readonly<Props>) =>
+  (state: AppState) =>
+    getTitle(state, componentPath, locationPath)
+
 /**
  *
  * @param props
- * @param props.componentPath
- * @param props.locationPath
  * @returns
  * @example
  */
-export default function ProgressNavPageTitle({
-  componentPath,
-  locationPath,
-}: Readonly<Props>) {
-  const title = useAppSelector((state) =>
-    getTitle(state, componentPath, locationPath),
-  )
+export default function ProgressNavPageTitle(props: Readonly<Props>) {
+  const title = useAppSelector(selectTitle(props))
 
   return (
     <Helmet>

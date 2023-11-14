@@ -1,6 +1,8 @@
 /* eslint-disable
   functional/functional-parameters
 */
+import type { AppState } from '@/app/store'
+
 import { getPosition, getProgressValue } from '@/features/progress/selectors'
 import { useAppSelector } from '@/lib/hooks'
 import {
@@ -22,6 +24,21 @@ const useClasses = makeStyles({
 })
 
 /**
+ *
+ * @param componentPath
+ * @param locationPath
+ * @returns
+ * @example
+ */
+const selectPosition =
+  (componentPath: string, locationPath: string) => (state: AppState) =>
+    getPosition(state, componentPath, locationPath)
+
+const selectProgressValue =
+  (componentPath: string, locationPath: string) => (state: AppState) =>
+    getProgressValue(state, componentPath, locationPath)
+
+/**
  * The progress navigation's bar component
  *
  * This component is used to control the length of the progress bar's fill
@@ -37,11 +54,9 @@ export default function ProgressNavBar() {
   const { pathname: componentPath } = useResolvedPath('')
   const { pathname: locationPath } = useLocation()
 
-  const params = [componentPath, locationPath] as const
-
-  const position = useAppSelector((state) => getPosition(state, ...params))
-  const progressValue = useAppSelector((state) =>
-    getProgressValue(state, ...params),
+  const position = useAppSelector(selectPosition(componentPath, locationPath))
+  const progressValue = useAppSelector(
+    selectProgressValue(componentPath, locationPath),
   )
 
   return (

@@ -6,7 +6,7 @@ import type { PayloadAction } from '@reduxjs/toolkit'
 import type * as Ref from 'fp-ts/Refinement'
 
 import { codebook } from '@/data'
-import { arrayLookup, getIndexedValue } from '@/lib/array'
+import { arrayLookup, getIndexedValue, head } from '@/lib/array'
 import { equals, stubOrd, typedIdentity } from '@/lib/fp'
 import { getPersisted, setPersisted } from '@/lib/localStorage'
 import { createSlice } from '@reduxjs/toolkit'
@@ -52,9 +52,7 @@ const initialState: Readonly<State> = {
     getPersisted(keys[1], defaultValue),
     S.split(','),
     RA.filter(P.not(S.isEmpty)),
-    RA.map(
-      f.flow((value) => [value, 10] as [string, number], f.tupled(parseInt)),
-    ),
+    RA.map(parseInt),
   ),
   matchesList: RA.empty,
   scoresList: RA.empty,
@@ -64,7 +62,7 @@ const initialState: Readonly<State> = {
 const columnsSlice = createSlice({
   extraReducers: (builder) => {
     builder.addCase(fetchMatches.fulfilled, (state, { payload }) => {
-      const { dataTypes: dataType, matchColumns, matchVisits } = state
+      const { dataTypes, matchColumns, matchVisits } = state
 
       const matchesList = f.pipe(
         payload,
@@ -80,15 +78,7 @@ const columnsSlice = createSlice({
 
       state.matchColumns = matchColumns.length
         ? matchColumns
-        : (f.pipe(
-            matchesList,
-            RA.map(
-              f.flow(
-                RA.head,
-                O.getOrElse(() => ''),
-              ),
-            ),
-          ) as string[])
+        : (RA.map(f.flow(head<string>, f.apply('')))(matchesList) as string[])
 
       const sorted =
         !matchVisits.length &&
@@ -130,8 +120,8 @@ const columnsSlice = createSlice({
             RA.map(getIndexedValue),
           ) as number[])
 
-      state.dataTypes = dataType.length
-        ? dataType
+      state.dataTypes = dataTypes.length
+        ? dataTypes
         : (f.pipe(
             matchColumns,
             RA.map((matchColumn) =>
