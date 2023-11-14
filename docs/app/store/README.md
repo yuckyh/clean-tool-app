@@ -6,6 +6,10 @@
 
 # app/store
 
+## File
+
+This file contains the application's store.
+
 ## Index
 
 ### Type Aliases

@@ -8,9 +8,11 @@
 
 > **AppDispatch**: *typeof* `store.dispatch`
 
+The type of the application's dispatch.
+
 ## Source
 
-[Projects/clean-tool-app/src/app/store.ts:11](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/app/store.ts:31](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

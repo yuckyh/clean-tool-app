@@ -20,7 +20,7 @@ The component object
 
 ## See
 
-[ProgressNavBar](../../ProgressNavBar/functions/ProgressNavBar.md) for details on the bar's functionality
+[ProgressNavBar](../Bar/functions/ProgressNavBar.md) for details on the bar's functionality
 
 ## Example
 
@@ -30,7 +30,7 @@ The component object
 
 ## Source
 
-[Projects/clean-tool-app/src/components/progress/ProgressNav/index.tsx:127](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/components/progress/ProgressNav/index.tsx:132](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

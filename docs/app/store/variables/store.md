@@ -8,9 +8,16 @@
 
 > **`const`** **store**: `ToolkitStore`\<`object`, `AnyAction`, [`ThunkMiddleware`\<`object`, `AnyAction`\>]\>
 
+The application's store.
+
+Consists of the following slices:
+- [columns]([object Object])
+- [progress](../../../features/progress/reducers/functions/reducer.md)
+- [sheet]([object Object])
+
 ## Source
 
-[Projects/clean-tool-app/src/app/store.ts:6](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/app/store.ts:19](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

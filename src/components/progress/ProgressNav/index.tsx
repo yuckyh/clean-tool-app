@@ -1,3 +1,8 @@
+/**
+ * @file This file contains the progress navigation component.
+ * @module components/progress/ProgressNav
+ */
+
 /* eslint-disable
   functional/functional-parameters
 */
@@ -36,8 +41,8 @@ import {
   useResolvedPath,
 } from 'react-router-dom'
 
-import ProgressNavBar from '../ProgressNavBar'
-import ProgressNavLink from '../ProgressNavLink'
+import ProgressNavBar from './Bar'
+import ProgressNavLink from './Link'
 import ProgressNavPageTitle from './PageTitle'
 
 const useClasses = makeStyles({

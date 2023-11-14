@@ -344,7 +344,7 @@ export const getOutliers = createSelector(
 
 /**
  * Function to select non outlier values from the given indexed numerical row.
- * @param state - The application state {@link AppState}
+ * @param state - The application state {@link app/store.AppState AppState}
  * @param column - The column to search for the row
  * @param visit - The visit to search for the row
  * @returns - An array of non outlier values

@@ -14,7 +14,7 @@ Function to select non outlier values from the given indexed numerical row.
 
 ▪ **state**: `object`
 
-The application state AppState
+The application state [AppState](../../../../app/store/type-aliases/AppState.md)
 
 ▪ **state.columns**: `Readonly`\<[`State`](../../../../selectors/columns/selectors/private/interfaces/State.md)\>
 

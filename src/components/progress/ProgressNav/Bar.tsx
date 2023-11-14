@@ -34,6 +34,13 @@ const selectPosition =
   (componentPath: string, locationPath: string) => (state: AppState) =>
     getPosition(state, componentPath, locationPath)
 
+/**
+ *
+ * @param componentPath
+ * @param locationPath
+ * @returns
+ * @example
+ */
 const selectProgressValue =
   (componentPath: string, locationPath: string) => (state: AppState) =>
     getProgressValue(state, componentPath, locationPath)
@@ -42,7 +49,7 @@ const selectProgressValue =
  * The progress navigation's bar component
  *
  * This component is used to control the length of the progress bar's fill
- * @see {@link ProgressNav} for details of the overall navigation component
+ * @see {@link components/progress/ProgressNav ProgressNav} for details of the overall navigation component
  * @category Component
  * @group Progress slice
  * @returns The component object

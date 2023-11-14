@@ -8,9 +8,11 @@
 
 > **AppState**: `ReturnType`\<*typeof* `store.getState`\>
 
+The type of the application's state.
+
 ## Source
 
-[Projects/clean-tool-app/src/app/store.ts:10](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/app/store.ts:26](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 
