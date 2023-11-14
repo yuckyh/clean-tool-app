@@ -18,9 +18,15 @@
 
 `Theme`
 
+## Example
+
+```ts
+
+```
+
 ## Source
 
-[Projects/clean-tool-app/src/lib/hooks.ts:74](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/lib/hooks.ts:77](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

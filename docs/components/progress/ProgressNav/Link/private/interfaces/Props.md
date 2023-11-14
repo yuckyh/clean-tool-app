@@ -21,7 +21,7 @@
 
 #### Source
 
-Projects/clean-tool-app/src/components/progress/ProgressNav/Link.tsx:70
+[Projects/clean-tool-app/src/components/progress/ProgressNav/Link.tsx:70](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 
@@ -31,7 +31,7 @@ Projects/clean-tool-app/src/components/progress/ProgressNav/Link.tsx:70
 
 #### Source
 
-Projects/clean-tool-app/src/components/progress/ProgressNav/Link.tsx:74
+[Projects/clean-tool-app/src/components/progress/ProgressNav/Link.tsx:74](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 
@@ -41,7 +41,7 @@ Projects/clean-tool-app/src/components/progress/ProgressNav/Link.tsx:74
 
 #### Source
 
-Projects/clean-tool-app/src/components/progress/ProgressNav/Link.tsx:78
+[Projects/clean-tool-app/src/components/progress/ProgressNav/Link.tsx:78](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

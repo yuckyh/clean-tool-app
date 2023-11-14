@@ -24,7 +24,7 @@
 
 ## Source
 
-Projects/clean-tool-app/src/components/progress/ProgressNav/Link.tsx:89
+[Projects/clean-tool-app/src/components/progress/ProgressNav/Link.tsx:89](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

@@ -37,9 +37,15 @@
 > Projects/clean-tool-app/.yarn/\_\_virtual\_\_/@fluentui-react-table-virtual-0bfb42a0ed/3/AppData/Local/Yarn/Berry/cache/@fluentui-react-table-npm-9.10.10-8498186e0a-10.zip/node\_modules/@fluentui/react-table/dist/index.d.ts:206
 >
 
+## Example
+
+```ts
+
+```
+
 ## Source
 
-[Projects/clean-tool-app/src/lib/hooks.ts:154](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/lib/hooks.ts:161](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

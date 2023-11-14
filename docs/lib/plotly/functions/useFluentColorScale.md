@@ -20,9 +20,15 @@
 
 `ColorScale`
 
+## Example
+
+```ts
+
+```
+
 ## Source
 
-[Projects/clean-tool-app/src/lib/plotly.ts:72](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/lib/plotly.ts:81](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 
