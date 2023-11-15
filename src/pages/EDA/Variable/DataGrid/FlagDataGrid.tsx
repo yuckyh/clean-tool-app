@@ -87,7 +87,7 @@ export default function IncorrectDataGrid({
       }),
     ],
     [classes.columnHeader, title],
-  )b
+  )
 
   return (
     <Card className={classes.card} size="large">
