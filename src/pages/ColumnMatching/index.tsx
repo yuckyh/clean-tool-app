@@ -7,12 +7,12 @@
   functional/functional-parameters
 */
 import type { AlertRef } from '@/components/AlertDialog'
-import type { Progress } from '@/features/progress/reducers'
+import type { Progress } from '@/reducers/progress'
 
 import AlertDialog from '@/components/AlertDialog'
-import { setProgress } from '@/features/progress/reducers'
 import { useAppDispatch } from '@/lib/hooks'
 import { createLazyMemo } from '@/lib/utils'
+import { setProgress } from '@/reducers/progress'
 import {
   Button,
   Title1,

@@ -8,11 +8,17 @@
 */
 import type { AppDispatch } from '@/app/store'
 
-import { saveColumnState } from '@/features/columns/reducers'
+import {
+  selectAllowedPaths,
+  selectShouldNavigateToAllowed,
+} from '@/components/progress/ProgressNav/selectors'
+import { saveMatchesState } from '@/features/data/reducers'
 import { saveSheetState } from '@/features/sheet/reducers'
 import { tail } from '@/lib/array'
-import { asIO, equals, refinedEq } from '@/lib/fp'
+import { asIO, equals } from '@/lib/fp'
+import { refinedEq } from '@/lib/fp/Eq'
 import { useAppDispatch, useAppSelector } from '@/lib/hooks'
+import { saveProgressState } from '@/reducers/progress'
 import { useThemeClassName } from '@fluentui/react-components'
 import * as IO from 'fp-ts/IO'
 import * as O from 'fp-ts/Option'
@@ -28,12 +34,6 @@ import {
   useResolvedPath,
 } from 'react-router-dom'
 
-import { saveProgressState } from '../../reducers'
-import {
-  selectAllowedPaths,
-  selectShouldNavigateToAllowed,
-} from '../../selectors'
-
 /**
  * The function to save the current app state.
  * @param dispatch - The app dispatch.
@@ -46,7 +46,7 @@ import {
  */
 export const saveStates = (dispatch: AppDispatch) =>
   f.pipe(
-    [saveSheetState, saveColumnState, saveProgressState] as const,
+    [saveSheetState, saveMatchesState, saveProgressState] as const,
     RA.map(f.flow((x) => dispatch(x()), IO.of)),
     IO.sequenceArray,
   )

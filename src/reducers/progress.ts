@@ -33,7 +33,7 @@ const { actions, reducer } = createSlice({
   initialState,
   name: sliceName,
   reducers: {
-    deleteProgressState: (state) => {
+    deleteProgress: (state) => {
       state.progress = defaultValue
 
       return state
@@ -51,5 +51,5 @@ const { actions, reducer } = createSlice({
   },
 })
 
-export const { deleteProgressState, saveProgressState, setProgress } = actions
+export const { deleteProgress, saveProgressState, setProgress } = actions
 export default reducer

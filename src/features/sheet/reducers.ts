@@ -21,7 +21,7 @@ import * as f from 'fp-ts/function'
 import * as S from 'fp-ts/string'
 import { type BookType, utils } from 'xlsx'
 
-import { deleteSheet, fetchSheet, postFile, sliceName } from './actions'
+import { deleteData, fetchSheet, postFile, sliceName } from './actions'
 
 // export type Flag = readonly [string, string, FlagReason]
 
@@ -149,7 +149,7 @@ const sheetSlice = createSlice({
 
         return state
       })
-      .addCase(deleteSheet.fulfilled, (state) => {
+      .addCase(deleteData.fulfilled, (state) => {
         state.fileName = defaultValue
         state.sheetName = defaultValue
         state.originalColumns = []

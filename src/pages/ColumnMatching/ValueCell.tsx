@@ -1,7 +1,7 @@
 import type { AppState } from '@/app/store'
 
 import { useAppSelector } from '@/lib/hooks'
-import { getOriginalColumn } from '@/selectors/columns/selectors'
+import { getOriginalColumn } from '@/selectors/data/columns'
 import { makeStyles, shorthands, tokens } from '@fluentui/react-components'
 
 const useClasses = makeStyles({

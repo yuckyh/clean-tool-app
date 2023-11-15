@@ -1,15 +1,7 @@
-import type { AppState } from '@/app/store'
+import type { FlagReason } from '@/lib/fp/Flag'
 import type { TableColumnDefinition } from '@fluentui/react-components'
 
 import SimpleDataGrid from '@/components/SimpleDataGrid'
-import {
-  getFormattedColumn,
-  getSearchedPos,
-} from '@/features/columns/selectors'
-import {
-  getFlaggedRows,
-  getIndexedRowIncorrects,
-} from '@/features/sheet/selectors'
 import { getIndexedIndex } from '@/lib/array'
 import { useAppSelector, useSyncedSelectionHandler } from '@/lib/hooks'
 import {
@@ -25,6 +17,7 @@ import * as f from 'fp-ts/function'
 import { useMemo } from 'react'
 
 import ValueCell from './ValueCell'
+import { selectFlaggedRows, selectFormattedColumn } from './selectors'
 
 const useClasses = makeStyles({
   card: {
@@ -41,69 +34,38 @@ const useClasses = makeStyles({
   },
 })
 
-/**
- *
- */
 interface Props {
-  /**
-   *
-   */
   column: string
-  /**
-   *
-   */
+  emptyText: string
+  reason: FlagReason
+  series: readonly (readonly [string, string])[]
+  subtitleText: string
+  titleText: string
   visit: string
 }
 
 /**
  *
  * @param props
- * @param props.column
- * @param props.visit
- * @returns
+ * @param props.titleText
+ * @param props.subtitleText
+ * @param props.emptyText
+ * @param props.series
  * @example
  */
-const selectFormattedColumn =
-  ({ column, visit }: Readonly<Props>) =>
-  (state: AppState) =>
-    getFormattedColumn(state, getSearchedPos(state, column, visit))
-
-/**
- *
- * @param props
- * @param props.column
- * @param props.visit
- * @returns
- * @example
- */
-const selectSeries =
-  ({ column, visit }: Readonly<Props>) =>
-  (state: AppState) =>
-    getIndexedRowIncorrects(state, column, visit)
-
-/**
- *
- * @param title
- * @returns
- * @example
- */
-const selectFlaggedRows = (title: string) => (state: AppState) =>
-  getFlaggedRows(state, title, 'incorrect')
-
-/**
- *
- * @param props
- * @param props.column
- * @param props.visit
- * @example
- */
-export default function IncorrectDataGrid(props: Readonly<Props>) {
+export default function IncorrectDataGrid({
+  emptyText,
+  series,
+  subtitleText,
+  titleText,
+  ...props
+}: Readonly<Props>) {
   const classes = useClasses()
 
   const title = useAppSelector(selectFormattedColumn(props))
-
-  const series = useAppSelector(selectSeries(props))
-  const flaggedRows = useAppSelector(selectFlaggedRows(title))
+  const reason: FlagReason = 'incorrect'
+  const flaggedRows = useAppSelector(selectFlaggedRows(title, reason))
+  const handleSelectionChange = useSyncedSelectionHandler(reason, title, series)
 
   const columnDefinition: Readonly<
     TableColumnDefinition<readonly [string, string]>[]
@@ -125,20 +87,12 @@ export default function IncorrectDataGrid(props: Readonly<Props>) {
       }),
     ],
     [classes.columnHeader, title],
-  )
-
-  const handleSelectionChange = useSyncedSelectionHandler(
-    'incorrect',
-    title,
-    series,
-  )
+  )b
 
   return (
     <Card className={classes.card} size="large">
-      <Title2>Incorrect Data</Title2>
-      <Body2>
-        The data shown here are data that might be incorrectly formatted.
-      </Body2>
+      <Title2>{titleText}</Title2>
+      <Body2>{subtitleText}</Body2>
       {series.length ? (
         <SimpleDataGrid
           columns={columnDefinition}
@@ -149,7 +103,7 @@ export default function IncorrectDataGrid(props: Readonly<Props>) {
           selectionMode="multiselect"
         />
       ) : (
-        <Body2>There are no incorrectly formatted data found</Body2>
+        <Body2>{emptyText}</Body2>
       )}
     </Card>
   )

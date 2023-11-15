@@ -1,17 +1,16 @@
+/**
+ * @file This file contains the MissingDataGrid component.
+ * @module pages/EDA/Variable/DataGrid/MissingDataGrid
+ */
 import type { AppState } from '@/app/store'
 import type { TableColumnDefinition } from '@fluentui/react-components'
 
 import SimpleDataGrid from '@/components/SimpleDataGrid'
-import {
-  getFormattedColumn,
-  getSearchedPos,
-} from '@/features/columns/selectors'
-import {
-  getFlaggedRows,
-  getIndexedRowMissings as getIndexedRowBlanks,
-} from '@/features/sheet/selectors'
 import { getIndexedIndex } from '@/lib/array'
 import { useAppSelector, useSyncedSelectionHandler } from '@/lib/hooks'
+import { getFlaggedRows, getIndexedRowMissings } from '@/selectors/data/rows'
+import { getSearchedPos } from '@/selectors/matches'
+import { getFormattedColumn } from '@/selectors/matches/format'
 import {
   Body2,
   Card,
@@ -79,7 +78,7 @@ const selectTitle =
 const selectSeries =
   ({ column, visit }: Readonly<Props>) =>
   (state: AppState) =>
-    getIndexedRowBlanks(state, column, visit)
+    getIndexedRowMissings(state, column, visit)
 
 /**
  *
@@ -91,10 +90,16 @@ const selectFlaggedRows = (title: string) => (state: AppState) =>
   getFlaggedRows(state, title, 'missing')
 
 /**
- *
- * @param props
- * @returns
+ * This function renders a data grid for the missing data.
+ * @param props - The {@link Props props} object.
+ * @returns The component object.
  * @example
+ * ```tsx
+ *  <MissingDataGrid
+ *    column={column}
+ *    visit={visit}
+ *  />
+ * ```
  */
 export default function BlankDataGrid(props: Readonly<Props>) {
   const classes = useClasses()

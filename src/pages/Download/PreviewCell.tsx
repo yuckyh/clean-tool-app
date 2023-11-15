@@ -1,12 +1,14 @@
 import type { AppState } from '@/app/store'
 
 import { getFlaggedCells } from '@/app/selectors'
-import { getFormattedColumn } from '@/features/columns/selectors'
-import { getCell, getIndexRow } from '@/features/sheet/selectors'
+import { getFormattedColumn } from '@/features/data/selectors'
 import { arrayLookup } from '@/lib/array'
-import { equals, refinedEq, stubEq } from '@/lib/fp'
+import { equals } from '@/lib/fp'
+import { refinedEq, stubEq } from '@/lib/fp/Eq'
 import * as Flag from '@/lib/fp/Flag'
 import { useAppSelector } from '@/lib/hooks'
+import { getCell } from '@/selectors/data/cells'
+import { getIndexRow } from '@/selectors/data/rows'
 import {
   makeStyles,
   mergeClasses,
@@ -113,6 +115,9 @@ const selectIndex =
  * @param props - The component's props
  * @returns JSX.Element
  * @example
+ * ```tsx
+ *  <PreviewCell col={col} row={row} />
+ * ```
  */
 export default function PreviewCell(props: Readonly<Props>) {
   const classes = useClasses()

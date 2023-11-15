@@ -1,14 +1,16 @@
+/**
+ * @file This file contains the OutlierDataGrid component.
+ * @module pages/EDA/Variable/DataGrid/OutlierDataGrid
+ */
+
 import type { AppState } from '@/app/store'
 import type { TableColumnDefinition } from '@fluentui/react-components'
 
 import SimpleDataGrid from '@/components/SimpleDataGrid'
-import {
-  getFormattedColumn,
-  getSearchedPos,
-} from '@/features/columns/selectors'
-import { getFlaggedRows, getOutliers } from '@/features/sheet/selectors'
 import { getIndexedIndex } from '@/lib/array'
 import { useAppSelector, useSyncedSelectionHandler } from '@/lib/hooks'
+import { getFlaggedRows } from '@/selectors/data/rows'
+import { getOutliers } from '@/selectors/data/stats'
 import {
   Body2,
   Card,
@@ -22,6 +24,8 @@ import * as f from 'fp-ts/function'
 import { useMemo } from 'react'
 
 import ValueCell from './ValueCell'
+import { getSearchedPos } from '@/selectors/matches'
+import { getFormattedColumn } from '@/selectors/matches/format'
 
 const useClasses = makeStyles({
   card: {
@@ -88,10 +92,16 @@ const selectFlaggedRows = (title: string) => (state: AppState) =>
   getFlaggedRows(state, title, 'suspected')
 
 /**
- *
- * @param props
- * @returns
+ * This function renders the data grid for the suspected outliers.
+ * @param props - The {@link Props} for the component.
+ * @returns The component object.
  * @example
+ * ```tsx
+ *  <OutlierDataGrid
+ *    column={column}
+ *    visit={visit}
+ *  />
+ * ```
  */
 export default function OutlierDataGrid(props: Readonly<Props>) {
   const classes = useClasses()

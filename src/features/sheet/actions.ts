@@ -56,7 +56,7 @@ export const fetchSheet = createAsyncThunk(
    * @example
    */
   async (_, { getState }) => {
-    const { fileName } = (getState() as AppState).sheet
+    const { fileName } = (getState() as AppState).data
 
     sheetWorker.postMessage({ fileName, method: 'get' })
 
@@ -102,7 +102,7 @@ export const postFile = createAsyncThunk(
 /**
  *
  */
-export const deleteSheet = createAsyncThunk(
+export const deleteData = createAsyncThunk(
   `${sliceName}/deleteSheet`,
   /**
    *
@@ -112,7 +112,7 @@ export const deleteSheet = createAsyncThunk(
    * @example
    */
   async (_, { getState }) => {
-    const { fileName } = (getState() as AppState).sheet
+    const { fileName } = (getState() as AppState).data
     sheetWorker.postMessage({ fileName, method: 'remove' })
 
     await messageTask()

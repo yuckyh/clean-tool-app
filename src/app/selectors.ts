@@ -1,5 +1,6 @@
 import type * as Flag from '@/lib/fp/Flag'
 
+import { getDataLength } from '@/selectors/data/data'
 import * as f from 'fp-ts/function'
 
 import type { AppState } from './store'
@@ -10,12 +11,10 @@ import type { AppState } from './store'
  * @param col - The column position parameter
  * @returns The column position parameter
  * @example
- * ```ts
- * const getOriginalColumn = createSelector(
- *  [getOriginalColumns, getColParam],
- *  (originalColumns, col) => originalColumns[col],
- * )
- * ```
+ *  const getOriginalColumn = createSelector(
+ *    [getOriginalColumns, getColParam],
+ *    (originalColumns, pos) => arrayLookup(originalColumns)('')(pos),,
+ *  )
  */
 export const getColParam = (_state: AppState, col: number) => col
 
@@ -28,12 +27,15 @@ export const getColParam = (_state: AppState, col: number) => col
  * @param row - The row position parameter
  * @returns The row position parameter
  * @example
- * ```ts
- * const originalColumn = createSelector(
- *  [getOriginalColumn, getRowParam],
- *  (originalColumn, row) => originalColumn[row],
- * )
- * ```
+ *  const getCell = createSelector(
+ *    [getData, getOriginalColumn, getRowParam],
+ *    (data, originalColumn, row) =>
+ *      f.pipe(
+ *        arrayLookup(data)(CellItem.of({}))(row),
+ *        CellItem.unwrap,
+ *        recordLookup,
+ *      )('')(originalColumn),
+ *    )
  */
 export const getRowParam = (_state: AppState, _col: number, row: number) => row
 
@@ -43,22 +45,24 @@ export const getRowParam = (_state: AppState, _col: number, row: number) => row
  * @param column - The column parameter
  * @returns The column parameter
  * @example
- * ```ts
- * const originalColumn = createSelector(
- *  [getOriginalColumn, getColumnParam],
- *  (originalColumn, column) => data.map((row) => row[column]),
- * )
- * ```
+ *  const getSearchedPos = createSelector(
+ *    [getIndices, getVisits, getColumnParam, getVisitParam],
+ *    searchPos,
+ *  )
  */
 export const getColumnParam = (_state: AppState, column: string) => column
 
 /**
- *
- * @param _state
- * @param _column
- * @param visit
- * @returns
+ * Utility function to get the visit parameter
+ * @param _state - The application state {@link AppState}
+ * @param _column - The column parameter
+ * @param visit - The visit parameter
+ * @returns The visit parameter
  * @example
+ *  const getSearchedPos = createSelector(
+ *    [getIndices, getVisits, getColumnParam, getVisitParam],
+ *    searchPos,
+ *  )
  */
 export const getVisitParam = (
   _state: AppState,
@@ -68,107 +72,123 @@ export const getVisitParam = (
 
 /**
  *
- * @param _state
- * @param title
+ * @param _
+ * @param _componentPath
+ * @param locationPath
  * @returns
  * @example
+ */
+export const getLocationPathParam = (
+  _: AppState,
+  _componentPath: string,
+  locationPath: string,
+) => locationPath
+
+/**
+ *
+ * @param _
+ * @param componentPath
+ * @returns
+ * @example
+ */
+export const getComponentPathParam = (_: AppState, componentPath: string) =>
+  componentPath
+
+/**
+ *
+ * @param _
+ * @param _componentPath
+ * @param _locationPath
+ * @param pos
+ * @returns
+ * @example
+ */
+export const getPosParam = (
+  _: AppState,
+  _componentPath: string,
+  _locationPath: string,
+  pos: number,
+) => pos
+
+/**
+ * Utility function to get the title parameter
+ * @param _state - The application state {@link AppState}
+ * @param title - The title parameter
+ * @returns The title parameter
+ * @example
+ *  const getFlaggedRows = createSelector(
+ *    [getFlaggedCells, getTitleParam, getReasonParam],
+ *    (flaggedCells, title, reason) =>
+ *      f.pipe(
+ *        Eq.tuple(
+ *          stubEq<string>(),
+ *          S.Eq,
+ *          refinedEq<Flag.FlagReason, string>(S.Eq),
+ *        ),
+ *      Flag.getEq,
+ *      equals,
+ *      f.apply(Flag.of('', title, reason)),
+ *      RA.filter<Flag.Flag>,
+ *      f.apply(flaggedCells),
+ *      RS.fromReadonlyArray(Flag.Eq),
+ *      RS.map(S.Eq)(({ value: [index] }) => index),
+ *    ),
+ *  )
  */
 export const getTitleParam = (_state: AppState, title: string) => title
 
 /**
- *
- * @param _state
- * @param _1
- * @param reason
- * @returns
+ * Utility function to get the reason parameter
+ * @param _state - The application state {@link AppState}
+ * @param _title - The title parameter
+ * @param reason - The reason parameter
+ * @returns The reason parameters
  * @example
  */
 export const getReasonParam = (
   _state: AppState,
-  _1: string,
+  _title: string,
   reason: Flag.FlagReason,
 ) => reason
 
 /**
  *
  * @param state
- * @param state.progress
+ * @param state.sheet
+ * @param state.data
  * @returns
  * @example
  */
-export const getProgress = ({ progress }: AppState) => progress.progress
+export const getFileName = ({ data }: AppState) => data.fileName
 
 /**
  *
  * @param state
  * @param state.sheet
+ * @param state.data
  * @returns
  * @example
  */
-export const getFileName = ({ sheet }: AppState) => sheet.fileName
+export const getSheetName = ({ data }: AppState) => data.sheetName
 
 /**
  *
  * @param state
  * @param state.sheet
+ * @param state.data
  * @returns
  * @example
  */
-export const getSheetName = ({ sheet }: AppState) => sheet.sheetName
+export const getSheetNames = ({ data }: AppState) => data.sheetNames
 
 /**
  *
  * @param state
- * @param state.sheet
+ * @param state.data
  * @returns
  * @example
  */
-export const getSheetNames = ({ sheet }: AppState) => sheet.sheetNames
-
-/**
- * Selector function to get the visits.
- * @param state - The application state {@link AppState}
- * @param state.sheet
- * @returns The visits that has been specified by the user
- * @example
- */
-export const getVisits = ({ sheet }: AppState) => sheet.visits
-
-/**
- *
- * @param state
- * @param state.sheet
- * @returns
- * @example
- */
-export const getOriginalColumns = ({ sheet }: AppState) => sheet.originalColumns
-
-/**
- *
- * @param state
- * @param state.sheet
- * @returns
- * @example
- */
-export const getData = ({ sheet }: AppState) => sheet.data
-
-/**
- *
- * @param state
- * @param state.sheet
- * @returns
- * @example
- */
-export const getFlaggedCells = ({ sheet }: AppState) => sheet.flaggedCells
-
-/**
- *
- * @param state
- * @param state.sheet
- * @returns
- * @example
- */
-export const getDataLength = ({ sheet }: AppState) => sheet.data.length
+export const getFlaggedCells = ({ data }: AppState) => data.flaggedCells
 
 /**
  *
@@ -178,52 +198,26 @@ export const getHasSheet = f.flow(getDataLength, Boolean)
 /**
  *
  * @param state
+ * @param state.data
  * @returns
  * @example
  */
-export const getHasMultipleSheets = (state: AppState) => !state.sheet.bookType
+export const getHasMultipleSheets = ({ data }: AppState) => !data.bookType
 
 /**
  *
  * @param state
- * @param state.columns
+ * @param state.matches
  * @returns
  * @example
  */
-export const getMatchColumns = ({ columns }: AppState) => columns.matchColumns
+export const getScoresList = ({ matches }: AppState) => matches.resultsScores
 
 /**
  *
  * @param state
- * @param state.columns
+ * @param state.matches
  * @returns
  * @example
  */
-export const getMatchVisits = ({ columns }: AppState) => columns.matchVisits
-
-/**
- *
- * @param state
- * @param state.columns
- * @returns
- * @example
- */
-export const getScoresList = ({ columns }: AppState) => columns.scoresList
-
-/**
- *
- * @param state
- * @param state.columns
- * @returns
- * @example
- */
-export const getMatchesList = ({ columns }: AppState) => columns.matchesList
-
-/**
- *
- * @param state
- * @param state.columns
- * @returns
- * @example
- */
-export const getDataTypes = ({ columns }: AppState) => columns.dataTypes
+export const getDataTypes = ({ matches }: AppState) => matches.dataTypes

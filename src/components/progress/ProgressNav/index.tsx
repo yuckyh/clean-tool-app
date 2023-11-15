@@ -23,7 +23,7 @@ import {
   useNavigateMiddleware,
   useRedirectSaveState,
   useUnloadSaveState,
-} from './hooks'
+} from '../../../hooks/progress'
 
 const useClasses = makeStyles({
   linkContainer: {

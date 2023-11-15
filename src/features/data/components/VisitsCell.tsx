@@ -1,11 +1,15 @@
+/**
+ * @file This file contains the VisitsCell component.
+ * @module components/data/VisitsCell
+ */
 import type { AppState } from '@/app/store'
 import type { AlertRef } from '@/components/AlertDialog'
 import type { DropdownProps } from '@fluentui/react-components'
 
-import { getVisits } from '@/app/selectors'
 import { indexDuplicateSearcher } from '@/lib/array'
 import { useAppDispatch, useAppSelector } from '@/lib/hooks'
-import { getMatchColumn } from '@/selectors/columns/selectors'
+import { getVisits } from '@/selectors/data/visits'
+import { getMatchColumn } from '@/selectors/matches/columns'
 import {
   Dropdown,
   Option,
@@ -79,11 +83,13 @@ const selectVisitByMatchVisit =
     getVisitByMatchVisit(state, pos)
 
 /**
- *
- * @param props
- * @param props.alertRef
- * @param props.pos
+ * This function is used to render the visits cell in the data grid.
+ * @param props - The {@link Props props} for the component.
+ * @returns The compoonent object.
  * @example
+ * ```tsx
+ *  <VisitsCell alertRef={alertRef} pos={pos} />
+ * ```
  */
 export default function VisitsCell(props: Readonly<Props>) {
   const classes = useClasses()

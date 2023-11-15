@@ -1,13 +1,10 @@
 import type { AppState } from '@/app/store'
 import type { Data, Layout } from 'plotly.js-cartesian-dist'
 
-import {
-  getIndexedNumericalRow,
-  getNotOutliers,
-  getOutliers,
-} from '@/features/sheet/selectors'
 import { getIndexedIndex, getIndexedValue } from '@/lib/array'
 import { useAppSelector, useTokenToHex } from '@/lib/hooks'
+import { getIndexedNumericalRow } from '@/selectors/data/rows'
+import { getNotOutliers, getOutliers } from '@/selectors/data/stats'
 import { tokens } from '@fluentui/react-components'
 import * as RA from 'fp-ts/ReadonlyArray'
 import { useMemo } from 'react'

@@ -19,13 +19,12 @@ import type { RefObject } from 'react'
 import { getMatchVisits } from '@/app/selectors'
 import Loader from '@/components/Loader'
 import SimpleDataGrid from '@/components/SimpleDataGrid'
-import { fetchMatches } from '@/features/columns/actions'
+import { fetchMatches } from '@/features/data/actions'
 import {
-  getMatchComparer,
+  getMatchColumnsComparer,
   getScoreComparer,
   getVisitsComparer,
-} from '@/features/columns/selectors'
-import { getVisitsLength } from '@/features/sheet/selectors'
+} from '@/features/data/selectors'
 import { dumpError } from '@/lib/fp/logger'
 import {
   useAppDispatch,
@@ -33,10 +32,8 @@ import {
   useLoadingTransition,
 } from '@/lib/hooks'
 import { createLazyMemo, createMemo } from '@/lib/utils'
-import {
-  getColumnComparer,
-  getColumnsLength,
-} from '@/selectors/columns/selectors'
+import { getColumnComparer, getColumnsLength } from '@/selectors/data/columns'
+import { getVisitsLength } from '@/selectors/data/visits'
 import {
   Spinner,
   Subtitle1,
@@ -54,15 +51,15 @@ import ValueCell from './ValueCell'
 
 const MemoizedMatchCell = createLazyMemo(
   'MemoizedMatchCell',
-  import('@/features/columns/components/MatchCell'),
+  import('@/features/data/components/MatchCell'),
 )
 const MemoizedScoreCell = createLazyMemo(
   'MemoizedScoreCell',
-  import('@/features/columns/components/ScoreCell'),
+  import('@/features/data/components/ScoreCell'),
 )
 const MemoizedVisitsCell = createLazyMemo(
   'MemoizedVisitsCell',
-  import('@/features/columns/components/VisitsCell'),
+  import('@/features/data/components/VisitsCell'),
 )
 const MemoizedDataGrid = createMemo<SimpleDataGridProps<number>>(
   'MemoizedDataGrid',
@@ -142,7 +139,7 @@ export default function ColumnsDataGrid({
 }: Readonly<Props>) {
   const columnsLength = useAppSelector(getColumnsLength)
   const columnComparer = useAppSelector(getColumnComparer)
-  const matchComparer = useAppSelector(getMatchComparer)
+  const matchComparer = useAppSelector(getMatchColumnsComparer)
   const visitsComparer = useAppSelector(getVisitsComparer)
   const scoreComparer = useAppSelector(getScoreComparer)
 

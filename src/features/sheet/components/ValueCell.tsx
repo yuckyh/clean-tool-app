@@ -1,9 +1,8 @@
 import type { AppState } from '@/app/store'
 
 import { useAppSelector } from '@/lib/hooks'
+import { getCell } from '@/selectors/data/cells'
 import { makeStyles, shorthands, tokens } from '@fluentui/react-components'
-
-import { getCell } from '../selectors'
 
 const useClasses = makeStyles({
   root: {

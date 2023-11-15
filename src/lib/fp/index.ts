@@ -1,4 +1,6 @@
-import type * as Ord from 'fp-ts/Ord'
+/* eslint-disable
+  functional/functional-parameters
+*/
 import type * as P from 'fp-ts/Predicate'
 
 import * as Eq from 'fp-ts/Eq'
@@ -11,7 +13,6 @@ import * as S from 'fp-ts/string'
 
 export const promisedTask =
   <V>(promise: Promise<V>): T.Task<V> =>
-  // eslint-disable-next-line functional/functional-parameters
   () =>
     promise
 /**
@@ -40,25 +41,7 @@ export const isCorrectNumber = (val: string) =>
 
 export const toString = <V extends Primitive>(val: V) => val.toString()
 
-// eslint-disable-next-line functional/functional-parameters
-export const stubEq = <V>(): Eq.Eq<V> => ({
-  equals: f.constTrue,
-})
-
-export const refinedEq = <V extends K, K>(eq: Eq.Eq<K>) => eq as Eq.Eq<V>
-
-// eslint-disable-next-line functional/functional-parameters
-export const stubOrd = <V>(): Ord.Ord<V> => ({
-  ...stubEq(),
-  compare: f.constant(0),
-})
-
-export const refinedOrd = <V extends K, K>(ord: Ord.Ord<K>) => ord as Ord.Ord<V>
-
 export const typedIdentity = <V>(val: unknown) => val as V
-
-export const length = <V extends ArrayLike<K> | string, K>(arrLike: V) =>
-  arrLike.length
 
 export const equals =
   <V>(eq: Eq.Eq<V>) =>

@@ -1,15 +1,19 @@
+/**
+ * @file This file contains the HeaderCell component.
+ * @module components/sheet/HeaderCell
+ */
+
 import type { AppState } from '@/app/store'
 
+import { getDataType, getFormattedColumn } from '@/features/data/selectors'
 import { useAppSelector } from '@/lib/hooks'
-import { getOriginalColumn } from '@/selectors/columns/selectors'
+import { getOriginalColumn } from '@/selectors/data/columns'
 import {
   makeStyles,
   mergeClasses,
   shorthands,
   tokens,
 } from '@fluentui/react-components'
-
-import { getDataType, getFormattedColumn } from '../../columns/selectors'
 
 const useClasses = makeStyles({
   categoricalHeader: {
@@ -72,9 +76,13 @@ const selectDataType =
     getDataType(state, pos)
 
 /**
- *
- * @param props
+ * This function renders the header cell for the preview data grid.
+ * @param props - The props for the component.
+ * @returns The component object.
  * @example
+ * ```tsx
+ *  <HeaderCell isOriginal={isOriginal} pos={pos} />
+ * ```
  */
 export default function HeaderCell(props: Readonly<Props>) {
   const classes = useClasses()

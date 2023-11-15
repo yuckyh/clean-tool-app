@@ -11,11 +11,11 @@ import type { TableColumnDefinition } from '@fluentui/react-components'
 
 import { getDataLength, getFileName } from '@/app/selectors'
 import SimpleDataGrid from '@/components/SimpleDataGrid'
-import { getFormattedColumns } from '@/features/columns/selectors'
-import { getFormattedWorkbook } from '@/features/sheet/selectors'
+import { getFormattedColumns } from '@/features/data/selectors'
 import { arrayLookup } from '@/lib/array'
 import { useAppSelector } from '@/lib/hooks'
-import { getColumnsLength } from '@/selectors/columns/selectors'
+import { getColumnsLength } from '@/selectors/data/columns'
+import { getFormattedWorkbook } from '@/selectors/data/sheet'
 import {
   Button,
   Subtitle2,

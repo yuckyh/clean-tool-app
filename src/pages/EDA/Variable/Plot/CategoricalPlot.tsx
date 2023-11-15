@@ -1,9 +1,9 @@
 import type { AppState } from '@/app/store'
 import type { Data, Layout } from 'plotly.js-cartesian-dist'
 
-import { getIndexedRow } from '@/features/sheet/selectors'
-import { getIndexedValue } from '@/lib/array'
+import { getIndexedValue, recordLookup } from '@/lib/array'
 import { useAppSelector } from '@/lib/hooks'
+import { getIndexedRow } from '@/selectors/data/rows'
 import * as RA from 'fp-ts/ReadonlyArray'
 import * as f from 'fp-ts/function'
 
@@ -46,7 +46,7 @@ export default function CategoricalPlot(props: Readonly<Props>) {
     RA.map(getIndexedValue),
     RA.reduce({} as Readonly<Record<string, number>>, (acc, curr) => ({
       ...acc,
-      [curr]: (acc[curr] ?? 0) + 1,
+      [curr]: recordLookup(acc)(0)(curr) + 1,
     })),
   )
 

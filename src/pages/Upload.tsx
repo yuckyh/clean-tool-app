@@ -3,14 +3,12 @@
 */
 
 import type { AlertRef } from '@/components/AlertDialog'
-import type { Progress } from '@/features/progress/reducers'
 import type { SheetInputRef } from '@/features/sheet/components/SheetUploadInput'
+import type { Progress } from '@/reducers/progress'
 
 import { getHasMultipleSheets, getHasSheet } from '@/app/selectors'
 import AlertDialog from '@/components/AlertDialog'
-import { deleteColumns } from '@/features/columns/reducers'
-import { deleteProgressState, setProgress } from '@/features/progress/reducers'
-import { deleteSheet, fetchSheet } from '@/features/sheet/actions'
+import { deleteData, fetchSheet } from '@/features/sheet/actions'
 import PreviewDataGrid from '@/features/sheet/components/PreviewDataGrid'
 import SheetPickerInput from '@/features/sheet/components/SheetPickerInput'
 import SheetUploadInput from '@/features/sheet/components/SheetUploadInput'
@@ -22,7 +20,9 @@ import {
   useAppSelector,
   useLoadingTransition,
 } from '@/lib/hooks'
-import { getColumnsLength } from '@/selectors/columns/selectors'
+import { deleteMatches } from '@/reducers/matches'
+import { deleteProgress, setProgress } from '@/reducers/progress'
+import { getColumnsLength } from '@/selectors/data/columns'
 import {
   Button,
   Card,
@@ -74,6 +74,28 @@ const useClasses = makeStyles({
   },
 })
 
+const useFetchSheet = () => {
+  const dispatch = useAppDispatch()
+
+  const columnsLength = useAppSelector(getColumnsLength)
+
+  const [, stopLoading] = useLoadingTransition()
+  useEffect(() => {
+    f.pipe(
+      columnsLength,
+      (length): TE.TaskEither<typeof fetchSheet, void> =>
+        length === 0 ? TE.left(fetchSheet) : TE.fromIO(stopLoading),
+      TE.getOrElse((x) =>
+        f.pipe(
+          stopLoading,
+          T.fromIO,
+          T.tap(() => f.pipe(dispatch(x()), promisedTask)),
+        ),
+      ),
+    )().catch(dumpError)
+  }, [columnsLength, dispatch, stopLoading])
+}
+
 /**
  * The upload page.
  * This page is used to upload the file, select the sheet if it has more than one sheet, and also specify the visit information.
@@ -81,6 +103,9 @@ const useClasses = makeStyles({
  * @category Page
  * @returns The component object
  * @example
+ * ```tsx
+ *  <Upload />
+ * ```
  */
 export default function Upload() {
   const classes = useClasses()
@@ -91,14 +116,12 @@ export default function Upload() {
 
   const hasSheet = useAppSelector(getHasSheet)
   const hasMultipleSheets = useAppSelector(getHasMultipleSheets)
-  const columnsLength = useAppSelector(getColumnsLength)
 
-  const [isLoading, stopLoading] = useLoadingTransition()
+  const [isLoading] = useLoadingTransition()
 
   const toasterId = useId()
 
   const alertRef = useRef<AlertRef>(null)
-  // const toasterRef = useRef<SimpleToasterRef>(null)
   const sheetInputRef = useRef<SheetInputRef>(null)
 
   useEffect(() => {
@@ -114,13 +137,13 @@ export default function Upload() {
 
   const handleResetConfirm = useCallback(() => {
     f.pipe(
-      [deleteProgressState, deleteColumns] as const,
+      [deleteProgress, deleteMatches] as const,
       RA.map(f.flow((x) => dispatch(x()), IO.of)),
       IO.sequenceArray,
       f.constant(sheetInputRef.current?.setFileTask('deleted')),
       IO.of,
       IO.tap(IO.of),
-      () => deleteSheet,
+      () => deleteData,
       T.of,
       T.tap((x) => f.pipe(dispatch(x()), promisedTask)),
       T.tapIO(() =>
@@ -145,21 +168,7 @@ export default function Upload() {
     )()
   }, [dispatch, navigate])
 
-  useEffect(() => {
-    f.pipe(
-      columnsLength,
-      (length): TE.TaskEither<typeof fetchSheet, void> =>
-        length === 0 ? TE.left(fetchSheet) : TE.fromIO(stopLoading),
-      TE.getOrElse((x) =>
-        f.pipe(
-          stopLoading,
-          T.fromIO,
-          T.tap(() => f.pipe(dispatch(x()), promisedTask)),
-        ),
-      ),
-    )().catch(dumpError)
-    return undefined
-  }, [columnsLength, dispatch, stopLoading])
+  useFetchSheet()
 
   return (
     <section className={classes.root}>

@@ -1,14 +1,16 @@
+/**
+ * @file This file contains the SummaryDataGrid component.
+ * @module pages/EDA/Variable/DataGrid/SummaryDataGrid
+ */
+
 import type { AppState } from '@/app/store'
 import type { TableColumnDefinition } from '@fluentui/react-components'
 
 import SimpleDataGrid from '@/components/SimpleDataGrid'
-import {
-  getIndexedNumericalRow,
-  getIndexedRow,
-} from '@/features/sheet/selectors'
 import { arrayLookup, getIndexedValue } from '@/lib/array'
 import { add, divideBy } from '@/lib/fp/number'
 import { useAppSelector } from '@/lib/hooks'
+import { getIndexedNumericalRow, getIndexedRow } from '@/selectors/data/rows'
 import {
   Card,
   CardHeader,
@@ -46,19 +48,19 @@ const useClasses = makeStyles({
   },
 })
 /**
- *
+ * The props for the {@link SummaryDataGrid} component.
  */
 interface Props {
   /**
-   *
+   * The name of the column.
    */
   column: string
   /**
-   *
+   * Whether the column is categorical.
    */
   isCategorical: boolean
   /**
-   *
+   * The visit to display.
    */
   visit: string
 }
@@ -90,10 +92,18 @@ const selectNumericalValues =
     RA.map(getIndexedValue)(getIndexedNumericalRow(state, column, visit))
 
 /**
- *
- * @param props
- * @returns
+ * This function is used to render the summary statistics of the selected variable.
+ * @category Components
+ * @param props - The {@link Props} object.
+ * @returns The component object.
  * @example
+ * ```tsx
+ *  <SummaryDataGrid
+ *    column={column}
+ *    isCategorical={isCategorical}
+ *    visit={visit}
+ *  />
+ * ```
  */
 export default function SummaryDataGrid(props: Readonly<Props>) {
   const classes = useClasses()

@@ -4,17 +4,15 @@
 import type { AppState } from '@/app/store'
 
 import { codebook } from '@/data'
-import { setDataType } from '@/features/columns/reducers'
-import {
-  getSearchedDataType,
-  getSearchedPos,
-} from '@/features/columns/selectors'
-import { getFirstVisit } from '@/features/sheet/selectors'
 import { equals } from '@/lib/fp'
 import { kebabToSnake } from '@/lib/fp/string'
 import { useAppDispatch, useAppSelector } from '@/lib/hooks'
 import CategoricalPlot from '@/pages/EDA/Variable/Plot/CategoricalPlot'
 import NumericalPlot from '@/pages/EDA/Variable/Plot/NumericalPlot'
+import { setDataType } from '@/reducers/matches'
+import { getFirstVisit } from '@/selectors/data/visits'
+import { getSearchedPos } from '@/selectors/matches'
+import { getSearchedDataType } from '@/selectors/matches/dataTypes'
 import {
   Card,
   Field,
@@ -31,10 +29,12 @@ import * as S from 'fp-ts/string'
 import { useParams } from 'react-router-dom'
 
 import AllDataGrid from './DataGrid/AllDataGrid'
+import FlagDataGrid from './DataGrid/FlagDataGrid'
 import IncorrectDataGrid from './DataGrid/IncorrectDataGrid'
 import BlankDataGrid from './DataGrid/MissingDataGrid'
 import OutlierDataGrid from './DataGrid/OutlierDataGrid'
 import SummaryDataGrid from './DataGrid/SummaryDataGrid'
+import { selectIncorrectSeries } from './DataGrid/selectors'
 
 const useClasses = makeStyles({
   actions: {
@@ -152,6 +152,10 @@ export default function Variable() {
 
   const isUser = !name
 
+  const incorrectSeries = useAppSelector(
+    selectIncorrectSeries({ column, visit }),
+  )
+
   return (
     <section className={classes.root}>
       <div className={classes.columns}>
@@ -207,7 +211,15 @@ export default function Variable() {
         </div>
         <div className={classes.rows}>
           {!isCategorical && (
-            <IncorrectDataGrid column={column} visit={visit} />
+            <FlagDataGrid
+              column={column}
+              emptyText="There are no incorrectly formatted data found."
+              reason="incorrect"
+              series={incorrectSeries}
+              subtitleText="The data shown here are data that might be incorrectly formatted."
+              titleText="Incorrect Data"
+              visit={visit}
+            />
           )}
         </div>
       </div>

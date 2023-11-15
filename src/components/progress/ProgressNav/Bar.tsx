@@ -10,7 +10,7 @@
 import {
   selectPosition,
   selectProgressValue,
-} from '@/features/progress/selectors'
+} from '@/components/progress/ProgressNav/selectors'
 import { useAppSelector } from '@/lib/hooks'
 import {
   ProgressBar,

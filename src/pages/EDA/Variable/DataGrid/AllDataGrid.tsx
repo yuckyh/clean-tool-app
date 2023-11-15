@@ -6,22 +6,17 @@ import type {
 } from '@fluentui/react-components'
 
 import SimpleDataGrid from '@/components/SimpleDataGrid'
-import {
-  getFormattedColumn,
-  getSearchedDataType,
-  getSearchedPos,
-} from '@/features/columns/selectors'
 import { syncFlaggedCells } from '@/features/sheet/reducers'
+import { getIndexedIndex } from '@/lib/array'
+import { isCorrectNumber } from '@/lib/fp'
+import * as Flag from '@/lib/fp/Flag'
+import { useAppDispatch, useAppSelector } from '@/lib/hooks'
 import {
   getFlaggedRows,
   getIndexedRow,
   getIndexedRowIncorrects,
   getIndexedRowMissings,
-} from '@/features/sheet/selectors'
-import { getIndexedIndex } from '@/lib/array'
-import { isCorrectNumber } from '@/lib/fp'
-import * as Flag from '@/lib/fp/Flag'
-import { useAppDispatch, useAppSelector } from '@/lib/hooks'
+} from '@/selectors/data/rows'
 import {
   Body2,
   Card,
@@ -132,19 +127,6 @@ const selectMissingSeries =
  * @returns
  * @example
  */
-const selectIncorrectSeries =
-  ({ column, visit }: Readonly<Props>) =>
-  (state: AppState) =>
-    getIndexedRowIncorrects(state, column, visit)
-
-/**
- *
- * @param props
- * @param props.column
- * @param props.visit
- * @returns
- * @example
- */
 const selectDataType =
   ({ column, visit }: Readonly<Props>) =>
   (state: AppState) =>
@@ -191,7 +173,7 @@ export default function AllDataGrid(props: Readonly<Props>) {
   )
 
   const handleSelectionChange: DataGridProps['onSelectionChange'] = (
-    _1,
+    _event,
     { selectedItems },
   ) => {
     const shouldAdd = flaggedRows.size < selectedItems.size

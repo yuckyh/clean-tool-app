@@ -4,6 +4,7 @@
 import type { InputProps } from '@fluentui/react-components'
 
 import { useAppDispatch, useAppSelector } from '@/lib/hooks'
+import { getVisitsLength } from '@/selectors/data/visits'
 import { Field, Input, makeStyles } from '@fluentui/react-components'
 import * as IO from 'fp-ts/IO'
 import * as RA from 'fp-ts/ReadonlyArray'
@@ -11,7 +12,6 @@ import * as f from 'fp-ts/function'
 import { useCallback, useEffect, useState } from 'react'
 
 import { syncVisits } from '../reducers'
-import { getVisitsLength } from '../selectors'
 import VisitInput from './VisitInput'
 
 const useClasses = makeStyles({

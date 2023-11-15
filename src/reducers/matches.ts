@@ -11,8 +11,11 @@ import type { PayloadAction } from '@reduxjs/toolkit'
 import type * as Ref from 'fp-ts/Refinement'
 
 import { codebook } from '@/data'
+import { fetchMatches } from '@/features/data/actions'
+import { sliceName } from '@/features/sheet/actions'
 import { arrayLookup, getIndexedValue, head } from '@/lib/array'
-import { equals, stubOrd, typedIdentity } from '@/lib/fp'
+import { equals, typedIdentity } from '@/lib/fp'
+import { stubOrd } from '@/lib/fp/Ord'
 import { getPersisted, setPersisted } from '@/lib/localStorage'
 import { createSlice } from '@reduxjs/toolkit'
 import * as O from 'fp-ts/Option'
@@ -22,8 +25,6 @@ import * as RA from 'fp-ts/ReadonlyArray'
 import * as f from 'fp-ts/function'
 import * as N from 'fp-ts/number'
 import * as S from 'fp-ts/string'
-
-import { fetchMatches, sliceName } from './actions'
 
 /**
  * The data type of the columns
@@ -35,86 +36,107 @@ export type DataType = 'categorical' | 'none' | 'numerical'
  */
 interface State {
   /**
+   * The columns to match
+   */
+  columns: readonly string[]
+  /**
    * The data types of the columns
    */
   dataTypes: readonly DataType[]
   /**
-   * The columns to match
-   */
-  matchColumns: readonly string[]
-  /**
-   * The visits to match
-   */
-  matchVisits: readonly number[]
-  /**
    * The matches
    */
-  matchesList: readonly (readonly string[])[]
+  results: readonly (readonly string[])[]
   /**
    * The scores of the matches
    */
-  scoresList: readonly (readonly number[])[]
+  resultsScores: readonly (readonly number[])[]
+  /**
+   * The scores of the matches
+   */
+  scores: readonly number[]
+  /**
+   * The visits to match
+   */
+  visits: readonly number[]
 }
 
-const keys = ['matchColumns', 'matchVisits', 'dataTypes'] as const
+const keys = [
+  'matchColumns',
+  'matchVisits',
+  'matchScores',
+  'dataTypes',
+] as const
 const defaultValue = ''
 
 const isDataType: Ref.Refinement<string, DataType> = (x): x is DataType =>
   x === 'categorical' || x === 'numerical'
 
 const initialState: Readonly<State> = {
-  dataTypes: f.pipe(
-    getPersisted(keys[2], defaultValue),
-    S.split(','),
-    RA.filter(P.not(S.isEmpty)),
-    RA.filter(isDataType),
-  ),
-  matchColumns: f.pipe(
+  columns: f.pipe(
     getPersisted(keys[0], defaultValue),
     S.split(','),
     RA.filter(P.not(S.isEmpty)),
   ),
-  matchVisits: f.pipe(
+  dataTypes: f.pipe(
+    getPersisted(keys[3], defaultValue),
+    S.split(','),
+    RA.filter(P.not(S.isEmpty)),
+    RA.filter(isDataType),
+  ),
+  results: RA.empty,
+  resultsScores: RA.empty,
+  scores: f.pipe(
+    getPersisted(keys[2], defaultValue),
+    S.split(','),
+    RA.filter(P.not(S.isEmpty)),
+    RA.map(parseFloat),
+  ),
+  visits: f.pipe(
     getPersisted(keys[1], defaultValue),
     S.split(','),
     RA.filter(P.not(S.isEmpty)),
     RA.map(parseInt),
   ),
-  matchesList: RA.empty,
-  scoresList: RA.empty,
 }
 
-const columnsSlice = createSlice({
+const { actions, reducer } = createSlice({
   extraReducers: (builder) => {
     builder.addCase(fetchMatches.fulfilled, (state, { payload }) => {
-      const { dataTypes, matchColumns, matchVisits } = state
+      const { columns, dataTypes, scores, visits } = state
 
-      const matchesList = f.pipe(
+      const results = f.pipe(
         payload,
         RA.map(RA.map(({ item: { name } }) => name)),
       )
 
-      state.matchesList = matchesList as string[][]
-
-      state.scoresList = f.pipe(
+      const resultsScores = f.pipe(
         payload,
         RA.map(RA.map(({ score = 0 }) => score)),
-      ) as number[][]
+      )
 
-      state.matchColumns = matchColumns.length
-        ? matchColumns
-        : (RA.map(f.flow(head<string>, f.apply('')))(matchesList) as string[])
+      state.results = results as string[][]
+
+      state.resultsScores = resultsScores as number[][]
+
+      state.columns = columns.length
+        ? columns
+        : (RA.map(f.flow(head<string>, f.apply('')))(results) as string[])
+
+      state.scores = scores.length
+        ? scores
+        : (RA.map(f.flow(head<number>, f.apply(0)))(resultsScores) as number[])
 
       const sorted =
-        !matchVisits.length &&
+        !visits.length &&
         f.pipe(
-          [...state.matchColumns],
+          [...state.columns],
           RA.mapWithIndex((i, x) => [i, x] as const),
           RA.sort(Ord.tuple(stubOrd(), S.Ord)),
         )
 
-      state.matchVisits = !sorted
-        ? matchVisits
+      state.visits = !sorted
+        ? visits
         : (f.pipe(
             sorted,
             RA.mapWithIndex(
@@ -148,7 +170,7 @@ const columnsSlice = createSlice({
       state.dataTypes = dataTypes.length
         ? dataTypes
         : (f.pipe(
-            matchColumns,
+            columns,
             RA.map((matchColumn) =>
               f.pipe(
                 codebook,
@@ -169,20 +191,25 @@ const columnsSlice = createSlice({
   initialState,
   name: sliceName,
   reducers: {
-    deleteColumns: (state) => {
-      state.matchColumns = []
-      state.matchVisits = []
-      state.matchesList = []
-      state.scoresList = []
+    deleteMatches: (state) => {
+      state.columns = []
+      state.visits = []
+      state.results = []
+      state.resultsScores = []
       state.dataTypes = []
 
       return state
     },
-    saveColumnState: (state) => {
-      const { dataTypes, matchColumns, matchVisits } = state
+    saveMatchesState: (state) => {
+      const {
+        columns: matchColumns,
+        dataTypes,
+        scores: matchScores,
+        visits: matchVisits,
+      } = state
 
       f.pipe(
-        [matchColumns, matchVisits, dataTypes] as const,
+        [matchColumns, matchVisits, matchScores, dataTypes] as const,
         RA.map((x) => x.join(',')),
         RA.zip<string>,
         f.apply(keys),
@@ -217,7 +244,7 @@ const columnsSlice = createSlice({
     ) => {
       const { matchColumn, pos } = payload
 
-      state.matchColumns[pos] = matchColumn
+      state.columns[pos] = matchColumn
 
       return state
     },
@@ -227,7 +254,7 @@ const columnsSlice = createSlice({
     ) => {
       const { matchVisit, pos } = payload
 
-      state.matchVisits[pos] = matchVisit
+      state.visits[pos] = matchVisit
 
       return state
     },
@@ -235,10 +262,10 @@ const columnsSlice = createSlice({
 })
 
 export const {
-  deleteColumns,
-  saveColumnState,
+  deleteMatches,
+  saveMatchesState,
   setDataType,
   setMatchColumn,
   setMatchVisit,
-} = columnsSlice.actions
-export default columnsSlice.reducer
+} = actions
+export default reducer

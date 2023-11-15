@@ -1,11 +1,11 @@
-/* 
+/* eslint-disable
   functional/immutable-data
 */
 import type { Props as SimpleDataGridProps } from '@/components/SimpleDataGrid'
 
 import { useAppSelector } from '@/lib/hooks'
 import { createLazyMemo } from '@/lib/utils'
-import { getColumnsLength } from '@/selectors/columns/selectors'
+import { getColumnsLength } from '@/selectors/data/columns'
 import {
   Tag,
   TagGroup,

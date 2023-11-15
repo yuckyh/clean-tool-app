@@ -4,8 +4,8 @@ import type { TypedUseSelectorHook } from 'react-redux'
 
 import globalStyles from '@/app/global.css?inline'
 import { syncFlaggedCells } from '@/features/sheet/reducers'
-import { getFlaggedRows } from '@/features/sheet/selectors'
 import { getIndexedIndex } from '@/lib/array'
+import { getFlaggedRows } from '@/selectors/data/rows'
 import {
   makeStaticStyles,
   useThemeClassName,
@@ -170,7 +170,7 @@ export const useSyncedSelectionHandler = (
   const indices = useMemo(() => RA.map(getIndexedIndex)(series), [series])
 
   return useCallback<Required<DataGridProps>['onSelectionChange']>(
-    (_1, { selectedItems }) => {
+    (_event, { selectedItems }) => {
       const shouldAdd = flaggedRows.size < selectedItems.size
 
       const subtractor = (

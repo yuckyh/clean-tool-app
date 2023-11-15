@@ -2,22 +2,20 @@
   functional/functional-parameters
 */
 import type { AppState } from '@/app/store'
-import type { Progress } from '@/features/progress/reducers'
+import type { Progress } from '@/reducers/progress'
 
-import { getVisits } from '@/app/selectors'
+import { arrayLookup, findIndex } from '@/lib/array'
+import { kebabToSnake } from '@/lib/fp/string'
+import { useAppDispatch, useAppSelector } from '@/lib/hooks'
+import { setProgress } from '@/reducers/progress'
+import { getColumnsLength } from '@/selectors/data/columns'
+import { getFirstVisit, getVisits } from '@/selectors/data/visits'
 import {
   getColumnPath,
   getColumnPaths,
   getIndices,
-} from '@/features/columns/selectors'
-import { setProgress } from '@/features/progress/reducers'
-import { getLocationPathWords } from '@/features/progress/selectors'
-import { getFirstVisit } from '@/features/sheet/selectors'
-import { arrayLookup, findIndex } from '@/lib/array'
-import { length } from '@/lib/fp'
-import { kebabToSnake } from '@/lib/fp/string'
-import { useAppDispatch, useAppSelector } from '@/lib/hooks'
-import { getColumnsLength } from '@/selectors/columns/selectors'
+} from '@/selectors/matches/format'
+import { getLocationPathWords } from '@/selectors/progress/paths'
 import {
   Button,
   TabList,
@@ -105,9 +103,12 @@ const selectNextVariablePath = (pos: number) => (state: AppState) =>
   getColumnPath(state, pos + 1)
 
 /**
- *
- * @returns
+ * The navigation for the variable page.
+ * @returns The component object
  * @example
+ * ```tsx
+ *  <Nav />
+ * ```
  */
 export default function Nav() {
   const classes = useClasses()
@@ -123,7 +124,7 @@ export default function Nav() {
   const firstVisit = useAppSelector(getFirstVisit)
   const columnPaths = useAppSelector(getColumnPaths)
   const pathWords = useAppSelector(selectPathWords(pathname))
-  const depth = useMemo(() => length(pathWords), [pathWords])
+  const depth = useMemo(() => RA.size(pathWords), [pathWords])
 
   const column = useMemo(
     () => f.pipe(pathWords, arrayLookup, f.apply(''), f.apply(1), kebabToSnake),

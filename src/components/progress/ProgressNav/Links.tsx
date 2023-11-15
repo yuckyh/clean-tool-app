@@ -8,7 +8,7 @@ import { makeStyles } from '@fluentui/react-components'
 import * as RA from 'fp-ts/ReadonlyArray'
 import * as f from 'fp-ts/function'
 
-import { selectPaths, selectPosition } from '../../selectors'
+import { selectPaths, selectPosition } from './selectors'
 import ProgressNavLink from './Link'
 
 const useClasses = makeStyles({

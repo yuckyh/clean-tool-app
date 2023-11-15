@@ -2,9 +2,9 @@ import type { AppState } from '@/app/store'
 import type { ColumnRequest, ColumnResponse } from '@/workers/column'
 import type * as T from 'fp-ts/Task'
 
-import { getOriginalColumns } from '@/app/selectors'
 import { columnWorker, createHandledTask } from '@/app/workers'
 import { add } from '@/lib/fp/number'
+import { getOriginalColumns } from '@/selectors/data/columns'
 import { createAsyncThunk } from '@reduxjs/toolkit'
 import * as O from 'fp-ts/Option'
 import * as f from 'fp-ts/function'
@@ -19,7 +19,7 @@ const handledTask: T.Task<ColumnResponse> = createHandledTask<
 /**
  * The name of the slice.
  */
-export const sliceName = 'columns' as const
+export const sliceName = 'matches' as const
 
 /**
  * The thunk to fetch the matches.
@@ -41,8 +41,8 @@ export const fetchMatches = createAsyncThunk(
 
     const result = (await handledTask()).matches
 
-    const { matchVisits } = (getState() as AppState).columns
-    const { visits } = (getState() as AppState).sheet
+    const { visits: matchVisits } = (getState() as AppState).matches
+    const { visits } = (getState() as AppState).data
 
     return f.pipe(
       matchVisits as number[],

@@ -1,16 +1,21 @@
 import type { AppState } from '@/app/store'
 import type { AlertRef } from '@/components/AlertDialog'
+import type { DataType } from '@/reducers/matches'
 import type { ComboboxProps } from '@fluentui/react-components'
 
-import { getVisits } from '@/app/selectors'
 import { codebook } from '@/data'
-import { getRow } from '@/features/sheet/selectors'
 import { findIndex, indexDuplicateSearcher } from '@/lib/array'
 import { equals, isCorrectNumber } from '@/lib/fp'
 import { useLoggerEffect } from '@/lib/fp/logger'
 import { useAppDispatch, useAppSelector, useDebounced } from '@/lib/hooks'
 import { createMemo } from '@/lib/utils'
-import { getMatchColumn } from '@/selectors/columns/selectors'
+import { setDataType, setMatchColumn, setMatchVisit } from '@/reducers/matches'
+import { getRow } from '@/selectors/data/rows'
+import { getVisits } from '@/selectors/data/visits'
+import { getMatchColumn } from '@/selectors/matches/columns'
+import { getIndices } from '@/selectors/matches/format'
+import { getMatchResult, getScoreResult } from '@/selectors/matches/results'
+import { getMatchVisit, getVisitByMatchVisit } from '@/selectors/matches/visits'
 import {
   Combobox,
   Option,
@@ -28,16 +33,6 @@ import * as N from 'fp-ts/number'
 import * as S from 'fp-ts/string'
 import { useCallback, useMemo, useState } from 'react'
 
-import type { DataType } from '../reducers'
-
-import { setDataType, setMatchColumn, setMatchVisit } from '../reducers'
-import {
-  getIndices,
-  getMatchVisit,
-  getMatches,
-  getScores,
-  getVisitByMatchVisit,
-} from '../selectors'
 import FilteredOptions from './FilteredOptions'
 
 const MemoizedFilteredOptions = createMemo('FilteredOptions', FilteredOptions)
@@ -97,7 +92,7 @@ const selectMatchVisit =
 const selectMatches =
   ({ pos }: Readonly<Props>) =>
   (state: AppState) =>
-    getMatches(state, pos)
+    getMatchResult(state, pos)
 
 /**
  *
@@ -106,10 +101,10 @@ const selectMatches =
  * @returns
  * @example
  */
-const selectScores =
+const selectScoreResult =
   ({ pos }: Readonly<Props>) =>
   (state: AppState) =>
-    getScores(state, pos)
+    getScoreResult(state, pos)
 
 /**
  *
@@ -154,7 +149,7 @@ export default function MatchCell(props: Readonly<Props>) {
   const matchColumn = useAppSelector(selectMatchColumn(props))
   const matchVisit = useAppSelector(selectMatchVisit(props))
   const matches = useAppSelector(selectMatches(props))
-  const scores = useAppSelector(selectScores(props))
+  const scoreResult = useAppSelector(selectScoreResult(props))
   const row = useAppSelector(selectRow(props))
   const indices = useAppSelector(getIndices)
 
@@ -172,13 +167,13 @@ export default function MatchCell(props: Readonly<Props>) {
       f.pipe(
         matches,
         f.pipe(deferredValue, S.includes, RA.filter<string>),
-        RA.zip(scores),
+        RA.zip(scoreResult),
         RA.map(([match, score]) => ({
           match,
           score,
         })),
       ),
-    [deferredValue, matches, scores],
+    [deferredValue, matches, scoreResult],
   )
 
   const handleOptionSelect: Required<ComboboxProps>['onOptionSelect'] =

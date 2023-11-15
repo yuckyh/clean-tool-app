@@ -3,21 +3,21 @@
  * @module app/store
  */
 
-import columns from '@/features/columns/reducers'
-import progress from '@/features/progress/reducers'
-import sheet from '@/features/sheet/reducers'
+import data from '@/features/sheet/reducers'
+import matches from '@/reducers/matches'
+import progress from '@/reducers/progress'
 import { configureStore } from '@reduxjs/toolkit'
 
 /**
  * The application's store.
  *
  * Consists of the following slices:
- * - {@link columns}
+ * - {@link matches}
  * - {@link progress}
- * - {@link sheet}
+ * - {@link data}
  */
 const store = configureStore({
-  reducer: { columns, progress, sheet },
+  reducer: { data, matches, progress },
 } as const)
 
 /**
