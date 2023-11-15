@@ -8,6 +8,8 @@
 
 > **getTitle**(`state`, ...`params`): `string`
 
+The selector to get the title for the current progress nav item.
+
 ## Parameters
 
 ▪ **state**: `object`
@@ -23,6 +25,15 @@
 ## Returns
 
 `string`
+
+The selector.
+
+## Example
+
+```ts
+   const { pathname: locationPath } = useLocation()
+   const title = useAppSelector((state) => getTitle(state, locationPath))
+```
 
 ## Source
 

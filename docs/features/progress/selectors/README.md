@@ -18,6 +18,12 @@
 - [getProgressValue](functions/getProgressValue.md)
 - [getShouldNavigateToAllowed](functions/getShouldNavigateToAllowed.md)
 - [getTitle](functions/getTitle.md)
+- [selectAllowedPaths](functions/selectAllowedPaths.md)
+- [selectIsDisabled](functions/selectIsDisabled.md)
+- [selectPaths](functions/selectPaths.md)
+- [selectPosition](functions/selectPosition.md)
+- [selectProgressValue](functions/selectProgressValue.md)
+- [selectShouldNavigateToAllowed](functions/selectShouldNavigateToAllowed.md)
 
 ***
 

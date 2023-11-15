@@ -2,13 +2,13 @@
 
 ***
 
-[CLEaN Tool](../../../../modules.md) / components/progress/ProgressNav/Link
+[CLEaN Tool](../../../../modules.md) / components/progress/ProgressNav/Links
 
-# components/progress/ProgressNav/Link
+# components/progress/ProgressNav/Links
 
 ## File
 
-This file contains the ProgressNavLink component.
+This file contains the ProgressNavLinks component.
 
 ## Index
 
@@ -18,7 +18,7 @@ This file contains the ProgressNavLink component.
 
 ### Functions
 
-- [ProgressNavLink](functions/ProgressNavLink.md)
+- [ProgressNavLinks](functions/ProgressNavLinks.md)
 
 ***
 

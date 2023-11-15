@@ -6,6 +6,8 @@
 
 # Interface: State
 
+The progress state
+
 ## Contents
 
 - [Properties](State.md#properties)
@@ -16,6 +18,8 @@
 ### progress
 
 > **progress**: [`Progress`](../../../../../features/progress/reducers/type-aliases/Progress.md)
+
+The progress state
 
 #### Source
 

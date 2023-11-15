@@ -2,11 +2,11 @@
 
 ***
 
-[CLEaN Tool](../../../../../../modules.md) / [components/progress/ProgressNav/PageTitle](../../README.md) / [private](../README.md) / Props
+[CLEaN Tool](../../../../../../modules.md) / [components/progress/ProgressNav/Links](../../README.md) / [private](../README.md) / Props
 
 # Interface: Props
 
-The props for the [ProgressNavPageTitle](../../functions/ProgressNavPageTitle.md) component.
+The props for the [ProgressNavLinks](../../functions/ProgressNavLinks.md) component.
 
 ## Contents
 
@@ -24,7 +24,7 @@ The progress nav's component path in the router.
 
 #### Source
 
-[Projects/clean-tool-app/src/features/progress/components/ProgressNav/PageTitle.tsx:19](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/features/progress/components/ProgressNav/Links.tsx:29](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 
@@ -36,7 +36,7 @@ The current location path.
 
 #### Source
 
-[Projects/clean-tool-app/src/features/progress/components/ProgressNav/PageTitle.tsx:23](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/features/progress/components/ProgressNav/Links.tsx:33](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

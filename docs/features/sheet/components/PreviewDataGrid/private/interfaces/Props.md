@@ -19,7 +19,7 @@
 
 #### Source
 
-[Projects/clean-tool-app/src/features/sheet/components/PreviewDataGrid.tsx:47](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/features/sheet/components/PreviewDataGrid.tsx:49](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

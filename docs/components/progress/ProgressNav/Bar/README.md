@@ -6,6 +6,10 @@
 
 # components/progress/ProgressNav/Bar
 
+## File
+
+This file contains the progress navigation's bar component.
+
 ## Index
 
 ### Component

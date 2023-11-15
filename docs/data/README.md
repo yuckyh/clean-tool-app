@@ -8,8 +8,13 @@
 
 ## Contents
 
+- [File](README.md#file)
 - [Properties](README.md#properties)
   - [codebook](README.md#codebook)
+
+## File
+
+This file exports the codebook as a JSON object.
 
 ## Properties
 

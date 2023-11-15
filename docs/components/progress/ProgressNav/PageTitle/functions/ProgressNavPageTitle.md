@@ -8,23 +8,32 @@
 
 > **ProgressNavPageTitle**(`props`): `Element`
 
+This component provides the page title for the current progress navigation using react-helmet-async.
+
 ## Parameters
 
 ▪ **props**: `Readonly`\<[`Props`](../private/interfaces/Props.md)\>
+
+The [props](../private/interfaces/Props.md) passed to the component.
 
 ## Returns
 
 `Element`
 
+- The [Helmet]([object Object]) component.
+
 ## Example
 
-```ts
-
+```tsx
+ <ProgressNavPageTitle
+   componentPath={componentPath}
+   locationPath={locationPath}
+ />
 ```
 
 ## Source
 
-[Projects/clean-tool-app/src/components/progress/ProgressNav/PageTitle.tsx:32](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/features/progress/components/ProgressNav/PageTitle.tsx:43](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

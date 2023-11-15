@@ -6,6 +6,8 @@
 
 # Interface: Props
 
+The props for plotly.js's [Plot](../../functions/Plot.md) component.
+
 ## Contents
 
 - [Extends](Props.md#extends)
@@ -22,13 +24,15 @@
 
 > **data**: `Data`[]
 
+A list of plotly.js data objects.
+
 #### Overrides
 
 Partial.data
 
 #### Source
 
-[Projects/clean-tool-app/src/components/Plot.tsx:11](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/components/Plot.tsx:22](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

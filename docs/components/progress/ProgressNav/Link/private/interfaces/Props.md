@@ -6,6 +6,8 @@
 
 # Interface: Props
 
+The props for the [ProgressNavLink](../../functions/ProgressNavLink.md) component.
+
 ## Contents
 
 - [Properties](Props.md#properties)
@@ -19,9 +21,11 @@
 
 > **done**: `boolean`
 
+Whether the link indicates that the step is done.
+
 #### Source
 
-[Projects/clean-tool-app/src/components/progress/ProgressNav/Link.tsx:70](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/features/progress/components/ProgressNav/Link.tsx:61](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 
@@ -29,9 +33,11 @@
 
 > **path**: `string`
 
+The path for the link.
+
 #### Source
 
-[Projects/clean-tool-app/src/components/progress/ProgressNav/Link.tsx:74](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/features/progress/components/ProgressNav/Link.tsx:65](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 
@@ -39,9 +45,11 @@
 
 > **pos**: `number`
 
+The position of the link in the progress nav.
+
 #### Source
 
-[Projects/clean-tool-app/src/components/progress/ProgressNav/Link.tsx:78](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/features/progress/components/ProgressNav/Link.tsx:69](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

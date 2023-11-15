@@ -8,6 +8,8 @@
 
 > **`const`** **sliceName**: `"columns"`
 
+The name of the slice.
+
 ## Source
 
 [Projects/clean-tool-app/src/features/columns/actions.ts:22](https://github.com/yuckyh/clean-tool-app/)

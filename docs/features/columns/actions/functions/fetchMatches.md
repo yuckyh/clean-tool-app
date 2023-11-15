@@ -8,9 +8,19 @@
 
 > **fetchMatches**(): `AsyncThunkAction`\<readonly readonly MatchlessFuseResult[][], `void`, `AsyncThunkConfig`\>
 
+The thunk to fetch the matches.
+
 ## Returns
 
 `AsyncThunkAction`\<readonly readonly MatchlessFuseResult[][], `void`, `AsyncThunkConfig`\>
+
+A promise containing the matches.
+
+## Example
+
+```ts
+   dispatch(fetchMatches())
+```
 
 ## Source
 

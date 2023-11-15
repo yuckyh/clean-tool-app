@@ -8,6 +8,8 @@
 
 > **getPosition**(`state`, ...`params`): `number`
 
+The selector to get the position for the current progress nav item.
+
 ## Parameters
 
 ▪ **state**: `object`
@@ -23,6 +25,15 @@
 ## Returns
 
 `number`
+
+The selector.
+
+## Example
+
+```ts
+   const { pathname: locationPath } = useLocation()
+   const position = useAppSelector((state) => getPosition(state, locationPath))
+```
 
 ## Source
 

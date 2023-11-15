@@ -24,13 +24,13 @@ The component object
 
 ## Example
 
-```ts
-
+```tsx
+   <ProgressNavBar />
 ```
 
 ## Source
 
-[Projects/clean-tool-app/src/components/progress/ProgressNav/Bar.tsx:58](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/features/progress/components/ProgressNav/Bar.tsx:46](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

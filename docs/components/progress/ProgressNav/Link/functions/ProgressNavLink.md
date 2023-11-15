@@ -8,23 +8,34 @@
 
 > **ProgressNavLink**(`props`): `Element`
 
+This component provides a link for the current progress navigation.
+
 ## Parameters
 
 ▪ **props**: `Readonly`\<[`Props`](../private/interfaces/Props.md)\>
+
+The [props](../private/interfaces/Props.md) passed to the component.
 
 ## Returns
 
 `Element`
 
+- The [Link]([object Object]) component.
+
 ## Example
 
-```ts
-
+```tsx
+   <ProgressNavLink
+     done={position >= pos}
+     key={path}
+     path={path}
+     pos={pos}
+   />
 ```
 
 ## Source
 
-[Projects/clean-tool-app/src/components/progress/ProgressNav/Link.tsx:89](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/features/progress/components/ProgressNav/Link.tsx:89](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

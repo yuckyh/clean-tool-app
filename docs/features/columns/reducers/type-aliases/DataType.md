@@ -8,9 +8,11 @@
 
 > **DataType**: `"categorical"` \| `"none"` \| `"numerical"`
 
+The data type of the columns
+
 ## Source
 
-[Projects/clean-tool-app/src/features/columns/reducers.ts:23](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/features/columns/reducers.ts:31](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

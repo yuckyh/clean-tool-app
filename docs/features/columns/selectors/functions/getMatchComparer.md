@@ -38,7 +38,7 @@
 >
 > ### Source
 >
-> [Projects/clean-tool-app/src/features/columns/selectors.ts:362](https://github.com/yuckyh/clean-tool-app/)
+> [Projects/clean-tool-app/src/features/columns/selectors.ts:272](https://github.com/yuckyh/clean-tool-app/)
 >
 
 ## Source

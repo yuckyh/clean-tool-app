@@ -6,6 +6,10 @@
 
 # components/progress/ProgressNav/PageTitle
 
+## File
+
+This file contains the progress navigation page title component.
+
 ## Index
 
 ### Modules

@@ -6,6 +6,10 @@
 
 # components/Plot
 
+## File
+
+This file contains the base Plot component.
+
 ## Index
 
 ### Modules

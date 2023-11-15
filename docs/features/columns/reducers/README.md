@@ -6,6 +6,10 @@
 
 # features/columns/reducers
 
+## File
+
+The file contains the reducers for the columns slice.
+
 ## Index
 
 ### Type Aliases

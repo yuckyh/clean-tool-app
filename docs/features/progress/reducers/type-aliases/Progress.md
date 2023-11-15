@@ -8,6 +8,8 @@
 
 > **Progress**: `"explored"` \| `"matched"` \| `"none"` \| `"uploaded"`
 
+The possible progress states
+
 ## Source
 
 [Projects/clean-tool-app/src/features/progress/reducers.ts:13](https://github.com/yuckyh/clean-tool-app/)
