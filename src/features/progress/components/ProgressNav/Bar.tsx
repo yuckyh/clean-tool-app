@@ -24,28 +24,6 @@ const useClasses = makeStyles({
 })
 
 /**
- *
- * @param componentPath
- * @param locationPath
- * @returns
- * @example
- */
-const selectPosition =
-  (componentPath: string, locationPath: string) => (state: AppState) =>
-    getPosition(state, componentPath, locationPath)
-
-/**
- *
- * @param componentPath
- * @param locationPath
- * @returns
- * @example
- */
-const selectProgressValue =
-  (componentPath: string, locationPath: string) => (state: AppState) =>
-    getProgressValue(state, componentPath, locationPath)
-
-/**
  * The progress navigation's bar component
  *
  * This component is used to control the length of the progress bar's fill
@@ -54,6 +32,9 @@ const selectProgressValue =
  * @group Progress slice
  * @returns The component object
  * @example
+ * ```tsx
+ *    <ProgressNavBar />
+ * ```
  */
 export default function ProgressNavBar() {
   const classes = useClasses()

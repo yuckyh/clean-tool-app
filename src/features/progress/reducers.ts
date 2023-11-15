@@ -8,16 +8,16 @@ import { getPersisted, setPersisted } from '@/lib/localStorage'
 import { createSlice } from '@reduxjs/toolkit'
 
 /**
- *
+ * The possible progress states
  */
 export type Progress = 'explored' | 'matched' | 'none' | 'uploaded'
 
 /**
- *
+ * The progress state
  */
 interface State {
   /**
-   *
+   * The progress state
    */
   progress: Progress
 }
@@ -29,8 +29,7 @@ const initialState: Readonly<State> = {
   progress: getPersisted(sliceName, defaultValue),
 }
 
-// Slice
-const progressSlice = createSlice({
+const { actions, reducer } = createSlice({
   initialState,
   name: sliceName,
   reducers: {
@@ -51,8 +50,6 @@ const progressSlice = createSlice({
     },
   },
 })
-
-const { actions, reducer } = progressSlice
 
 export const { deleteProgressState, saveProgressState, setProgress } = actions
 export default reducer

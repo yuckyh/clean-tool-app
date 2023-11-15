@@ -1,3 +1,8 @@
+/**
+ * @file The file contains the reducers for the columns slice.
+ * @module features/columns/reducers
+ */
+
 /* eslint-disable
   no-param-reassign,
   functional/immutable-data
@@ -20,13 +25,34 @@ import * as S from 'fp-ts/string'
 
 import { fetchMatches, sliceName } from './actions'
 
+/**
+ * The data type of the columns
+ */
 export type DataType = 'categorical' | 'none' | 'numerical'
 
+/**
+ * The columns state
+ */
 interface State {
+  /**
+   * The data types of the columns
+   */
   dataTypes: readonly DataType[]
+  /**
+   * The columns to match
+   */
   matchColumns: readonly string[]
+  /**
+   * The visits to match
+   */
   matchVisits: readonly number[]
+  /**
+   * The matches
+   */
   matchesList: readonly (readonly string[])[]
+  /**
+   * The scores of the matches
+   */
   scoresList: readonly (readonly number[])[]
 }
 
@@ -58,7 +84,6 @@ const initialState: Readonly<State> = {
   scoresList: RA.empty,
 }
 
-// Slice
 const columnsSlice = createSlice({
   extraReducers: (builder) => {
     builder.addCase(fetchMatches.fulfilled, (state, { payload }) => {

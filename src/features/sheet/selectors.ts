@@ -69,13 +69,6 @@ const colorMap: RR.ReadonlyRecord<Flag.FlagReason, string> = {
  */
 export const getVisit = createSelector(
   [getVisits, getColParam],
-  /**
-   *
-   * @param visits
-   * @param pos
-   * @returns
-   * @example
-   */
   (visits, pos) => arrayLookup(visits)('')(pos),
 )
 
@@ -109,13 +102,6 @@ const getColumnsByData = createSelector(
  */
 const getPosAtEmptyList = createSelector(
   [getColumnsByData, getOriginalColumns],
-  /**
-   *
-   * @param dataColumns
-   * @param columns
-   * @returns
-   * @example
-   */
   (dataColumns, columns) =>
     f.pipe(
       columns,
@@ -129,13 +115,6 @@ const getPosAtEmptyList = createSelector(
  */
 const getEmptyColumns = createSelector(
   [getPosAtEmptyList, getMatchColumns],
-  /**
-   *
-   * @param posList
-   * @param matchColumns
-   * @returns
-   * @example
-   */
   (posList, matchColumns) =>
     f.pipe(matchColumns, arrayLookup, f.apply(''), RA.map)(posList),
 )
@@ -145,20 +124,12 @@ const getEmptyColumns = createSelector(
  */
 export const getCell = createSelector(
   [getData, getOriginalColumn, getRowParam],
-  /**
-   *
-   * @param data
-   * @param column
-   * @param row
-   * @returns
-   * @example
-   */
-  (data, column, row) =>
+  (data, originalColumn, row) =>
     f.pipe(
       arrayLookup(data)(CellItem.of({}))(row),
-      CellItem.fold(RR.lookup(column)),
-      O.getOrElse(() => '' as CellItem.Value),
-    ),
+      CellItem.unwrap,
+      recordLookup,
+    )('')(originalColumn),
 )
 
 /**
@@ -166,14 +137,6 @@ export const getCell = createSelector(
  */
 export const getIndexRow = createSelector(
   [getData, getOriginalColumns, getIndexColumnPos],
-  /**
-   *
-   * @param data
-   * @param originalColumns
-   * @param pos
-   * @returns
-   * @example
-   */
   (data, originalColumns, pos) =>
     RA.map(
       f.flow(
@@ -194,14 +157,6 @@ export const getIndexRow = createSelector(
  */
 export const getRow = createSelector(
   [getData, getOriginalColumns, getSearchedPos],
-  /**
-   *
-   * @param data
-   * @param originalColumns
-   * @param pos
-   * @returns
-   * @example
-   */
   (data, originalColumns, pos) =>
     RA.map(
       f.flow(
@@ -293,32 +248,24 @@ const getSortedNumericalRow = createSelector(
 /**
  *
  */
-const getFences = createSelector(
-  [getSortedNumericalRow],
-  /**
-   * Calculates the fences for outlier detection using the provided sorted numerical row.
-   * @param row - The sorted numerical row to calculate the fences from.
-   * @returns The fences tuple.
-   * @example
-   */
-  (row) =>
-    f.pipe(
-      RA.makeBy(
-        3,
-        f.flow(
-          add(1),
-          multiply(row.length),
-          divideBy,
-          f.apply(4),
-          E.fromPredicate((x) => x % 1 === 0, f.identity),
-          E.getOrElse(Math.ceil),
-          (x) => [x - 1, x] as const,
-          RA.foldMap(N.MonoidSum)(arrayLookup(row)(0)),
-          f.flip(divideBy)(2),
-        ),
-      ) as readonly [number, number, number],
-      ([q1, , q3]) => [2.5 * q1 - 1.5 * q3, 2.5 * q3 - 1.5 * q1] as const,
-    ),
+const getFences = createSelector([getSortedNumericalRow], (row) =>
+  f.pipe(
+    RA.makeBy(
+      3,
+      f.flow(
+        add(1),
+        multiply(row.length),
+        divideBy,
+        f.apply(4),
+        E.fromPredicate((x) => x % 1 === 0, f.identity),
+        E.getOrElse(Math.ceil),
+        (x) => [x - 1, x] as const,
+        RA.foldMap(N.MonoidSum)(arrayLookup(row)(0)),
+        f.flip(divideBy)(2),
+      ),
+    ) as readonly [number, number, number],
+    ([q1, , q3]) => [2.5 * q1 - 1.5 * q3, 2.5 * q3 - 1.5 * q1] as const,
+  ),
 )
 
 /**
@@ -326,15 +273,6 @@ const getFences = createSelector(
  */
 export const getOutliers = createSelector(
   [getIndexedNumericalRow, getFences],
-  /**
-   * Selects the values from the indexed numerical row that are outliers, using the provided row and fences.
-   * @param row - The indexed numerical row to select from.
-   * @param fences - The fences to use for outlier detection.
-   * @param fences."0" - The lower fence.
-   * @param fences."1" - The upper fence.
-   * @returns An array of values that are outliers.
-   * @example
-   */
   (row, [lower, upper]) =>
     f.pipe(
       row,
@@ -351,15 +289,6 @@ export const getOutliers = createSelector(
  */
 export const getNotOutliers = createSelector(
   [getIndexedNumericalRow, getFences],
-  /**
-   * Selects the values from the indexed numerical row that are not outliers, using the provided row and fences
-   * @param row - The indexed numerical row to select from
-   * @param fences - The fences to use for outlier detection
-   * @param fences."0" - The lower fence
-   * @param fences."1" - The upper fence
-   * @returns - An array of non outlier values
-   * @example
-   */
   (row, [lower, upper]) =>
     f.pipe(
       row,
@@ -374,14 +303,6 @@ export const getNotOutliers = createSelector(
  */
 export const getFlaggedRows = createSelector(
   [getFlaggedCells, getTitleParam, getReasonParam],
-  /**
-   * Selects the flagged rows from the app state using the provided flagged cells, title, and reason.
-   * @param flaggedCells - The flagged cells to select from.
-   * @param title - The title to use for selection.
-   * @param reason - The flag reason.
-   * @returns An array of flagged rows.
-   * @example
-   */
   (flaggedCells, title, reason) =>
     f.pipe(
       Eq.tuple(
@@ -411,17 +332,6 @@ const getFormattedData = createSelector(
     getPosAtEmptyList,
     getDataTypes,
   ],
-  /**
-   * Formats the data using the provided columns, data, empty columns, positions at empty list, and data types.
-   * @param formattedColumns - The formatted columns to use for data formatting.
-   * @param originalColumns - The columns to use for data formatting.
-   * @param data - The data to format.
-   * @param emptyColumns - The empty columns to use for data formatting.
-   * @param posList - The positions at empty list to use for data formatting.
-   * @param dataTypes - The data types to use for data formatting.
-   * @returns An array of formatted cell items.
-   * @example
-   */
   (
     formattedColumns,
     originalColumns,
@@ -478,27 +388,15 @@ const getFormattedData = createSelector(
 /**
  *
  */
-const getRenamedSheet = createSelector(
-  [getFormattedData],
-  /**
-   * Renames the sheet using the formatted data.
-   * @param formattedData - The formatted data to use for renaming.
-   * @returns The renamed sheet.
-   * @example
-   */
-  (formattedData) => utils.json_to_sheet(formattedData as CellItem.CellItem[]),
+const getRenamedSheet = createSelector([getFormattedData], (formattedData) =>
+  utils.json_to_sheet(formattedData as CellItem.CellItem[]),
 )
 
+/**
+ *
+ */
 const getFlaggedCellsAddresses = createSelector(
   [getFlaggedCells, getFormattedColumns, getIndexRow],
-  /**
-   * Selects the flagged cells addresses from the flagged cells, formatted columns, and index row.
-   * @param flaggedCells - The flagged cells to select from.
-   * @param formattedColumns - The formatted columns to use for address encoding.
-   * @param indexRow - The index row to use for address encoding.
-   * @returns An array of flagged cells addresses.
-   * @example
-   */
   (flaggedCells, formattedColumns, indexRow) =>
     f.pipe(
       flaggedCells,
@@ -538,13 +436,6 @@ const getFlaggedCellsAddresses = createSelector(
  */
 export const getFormattedSheet = createSelector(
   [getRenamedSheet, getFlaggedCellsAddresses],
-  /**
-   * Formats the sheet using the renamed sheet and flagged cells addresses.
-   * @param renamedSheet - The renamed sheet to format.
-   * @param flaggedCellsAddresses - The flagged cells addresses to use for formatting.
-   * @returns The formatted sheet.
-   * @example
-   */
   (renamedSheet, flaggedCellsAddresses) =>
     f.pipe(
       flaggedCellsAddresses,
@@ -569,13 +460,6 @@ export const getFormattedSheet = createSelector(
  */
 export const getFormattedWorkbook = createSelector(
   [getFormattedSheet, getSheetName],
-  /**
-   * Creates a workbook using the formatted sheet and sheet name.
-   * @param formattedSheet - The sheet that has been formatted with the flagged cells
-   * @param sheetName - The sheet name to use for creating the workbook
-   * @returns The formatted workbook.
-   * @example
-   */
   (formattedSheet, sheetName) => {
     const newWorkbook = utils.book_new()
     utils.book_append_sheet(newWorkbook, formattedSheet, sheetName)

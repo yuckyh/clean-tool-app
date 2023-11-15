@@ -36,8 +36,8 @@ interface Props {
 
 /**
  *
- * @param param0
- * @param param0.pos
+ * @param props
+ * @param props.pos
  * @returns
  * @example
  */

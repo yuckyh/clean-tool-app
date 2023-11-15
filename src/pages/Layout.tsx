@@ -7,7 +7,7 @@
   functional/functional-parameters
 */
 import Loader from '@/components/Loader'
-import ProgressNav from '@/components/progress/ProgressNav'
+import ProgressNav from '@/features/progress/components/ProgressNav'
 import {
   Spinner,
   Subtitle1,

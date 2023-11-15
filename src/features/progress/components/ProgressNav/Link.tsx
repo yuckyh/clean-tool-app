@@ -1,6 +1,8 @@
-import type { AppState } from '@/app/store'
+/**
+ * @file This file contains the ProgressNavLink component.
+ * @module components/progress/ProgressNav/Link
+ */
 
-import { getIsDisabled } from '@/features/progress/selectors'
 import { getPathTitle } from '@/lib/fp/string'
 import { useAppSelector } from '@/lib/hooks'
 import {
@@ -18,6 +20,8 @@ import {
   useLocation,
   useResolvedPath,
 } from 'react-router-dom'
+
+import { selectIsDisabled } from '../../selectors'
 
 const useClasses = makeStyles({
   activeStepThumb: {
@@ -48,43 +52,39 @@ const useClasses = makeStyles({
 })
 
 /**
- *
- * @param componentPath
- * @param locationPath
- * @param pos
- * @returns
- * @example
- */
-const selectIsDisabled =
-  (componentPath: string, locationPath: string, pos: number) =>
-  (state: AppState) =>
-    getIsDisabled(state, componentPath, locationPath, pos)
-
-/**
- *
+ * The props for the {@link ProgressNavLink} component.
  */
 interface Props {
   /**
-   *
+   * Whether the link indicates that the step is done.
    */
   done: boolean
   /**
-   *
+   * The path for the link.
    */
   path: string
   /**
-   *
+   * The position of the link in the progress nav.
    */
   pos: number
 }
 
 /**
- *
- * @param props
- * @param props.done
- * @param props.path
- * @param props.pos
+ * This component provides a link for the current progress navigation.
+ * @param props - The {@link Props props} passed to the component.
+ * @param props.done - Whether the link indicates that the step is done.
+ * @param props.path - The path for the link.
+ * @param props.pos - The position of the link in the progress nav.
+ * @returns - The {@link Link} component.
  * @example
+ * ```tsx
+ *    <ProgressNavLink
+ *      done={position >= pos}
+ *      key={path}
+ *      path={path}
+ *      pos={pos}
+ *    />
+ * ```
  */
 export default function ProgressNavLink({ done, path, pos }: Readonly<Props>) {
   const classes = useClasses()

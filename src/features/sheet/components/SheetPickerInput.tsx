@@ -13,9 +13,6 @@ import { useCallback } from 'react'
 
 import { setSheetName } from '../reducers'
 
-/**
- *
- */
 const useClasses = makeStyles({
   input: {
     minWidth: 'initial',

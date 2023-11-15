@@ -1,4 +1,6 @@
-/* eslint-disable functional/immutable-data */
+/* 
+  functional/immutable-data
+*/
 import type { Props as SimpleDataGridProps } from '@/components/SimpleDataGrid'
 
 import { useAppSelector } from '@/lib/hooks'

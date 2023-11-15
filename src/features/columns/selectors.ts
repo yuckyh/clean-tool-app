@@ -90,13 +90,6 @@ const formatColumn = (shouldFormat: boolean, column: string, visit: string) =>
  */
 export const getMatchVisit = createSelector(
   [getMatchVisits, getColParam],
-  /**
-   *
-   * @param matchVisits
-   * @param pos
-   * @returns
-   * @example
-   */
   (matchVisits, pos) => arrayLookup(matchVisits)(0)(pos),
 )
 
@@ -105,13 +98,6 @@ export const getMatchVisit = createSelector(
  */
 export const getMatches = createSelector(
   [getMatchesList, getColParam],
-  /**
-   *
-   * @param matchesList
-   * @param pos
-   * @returns
-   * @example
-   */
   (matchesList, pos) => arrayLookup(matchesList)([] as readonly string[])(pos),
 )
 
@@ -120,13 +106,6 @@ export const getMatches = createSelector(
  */
 export const getScores = createSelector(
   [getScoresList, getColParam],
-  /**
-   *
-   * @param scoresList
-   * @param pos
-   * @returns
-   * @example
-   */
   (scoresList, pos) => arrayLookup(scoresList)([] as readonly number[])(pos),
 )
 
@@ -135,13 +114,6 @@ export const getScores = createSelector(
  */
 export const getVisitByMatchVisit = createSelector(
   [getVisits, getMatchVisit],
-  /**
-   *
-   * @param visits
-   * @param matchVisit
-   * @returns
-   * @example
-   */
   (visits, matchVisit) => arrayLookup(visits)('')(matchVisit),
 )
 
@@ -150,26 +122,15 @@ export const getVisitByMatchVisit = createSelector(
  */
 const getShouldFormat = createSelector(
   [getMatchVisit, getColumnDuplicates],
-  /**
-   *
-   * @param matchVisit
-   * @param columnDuplicates
-   * @returns
-   * @example
-   */
   (matchVisit, columnDuplicates) =>
     columnDuplicates.length > 1 || P.not(equals(N.Eq)(matchVisit))(0),
 )
 
+/**
+ *
+ */
 const getShouldFormatList = createSelector(
   [getMatchVisits, getColumnDuplicatesList],
-  /**
-   *
-   * @param matchVisits
-   * @param columnDuplicatesList
-   * @returns
-   * @example
-   */
   (matchVisits, columnDuplicatesList) =>
     RA.zipWith(
       matchVisits,
@@ -191,13 +152,6 @@ export const getIndices = createSelector(
  */
 const getResolvedVisits = createSelector(
   [getVisits, getMatchVisits],
-  /**
-   *
-   * @param visits
-   * @param matchVisits
-   * @returns
-   * @example
-   */
   (visits, matchVisits) => RA.map(arrayLookup(visits)(''))(matchVisits),
 )
 
@@ -214,13 +168,6 @@ const getResolvedIndices = createSelector(
  */
 export const getColumnPaths = createSelector(
   [getResolvedIndices, getShouldFormatList],
-  /**
-   *
-   * @param resolvedIndices
-   * @param shouldFormatList
-   * @returns
-   * @example
-   */
   (resolvedIndices, shouldFormatList) =>
     RA.zipWith(
       resolvedIndices,
@@ -273,13 +220,6 @@ export const getSearchedPos = createSelector(
  */
 export const getIndexColumnPos = createSelector(
   [getIndices, getVisits],
-  /**
-   *
-   * @param indices
-   * @param visits
-   * @returns
-   * @example
-   */
   (indices, visits) => searchPos(indices, visits, 'sno', head(visits)('')),
 )
 
@@ -296,13 +236,6 @@ export const getMatchIndex = createSelector(
  */
 export const getDataType = createSelector(
   [getDataTypes, getColParam],
-  /**
-   *
-   * @param dataTypes
-   * @param pos
-   * @returns
-   * @example
-   */
   (dataTypes, pos) => arrayLookup(dataTypes)('none')(pos),
 )
 
@@ -311,13 +244,6 @@ export const getDataType = createSelector(
  */
 export const getSearchedDataType = createSelector(
   [getDataTypes, getSearchedPos],
-  /**
-   *
-   * @param dataTypes
-   * @param pos
-   * @returns
-   * @example
-   */
   (dataTypes, pos) => arrayLookup(dataTypes)('none')(pos),
 )
 
@@ -326,14 +252,6 @@ export const getSearchedDataType = createSelector(
  */
 export const getScore = createSelector(
   [getMatchIndex, getMatchColumn, getScores],
-  /**
-   *
-   * @param matchIndex
-   * @param matchColumn
-   * @param scores
-   * @returns
-   * @example
-   */
   (matchIndex, matchColumn, scores) =>
     f
       .pipe(
@@ -351,14 +269,6 @@ export const getScore = createSelector(
  */
 export const getMatchComparer = createSelector(
   [getMatchColumns],
-  /**
-   *
-   * @param matchColumns
-   * @param a
-   * @param b
-   * @returns
-   * @example
-   */
   (matchColumns) => (a: number, b: number) =>
     f.pipe(
       [a, b] as [number, number],
@@ -372,14 +282,6 @@ export const getMatchComparer = createSelector(
  */
 export const getVisitsComparer = createSelector(
   [getMatchVisits],
-  /**
-   *
-   * @param matchVisits
-   * @param a
-   * @param b
-   * @returns
-   * @example
-   */
   (matchVisits) => (a: number, b: number) =>
     f.pipe(
       [a, b] as [number, number],
@@ -393,16 +295,6 @@ export const getVisitsComparer = createSelector(
  */
 export const getScoreComparer = createSelector(
   [getMatchesList, getScoresList, getMatchColumns],
-  /**
-   *
-   * @param matchesList
-   * @param scoresList
-   * @param matchColumns
-   * @param a
-   * @param b
-   * @returns
-   * @example
-   */
   (matchesList, scoresList, matchColumns) => (a: number, b: number) =>
     f.pipe(
       [a, b] as [number, number],

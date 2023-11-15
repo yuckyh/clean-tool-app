@@ -1,4 +1,6 @@
-/* eslint-disable functional/functional-parameters */
+/* eslint-disable
+  functional/functional-parameters
+*/
 import type { InputProps } from '@fluentui/react-components'
 
 import { useAppDispatch, useAppSelector } from '@/lib/hooks'
@@ -12,9 +14,6 @@ import { syncVisits } from '../reducers'
 import { getVisitsLength } from '../selectors'
 import VisitInput from './VisitInput'
 
-/**
- *
- */
 const useClasses = makeStyles({
   input: {
     minWidth: 'initial',

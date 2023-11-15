@@ -3,6 +3,10 @@
  * @module pages/ColumnMatching/ColumnsDataGrid
  */
 
+/* eslint-disable
+  functional/functional-parameters
+*/
+
 import type { AlertRef } from '@/components/AlertDialog'
 import type { Props as SimpleDataGridProps } from '@/components/SimpleDataGrid'
 import type {
@@ -68,6 +72,40 @@ const MemoizedDataGrid = createMemo<SimpleDataGridProps<number>>(
 const focusMode: DataGridFocusMode = 'composite'
 
 /**
+ * The hook for fetching the matches.
+ * @example
+ * ```tsx
+ *    useFetchMatches()
+ * ```
+ */
+const useFetchMatches = () => {
+  const dispatch = useAppDispatch()
+  const [, stopLoading] = useLoadingTransition()
+
+  useEffect(() => {
+    f.pipe(
+      fetchMatches,
+      (x) => dispatch(x()),
+      T.of,
+      T.tapIO(() => stopLoading),
+    )().catch(dumpError)
+  }, [dispatch, stopLoading])
+}
+
+const useInferVisitAlert = (infoAlertRef: RefObject<AlertRef>) => {
+  const matchVisits = useAppSelector(getMatchVisits)
+  const visitsLength = useAppSelector(getVisitsLength)
+
+  useEffect(() => {
+    f.pipe(
+      visitsLength,
+      IOO.fromPredicate((x) => Math.max(...matchVisits) > x && x > 0),
+      IOO.flatMapIO(() => infoAlertRef.current?.open ?? IO.of(() => {})),
+    )()
+  }, [infoAlertRef, matchVisits, visitsLength])
+}
+
+/**
  * The props for {@link ColumnsDataGrid}.
  */
 interface Props {
@@ -102,17 +140,13 @@ export default function ColumnsDataGrid({
   errorAlertRef,
   infoAlertRef,
 }: Readonly<Props>) {
-  const dispatch = useAppDispatch()
-
   const columnsLength = useAppSelector(getColumnsLength)
-  const matchVisits = useAppSelector(getMatchVisits)
-  const visitsLength = useAppSelector(getVisitsLength)
   const columnComparer = useAppSelector(getColumnComparer)
   const matchComparer = useAppSelector(getMatchComparer)
   const visitsComparer = useAppSelector(getVisitsComparer)
   const scoreComparer = useAppSelector(getScoreComparer)
 
-  const [isLoading, stopLoading] = useLoadingTransition()
+  const [isLoading] = useLoadingTransition()
 
   const [sortState, setSortState] = useState<
     Parameters<NonNullable<DataGridProps['onSortChange']>>[1]
@@ -187,22 +221,8 @@ export default function ColumnsDataGrid({
     ],
   )
 
-  useEffect(() => {
-    f.pipe(
-      fetchMatches,
-      (x) => dispatch(x()),
-      T.of,
-      T.tapIO(() => stopLoading),
-    )().catch(dumpError)
-  }, [dispatch, stopLoading])
-
-  useEffect(() => {
-    f.pipe(
-      visitsLength,
-      IOO.fromPredicate((x) => Math.max(...matchVisits) > x && x > 0),
-      IOO.flatMapIO(() => infoAlertRef.current?.open ?? IO.of(() => {})),
-    )()
-  }, [infoAlertRef, matchVisits, visitsLength])
+  useInferVisitAlert(infoAlertRef)
+  useFetchMatches()
 
   return !isLoading ? (
     <Loader

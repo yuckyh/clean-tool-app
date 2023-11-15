@@ -17,12 +17,17 @@ const handledTask: T.Task<ColumnResponse> = createHandledTask<
 >(columnWorker, 'columnWorker failed')
 
 /**
- *
+ * The name of the slice.
  */
 export const sliceName = 'columns' as const
 
 /**
- *
+ * The thunk to fetch the matches.
+ * @returns A promise containing the matches.
+ * @example
+ * ```ts
+ *    dispatch(fetchMatches())
+ * ```
  */
 export const fetchMatches = createAsyncThunk(
   `${sliceName}/fetchMatches`,
