@@ -1,9 +1,16 @@
+/**
+ * @file This file contains the progress navigation's bar component.
+ * @module components/progress/ProgressNav/Bar
+ */
+
 /* eslint-disable
   functional/functional-parameters
 */
-import type { AppState } from '@/app/store'
 
-import { getPosition, getProgressValue } from '@/features/progress/selectors'
+import {
+  selectPosition,
+  selectProgressValue,
+} from '@/features/progress/selectors'
 import { useAppSelector } from '@/lib/hooks'
 import {
   ProgressBar,
