@@ -9,8 +9,8 @@ import SimpleDataGrid from '@/components/SimpleDataGrid'
 import { getIndexedIndex } from '@/lib/array'
 import { useAppSelector, useSyncedSelectionHandler } from '@/lib/hooks'
 import { getFlaggedRows, getIndexedRowMissings } from '@/selectors/data/rows'
-import { getSearchedPos } from '@/selectors/matches'
 import { getFormattedColumn } from '@/selectors/matches/format'
+import { getSearchedPos } from '@/selectors/matches/pos'
 import {
   Body2,
   Card,

@@ -3,9 +3,6 @@
  * @module pages/ColumnMatching
  */
 
-/* eslint-disable
-  functional/functional-parameters
-*/
 import type { AlertRef } from '@/components/AlertDialog'
 import type { Progress } from '@/reducers/progress'
 

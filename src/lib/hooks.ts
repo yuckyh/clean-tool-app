@@ -125,7 +125,7 @@ export const useTokenToHex = (token: Property<ColorTokens>) => {
  * @returns
  * @example
  */
-// eslint-disable-next-line functional/functional-parameters
+
 export const useStorage = () => {
   useEffect(() => {
     f.pipe(

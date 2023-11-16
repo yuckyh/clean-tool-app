@@ -6,12 +6,13 @@ import type { SheetResponse } from '@/workers/sheet'
 import type { Dispatch, SetStateAction } from 'react'
 import type { DropzoneOptions } from 'react-dropzone'
 
-import { getDataLength, getFileName } from '@/app/selectors'
 import { sheetWorker } from '@/app/workers'
 import FileToast from '@/components/FileToast'
 import { asIO, equals } from '@/lib/fp'
 import { dumpError } from '@/lib/fp/logger'
 import { useAppDispatch, useAppSelector } from '@/lib/hooks'
+import { getDataLength } from '@/selectors/data'
+import { getFileName } from '@/selectors/data/sheet'
 import {
   Field,
   Input,

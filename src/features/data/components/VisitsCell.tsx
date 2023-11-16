@@ -8,8 +8,11 @@ import type { DropdownProps } from '@fluentui/react-components'
 
 import { indexDuplicateSearcher } from '@/lib/array'
 import { useAppDispatch, useAppSelector } from '@/lib/hooks'
+import { setMatchVisit } from '@/reducers/matches'
 import { getVisits } from '@/selectors/data/visits'
 import { getMatchColumn } from '@/selectors/matches/columns'
+import { getIndices } from '@/selectors/matches/format'
+import { getMatchVisit, getVisitByMatchVisit } from '@/selectors/matches/visits'
 import {
   Dropdown,
   Option,
@@ -21,9 +24,6 @@ import * as IO from 'fp-ts/IO'
 import * as RA from 'fp-ts/ReadonlyArray'
 import * as f from 'fp-ts/function'
 import { type RefObject, useCallback } from 'react'
-
-import { setMatchVisit } from '../reducers'
-import { getIndices, getMatchVisit, getVisitByMatchVisit } from '../selectors'
 
 const useClasses = makeStyles({
   root: {

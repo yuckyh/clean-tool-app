@@ -3,9 +3,6 @@
  * @module lib/fp/Eq
  */
 
-/* eslint-disable
-  functional/functional-parameters
-*/
 import type * as Eq from 'fp-ts/Eq'
 
 import * as f from 'fp-ts/function'

@@ -5,8 +5,8 @@
 
 import type { AppState } from '@/app/store'
 
-import { getTitle } from '@/components/progress/ProgressNav/selectors'
 import { useAppSelector } from '@/lib/hooks'
+import { getTitle } from '@/selectors/progress/paths'
 import { Helmet } from 'react-helmet-async'
 
 /**

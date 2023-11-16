@@ -3,10 +3,6 @@
  * @module app
  */
 
-/* eslint-disable
-  functional/functional-parameters
-*/
-
 import { author, description, keywords } from '@/../package.json'
 import store from '@/app/store'
 import { ioDump } from '@/lib/fp/logger'

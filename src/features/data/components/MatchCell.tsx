@@ -1,15 +1,16 @@
 import type { AppState } from '@/app/store'
 import type { AlertRef } from '@/components/AlertDialog'
-import type { DataType } from '@/reducers/matches'
 import type { ComboboxProps } from '@fluentui/react-components'
 
-import { codebook } from '@/data'
 import { findIndex, indexDuplicateSearcher } from '@/lib/array'
-import { equals, isCorrectNumber } from '@/lib/fp'
-import { useLoggerEffect } from '@/lib/fp/logger'
 import { useAppDispatch, useAppSelector, useDebounced } from '@/lib/hooks'
 import { createMemo } from '@/lib/utils'
-import { setDataType, setMatchColumn, setMatchVisit } from '@/reducers/matches'
+import {
+  setDataTypeByColumn,
+  setMatchColumn,
+  setMatchScoreByColumn,
+  setMatchVisit,
+} from '@/reducers/matches'
 import { getRow } from '@/selectors/data/rows'
 import { getVisits } from '@/selectors/data/visits'
 import { getMatchColumn } from '@/selectors/matches/columns'
@@ -25,9 +26,7 @@ import {
   tokens,
 } from '@fluentui/react-components'
 import * as IO from 'fp-ts/IO'
-import * as O from 'fp-ts/Option'
 import * as RA from 'fp-ts/ReadonlyArray'
-import * as B from 'fp-ts/boolean'
 import * as f from 'fp-ts/function'
 import * as N from 'fp-ts/number'
 import * as S from 'fp-ts/string'
@@ -89,7 +88,7 @@ const selectMatchVisit =
  * @returns
  * @example
  */
-const selectMatches =
+const selectResult =
   ({ pos }: Readonly<Props>) =>
   (state: AppState) =>
     getMatchResult(state, pos)
@@ -148,12 +147,10 @@ export default function MatchCell(props: Readonly<Props>) {
   const visits = useAppSelector(getVisits)
   const matchColumn = useAppSelector(selectMatchColumn(props))
   const matchVisit = useAppSelector(selectMatchVisit(props))
-  const matches = useAppSelector(selectMatches(props))
+  const result = useAppSelector(selectResult(props))
   const scoreResult = useAppSelector(selectScoreResult(props))
   const row = useAppSelector(selectRow(props))
   const indices = useAppSelector(getIndices)
-
-  useLoggerEffect({ matchColumn })
 
   const [comboboxOpen, setComboboxOpen] = useState(false)
   const [value, setValue] = useState(matchColumn)
@@ -165,7 +162,7 @@ export default function MatchCell(props: Readonly<Props>) {
   const filteredMatches = useMemo(
     () =>
       f.pipe(
-        matches,
+        result,
         f.pipe(deferredValue, S.includes, RA.filter<string>),
         RA.zip(scoreResult),
         RA.map(([match, score]) => ({
@@ -173,7 +170,7 @@ export default function MatchCell(props: Readonly<Props>) {
           score,
         })),
       ),
-    [deferredValue, matches, scoreResult],
+    [deferredValue, result, scoreResult],
   )
 
   const handleOptionSelect: Required<ComboboxProps>['onOptionSelect'] =
@@ -215,33 +212,18 @@ export default function MatchCell(props: Readonly<Props>) {
         }
 
         f.pipe(
-          { matchColumn: newMatchColumn, pos },
-          setMatchColumn,
-          (x) => dispatch(x),
-          IO.of,
+          [setMatchColumn, setMatchScoreByColumn] as const,
+          IO.traverseArray(
+            f.flow(
+              (x) => dispatch(x({ matchColumn: newMatchColumn, pos })),
+              IO.of,
+            ),
+          ),
         )()
 
-        const newDataType: DataType = f.pipe(
-          codebook,
-          RA.findFirst(({ name }) => equals(S.Eq)(name)(newMatchColumn)),
-          O.map(({ type }) =>
-            f.pipe(
-              type,
-              S.includes,
-              RA.some,
-            )(['whole_number', 'interval'] as const),
-          ),
-          O.getOrElse(
-            () =>
-              0.6 * row.length < f.pipe(row, RA.filter(isCorrectNumber)).length,
-          ),
-          B.match(f.constant('categorical'), f.constant('numerical')),
-        )
-
         f.pipe(
-          { dataType: newDataType, pos },
-          setDataType,
-          (x) => dispatch(x),
+          setDataTypeByColumn,
+          (x) => dispatch(x({ matchColumn: newMatchColumn, pos, row })),
           IO.of,
         )()
 

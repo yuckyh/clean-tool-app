@@ -33,7 +33,7 @@ const isSuccessful: Ref.Refinement<
  * @throws
  * @example
  */
-// eslint-disable-next-line functional/functional-parameters
+
 const messageTask: T.Task<SheetResponse<SheetMethod, 'ok'>> = async () => {
   const result = await handledTask()
   if (!isSuccessful(result)) {

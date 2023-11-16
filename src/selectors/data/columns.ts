@@ -9,14 +9,14 @@ import type * as CellItem from '@/lib/fp/CellItem'
 import { getColParam } from '@/app/selectors'
 import { arrayLookup, findIndex, head } from '@/lib/array'
 import { typedIdentity } from '@/lib/fp'
+import { getMatchColumns } from '@/selectors/matches/columns'
 import { createSelector } from '@reduxjs/toolkit'
 import * as RA from 'fp-ts/ReadonlyArray'
 import * as RR from 'fp-ts/ReadonlyRecord'
 import * as f from 'fp-ts/function'
 import * as S from 'fp-ts/string'
 
-import { getMatchColumns } from '../matches/columns'
-import { getData } from './data'
+import { getData } from '.'
 
 /**
  * This selector is used to get the original columns in the data slice.

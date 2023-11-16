@@ -3,9 +3,8 @@ import type { AppState } from '@/app/store'
 import Plot from '@/components/Plot'
 import { useAppSelector } from '@/lib/hooks'
 import { useFluentColorScale } from '@/lib/plotly'
+import { getScore } from '@/selectors/matches/scores'
 import { makeStyles, shorthands, tokens } from '@fluentui/react-components'
-
-import { getScore } from '../selectors'
 
 const useClasses = makeStyles({
   plot: {

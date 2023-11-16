@@ -3,10 +3,6 @@
  * @module pages/ColumnMatching/ColumnsDataGrid
  */
 
-/* eslint-disable
-  functional/functional-parameters
-*/
-
 import type { AlertRef } from '@/components/AlertDialog'
 import type { Props as SimpleDataGridProps } from '@/components/SimpleDataGrid'
 import type {
@@ -16,15 +12,9 @@ import type {
 } from '@fluentui/react-components'
 import type { RefObject } from 'react'
 
-import { getMatchVisits } from '@/app/selectors'
 import Loader from '@/components/Loader'
 import SimpleDataGrid from '@/components/SimpleDataGrid'
 import { fetchMatches } from '@/features/data/actions'
-import {
-  getMatchColumnsComparer,
-  getScoreComparer,
-  getVisitsComparer,
-} from '@/features/data/selectors'
 import { dumpError } from '@/lib/fp/logger'
 import {
   useAppDispatch,
@@ -34,6 +24,9 @@ import {
 import { createLazyMemo, createMemo } from '@/lib/utils'
 import { getColumnComparer, getColumnsLength } from '@/selectors/data/columns'
 import { getVisitsLength } from '@/selectors/data/visits'
+import { getMatchColumnsComparer } from '@/selectors/matches/columns'
+import { getScoreComparer } from '@/selectors/matches/scores'
+import { getMatchVisits, getVisitsComparer } from '@/selectors/matches/visits'
 import {
   Spinner,
   Subtitle1,
@@ -70,14 +63,14 @@ const focusMode: DataGridFocusMode = 'composite'
 
 /**
  * The hook for fetching the matches.
+ * @param stopLoading
  * @example
  * ```tsx
  *    useFetchMatches()
  * ```
  */
-const useFetchMatches = () => {
+const useFetchMatches = (stopLoading: IO.IO<void>) => {
   const dispatch = useAppDispatch()
-  const [, stopLoading] = useLoadingTransition()
 
   useEffect(() => {
     f.pipe(
@@ -143,7 +136,7 @@ export default function ColumnsDataGrid({
   const visitsComparer = useAppSelector(getVisitsComparer)
   const scoreComparer = useAppSelector(getScoreComparer)
 
-  const [isLoading] = useLoadingTransition()
+  const [isLoading, stopLoading] = useLoadingTransition()
 
   const [sortState, setSortState] = useState<
     Parameters<NonNullable<DataGridProps['onSortChange']>>[1]
@@ -219,7 +212,7 @@ export default function ColumnsDataGrid({
   )
 
   useInferVisitAlert(infoAlertRef)
-  useFetchMatches()
+  useFetchMatches(stopLoading)
 
   return !isLoading ? (
     <Loader

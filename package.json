@@ -4,7 +4,7 @@
     "name": "Yucky Hito"
   },
   "dependencies": {
-    "@fluentui/react-components": "^9.39.0",
+    "@fluentui/react-components": "^9.40.0",
     "@fluentui/react-icons": "^2.0.222",
     "@reduxjs/toolkit": "^1.9.7",
     "@tauri-apps/api": "^1.5.1",
@@ -166,13 +166,11 @@
           "ignoreInferredTypes": true
         }
       ],
-      "functionaya l/functional-parameters": 0,
+      "functional/functional-parameters": 0,
       "immutable/no-let": 2,
       "immutable/no-this": 2,
       "import/extensions": 0,
-      "import/no-cycle": 0,
       "import/no-extraneous-dependencies": 0,
-      "import/no-namespace": 0,
       "import/no-restricted-paths": 0,
       "import/no-self-import": 0,
       "import/no-unresolved": 0,

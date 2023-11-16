@@ -1,6 +1,3 @@
-/* eslint-disable
-  functional/functional-parameters, 
-*/
 import { Link, Subtitle1, Title1, makeStyles } from '@fluentui/react-components'
 import { useHref } from 'react-router-dom'
 

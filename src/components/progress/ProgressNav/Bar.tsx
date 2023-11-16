@@ -3,10 +3,6 @@
  * @module components/progress/ProgressNav/Bar
  */
 
-/* eslint-disable
-  functional/functional-parameters
-*/
-
 import {
   selectPosition,
   selectProgressValue,

@@ -3,9 +3,6 @@
  * @module pages/Layout
  */
 
-/* eslint-disable
-  functional/functional-parameters
-*/
 import Loader from '@/components/Loader'
 import ProgressNav from '@/components/progress/ProgressNav'
 import {

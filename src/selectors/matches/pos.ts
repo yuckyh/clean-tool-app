@@ -1,12 +1,12 @@
 import { getColumnParam, getVisitParam } from '@/app/selectors'
 import { arrayLookup, head } from '@/lib/array'
 import { equals, indexEq } from '@/lib/fp'
+import { getVisits } from '@/selectors/data/visits'
 import { createSelector } from '@reduxjs/toolkit'
 import * as O from 'fp-ts/Option'
 import * as RA from 'fp-ts/ReadonlyArray'
 import * as f from 'fp-ts/function'
 
-import { getVisits } from '../data/visits'
 import { getIndices } from './format'
 
 /**

@@ -3,21 +3,18 @@
  * @module components/progress/ProgressNav/hooks
  */
 
-/* eslint-disable
-  functional/functional-parameters
-*/
 import type { AppDispatch } from '@/app/store'
 
 import {
   selectAllowedPaths,
   selectShouldNavigateToAllowed,
 } from '@/components/progress/ProgressNav/selectors'
-import { saveMatchesState } from '@/features/data/reducers'
 import { saveSheetState } from '@/features/sheet/reducers'
 import { tail } from '@/lib/array'
 import { asIO, equals } from '@/lib/fp'
 import { refinedEq } from '@/lib/fp/Eq'
 import { useAppDispatch, useAppSelector } from '@/lib/hooks'
+import { saveMatchesState } from '@/reducers/matches'
 import { saveProgressState } from '@/reducers/progress'
 import { useThemeClassName } from '@fluentui/react-components'
 import * as IO from 'fp-ts/IO'

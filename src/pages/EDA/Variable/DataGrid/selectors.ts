@@ -1,9 +1,15 @@
 import type { AppState } from '@/app/store'
 import type * as Flag from '@/lib/fp/Flag'
 
-import { getFlaggedRows, getIndexedRowIncorrects } from '@/selectors/data/rows'
-import { getSearchedPos } from '@/selectors/matches'
+import {
+  getFlaggedRows,
+  getIndexedRow,
+  getIndexedRowIncorrects,
+  getIndexedRowMissings,
+} from '@/selectors/data/rows'
+import { getSearchedDataType } from '@/selectors/matches/dataTypes'
 import { getFormattedColumn } from '@/selectors/matches/format'
+import { getSearchedPos } from '@/selectors/matches/pos'
 
 /**
  *
@@ -55,3 +61,55 @@ export const selectIncorrectSeries =
   ({ column, visit }: Readonly<BaseProps>) =>
   (state: AppState) =>
     getIndexedRowIncorrects(state, column, visit)
+
+/**
+ *
+ * @param props
+ * @param props.column
+ * @param props.visit
+ * @returns
+ * @example
+ */
+export const selectMissingSeries =
+  ({ column, visit }: Readonly<BaseProps>) =>
+  (state: AppState) =>
+    getIndexedRowMissings(state, column, visit)
+
+/**
+ *
+ * @param props
+ * @param props.column
+ * @param props.visit
+ * @returns
+ * @example
+ */
+export const selectTitle =
+  ({ column, visit }: Readonly<BaseProps>) =>
+  (state: AppState) =>
+    getFormattedColumn(state, getSearchedPos(state, column, visit))
+
+/**
+ *
+ * @param props
+ * @param props.column
+ * @param props.visit
+ * @returns
+ * @example
+ */
+export const selectSeries =
+  ({ column, visit }: Readonly<BaseProps>) =>
+  (state: AppState) =>
+    getIndexedRow(state, column, visit)
+
+/**
+ *
+ * @param props
+ * @param props.column
+ * @param props.visit
+ * @returns
+ * @example
+ */
+export const selectDataType =
+  ({ column, visit }: Readonly<BaseProps>) =>
+  (state: AppState) =>
+    getSearchedDataType(state, column, visit)

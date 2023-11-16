@@ -1,4 +1,3 @@
-import type { AppState } from '@/app/store'
 import type {
   DataGridProps,
   InputProps,
@@ -11,12 +10,6 @@ import { getIndexedIndex } from '@/lib/array'
 import { isCorrectNumber } from '@/lib/fp'
 import * as Flag from '@/lib/fp/Flag'
 import { useAppDispatch, useAppSelector } from '@/lib/hooks'
-import {
-  getFlaggedRows,
-  getIndexedRow,
-  getIndexedRowIncorrects,
-  getIndexedRowMissings,
-} from '@/selectors/data/rows'
 import {
   Body2,
   Card,
@@ -36,6 +29,14 @@ import { useCallback, useMemo, useState } from 'react'
 
 import FilterInput from '../FilterInput'
 import ValueCell from './ValueCell'
+import {
+  selectDataType,
+  selectFlaggedRows,
+  selectIncorrectSeries,
+  selectMissingSeries,
+  selectSeries,
+  selectTitle,
+} from './selectors'
 
 const useClasses = makeStyles({
   card: {
@@ -69,7 +70,7 @@ const useClasses = makeStyles({
 /**
  *
  */
-interface Props {
+export interface Props {
   /**
    *
    */
@@ -85,67 +86,6 @@ interface Props {
  * @param props
  * @param props.column
  * @param props.visit
- * @returns
- * @example
- */
-const selectTitle =
-  ({ column, visit }: Readonly<Props>) =>
-  (state: AppState) =>
-    getFormattedColumn(state, getSearchedPos(state, column, visit))
-
-/**
- *
- * @param props
- * @param props.column
- * @param props.visit
- * @returns
- * @example
- */
-const selectSeries =
-  ({ column, visit }: Readonly<Props>) =>
-  (state: AppState) =>
-    getIndexedRow(state, column, visit)
-
-/**
- *
- * @param props
- * @param props.column
- * @param props.visit
- * @returns
- * @example
- */
-const selectMissingSeries =
-  ({ column, visit }: Readonly<Props>) =>
-  (state: AppState) =>
-    getIndexedRowMissings(state, column, visit)
-
-/**
- *
- * @param props
- * @param props.column
- * @param props.visit
- * @returns
- * @example
- */
-const selectDataType =
-  ({ column, visit }: Readonly<Props>) =>
-  (state: AppState) =>
-    getSearchedDataType(state, column, visit)
-
-/**
- *
- * @param title
- * @returns
- * @example
- */
-const selectFlaggedRows = (title: string) => (state: AppState) =>
-  getFlaggedRows(state, title, 'outlier')
-
-/**
- *
- * @param props
- * @param props.column
- * @param props.visit
  * @example
  */
 export default function AllDataGrid(props: Readonly<Props>) {
@@ -155,7 +95,7 @@ export default function AllDataGrid(props: Readonly<Props>) {
 
   const dispatch = useAppDispatch()
 
-  const flaggedRows = useAppSelector(selectFlaggedRows(title))
+  const flaggedRows = useAppSelector(selectFlaggedRows(title, 'outlier'))
   const series = useAppSelector(selectSeries(props))
   const missingSeries = useAppSelector(selectMissingSeries(props))
   const incorrectSeries = useAppSelector(selectIncorrectSeries(props))

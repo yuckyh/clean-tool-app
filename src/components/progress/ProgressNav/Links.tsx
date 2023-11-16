@@ -8,8 +8,8 @@ import { makeStyles } from '@fluentui/react-components'
 import * as RA from 'fp-ts/ReadonlyArray'
 import * as f from 'fp-ts/function'
 
-import { selectPaths, selectPosition } from './selectors'
 import ProgressNavLink from './Link'
+import { selectPaths, selectPosition } from './selectors'
 
 const useClasses = makeStyles({
   linkContainer: {

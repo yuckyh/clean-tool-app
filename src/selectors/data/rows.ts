@@ -3,13 +3,14 @@
  * @module selectors/data/rows
  */
 
-import { getFlaggedCells, getReasonParam, getTitleParam } from '@/app/selectors'
+import { getReasonParam, getTitleParam } from '@/app/selectors'
 import { arrayLookup, getIndexedValue, recordLookup } from '@/lib/array'
 import { equals, isCorrectNumber } from '@/lib/fp'
 import * as CellItem from '@/lib/fp/CellItem'
 import { refinedEq, stubEq } from '@/lib/fp/Eq'
 import * as Flag from '@/lib/fp/Flag'
 import { dump } from '@/lib/fp/logger'
+import { getIndexColumnPos, getSearchedPos } from '@/selectors/matches/pos'
 import { createSelector } from '@reduxjs/toolkit'
 import * as Eq from 'fp-ts/Eq'
 import * as P from 'fp-ts/Predicate'
@@ -19,9 +20,9 @@ import * as f from 'fp-ts/function'
 import * as N from 'fp-ts/number'
 import * as S from 'fp-ts/string'
 
-import { getIndexColumnPos, getSearchedPos } from '../matches'
+import { getData } from '.'
+import { getFlaggedCells } from './cells'
 import { getOriginalColumns } from './columns'
-import { getData } from './data'
 
 /**
  *

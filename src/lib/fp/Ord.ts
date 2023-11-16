@@ -3,9 +3,6 @@
  * @module lib/fp/Ord
  */
 
-/* eslint-disable
-  functional/functional-parameters
-*/
 import type * as Ord from 'fp-ts/Ord'
 
 import * as f from 'fp-ts/function'

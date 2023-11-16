@@ -3,12 +3,11 @@ import type { AppState } from '@/app/store'
 import { getColParam } from '@/app/selectors'
 import { arrayLookup } from '@/lib/array'
 import { dualMap } from '@/lib/fp'
+import { getVisits } from '@/selectors/data/visits'
 import { createSelector } from '@reduxjs/toolkit'
 import * as RA from 'fp-ts/ReadonlyArray'
 import * as f from 'fp-ts/function'
 import * as N from 'fp-ts/number'
-
-import { getVisits } from '../data/visits'
 
 /**
  *

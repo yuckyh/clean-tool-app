@@ -1,6 +1,3 @@
-/* eslint-disable
-  functional/functional-parameters
-*/
 import type * as P from 'fp-ts/Predicate'
 
 import * as Eq from 'fp-ts/Eq'

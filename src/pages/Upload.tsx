@@ -1,12 +1,12 @@
-/* eslint-disable
-  functional/functional-parameters
-*/
+/**
+ * @file This file is for the sheet upload input component.
+ * @module features/sheet/components/SheetUploadInput
+ */
 
 import type { AlertRef } from '@/components/AlertDialog'
 import type { SheetInputRef } from '@/features/sheet/components/SheetUploadInput'
 import type { Progress } from '@/reducers/progress'
 
-import { getHasMultipleSheets, getHasSheet } from '@/app/selectors'
 import AlertDialog from '@/components/AlertDialog'
 import { deleteData, fetchSheet } from '@/features/sheet/actions'
 import PreviewDataGrid from '@/features/sheet/components/PreviewDataGrid'
@@ -23,6 +23,7 @@ import {
 import { deleteMatches } from '@/reducers/matches'
 import { deleteProgress, setProgress } from '@/reducers/progress'
 import { getColumnsLength } from '@/selectors/data/columns'
+import { getHasMultipleSheets, getHasSheet } from '@/selectors/data/sheet'
 import {
   Button,
   Card,
@@ -74,12 +75,18 @@ const useClasses = makeStyles({
   },
 })
 
-const useFetchSheet = () => {
+/**
+ * Hook to fetch the sheet.
+ * @param stopLoading - The callback to stop the loading transition.
+ * @example
+ * ```tsx
+ *  useFetchSheet(stopLoading)
+ * ```
+ */
+const useFetchSheet = (stopLoading: IO.IO<void>) => {
   const dispatch = useAppDispatch()
 
   const columnsLength = useAppSelector(getColumnsLength)
-
-  const [, stopLoading] = useLoadingTransition()
   useEffect(() => {
     f.pipe(
       columnsLength,
@@ -117,7 +124,7 @@ export default function Upload() {
   const hasSheet = useAppSelector(getHasSheet)
   const hasMultipleSheets = useAppSelector(getHasMultipleSheets)
 
-  const [isLoading] = useLoadingTransition()
+  const [isLoading, stopLoading] = useLoadingTransition()
 
   const toasterId = useId()
 
@@ -137,7 +144,7 @@ export default function Upload() {
 
   const handleResetConfirm = useCallback(() => {
     f.pipe(
-      [deleteProgress, deleteMatches] as const,
+      [deleteProgress, deleteMatches, deleteData] as const,
       RA.map(f.flow((x) => dispatch(x()), IO.of)),
       IO.sequenceArray,
       f.constant(sheetInputRef.current?.setFileTask('deleted')),
@@ -168,7 +175,7 @@ export default function Upload() {
     )()
   }, [dispatch, navigate])
 
-  useFetchSheet()
+  useFetchSheet(stopLoading)
 
   return (
     <section className={classes.root}>

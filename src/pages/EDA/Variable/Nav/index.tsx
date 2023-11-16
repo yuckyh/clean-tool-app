@@ -1,6 +1,3 @@
-/* eslint-disable
-  functional/functional-parameters
-*/
 import type { AppState } from '@/app/store'
 import type { Progress } from '@/reducers/progress'
 

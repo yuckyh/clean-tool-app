@@ -1,6 +1,3 @@
-/* eslint-disable
-  functional/functional-parameters
-*/
 import type { InputProps } from '@fluentui/react-components'
 
 import { useAppDispatch, useAppSelector } from '@/lib/hooks'

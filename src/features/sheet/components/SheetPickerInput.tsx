@@ -1,10 +1,7 @@
-/* eslint-disable
-  functional/functional-parameters
-*/
 import type { DropdownProps } from '@fluentui/react-components'
 
-import { getSheetName, getSheetNames } from '@/app/selectors'
 import { useAppDispatch, useAppSelector } from '@/lib/hooks'
+import { getSheetName, getSheetNames } from '@/selectors/data/sheet'
 import { Dropdown, Field, Option, makeStyles } from '@fluentui/react-components'
 import * as IO from 'fp-ts/IO'
 import * as RA from 'fp-ts/ReadonlyArray'

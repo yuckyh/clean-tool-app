@@ -13,15 +13,18 @@ import type * as Ref from 'fp-ts/Refinement'
 import { codebook } from '@/data'
 import { fetchMatches } from '@/features/data/actions'
 import { sliceName } from '@/features/sheet/actions'
-import { arrayLookup, getIndexedValue, head } from '@/lib/array'
-import { equals, typedIdentity } from '@/lib/fp'
+import { arrayLookup, findIndex, getIndexedValue, head } from '@/lib/array'
+import { equals, isCorrectNumber, typedIdentity } from '@/lib/fp'
 import { stubOrd } from '@/lib/fp/Ord'
+import { add, multiply } from '@/lib/fp/number'
+import fuse from '@/lib/fuse'
 import { getPersisted, setPersisted } from '@/lib/localStorage'
 import { createSlice } from '@reduxjs/toolkit'
 import * as O from 'fp-ts/Option'
 import * as Ord from 'fp-ts/Ord'
 import * as P from 'fp-ts/Predicate'
 import * as RA from 'fp-ts/ReadonlyArray'
+import * as B from 'fp-ts/boolean'
 import * as f from 'fp-ts/function'
 import * as N from 'fp-ts/number'
 import * as S from 'fp-ts/string'
@@ -54,7 +57,7 @@ interface State {
   /**
    * The scores of the matches
    */
-  scores: readonly number[]
+  scores: readonly string[]
   /**
    * The visits to match
    */
@@ -90,7 +93,6 @@ const initialState: Readonly<State> = {
     getPersisted(keys[2], defaultValue),
     S.split(','),
     RA.filter(P.not(S.isEmpty)),
-    RA.map(parseFloat),
   ),
   visits: f.pipe(
     getPersisted(keys[1], defaultValue),
@@ -125,7 +127,11 @@ const { actions, reducer } = createSlice({
 
       state.scores = scores.length
         ? scores
-        : (RA.map(f.flow(head<number>, f.apply(0)))(resultsScores) as number[])
+        : (RA.map(
+            f.flow(head<number>, f.apply(0), multiply(-1), add(1), (x) =>
+              x.toFixed(2),
+            ),
+          )(resultsScores) as string[])
 
       const sorted =
         !visits.length &&
@@ -170,13 +176,13 @@ const { actions, reducer } = createSlice({
       state.dataTypes = dataTypes.length
         ? dataTypes
         : (f.pipe(
-            columns,
+            [...state.columns],
             RA.map((matchColumn) =>
               f.pipe(
                 codebook,
                 RA.findFirst(({ name }) => equals(S.Eq)(name)(matchColumn)),
                 O.map(({ type }) => type),
-                O.getOrElse(() => 'none'),
+                O.getOrElse(() => ''),
                 equals(S.Eq),
                 RA.some,
                 f.apply(['whole_number', 'interval'] as const),
@@ -194,6 +200,7 @@ const { actions, reducer } = createSlice({
     deleteMatches: (state) => {
       state.columns = []
       state.visits = []
+      state.scores = []
       state.results = []
       state.resultsScores = []
       state.dataTypes = []
@@ -236,6 +243,44 @@ const { actions, reducer } = createSlice({
 
       return state
     },
+    setDataTypeByColumn: (
+      state,
+      {
+        payload,
+      }: Readonly<
+        PayloadAction<{
+          matchColumn: string
+          pos: number
+          row: readonly string[]
+        }>
+      >,
+    ) => {
+      const { matchColumn, pos, row } = payload
+
+      const newDataType: DataType = f.pipe(
+        codebook,
+        RA.findFirst(({ name }) => equals(S.Eq)(name)(matchColumn)),
+        O.map(({ type }) =>
+          f.pipe(
+            type,
+            S.includes,
+            RA.some,
+          )(['whole_number', 'interval'] as const),
+        ),
+        O.getOrElse(
+          () =>
+            0.6 * row.length < f.pipe(row, RA.filter(isCorrectNumber)).length,
+        ),
+        B.match(
+          () => 'categorical',
+          () => 'numerical',
+        ),
+      )
+
+      state.dataTypes[pos] = newDataType
+
+      return state
+    },
     setMatchColumn: (
       state,
       {
@@ -245,6 +290,55 @@ const { actions, reducer } = createSlice({
       const { matchColumn, pos } = payload
 
       state.columns[pos] = matchColumn
+
+      return state
+    },
+    setMatchScore: (
+      state,
+      { payload }: Readonly<PayloadAction<{ matchScore: string; pos: number }>>,
+    ) => {
+      const { matchScore, pos } = payload
+
+      state.scores[pos] = matchScore
+
+      return state
+    },
+    setMatchScoreByColumn: (
+      state,
+      {
+        payload,
+      }: Readonly<PayloadAction<{ matchColumn: string; pos: number }>>,
+    ) => {
+      const { matchColumn, pos } = payload
+
+      const { results, resultsScores } = state
+
+      const result = arrayLookup([
+        ...results,
+      ] as readonly (readonly string[])[])([] as readonly string[])(0)
+
+      const resultScores = arrayLookup([
+        ...resultsScores,
+      ] as readonly (readonly number[])[])([] as readonly number[])(0)
+
+      const newScore = f.pipe(
+        matchColumn,
+        findIndex(result)(S.Eq),
+        arrayLookup(resultScores)(
+          f.pipe(
+            matchColumn,
+            fuse.search.bind(fuse),
+            RA.head,
+            O.flatMap(({ score }) => O.fromNullable(score)),
+            O.getOrElse(() => 0),
+          ),
+        ),
+        multiply(-1),
+        add(1),
+        (x) => x.toFixed(2),
+      )
+
+      state.scores[pos] = newScore
 
       return state
     },
@@ -265,7 +359,10 @@ export const {
   deleteMatches,
   saveMatchesState,
   setDataType,
+  setDataTypeByColumn,
   setMatchColumn,
+  setMatchScore,
+  setMatchScoreByColumn,
   setMatchVisit,
 } = actions
 export default reducer

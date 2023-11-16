@@ -1,7 +1,9 @@
-import type * as Flag from '@/lib/fp/Flag'
+/**
+ * @file This file contains the global app selectors.
+ * @module app/selectors
+ */
 
-import { getDataLength } from '@/selectors/data/data'
-import * as f from 'fp-ts/function'
+import type * as Flag from '@/lib/fp/Flag'
 
 import type { AppState } from './store'
 
@@ -13,7 +15,7 @@ import type { AppState } from './store'
  * @example
  *  const getOriginalColumn = createSelector(
  *    [getOriginalColumns, getColParam],
- *    (originalColumns, pos) => arrayLookup(originalColumns)('')(pos),,
+ *      ...
  *  )
  */
 export const getColParam = (_state: AppState, col: number) => col
@@ -30,12 +32,8 @@ export const getColParam = (_state: AppState, col: number) => col
  *  const getCell = createSelector(
  *    [getData, getOriginalColumn, getRowParam],
  *    (data, originalColumn, row) =>
- *      f.pipe(
- *        arrayLookup(data)(CellItem.of({}))(row),
- *        CellItem.unwrap,
- *        recordLookup,
- *      )('')(originalColumn),
- *    )
+ *      ...
+ *  )
  */
 export const getRowParam = (_state: AppState, _col: number, row: number) => row
 
@@ -71,40 +69,55 @@ export const getVisitParam = (
 ) => visit
 
 /**
- *
- * @param _
- * @param _componentPath
- * @param locationPath
- * @returns
+ * Utility function to get the location path parameter
+ * @param _state - The application state {@link AppState}
+ * @param _componentPath - The component path parameter
+ * @param locationPath - The location path parameter
+ * @returns The location path parameter
  * @example
+ *  const getTitle = createSelector(
+ *    [getLocationPathParam, getLocationHasVisit, getIsAtEda],
+ *    (locationPath, locationHasVisit, isAtEda) =>
+ *      ...
+ *  )
  */
 export const getLocationPathParam = (
-  _: AppState,
+  _state: AppState,
   _componentPath: string,
   locationPath: string,
 ) => locationPath
 
 /**
- *
- * @param _
- * @param componentPath
- * @returns
+ * Utility function to get the component path parameter
+ * @param _state - The application state {@link AppState}
+ * @param componentPath - The component path parameter
+ * @returns The component path parameter
  * @example
+ *  const getPaths = createSelector(
+ *    [getComponentPathParam],
+ *    (componentPath) =>
+ *       ...
+ *  )
  */
-export const getComponentPathParam = (_: AppState, componentPath: string) =>
-  componentPath
+export const getComponentPathParam = (
+  _state: AppState,
+  componentPath: string,
+) => componentPath
 
 /**
- *
- * @param _
- * @param _componentPath
- * @param _locationPath
- * @param pos
- * @returns
+ * Utility function to get the position parameter when used with the location path parameter.
+ * @param _state - The application state {@link AppState}
+ * @param _componentPath - The component path parameter
+ * @param _locationPath - The location path parameter
+ * @param pos - The position parameter
+ * @returns The position parameter
  * @example
+ *  const getPath = createSelector([getPaths, getPosParam], (paths, pos) =>
+ *    arrayLookup(paths)('')(pos),
+ *  )
  */
 export const getPosParam = (
-  _: AppState,
+  _state: AppState,
   _componentPath: string,
   _locationPath: string,
   pos: number,
@@ -118,21 +131,7 @@ export const getPosParam = (
  * @example
  *  const getFlaggedRows = createSelector(
  *    [getFlaggedCells, getTitleParam, getReasonParam],
- *    (flaggedCells, title, reason) =>
- *      f.pipe(
- *        Eq.tuple(
- *          stubEq<string>(),
- *          S.Eq,
- *          refinedEq<Flag.FlagReason, string>(S.Eq),
- *        ),
- *      Flag.getEq,
- *      equals,
- *      f.apply(Flag.of('', title, reason)),
- *      RA.filter<Flag.Flag>,
- *      f.apply(flaggedCells),
- *      RS.fromReadonlyArray(Flag.Eq),
- *      RS.map(S.Eq)(({ value: [index] }) => index),
- *    ),
+ *      ...
  *  )
  */
 export const getTitleParam = (_state: AppState, title: string) => title
@@ -144,80 +143,14 @@ export const getTitleParam = (_state: AppState, title: string) => title
  * @param reason - The reason parameter
  * @returns The reason parameters
  * @example
+ *  const getFlaggedRows = createSelector(
+ *    [getFlaggedCells, getTitleParam, getReasonParam],
+ *    (flaggedCells, title, reason) =>
+ *      ...
+ *  )
  */
 export const getReasonParam = (
   _state: AppState,
   _title: string,
   reason: Flag.FlagReason,
 ) => reason
-
-/**
- *
- * @param state
- * @param state.sheet
- * @param state.data
- * @returns
- * @example
- */
-export const getFileName = ({ data }: AppState) => data.fileName
-
-/**
- *
- * @param state
- * @param state.sheet
- * @param state.data
- * @returns
- * @example
- */
-export const getSheetName = ({ data }: AppState) => data.sheetName
-
-/**
- *
- * @param state
- * @param state.sheet
- * @param state.data
- * @returns
- * @example
- */
-export const getSheetNames = ({ data }: AppState) => data.sheetNames
-
-/**
- *
- * @param state
- * @param state.data
- * @returns
- * @example
- */
-export const getFlaggedCells = ({ data }: AppState) => data.flaggedCells
-
-/**
- *
- */
-export const getHasSheet = f.flow(getDataLength, Boolean)
-
-/**
- *
- * @param state
- * @param state.data
- * @returns
- * @example
- */
-export const getHasMultipleSheets = ({ data }: AppState) => !data.bookType
-
-/**
- *
- * @param state
- * @param state.matches
- * @returns
- * @example
- */
-export const getScoresList = ({ matches }: AppState) => matches.resultsScores
-
-/**
- *
- * @param state
- * @param state.matches
- * @returns
- * @example
- */
-export const getDataTypes = ({ matches }: AppState) => matches.dataTypes

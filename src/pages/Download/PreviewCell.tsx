@@ -1,14 +1,13 @@
 import type { AppState } from '@/app/store'
 
-import { getFlaggedCells } from '@/app/selectors'
-import { getFormattedColumn } from '@/features/data/selectors'
 import { arrayLookup } from '@/lib/array'
 import { equals } from '@/lib/fp'
 import { refinedEq, stubEq } from '@/lib/fp/Eq'
 import * as Flag from '@/lib/fp/Flag'
 import { useAppSelector } from '@/lib/hooks'
-import { getCell } from '@/selectors/data/cells'
+import { getCell, getFlaggedCells } from '@/selectors/data/cells'
 import { getIndexRow } from '@/selectors/data/rows'
+import { getFormattedColumn } from '@/selectors/matches/format'
 import {
   makeStyles,
   mergeClasses,

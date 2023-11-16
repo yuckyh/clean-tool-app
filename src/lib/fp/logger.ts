@@ -50,6 +50,7 @@ export const ioDumpName = <T>(obj: Readonly<Record<string, T>>) =>
         IO.of,
         IO.tap(fpConsole.log),
         IO.map(() => value),
+        IO.tap(fpConsole.log),
         IO.flatMap(ioDumpTrace),
       ),
     ),

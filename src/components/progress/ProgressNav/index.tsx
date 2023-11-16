@@ -3,10 +3,12 @@
  * @module components/progress/ProgressNav
  */
 
-/* eslint-disable
-  functional/functional-parameters
-*/
-
+import {
+  useBodyThemeContext,
+  useNavigateMiddleware,
+  useRedirectSaveState,
+  useUnloadSaveState,
+} from '@/hooks/progress'
 import {
   makeStyles,
   shorthands,
@@ -18,12 +20,6 @@ import { useLocation, useResolvedPath } from 'react-router-dom'
 import ProgressNavBar from './Bar'
 import ProgressNavLinks from './Links'
 import ProgressNavPageTitle from './PageTitle'
-import {
-  useBodyThemeContext,
-  useNavigateMiddleware,
-  useRedirectSaveState,
-  useUnloadSaveState,
-} from '../../../hooks/progress'
 
 const useClasses = makeStyles({
   linkContainer: {

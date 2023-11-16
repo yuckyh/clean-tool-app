@@ -1,6 +1,3 @@
-/* eslint-disable
-  functional/functional-parameters
-*/
 import Nav from '@/pages/EDA/Variable/Nav'
 import { makeStyles, tokens } from '@fluentui/react-components'
 import { Outlet } from 'react-router-dom'

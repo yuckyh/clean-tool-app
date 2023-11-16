@@ -3,19 +3,15 @@
  * @module pages/Download
  */
 
-/* eslint-disable
-  functional/functional-parameters
-*/
-
 import type { TableColumnDefinition } from '@fluentui/react-components'
 
-import { getDataLength, getFileName } from '@/app/selectors'
 import SimpleDataGrid from '@/components/SimpleDataGrid'
-import { getFormattedColumns } from '@/features/data/selectors'
 import { arrayLookup } from '@/lib/array'
 import { useAppSelector } from '@/lib/hooks'
+import { getDataLength } from '@/selectors/data'
 import { getColumnsLength } from '@/selectors/data/columns'
-import { getFormattedWorkbook } from '@/selectors/data/sheet'
+import { getFileName, getFormattedWorkbook } from '@/selectors/data/sheet'
+import { getFormattedColumns } from '@/selectors/matches/format'
 import {
   Button,
   Subtitle2,

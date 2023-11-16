@@ -3,12 +3,15 @@
  * @module selectors/data/data
  */
 
-import type { AppState } from '@/app/store'
+/* eslint-disable
+  import/prefer-default-export
+*/
 
-import { getDataTypes } from '@/app/selectors'
 import { arrayLookup, findIndex } from '@/lib/array'
 import { isCorrectNumber } from '@/lib/fp'
 import * as CellItem from '@/lib/fp/CellItem'
+import { getDataTypes } from '@/selectors/matches/dataTypes'
+import { getFormattedColumns } from '@/selectors/matches/format'
 import { createSelector } from '@reduxjs/toolkit'
 import * as O from 'fp-ts/Option'
 import * as RA from 'fp-ts/ReadonlyArray'
@@ -16,39 +19,12 @@ import * as RR from 'fp-ts/ReadonlyRecord'
 import * as f from 'fp-ts/function'
 import * as S from 'fp-ts/string'
 
-import { getFormattedColumns } from '../matches/format'
+import { getData } from '.'
 import {
   getEmptyColumns,
   getOriginalColumns,
   getPosAtEmptyList,
 } from './columns'
-
-/**
- * Selector function to get the data from the sheet slice of the state
- * @param state - The application state {@link AppState}
- * @param state.sheet - The sheet slice of the state
- * @param state.data
- * @returns The data from the sheet slice of the state
- * @example
- *  const getColumnsByData = createSelector(
- *    [getData],
- *    f.flow(
- *      RA.map(RR.keys),
- *      head,
- *      f.apply([] as readonly (keyof CellItem.CellItem)[]),
- *    ),
- *  )
- */
-export const getData = ({ data }: AppState) => data.data
-
-/**
- *
- * @param state
- * @param state.data
- * @returns
- * @example
- */
-export const getDataLength = ({ data }: AppState) => data.data.length
 
 /**
  * Selector function to get the formatted data.
@@ -61,7 +37,8 @@ export const getDataLength = ({ data }: AppState) => data.data.length
  * @param state - The application state {@link AppState}
  * @returns The formatted data
  * @example
- *  const getRenamedSheet = createSelector([getFormattedData], (formattedData) =>
+ *  const getRenamedSheet = createSelector([getFormattedData],
+ *    (formattedData) =>
  *    utils.json_to_sheet(formattedData as CellItem.CellItem[]),
  *  )
  */

@@ -1,9 +1,11 @@
 import { equals } from '@/lib/fp'
+import { gt } from '@/lib/fp/number'
 import { snakeToKebab } from '@/lib/fp/string'
 import { createSelector } from '@reduxjs/toolkit'
 import * as P from 'fp-ts/Predicate'
-import * as N from 'fp-ts/number'
 import * as RA from 'fp-ts/ReadonlyArray'
+import * as f from 'fp-ts/function'
+import * as N from 'fp-ts/number'
 
 import {
   getMatchColumn,
@@ -17,17 +19,6 @@ import {
   getResolvedVisits,
   getVisitByMatchVisit,
 } from './visits'
-
-/**
- *
- * @param matchVisit
- * @param columnDuplicates
- * @returns
- */
-const shouldFormat = (
-  matchVisit: number,
-  columnDuplicates: readonly (readonly string[])[],
-) => columnDuplicates.length > 1 || P.not(equals(N.Eq)(matchVisit))(0)
 
 /**
  * Utility function to convert the column name to a path
@@ -73,7 +64,13 @@ const getResolvedIndices = createSelector(
 const getShouldFormatList = createSelector(
   [getMatchVisits, getMatchColumnsDuplicates],
   (matchVisits, columnDuplicatesList) =>
-    RA.zipWith(matchVisits, columnDuplicatesList, shouldFormat),
+    RA.zipWith(
+      matchVisits,
+      columnDuplicatesList,
+      (matchVisit, columnDuplicates) =>
+        f.pipe(columnDuplicates, RA.size, gt)(1) ||
+        f.pipe(matchVisit, equals(N.Eq), P.not)(0),
+    ),
 )
 
 /**
@@ -81,7 +78,9 @@ const getShouldFormatList = createSelector(
  */
 const getShouldFormat = createSelector(
   [getMatchVisit, getMatchColumnDuplicates],
-  shouldFormat,
+  (matchVisit, columnDuplicates) =>
+    f.pipe(columnDuplicates, RA.size, gt)(1) ||
+    f.pipe(matchVisit, equals(N.Eq), P.not)(0),
 )
 
 /**

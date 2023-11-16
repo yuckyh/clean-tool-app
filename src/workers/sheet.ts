@@ -108,10 +108,12 @@ const postFile: Handler<'postFile'> = async ({ file, method }) => {
 }
 
 const remove: Handler<'remove'> = async ({ fileName, method }) => {
-  await f.pipe(
-    getRootHandle,
-    T.map((dir) => dir.removeEntry(fileName)),
-  )()
+  await f
+    .pipe(
+      getRootHandle,
+      T.flatMap((dir) => f.constant(dir.removeEntry(fileName))),
+    )()
+    .catch(dumpError)
 
   return { fileName, method, status: 'ok' }
 }

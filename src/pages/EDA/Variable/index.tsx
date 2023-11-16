@@ -1,6 +1,3 @@
-/* eslint-disable
-  functional/functional-parameters
-*/
 import type { AppState } from '@/app/store'
 
 import { codebook } from '@/data'
@@ -11,8 +8,8 @@ import CategoricalPlot from '@/pages/EDA/Variable/Plot/CategoricalPlot'
 import NumericalPlot from '@/pages/EDA/Variable/Plot/NumericalPlot'
 import { setDataType } from '@/reducers/matches'
 import { getFirstVisit } from '@/selectors/data/visits'
-import { getSearchedPos } from '@/selectors/matches'
 import { getSearchedDataType } from '@/selectors/matches/dataTypes'
+import { getSearchedPos } from '@/selectors/matches/pos'
 import {
   Card,
   Field,
@@ -30,11 +27,12 @@ import { useParams } from 'react-router-dom'
 
 import AllDataGrid from './DataGrid/AllDataGrid'
 import FlagDataGrid from './DataGrid/FlagDataGrid'
-import IncorrectDataGrid from './DataGrid/IncorrectDataGrid'
-import BlankDataGrid from './DataGrid/MissingDataGrid'
 import OutlierDataGrid from './DataGrid/OutlierDataGrid'
 import SummaryDataGrid from './DataGrid/SummaryDataGrid'
-import { selectIncorrectSeries } from './DataGrid/selectors'
+import {
+  selectIncorrectSeries,
+  selectMissingSeries,
+} from './DataGrid/selectors'
 
 const useClasses = makeStyles({
   actions: {
@@ -152,9 +150,11 @@ export default function Variable() {
 
   const isUser = !name
 
-  const incorrectSeries = useAppSelector(
-    selectIncorrectSeries({ column, visit }),
-  )
+  const seriesProps = { column, visit }
+
+  const incorrectSeries = useAppSelector(selectIncorrectSeries(seriesProps))
+
+  const missingSeries = useAppSelector(selectMissingSeries(seriesProps))
 
   return (
     <section className={classes.root}>
@@ -207,7 +207,15 @@ export default function Variable() {
           <OutlierDataGrid column={column} visit={visit} />
         </div>
         <div className={classes.rows}>
-          <BlankDataGrid column={column} visit={visit} />
+          <FlagDataGrid
+            column={column}
+            emptyText="There are no blank data found."
+            reason="missing"
+            series={missingSeries}
+            subtitleText="The data shown here are the most common blank values that could be invalidly blank."
+            titleText="Blank Data"
+            visit={visit}
+          />
         </div>
         <div className={classes.rows}>
           {!isCategorical && (

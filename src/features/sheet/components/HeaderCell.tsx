@@ -5,9 +5,10 @@
 
 import type { AppState } from '@/app/store'
 
-import { getDataType, getFormattedColumn } from '@/features/data/selectors'
 import { useAppSelector } from '@/lib/hooks'
 import { getOriginalColumn } from '@/selectors/data/columns'
+import { getDataType } from '@/selectors/matches/dataTypes'
+import { getFormattedColumn } from '@/selectors/matches/format'
 import {
   makeStyles,
   mergeClasses,

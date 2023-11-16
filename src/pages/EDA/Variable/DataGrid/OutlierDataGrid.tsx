@@ -11,6 +11,8 @@ import { getIndexedIndex } from '@/lib/array'
 import { useAppSelector, useSyncedSelectionHandler } from '@/lib/hooks'
 import { getFlaggedRows } from '@/selectors/data/rows'
 import { getOutliers } from '@/selectors/data/stats'
+import { getFormattedColumn } from '@/selectors/matches/format'
+import { getSearchedPos } from '@/selectors/matches/pos'
 import {
   Body2,
   Card,
@@ -24,8 +26,6 @@ import * as f from 'fp-ts/function'
 import { useMemo } from 'react'
 
 import ValueCell from './ValueCell'
-import { getSearchedPos } from '@/selectors/matches'
-import { getFormattedColumn } from '@/selectors/matches/format'
 
 const useClasses = makeStyles({
   card: {
