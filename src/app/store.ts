@@ -3,7 +3,7 @@
  * @module app/store
  */
 
-import data from '@/features/sheet/reducers'
+import data from '@/reducers/data'
 import matches from '@/reducers/matches'
 import progress from '@/reducers/progress'
 import { configureStore } from '@reduxjs/toolkit'

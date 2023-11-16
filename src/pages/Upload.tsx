@@ -4,15 +4,15 @@
  */
 
 import type { AlertRef } from '@/components/AlertDialog'
-import type { SheetInputRef } from '@/features/sheet/components/SheetUploadInput'
+import type { SheetInputRef } from '@/components/data/SheetUploadInput'
 import type { Progress } from '@/reducers/progress'
 
+import { deleteData, fetchSheet } from '@/actions/data'
 import AlertDialog from '@/components/AlertDialog'
-import { deleteData, fetchSheet } from '@/features/sheet/actions'
-import PreviewDataGrid from '@/features/sheet/components/PreviewDataGrid'
-import SheetPickerInput from '@/features/sheet/components/SheetPickerInput'
-import SheetUploadInput from '@/features/sheet/components/SheetUploadInput'
-import VisitsInput from '@/features/sheet/components/VisitsInput'
+import PreviewDataGrid from '@/components/data/PreviewDataGrid'
+import SheetPickerInput from '@/components/data/SheetPickerInput'
+import SheetUploadInput from '@/components/data/SheetUploadInput'
+import VisitsInput from '@/components/data/VisitsInput'
 import { promisedTask } from '@/lib/fp'
 import { dumpError } from '@/lib/fp/logger'
 import {

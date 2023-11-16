@@ -8,7 +8,7 @@ import * as IO from 'fp-ts/IO'
 import * as f from 'fp-ts/function'
 import { useCallback } from 'react'
 
-import { setVisit } from '../reducers'
+import { setVisit } from '../../reducers/data'
 
 const useClasses = makeStyles({
   input: {

@@ -3,7 +3,7 @@ import type { ColorTokens, DataGridProps } from '@fluentui/react-components'
 import type { TypedUseSelectorHook } from 'react-redux'
 
 import globalStyles from '@/app/global.css?inline'
-import { syncFlaggedCells } from '@/features/sheet/reducers'
+import { syncFlaggedCells } from '@/reducers/data'
 import { getIndexedIndex } from '@/lib/array'
 import { getFlaggedRows } from '@/selectors/data/rows'
 import {

@@ -10,9 +10,9 @@
 import type { PayloadAction } from '@reduxjs/toolkit'
 import type * as Ref from 'fp-ts/Refinement'
 
+import { sliceName } from '@/actions/data'
+import { fetchMatches } from '@/actions/matches'
 import { codebook } from '@/data'
-import { fetchMatches } from '@/features/data/actions'
-import { sliceName } from '@/features/sheet/actions'
 import { arrayLookup, findIndex, getIndexedValue, head } from '@/lib/array'
 import { equals, isCorrectNumber, typedIdentity } from '@/lib/fp'
 import { stubOrd } from '@/lib/fp/Ord'
@@ -142,7 +142,7 @@ const { actions, reducer } = createSlice({
         )
 
       state.visits = !sorted
-        ? visits
+        ? [...state.visits]
         : (f.pipe(
             sorted,
             RA.mapWithIndex(

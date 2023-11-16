@@ -21,7 +21,7 @@ import * as f from 'fp-ts/function'
 import * as S from 'fp-ts/string'
 import { type BookType, utils } from 'xlsx'
 
-import { deleteData, fetchSheet, postFile, sliceName } from './actions'
+import { deleteData, fetchSheet, postFile, sliceName } from '../actions/data'
 
 // export type Flag = readonly [string, string, FlagReason]
 

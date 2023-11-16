@@ -8,7 +8,7 @@ import * as RA from 'fp-ts/ReadonlyArray'
 import * as f from 'fp-ts/function'
 import { useCallback } from 'react'
 
-import { setSheetName } from '../reducers'
+import { setSheetName } from '../../reducers/data'
 
 const useClasses = makeStyles({
   input: {

@@ -9,11 +9,11 @@ import {
   selectAllowedPaths,
   selectShouldNavigateToAllowed,
 } from '@/components/progress/ProgressNav/selectors'
-import { saveSheetState } from '@/features/sheet/reducers'
 import { tail } from '@/lib/array'
 import { asIO, equals } from '@/lib/fp'
 import { refinedEq } from '@/lib/fp/Eq'
 import { useAppDispatch, useAppSelector } from '@/lib/hooks'
+import { saveSheetState } from '@/reducers/data'
 import { saveMatchesState } from '@/reducers/matches'
 import { saveProgressState } from '@/reducers/progress'
 import { useThemeClassName } from '@fluentui/react-components'
@@ -44,9 +44,8 @@ import {
 export const saveStates = (dispatch: AppDispatch) =>
   f.pipe(
     [saveSheetState, saveMatchesState, saveProgressState] as const,
-    RA.map(f.flow((x) => dispatch(x()), IO.of)),
-    IO.sequenceArray,
-  )
+    IO.traverseArray(f.flow((x) => dispatch(x()), IO.of)),
+  )()
 
 /**
  * This hook saves the current app state when the user reloads or closes the page.

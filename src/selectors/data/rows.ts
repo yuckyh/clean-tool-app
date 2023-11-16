@@ -9,7 +9,6 @@ import { equals, isCorrectNumber } from '@/lib/fp'
 import * as CellItem from '@/lib/fp/CellItem'
 import { refinedEq, stubEq } from '@/lib/fp/Eq'
 import * as Flag from '@/lib/fp/Flag'
-import { dump } from '@/lib/fp/logger'
 import { getIndexColumnPos, getSearchedPos } from '@/selectors/matches/pos'
 import { createSelector } from '@reduxjs/toolkit'
 import * as Eq from 'fp-ts/Eq'
@@ -128,7 +127,6 @@ export const getIndexedNumericalRow = createSelector(
   [getBlanklessRow],
   f.flow(
     RA.filter(f.flow(getIndexedValue, isCorrectNumber)),
-    dump,
     RA.map(([index, val]) => [index, parseFloat(val)] as const),
   ),
 )

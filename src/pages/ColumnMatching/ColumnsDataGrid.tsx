@@ -12,16 +12,18 @@ import type {
 } from '@fluentui/react-components'
 import type { RefObject } from 'react'
 
+import { fetchMatches } from '@/actions/matches'
 import Loader from '@/components/Loader'
 import SimpleDataGrid from '@/components/SimpleDataGrid'
-import { fetchMatches } from '@/features/data/actions'
 import { dumpError } from '@/lib/fp/logger'
+import { add } from '@/lib/fp/number'
 import {
   useAppDispatch,
   useAppSelector,
   useLoadingTransition,
 } from '@/lib/hooks'
 import { createLazyMemo, createMemo } from '@/lib/utils'
+import { syncVisits } from '@/reducers/data'
 import { getColumnComparer, getColumnsLength } from '@/selectors/data/columns'
 import { getVisitsLength } from '@/selectors/data/visits'
 import { getMatchColumnsComparer } from '@/selectors/matches/columns'
@@ -34,6 +36,7 @@ import {
 } from '@fluentui/react-components'
 import * as IO from 'fp-ts/IO'
 import * as IOO from 'fp-ts/IOOption'
+import * as O from 'fp-ts/Option'
 import * as RA from 'fp-ts/ReadonlyArray'
 import * as T from 'fp-ts/Task'
 import * as f from 'fp-ts/function'
@@ -44,15 +47,15 @@ import ValueCell from './ValueCell'
 
 const MemoizedMatchCell = createLazyMemo(
   'MemoizedMatchCell',
-  import('@/features/data/components/MatchCell'),
+  import('@/components/matches/MatchCell'),
 )
 const MemoizedScoreCell = createLazyMemo(
   'MemoizedScoreCell',
-  import('@/features/data/components/ScoreCell'),
+  import('@/components/matches/ScoreCell'),
 )
 const MemoizedVisitsCell = createLazyMemo(
   'MemoizedVisitsCell',
-  import('@/features/data/components/VisitsCell'),
+  import('@/components/matches/VisitsCell'),
 )
 const MemoizedDataGrid = createMemo<SimpleDataGridProps<number>>(
   'MemoizedDataGrid',
@@ -83,6 +86,7 @@ const useFetchMatches = (stopLoading: IO.IO<void>) => {
 }
 
 const useInferVisitAlert = (infoAlertRef: RefObject<AlertRef>) => {
+  const dispatch = useAppDispatch()
   const matchVisits = useAppSelector(getMatchVisits)
   const visitsLength = useAppSelector(getVisitsLength)
 
@@ -90,9 +94,18 @@ const useInferVisitAlert = (infoAlertRef: RefObject<AlertRef>) => {
     f.pipe(
       visitsLength,
       IOO.fromPredicate((x) => Math.max(...matchVisits) > x && x > 0),
+      IOO.map(
+        f.flow(
+          () => matchVisits as number[],
+          f.tupled(Math.max),
+          add(1),
+          syncVisits,
+          dispatch,
+        ),
+      ),
       IOO.flatMapIO(() => infoAlertRef.current?.open ?? IO.of(() => {})),
     )()
-  }, [infoAlertRef, matchVisits, visitsLength])
+  }, [dispatch, infoAlertRef, matchVisits, visitsLength])
 }
 
 /**

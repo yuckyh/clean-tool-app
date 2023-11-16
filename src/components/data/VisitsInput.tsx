@@ -8,7 +8,7 @@ import * as RA from 'fp-ts/ReadonlyArray'
 import * as f from 'fp-ts/function'
 import { useCallback, useEffect, useState } from 'react'
 
-import { syncVisits } from '../reducers'
+import { syncVisits } from '../../reducers/data'
 import VisitInput from './VisitInput'
 
 const useClasses = makeStyles({

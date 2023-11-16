@@ -34,7 +34,7 @@ import {
 } from 'react'
 import { useDropzone } from 'react-dropzone'
 
-import { fetchSheet, postFile } from '../actions'
+import { fetchSheet, postFile } from '../../actions/data'
 
 /**
  *

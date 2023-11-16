@@ -29,7 +29,7 @@ const MemoizedColumnsDataGrid = createLazyMemo(
 
 const MemoizedPreviewDataGrid = createLazyMemo(
   'MemoizedPreviewDataGrid',
-  import('@/features/sheet/components/PreviewDataGrid'),
+  import('@/components/data/PreviewDataGrid'),
 )
 
 const useClasses = makeStyles({
