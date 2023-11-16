@@ -1,0 +1,52 @@
+**CLEaN Tool - v1.0.0** ( [Readme](../../../../../../README.md) \| API )
+
+***
+
+[CLEaN Tool](../../../../../../modules.md) / [pages/EDA/Variable/DataGrid/selectors](../README.md) / selectTitle
+
+# Function: selectTitle()
+
+> **selectTitle**(`props`): (`state`) => `string`
+
+## Parameters
+
+▪ **props**: `Readonly`\<[`BaseProps`](../interfaces/BaseProps.md)\>
+
+## Returns
+
+`function`
+
+> > (`state`): `string`
+>
+> ### Parameters
+>
+> ▪ **state**: `object`
+>
+> ▪ **state.data**: `Readonly`\<[`State`](../../../../../../features/sheet/reducers/interfaces/State.md)\>
+>
+> ▪ **state.matches**: `Readonly`\<[`State`](../../../../../../selectors/progress/paths/private/interfaces/State.md)\>
+>
+> ▪ **state.progress**: `Readonly`\<[`State`](../../../../../../selectors/progress/paths/private/interfaces/State.md)\>
+>
+> ### Returns
+>
+> `string`
+>
+> ### Source
+>
+> [Projects/clean-tool-app/src/pages/EDA/Variable/DataGrid/selectors.ts:88](https://github.com/yuckyh/clean-tool-app/)
+>
+
+## Example
+
+```ts
+
+```
+
+## Source
+
+[Projects/clean-tool-app/src/pages/EDA/Variable/DataGrid/selectors.ts:87](https://github.com/yuckyh/clean-tool-app/)
+
+***
+
+Generated using [typedoc-plugin-markdown](https://www.npmjs.com/package/typedoc-plugin-markdown) and [TypeDoc](https://typedoc.org/)

@@ -11,9 +11,9 @@
 The application's store.
 
 Consists of the following slices:
-- [columns]([object Object])
-- [progress](../../../features/progress/reducers/functions/reducer.md)
-- [sheet]([object Object])
+- [matches](../../../features/columns/reducers/functions/reducer.md)
+- [progress](../../../reducers/progress/functions/reducer.md)
+- [data](../../../data/README.md)
 
 ## Source
 

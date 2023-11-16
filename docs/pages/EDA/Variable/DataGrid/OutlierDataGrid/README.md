@@ -6,6 +6,10 @@
 
 # pages/EDA/Variable/DataGrid/OutlierDataGrid
 
+## File
+
+This file contains the OutlierDataGrid component.
+
 ## Index
 
 ### Modules

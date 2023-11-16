@@ -8,23 +8,32 @@
 
 > **OutlierDataGrid**(`props`): `Element`
 
+This function renders the data grid for the suspected outliers.
+
 ## Parameters
 
 ▪ **props**: `Readonly`\<[`Props`](../private/interfaces/Props.md)\>
+
+The [Props](../private/interfaces/Props.md) for the component.
 
 ## Returns
 
 `Element`
 
+The component object.
+
 ## Example
 
-```ts
-
+```tsx
+ <OutlierDataGrid
+   column={column}
+   visit={visit}
+ />
 ```
 
 ## Source
 
-[Projects/clean-tool-app/src/pages/EDA/Variable/DataGrid/OutlierDataGrid.tsx:96](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/pages/EDA/Variable/DataGrid/OutlierDataGrid.tsx:106](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

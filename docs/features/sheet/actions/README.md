@@ -14,7 +14,7 @@
 
 ### Functions
 
-- [deleteSheet](functions/deleteSheet.md)
+- [deleteData](functions/deleteData.md)
 - [fetchSheet](functions/fetchSheet.md)
 - [postFile](functions/postFile.md)
 

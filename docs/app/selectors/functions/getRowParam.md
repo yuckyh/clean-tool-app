@@ -18,11 +18,11 @@ This function is to be used with the column position parameter to select a cell 
 
 The application state [AppState](../../store/type-aliases/AppState.md)
 
-▪ **\_state.columns**: `Readonly`\<[`State`](../../../selectors/columns/selectors/private/interfaces/State.md)\>
+▪ **\_state.data**: `Readonly`\<[`State`](../../../features/sheet/reducers/interfaces/State.md)\>
 
-▪ **\_state.progress**: `Readonly`\<[`State`](../../../selectors/columns/selectors/private/interfaces/State.md)\>
+▪ **\_state.matches**: `Readonly`\<[`State`](../../../selectors/progress/paths/private/interfaces/State.md)\>
 
-▪ **\_state.sheet**: `Readonly`\<[`State`](../../../features/sheet/reducers/interfaces/State.md)\>
+▪ **\_state.progress**: `Readonly`\<[`State`](../../../selectors/progress/paths/private/interfaces/State.md)\>
 
 ▪ **\_col**: `number`
 
@@ -41,10 +41,11 @@ The row position parameter
 ## Example
 
 ```ts
-const originalColumn = createSelector(
- [getOriginalColumn, getRowParam],
- (originalColumn, row) => originalColumn[row],
-)
+const getCell = createSelector(
+   [getData, getOriginalColumn, getRowParam],
+   (data, originalColumn, row) =>
+     ...
+ )
 ```
 
 ## Source

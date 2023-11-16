@@ -8,33 +8,46 @@
 
 > **getVisitParam**(`_state`, `_column`, `visit`): `string`
 
+Utility function to get the visit parameter
+
 ## Parameters
 
 ▪ **\_state**: `object`
 
-▪ **\_state.columns**: `Readonly`\<[`State`](../../../selectors/columns/selectors/private/interfaces/State.md)\>
+The application state [AppState](../../store/type-aliases/AppState.md)
 
-▪ **\_state.progress**: `Readonly`\<[`State`](../../../selectors/columns/selectors/private/interfaces/State.md)\>
+▪ **\_state.data**: `Readonly`\<[`State`](../../../features/sheet/reducers/interfaces/State.md)\>
 
-▪ **\_state.sheet**: `Readonly`\<[`State`](../../../features/sheet/reducers/interfaces/State.md)\>
+▪ **\_state.matches**: `Readonly`\<[`State`](../../../selectors/progress/paths/private/interfaces/State.md)\>
+
+▪ **\_state.progress**: `Readonly`\<[`State`](../../../selectors/progress/paths/private/interfaces/State.md)\>
 
 ▪ **\_column**: `string`
 
+The column parameter
+
 ▪ **visit**: `string`
+
+The visit parameter
 
 ## Returns
 
 `string`
 
+The visit parameter
+
 ## Example
 
 ```ts
-
+const getSearchedPos = createSelector(
+   [getIndices, getVisits, getColumnParam, getVisitParam],
+   searchPos,
+ )
 ```
 
 ## Source
 
-[Projects/clean-tool-app/src/app/selectors.ts:63](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/app/selectors.ts:65](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

@@ -8,31 +8,42 @@
 
 > **getTitleParam**(`_state`, `title`): `string`
 
+Utility function to get the title parameter
+
 ## Parameters
 
 ▪ **\_state**: `object`
 
-▪ **\_state.columns**: `Readonly`\<[`State`](../../../selectors/columns/selectors/private/interfaces/State.md)\>
+The application state [AppState](../../store/type-aliases/AppState.md)
 
-▪ **\_state.progress**: `Readonly`\<[`State`](../../../selectors/columns/selectors/private/interfaces/State.md)\>
+▪ **\_state.data**: `Readonly`\<[`State`](../../../features/sheet/reducers/interfaces/State.md)\>
 
-▪ **\_state.sheet**: `Readonly`\<[`State`](../../../features/sheet/reducers/interfaces/State.md)\>
+▪ **\_state.matches**: `Readonly`\<[`State`](../../../selectors/progress/paths/private/interfaces/State.md)\>
+
+▪ **\_state.progress**: `Readonly`\<[`State`](../../../selectors/progress/paths/private/interfaces/State.md)\>
 
 ▪ **title**: `string`
+
+The title parameter
 
 ## Returns
 
 `string`
 
+The title parameter
+
 ## Example
 
 ```ts
-
+const getFlaggedRows = createSelector(
+   [getFlaggedCells, getTitleParam, getReasonParam],
+     ...
+ )
 ```
 
 ## Source
 
-[Projects/clean-tool-app/src/app/selectors.ts:76](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/app/selectors.ts:137](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

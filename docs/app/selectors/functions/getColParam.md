@@ -16,11 +16,11 @@ Utility function to get the column position parameter
 
 The application state [AppState](../../store/type-aliases/AppState.md)
 
-▪ **\_state.columns**: `Readonly`\<[`State`](../../../selectors/columns/selectors/private/interfaces/State.md)\>
+▪ **\_state.data**: `Readonly`\<[`State`](../../../features/sheet/reducers/interfaces/State.md)\>
 
-▪ **\_state.progress**: `Readonly`\<[`State`](../../../selectors/columns/selectors/private/interfaces/State.md)\>
+▪ **\_state.matches**: `Readonly`\<[`State`](../../../selectors/progress/paths/private/interfaces/State.md)\>
 
-▪ **\_state.sheet**: `Readonly`\<[`State`](../../../features/sheet/reducers/interfaces/State.md)\>
+▪ **\_state.progress**: `Readonly`\<[`State`](../../../selectors/progress/paths/private/interfaces/State.md)\>
 
 ▪ **col**: `number`
 
@@ -36,14 +36,14 @@ The column position parameter
 
 ```ts
 const getOriginalColumn = createSelector(
- [getOriginalColumns, getColParam],
- (originalColumns, col) => originalColumns[col],
-)
+   [getOriginalColumns, getColParam],
+     ...
+ )
 ```
 
 ## Source
 
-[Projects/clean-tool-app/src/app/selectors.ts:20](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/app/selectors.ts:21](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

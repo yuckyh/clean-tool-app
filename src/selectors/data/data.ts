@@ -34,7 +34,7 @@ import {
  * Using the data types, the values of the {@link CellItem.CellItem CellItem} objects are converted to the correct type.
  *
  * The empty columns are then used to insert empty values into the {@link CellItem.CellItem CellItem} objects.
- * @param state - The application state {@link AppState}
+ * @param state - The application state {@link app/store.AppState AppState}
  * @returns The formatted data
  * @example
  *  const getRenamedSheet = createSelector([getFormattedData],

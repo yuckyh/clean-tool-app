@@ -35,7 +35,7 @@ The [props](../private/interfaces/Props.md) passed to the component.
 
 ## Source
 
-[Projects/clean-tool-app/src/features/progress/components/ProgressNav/Link.tsx:89](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/components/progress/ProgressNav/Link.tsx:89](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

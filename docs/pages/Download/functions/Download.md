@@ -20,7 +20,7 @@
 
 ## Source
 
-[Projects/clean-tool-app/src/pages/Download/index.tsx:74](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/pages/Download/index.tsx:70](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

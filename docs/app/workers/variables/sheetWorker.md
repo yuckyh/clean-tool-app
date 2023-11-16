@@ -8,9 +8,20 @@
 
 > **`const`** **sheetWorker**: `Readonly`\<[`RequestWorker`](../../../types/workers/interfaces/RequestWorker.md)\<[`SheetRequest`](../../../workers/sheet/type-aliases/SheetRequest.md), [`SheetResponse`](../../../workers/sheet/type-aliases/SheetResponse.md)\>\>
 
+The sheet worker.
+
+## Example
+
+```ts
+sheetWorker.postMessage({
+   fileName,
+   method: 'get',
+ })
+```
+
 ## Source
 
-[Projects/clean-tool-app/src/app/workers.ts:15](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/app/workers.ts:25](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

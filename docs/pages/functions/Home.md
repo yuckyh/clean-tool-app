@@ -29,7 +29,7 @@ Add a quick introduction text to the tool in this page
 
 ## Source
 
-[Projects/clean-tool-app/src/pages/index.tsx:40](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/pages/index.tsx:39](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

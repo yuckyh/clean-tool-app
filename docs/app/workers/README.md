@@ -6,6 +6,10 @@
 
 # app/workers
 
+## File
+
+This file contains the worker's instances and utilities.
+
 ## Index
 
 ### Variables

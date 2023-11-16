@@ -8,23 +8,33 @@
 
 > **SummaryDataGrid**(`props`): `Element`
 
+This function is used to render the summary statistics of the selected variable.
+
 ## Parameters
 
 ▪ **props**: `Readonly`\<[`Props`](../private/interfaces/Props.md)\>
+
+The [Props](../private/interfaces/Props.md) object.
 
 ## Returns
 
 `Element`
 
+The component object.
+
 ## Example
 
-```ts
-
+```tsx
+ <SummaryDataGrid
+   column={column}
+   isCategorical={isCategorical}
+   visit={visit}
+ />
 ```
 
 ## Source
 
-[Projects/clean-tool-app/src/pages/EDA/Variable/DataGrid/SummaryDataGrid.tsx:98](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/pages/EDA/Variable/DataGrid/SummaryDataGrid.tsx:108](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

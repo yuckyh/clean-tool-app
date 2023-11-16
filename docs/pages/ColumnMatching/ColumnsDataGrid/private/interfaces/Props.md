@@ -24,7 +24,7 @@ The alert ref for the error alert used by the [ColumnMatching](../../../README.m
 
 #### Source
 
-[Projects/clean-tool-app/src/pages/ColumnMatching/ColumnsDataGrid.tsx:115](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/pages/ColumnMatching/ColumnsDataGrid.tsx:105](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 
@@ -36,7 +36,7 @@ The alert ref for the info alert used by the [ColumnMatching](../../../README.md
 
 #### Source
 
-[Projects/clean-tool-app/src/pages/ColumnMatching/ColumnsDataGrid.tsx:119](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/pages/ColumnMatching/ColumnsDataGrid.tsx:109](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

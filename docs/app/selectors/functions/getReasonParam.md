@@ -6,35 +6,49 @@
 
 # Function: getReasonParam()
 
-> **getReasonParam**(`_state`, `_1`, `reason`): [`FlagReason`](../../../lib/fp/Flag/type-aliases/FlagReason.md)
+> **getReasonParam**(`_state`, `_title`, `reason`): [`FlagReason`](../../../lib/fp/Flag/type-aliases/FlagReason.md)
+
+Utility function to get the reason parameter
 
 ## Parameters
 
 ▪ **\_state**: `object`
 
-▪ **\_state.columns**: `Readonly`\<[`State`](../../../selectors/columns/selectors/private/interfaces/State.md)\>
+The application state [AppState](../../store/type-aliases/AppState.md)
 
-▪ **\_state.progress**: `Readonly`\<[`State`](../../../selectors/columns/selectors/private/interfaces/State.md)\>
+▪ **\_state.data**: `Readonly`\<[`State`](../../../features/sheet/reducers/interfaces/State.md)\>
 
-▪ **\_state.sheet**: `Readonly`\<[`State`](../../../features/sheet/reducers/interfaces/State.md)\>
+▪ **\_state.matches**: `Readonly`\<[`State`](../../../selectors/progress/paths/private/interfaces/State.md)\>
 
-▪ **\_1**: `string`
+▪ **\_state.progress**: `Readonly`\<[`State`](../../../selectors/progress/paths/private/interfaces/State.md)\>
+
+▪ **\_title**: `string`
+
+The title parameter
 
 ▪ **reason**: [`FlagReason`](../../../lib/fp/Flag/type-aliases/FlagReason.md)
+
+The reason parameter
 
 ## Returns
 
 [`FlagReason`](../../../lib/fp/Flag/type-aliases/FlagReason.md)
 
+The reason parameters
+
 ## Example
 
 ```ts
-
+const getFlaggedRows = createSelector(
+   [getFlaggedCells, getTitleParam, getReasonParam],
+   (flaggedCells, title, reason) =>
+     ...
+ )
 ```
 
 ## Source
 
-[Projects/clean-tool-app/src/app/selectors.ts:86](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/app/selectors.ts:152](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

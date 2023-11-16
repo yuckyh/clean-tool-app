@@ -8,9 +8,20 @@
 
 > **`const`** **columnWorker**: `Readonly`\<[`RequestWorker`](../../../types/workers/interfaces/RequestWorker.md)\<[`ColumnRequest`](../../../workers/column/type-aliases/ColumnRequest.md), [`ColumnResponse`](../../../workers/column/type-aliases/ColumnResponse.md)\>\>
 
+The column worker.
+
+## Example
+
+```ts
+columnWorker.postMessage({
+   columns,
+   method: 'get',
+ })
+```
+
 ## Source
 
-[Projects/clean-tool-app/src/app/workers.ts:21](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/app/workers.ts:36](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

@@ -22,7 +22,7 @@
 
 ## Source
 
-[Projects/clean-tool-app/src/lib/fp/index.ts:41](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/lib/fp/index.ts:39](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

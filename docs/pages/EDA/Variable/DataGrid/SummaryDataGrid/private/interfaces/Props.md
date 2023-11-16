@@ -6,6 +6,8 @@
 
 # Interface: Props
 
+The props for the [SummaryDataGrid](../../functions/SummaryDataGrid.md) component.
+
 ## Contents
 
 - [Properties](Props.md#properties)
@@ -19,9 +21,11 @@
 
 > **column**: `string`
 
+The name of the column.
+
 #### Source
 
-[Projects/clean-tool-app/src/pages/EDA/Variable/DataGrid/SummaryDataGrid.tsx:55](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/pages/EDA/Variable/DataGrid/SummaryDataGrid.tsx:57](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 
@@ -29,9 +33,11 @@
 
 > **isCategorical**: `boolean`
 
+Whether the column is categorical.
+
 #### Source
 
-[Projects/clean-tool-app/src/pages/EDA/Variable/DataGrid/SummaryDataGrid.tsx:59](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/pages/EDA/Variable/DataGrid/SummaryDataGrid.tsx:61](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 
@@ -39,9 +45,11 @@
 
 > **visit**: `string`
 
+The visit to display.
+
 #### Source
 
-[Projects/clean-tool-app/src/pages/EDA/Variable/DataGrid/SummaryDataGrid.tsx:63](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/pages/EDA/Variable/DataGrid/SummaryDataGrid.tsx:65](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

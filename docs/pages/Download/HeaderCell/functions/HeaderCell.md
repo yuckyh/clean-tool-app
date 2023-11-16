@@ -8,23 +8,29 @@
 
 > **HeaderCell**(`props`): `Element`
 
+This function renders the header cell of the for the download preview data grid.
+
 ## Parameters
 
 ▪ **props**: `Readonly`\<[`Props`](../private/interfaces/Props.md)\>
+
+The [props](../private/interfaces/Props.md) of the component.
 
 ## Returns
 
 `Element`
 
+The component object.
+
 ## Example
 
-```ts
-
+```tsx
+ <HeaderCell header={header} />
 ```
 
 ## Source
 
-[Projects/clean-tool-app/src/pages/Download/HeaderCell.tsx:30](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/pages/Download/HeaderCell.tsx:33](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

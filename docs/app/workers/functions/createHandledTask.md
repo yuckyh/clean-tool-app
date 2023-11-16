@@ -8,6 +8,8 @@
 
 > **createHandledTask**\<`Request`, `Response`\>(`worker`, `errorMsg`): `Task`\<`Response`\>
 
+Creates a task that has a handled error.
+
 ## Type parameters
 
 ▪ **Request** extends [`WorkerRequest`](../../../types/workers/type-aliases/WorkerRequest.md)\<`string`\>
@@ -18,15 +20,30 @@
 
 ▪ **worker**: `Readonly`\<[`RequestWorker`](../../../types/workers/interfaces/RequestWorker.md)\<`Request`, `Response`\>\>
 
+The worker to post the message to.
+
 ▪ **errorMsg**: `string`
+
+The error message to display.
 
 ## Returns
 
 `Task`\<`Response`\>
 
+A task that has a handled error.
+
+## Example
+
+```ts
+const handledTask: T.Task<ColumnResponse> = createHandledTask<
+   ColumnRequest,
+   ColumnResponse
+ >(columnWorker, 'columnWorker failed')
+```
+
 ## Source
 
-[Projects/clean-tool-app/src/app/workers.ts:25](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/app/workers.ts:51](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

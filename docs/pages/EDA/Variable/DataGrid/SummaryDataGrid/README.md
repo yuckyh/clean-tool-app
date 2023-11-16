@@ -6,15 +6,19 @@
 
 # pages/EDA/Variable/DataGrid/SummaryDataGrid
 
+## File
+
+This file contains the SummaryDataGrid component.
+
 ## Index
 
-### Modules
-
-- [private](private/README.md)
-
-### Functions
+### Components
 
 - [SummaryDataGrid](functions/SummaryDataGrid.md)
+
+### Other
+
+- [private](private/README.md)
 
 ***
 

@@ -8,17 +8,15 @@
 
 ## Index
 
-### Modules
+### Other
 
 - [private](private/README.md)
-
-### Interfaces
-
 - [SheetInputRef](interfaces/SheetInputRef.md)
-
-### Functions
-
 - [SheetUploadInput](functions/SheetUploadInput.md)
+
+### Page
+
+- [Upload](functions/Upload.md)
 
 ***
 

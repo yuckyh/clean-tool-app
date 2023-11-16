@@ -24,7 +24,7 @@ The progress nav's component path in the router.
 
 #### Source
 
-[Projects/clean-tool-app/src/features/progress/components/ProgressNav/PageTitle.tsx:19](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/components/progress/ProgressNav/PageTitle.tsx:19](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 
@@ -36,7 +36,7 @@ The current location path.
 
 #### Source
 
-[Projects/clean-tool-app/src/features/progress/components/ProgressNav/PageTitle.tsx:23](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/components/progress/ProgressNav/PageTitle.tsx:23](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

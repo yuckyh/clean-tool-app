@@ -18,10 +18,14 @@ The file contains the reducers for the columns slice.
 
 ### Functions
 
-- [deleteColumns](functions/deleteColumns.md)
-- [saveColumnState](functions/saveColumnState.md)
+- [deleteMatches](functions/deleteMatches.md)
+- [reducer](functions/reducer.md)
+- [saveMatchesState](functions/saveMatchesState.md)
 - [setDataType](functions/setDataType.md)
+- [setDataTypeByColumn](functions/setDataTypeByColumn.md)
 - [setMatchColumn](functions/setMatchColumn.md)
+- [setMatchScore](functions/setMatchScore.md)
+- [setMatchScoreByColumn](functions/setMatchScoreByColumn.md)
 - [setMatchVisit](functions/setMatchVisit.md)
 
 ***

@@ -25,7 +25,7 @@ The component object
 
 ## Source
 
-[Projects/clean-tool-app/src/pages/ColumnMatching/index.tsx:54](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/pages/ColumnMatching/index.tsx:51](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

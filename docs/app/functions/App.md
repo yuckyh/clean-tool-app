@@ -25,7 +25,7 @@ The main app component
 
 ## Source
 
-[Projects/clean-tool-app/src/app/index.tsx:30](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/app/index.tsx:26](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

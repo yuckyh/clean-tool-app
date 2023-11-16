@@ -6,6 +6,10 @@
 
 # pages/EDA/Variable/Nav/Tab
 
+## File
+
+This file contains the Tab component for the Nav component.
+
 ## Index
 
 ### Modules

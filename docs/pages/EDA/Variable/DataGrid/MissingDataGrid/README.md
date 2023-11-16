@@ -6,6 +6,10 @@
 
 # pages/EDA/Variable/DataGrid/MissingDataGrid
 
+## File
+
+This file contains the MissingDataGrid component.
+
 ## Index
 
 ### Modules

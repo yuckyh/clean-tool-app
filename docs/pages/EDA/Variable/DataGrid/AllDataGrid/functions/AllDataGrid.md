@@ -10,7 +10,7 @@
 
 ## Parameters
 
-▪ **props**: `Readonly`\<[`Props`](../private/interfaces/Props.md)\>
+▪ **props**: `Readonly`\<[`Props`](../interfaces/Props.md)\>
 
 ## Returns
 
@@ -24,7 +24,7 @@
 
 ## Source
 
-[Projects/clean-tool-app/src/pages/EDA/Variable/DataGrid/AllDataGrid.tsx:169](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/pages/EDA/Variable/DataGrid/AllDataGrid.tsx:91](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

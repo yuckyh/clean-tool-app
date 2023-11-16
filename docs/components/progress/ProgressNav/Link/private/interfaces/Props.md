@@ -25,7 +25,7 @@ Whether the link indicates that the step is done.
 
 #### Source
 
-[Projects/clean-tool-app/src/features/progress/components/ProgressNav/Link.tsx:61](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/components/progress/ProgressNav/Link.tsx:61](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 
@@ -37,7 +37,7 @@ The path for the link.
 
 #### Source
 
-[Projects/clean-tool-app/src/features/progress/components/ProgressNav/Link.tsx:65](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/components/progress/ProgressNav/Link.tsx:65](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 
@@ -49,7 +49,7 @@ The position of the link in the progress nav.
 
 #### Source
 
-[Projects/clean-tool-app/src/features/progress/components/ProgressNav/Link.tsx:69](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/components/progress/ProgressNav/Link.tsx:69](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

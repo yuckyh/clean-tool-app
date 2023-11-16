@@ -34,7 +34,7 @@
 >
 > ### Source
 >
-> Projects/clean-tool-app/.yarn/\_\_virtual\_\_/@fluentui-react-table-virtual-0bfb42a0ed/3/AppData/Local/Yarn/Berry/cache/@fluentui-react-table-npm-9.10.10-8498186e0a-10.zip/node\_modules/@fluentui/react-table/dist/index.d.ts:206
+> Projects/clean-tool-app/.yarn/\_\_virtual\_\_/@fluentui-react-table-virtual-1e556aafec/3/AppData/Local/Yarn/Berry/cache/@fluentui-react-table-npm-9.10.11-29ff27ac60-10.zip/node\_modules/@fluentui/react-table/dist/index.d.ts:206
 >
 
 ## Example

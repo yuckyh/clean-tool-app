@@ -16,11 +16,11 @@ Utility function to get the column parameter
 
 The application state [AppState](../../store/type-aliases/AppState.md)
 
-▪ **\_state.columns**: `Readonly`\<[`State`](../../../selectors/columns/selectors/private/interfaces/State.md)\>
+▪ **\_state.data**: `Readonly`\<[`State`](../../../features/sheet/reducers/interfaces/State.md)\>
 
-▪ **\_state.progress**: `Readonly`\<[`State`](../../../selectors/columns/selectors/private/interfaces/State.md)\>
+▪ **\_state.matches**: `Readonly`\<[`State`](../../../selectors/progress/paths/private/interfaces/State.md)\>
 
-▪ **\_state.sheet**: `Readonly`\<[`State`](../../../features/sheet/reducers/interfaces/State.md)\>
+▪ **\_state.progress**: `Readonly`\<[`State`](../../../selectors/progress/paths/private/interfaces/State.md)\>
 
 ▪ **column**: `string`
 
@@ -35,15 +35,15 @@ The column parameter
 ## Example
 
 ```ts
-const originalColumn = createSelector(
- [getOriginalColumn, getColumnParam],
- (originalColumn, column) => data.map((row) => row[column]),
-)
+const getSearchedPos = createSelector(
+   [getIndices, getVisits, getColumnParam, getVisitParam],
+   searchPos,
+ )
 ```
 
 ## Source
 
-[Projects/clean-tool-app/src/app/selectors.ts:53](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/app/selectors.ts:51](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

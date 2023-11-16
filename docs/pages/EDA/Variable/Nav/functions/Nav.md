@@ -8,19 +8,23 @@
 
 > **Nav**(): `Element`
 
+The navigation for the variable page.
+
 ## Returns
 
 `Element`
 
+The component object
+
 ## Example
 
-```ts
-
+```tsx
+ <Nav />
 ```
 
 ## Source
 
-[Projects/clean-tool-app/src/pages/EDA/Variable/Nav/index.tsx:112](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/pages/EDA/Variable/Nav/index.tsx:110](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

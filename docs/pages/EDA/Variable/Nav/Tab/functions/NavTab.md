@@ -8,23 +8,29 @@
 
 > **NavTab**(`props`): `Element`
 
+This function renders the Tab component for the Nav component.
+
 ## Parameters
 
 ▪ **props**: `Readonly`\<[`Props`](../private/interfaces/Props.md)\>
+
+The [Props](../private/interfaces/Props.md) object.
 
 ## Returns
 
 `Element`
 
+The component obj
+
 ## Example
 
-```ts
-
+```tsx
+ <NavTab pos={0} />
 ```
 
 ## Source
 
-[Projects/clean-tool-app/src/pages/EDA/Variable/Nav/Tab.tsx:49](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/pages/EDA/Variable/Nav/Tab.tsx:63](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 
