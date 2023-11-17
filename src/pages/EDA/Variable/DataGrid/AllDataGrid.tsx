@@ -8,6 +8,7 @@ import SimpleDataGrid from '@/components/SimpleDataGrid'
 import { getIndexedIndex } from '@/lib/array'
 import { isCorrectNumber } from '@/lib/fp'
 import * as Flag from '@/lib/fp/Flag'
+import { dump } from '@/lib/fp/logger'
 import { useAppDispatch, useAppSelector } from '@/lib/hooks'
 import { syncFlaggedCells } from '@/reducers/data'
 import {
@@ -35,6 +36,7 @@ import {
   selectIncorrectSeries,
   selectMissingSeries,
   selectSeries,
+  selectSuspectedSeries,
   selectTitle,
 } from './selectors'
 
@@ -99,6 +101,7 @@ export default function AllDataGrid(props: Readonly<Props>) {
   const series = useAppSelector(selectSeries(props))
   const missingSeries = useAppSelector(selectMissingSeries(props))
   const incorrectSeries = useAppSelector(selectIncorrectSeries(props))
+  const suspectedSeries = useAppSelector(selectSuspectedSeries(props))
 
   const dataType = useAppSelector(selectDataType(props))
 
@@ -110,6 +113,10 @@ export default function AllDataGrid(props: Readonly<Props>) {
   const incorrectIndices = useMemo(
     () => RA.map(getIndexedIndex)(incorrectSeries),
     [incorrectSeries],
+  )
+  const suspectedIndices = useMemo(
+    () => RA.map(getIndexedIndex)(dump(suspectedSeries)),
+    [suspectedSeries],
   )
 
   const handleSelectionChange: DataGridProps['onSelectionChange'] = (
@@ -144,8 +151,19 @@ export default function AllDataGrid(props: Readonly<Props>) {
       RA.map((currentIndex) => Flag.of(currentIndex, title, 'incorrect')),
     )
 
+    const suspectedPayloads = f.pipe(
+      checkedPosList,
+      RA.filter((checkedPos) => RA.elem(S.Eq)(checkedPos, suspectedIndices)),
+      RA.map((currentIndex) => Flag.of(currentIndex, title, 'suspected')),
+    )
+
     return f.pipe(
-      [...payloads, ...missingPayloads, ...incorrectPayloads] as const,
+      [
+        ...payloads,
+        ...missingPayloads,
+        ...incorrectPayloads,
+        ...suspectedPayloads,
+      ] as const,
       RA.map(f.flow(syncFlaggedCells, (x) => dispatch(x), IO.of)),
       IO.sequenceArray,
     )()

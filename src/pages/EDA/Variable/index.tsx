@@ -175,7 +175,7 @@ export default function Variable() {
           <FlagDataGrid
             column={column}
             emptyText="There are no suspected outliers."
-            reason="outlier"
+            reason="suspected"
             series={suspectedSeries}
             subtitleText="The data shown here are suspected outliers based on the bell curve distribution."
             titleText="Suspected Outliers"
