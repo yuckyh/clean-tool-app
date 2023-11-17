@@ -6,13 +6,11 @@
 
 # features/sheet/components/SheetUploadInput
 
+## File
+
+This file is for the sheet upload input component.
+
 ## Index
-
-### Other
-
-- [private](private/README.md)
-- [SheetInputRef](interfaces/SheetInputRef.md)
-- [SheetUploadInput](functions/SheetUploadInput.md)
 
 ### Page
 

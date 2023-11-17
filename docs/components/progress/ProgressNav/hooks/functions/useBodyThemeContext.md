@@ -22,7 +22,7 @@ This hook adds the theme class names to the body element.
 
 ## Source
 
-[Projects/clean-tool-app/src/hooks/progress.ts:97](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/hooks/progress.ts:99](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

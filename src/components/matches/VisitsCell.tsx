@@ -7,7 +7,6 @@ import type { AlertRef } from '@/components/AlertDialog'
 import type { DropdownProps } from '@fluentui/react-components'
 
 import { indexDuplicateSearcher } from '@/lib/array'
-import { useLoggerEffect } from '@/lib/fp/logger'
 import { useAppDispatch, useAppSelector } from '@/lib/hooks'
 import { setMatchVisit } from '@/reducers/matches'
 import { getVisits } from '@/selectors/data/visits'

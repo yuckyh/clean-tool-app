@@ -22,7 +22,7 @@ This hook saves the current app state when the user reloads or closes the page.
 
 ## Source
 
-[Projects/clean-tool-app/src/hooks/progress.ts:58](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/hooks/progress.ts:59](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

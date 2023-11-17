@@ -14,7 +14,7 @@
 
 ## Source
 
-Projects/clean-tool-app/.yarn/\_\_virtual\_\_/@griffel-react-virtual-00185671a8/3/AppData/Local/Yarn/Berry/cache/@griffel-react-npm-1.5.16-35554db5c8-10.zip/node\_modules/@griffel/react/src/makeStaticStyles.d.ts:2
+Projects/clean-tool-app/.yarn/\_\_virtual\_\_/@griffel-react-virtual-6868145e98/3/AppData/Local/Yarn/Berry/cache/@griffel-react-npm-1.5.16-35554db5c8-10.zip/node\_modules/@griffel/react/src/makeStaticStyles.d.ts:2
 
 ***
 

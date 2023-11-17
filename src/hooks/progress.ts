@@ -18,6 +18,7 @@ import { saveMatchesState } from '@/reducers/matches'
 import { saveProgressState } from '@/reducers/progress'
 import { useThemeClassName } from '@fluentui/react-components'
 import * as IO from 'fp-ts/IO'
+import * as IOO from 'fp-ts/IOOption'
 import * as O from 'fp-ts/Option'
 import * as RA from 'fp-ts/ReadonlyArray'
 import * as f from 'fp-ts/function'
@@ -46,7 +47,7 @@ export const saveStates = (dispatch: AppDispatch) =>
     [saveSheetState, saveMatchesState, saveProgressState] as const,
     RA.map(f.flow((x) => dispatch(x()), IO.of)),
     IO.sequenceArray,
-  )()
+  )
 
 /**
  * This hook saves the current app state when the user reloads or closes the page.
@@ -83,8 +84,9 @@ export const useRedirectSaveState = () => {
       f.apply('loading' as typeof navState),
       O.fromPredicate<typeof navState>,
       f.apply(navState),
-      O.map(saveStates(dispatch)),
-    )
+      IOO.fromOption,
+      IOO.map(saveStates(dispatch)),
+    )()
   }, [dispatch, navState])
 }
 /**

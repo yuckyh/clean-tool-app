@@ -22,7 +22,7 @@ This hook saves the current app state when the user navigates away from the curr
 
 ## Source
 
-[Projects/clean-tool-app/src/hooks/progress.ts:74](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/hooks/progress.ts:75](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

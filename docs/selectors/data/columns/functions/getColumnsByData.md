@@ -6,23 +6,23 @@
 
 # Function: getColumnsByData()
 
-> **getColumnsByData**(`state`, ...`params`): readonly keyof [`CellItem`](../../../../lib/fp/CellItem/interfaces/CellItem.md)\<[`Value`](../../../../lib/fp/CellItem/type-aliases/Value.md)\>[]
+> **getColumnsByData**(`state`, ...`params`): readonly `string`[]
 
 ## Parameters
 
 ▪ **state**: `object`
 
-▪ **state.data**: `Readonly`\<[`State`](../../../../features/sheet/reducers/interfaces/State.md)\>
+▪ **state.data**: `Readonly`\<[`State`](../../../../reducers/data/interfaces/State.md)\>
 
-▪ **state.matches**: `Readonly`\<[`State`](../../../progress/paths/private/interfaces/State.md)\>
+▪ **state.matches**: `Readonly`\<[`State`](../../../progress/progress/private/interfaces/State.md)\>
 
-▪ **state.progress**: `Readonly`\<[`State`](../../../progress/paths/private/interfaces/State.md)\>
+▪ **state.progress**: `Readonly`\<[`State`](../../../progress/progress/private/interfaces/State.md)\>
 
 ▪ ...**params**: []
 
 ## Returns
 
-readonly keyof [`CellItem`](../../../../lib/fp/CellItem/interfaces/CellItem.md)\<[`Value`](../../../../lib/fp/CellItem/type-aliases/Value.md)\>[]
+readonly `string`[]
 
 ## Source
 

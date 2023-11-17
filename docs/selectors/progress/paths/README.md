@@ -12,10 +12,6 @@ The file contains the selectors for the paths in the progress slice.
 
 ## Index
 
-### Modules
-
-- [private](private/README.md)
-
 ### Functions
 
 - [getIsAtEda](functions/getIsAtEda.md)

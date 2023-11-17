@@ -24,7 +24,7 @@
 
 ## Source
 
-[Projects/clean-tool-app/src/pages/EDA/Variable/DataGrid/FlagDataGrid.tsx:56](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/pages/EDA/Variable/DataGrid/FlagDataGrid.tsx:57](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

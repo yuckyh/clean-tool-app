@@ -12,11 +12,11 @@
 
 ▪ **state**: `object`
 
-▪ **state.data**: `Readonly`\<[`State`](../../../features/sheet/reducers/interfaces/State.md)\>
+▪ **state.data**: `Readonly`\<[`State`](../../../reducers/data/interfaces/State.md)\>
 
-▪ **state.matches**: `Readonly`\<[`State`](../paths/private/interfaces/State.md)\>
+▪ **state.matches**: `Readonly`\<[`State`](../progress/private/interfaces/State.md)\>
 
-▪ **state.progress**: `Readonly`\<[`State`](../paths/private/interfaces/State.md)\>
+▪ **state.progress**: `Readonly`\<[`State`](../progress/private/interfaces/State.md)\>
 
 ## Returns
 
@@ -30,7 +30,7 @@
 
 ## Source
 
-[Projects/clean-tool-app/src/selectors/progress/index.ts:21](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/selectors/progress/index.ts:11](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

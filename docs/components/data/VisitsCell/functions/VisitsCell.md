@@ -30,7 +30,7 @@ The compoonent object.
 
 ## Source
 
-[Projects/clean-tool-app/src/features/data/components/VisitsCell.tsx:94](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/components/matches/VisitsCell.tsx:94](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

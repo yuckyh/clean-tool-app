@@ -10,10 +10,7 @@
 
 ### Functions
 
-- [getAllowedPaths](functions/getAllowedPaths.md)
-- [getIsDisabled](functions/getIsDisabled.md)
 - [getProgress](functions/getProgress.md)
-- [getShouldNavigateToAllowed](functions/getShouldNavigateToAllowed.md)
 
 ***
 

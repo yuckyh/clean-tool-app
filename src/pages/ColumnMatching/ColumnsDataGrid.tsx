@@ -36,7 +36,6 @@ import {
 } from '@fluentui/react-components'
 import * as IO from 'fp-ts/IO'
 import * as IOO from 'fp-ts/IOOption'
-import * as O from 'fp-ts/Option'
 import * as RA from 'fp-ts/ReadonlyArray'
 import * as T from 'fp-ts/Task'
 import * as f from 'fp-ts/function'

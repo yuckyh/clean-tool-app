@@ -30,7 +30,7 @@ The component object.
 
 ## Source
 
-[Projects/clean-tool-app/src/features/sheet/components/HeaderCell.tsx:88](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/components/data/HeaderCell.tsx:88](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

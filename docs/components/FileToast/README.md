@@ -6,6 +6,10 @@
 
 # components/FileToast
 
+## File
+
+This file contains the FileToast component.
+
 ## Index
 
 ### Modules

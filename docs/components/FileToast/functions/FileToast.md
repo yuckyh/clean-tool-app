@@ -8,23 +8,29 @@
 
 > **FileToast**(`props`): `Element`
 
+The [FileToast](FileToast.md) component displays a toast notification for file I/O
+
 ## Parameters
 
 ▪ **props**: `Readonly`\<[`Props`](../private/interfaces/Props.md)\>
+
+The props for the [FileToast](FileToast.md) component.
 
 ## Returns
 
 `Element`
 
+The component object.
+
 ## Example
 
-```ts
-
+```tsx
+ dispatchToast(<FileToast fileTask="uploaded" />)
 ```
 
 ## Source
 
-[Projects/clean-tool-app/src/components/FileToast.tsx:27](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/components/FileToast.tsx:34](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

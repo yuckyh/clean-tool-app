@@ -16,13 +16,13 @@ This selector is used to get the original columns in the data slice.
 
 The application state [AppState](../../../../app/store/type-aliases/AppState.md)
 
-▪ **state.data**: `Readonly`\<[`State`](../../../../features/sheet/reducers/interfaces/State.md)\>
+▪ **state.data**: `Readonly`\<[`State`](../../../../reducers/data/interfaces/State.md)\>
 
 The data slice of the application state [data](Property data:Readonly`<State>` )
 
-▪ **state.matches**: `Readonly`\<[`State`](../../../progress/paths/private/interfaces/State.md)\>
+▪ **state.matches**: `Readonly`\<[`State`](../../../progress/progress/private/interfaces/State.md)\>
 
-▪ **state.progress**: `Readonly`\<[`State`](../../../progress/paths/private/interfaces/State.md)\>
+▪ **state.progress**: `Readonly`\<[`State`](../../../progress/progress/private/interfaces/State.md)\>
 
 ## Returns
 

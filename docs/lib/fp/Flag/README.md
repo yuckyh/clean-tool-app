@@ -27,6 +27,7 @@
 - [isFlagTuple](functions/isFlagTuple.md)
 - [isFlagValue](functions/isFlagValue.md)
 - [of](functions/of.md)
+- [unwrap](functions/unwrap.md)
 
 ***
 

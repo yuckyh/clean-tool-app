@@ -28,11 +28,11 @@ The selector function.
 >
 > ▪ **state**: `object`
 >
-> ▪ **state.data**: `Readonly`\<[`State`](../../../../../features/sheet/reducers/interfaces/State.md)\>
+> ▪ **state.data**: `Readonly`\<[`State`](../../../../../reducers/data/interfaces/State.md)\>
 >
-> ▪ **state.matches**: `Readonly`\<[`State`](../../../../../selectors/progress/paths/private/interfaces/State.md)\>
+> ▪ **state.matches**: `Readonly`\<[`State`](../../../../../selectors/progress/progress/private/interfaces/State.md)\>
 >
-> ▪ **state.progress**: `Readonly`\<[`State`](../../../../../selectors/progress/paths/private/interfaces/State.md)\>
+> ▪ **state.progress**: `Readonly`\<[`State`](../../../../../selectors/progress/progress/private/interfaces/State.md)\>
 >
 > ### Returns
 >

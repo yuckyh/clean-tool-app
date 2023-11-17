@@ -6,6 +6,8 @@
 
 # Interface: Props
 
+The props for the [FileToast](../../functions/FileToast.md) component.
+
 ## Contents
 
 - [Properties](Props.md#properties)
@@ -17,9 +19,11 @@
 
 > **fileTask**: [`FileTaskType`](../../type-aliases/FileTaskType.md)
 
+The file task to display.
+
 #### Source
 
-[Projects/clean-tool-app/src/components/FileToast.tsx:17](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/components/FileToast.tsx:21](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

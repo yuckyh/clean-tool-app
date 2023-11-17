@@ -8,9 +8,11 @@
 
 > **FileTaskType**: `"deleted"` \| `"downloaded"` \| `"none"` \| `"uploaded"`
 
+The type of file I/O task.
+
 ## Source
 
-[Projects/clean-tool-app/src/components/FileToast.tsx:8](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/components/FileToast.tsx:12](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

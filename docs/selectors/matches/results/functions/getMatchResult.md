@@ -16,11 +16,11 @@ Selector function to get the match result from the match results array.
 
 The application state [AppState](../../../../app/store/type-aliases/AppState.md)
 
-▪ **state.data**: `Readonly`\<[`State`](../../../../features/sheet/reducers/interfaces/State.md)\>
+▪ **state.data**: `Readonly`\<[`State`](../../../../reducers/data/interfaces/State.md)\>
 
-▪ **state.matches**: `Readonly`\<[`State`](../../../progress/paths/private/interfaces/State.md)\>
+▪ **state.matches**: `Readonly`\<[`State`](../../../progress/progress/private/interfaces/State.md)\>
 
-▪ **state.progress**: `Readonly`\<[`State`](../../../progress/paths/private/interfaces/State.md)\>
+▪ **state.progress**: `Readonly`\<[`State`](../../../progress/progress/private/interfaces/State.md)\>
 
 ▪ ...**params**: [`number`]
 

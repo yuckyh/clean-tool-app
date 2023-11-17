@@ -16,13 +16,13 @@ Selector function to get the score results from the matches slice of the state.
 
 The application state [AppState](../../../../app/store/type-aliases/AppState.md)
 
-▪ **state.data**: `Readonly`\<[`State`](../../../../features/sheet/reducers/interfaces/State.md)\>
+▪ **state.data**: `Readonly`\<[`State`](../../../../reducers/data/interfaces/State.md)\>
 
-▪ **state.matches**: `Readonly`\<[`State`](../../../progress/paths/private/interfaces/State.md)\>
+▪ **state.matches**: `Readonly`\<[`State`](../../../progress/progress/private/interfaces/State.md)\>
 
 The matches slice of the state.
 
-▪ **state.progress**: `Readonly`\<[`State`](../../../progress/paths/private/interfaces/State.md)\>
+▪ **state.progress**: `Readonly`\<[`State`](../../../progress/progress/private/interfaces/State.md)\>
 
 ## Returns
 

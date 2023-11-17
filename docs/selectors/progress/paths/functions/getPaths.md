@@ -12,11 +12,11 @@
 
 ▪ **state**: `object`
 
-▪ **state.data**: `Readonly`\<[`State`](../../../../features/sheet/reducers/interfaces/State.md)\>
+▪ **state.data**: `Readonly`\<[`State`](../../../../reducers/data/interfaces/State.md)\>
 
-▪ **state.matches**: `Readonly`\<[`State`](../private/interfaces/State.md)\>
+▪ **state.matches**: `Readonly`\<[`State`](../../progress/private/interfaces/State.md)\>
 
-▪ **state.progress**: `Readonly`\<[`State`](../private/interfaces/State.md)\>
+▪ **state.progress**: `Readonly`\<[`State`](../../progress/private/interfaces/State.md)\>
 
 ▪ ...**params**: [`string`]
 

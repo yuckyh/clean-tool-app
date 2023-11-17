@@ -20,7 +20,7 @@
 
 #### Source
 
-[Projects/clean-tool-app/src/features/sheet/components/HeaderCell.tsx:47](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/components/data/HeaderCell.tsx:47](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 
@@ -30,7 +30,7 @@
 
 #### Source
 
-[Projects/clean-tool-app/src/features/sheet/components/HeaderCell.tsx:51](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/components/data/HeaderCell.tsx:51](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

@@ -22,7 +22,7 @@ This hook navigates the user to the allowed path if the current path is not allo
 
 ## Source
 
-[Projects/clean-tool-app/src/hooks/progress.ts:116](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/hooks/progress.ts:118](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

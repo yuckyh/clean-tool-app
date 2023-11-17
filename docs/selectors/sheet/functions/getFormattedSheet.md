@@ -16,11 +16,11 @@ Selector to get the formatted sheet from the app state
 
 The application state
 
-▪ **state.data**: `Readonly`\<[`State`](../../../features/sheet/reducers/interfaces/State.md)\>
+▪ **state.data**: `Readonly`\<[`State`](../../../reducers/data/interfaces/State.md)\>
 
-▪ **state.matches**: `Readonly`\<[`State`](../../progress/paths/private/interfaces/State.md)\>
+▪ **state.matches**: `Readonly`\<[`State`](../../progress/progress/private/interfaces/State.md)\>
 
-▪ **state.progress**: `Readonly`\<[`State`](../../progress/paths/private/interfaces/State.md)\>
+▪ **state.progress**: `Readonly`\<[`State`](../../progress/progress/private/interfaces/State.md)\>
 
 ▪ ...**params**: []
 

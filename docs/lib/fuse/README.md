@@ -8,9 +8,9 @@
 
 ## Index
 
-### Variables
+### Functions
 
-- [fuse](variables/fuse.md)
+- [search](functions/search.md)
 
 ***
 

@@ -4,7 +4,7 @@ import {
   getAllowedPaths,
   getIsDisabled,
   getShouldNavigateToAllowed,
-} from '@/selectors/progress'
+} from '@/selectors/progress/progress'
 import {
   getPaths,
   getPosition,
