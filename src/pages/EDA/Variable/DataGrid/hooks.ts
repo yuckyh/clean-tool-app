@@ -9,6 +9,9 @@
 import type { DataGridProps } from '@fluentui/react-components'
 
 import { getIndexedIndex } from '@/lib/array'
+import * as Flag from '@/lib/fp/Flag'
+import { dump } from '@/lib/fp/logger'
+import { useAppDispatch, useAppSelector } from '@/lib/hooks'
 import { selectFlaggedRows } from '@/pages/EDA/Variable/DataGrid/selectors'
 import { syncFlaggedCells } from '@/reducers/data'
 import * as IO from 'fp-ts/IO'
@@ -17,9 +20,6 @@ import * as RS from 'fp-ts/ReadonlySet'
 import * as f from 'fp-ts/function'
 import * as S from 'fp-ts/string'
 import { useCallback, useMemo } from 'react'
-
-import * as Flag from '../../../../lib/fp/Flag'
-import { useAppDispatch, useAppSelector } from '../../../../lib/hooks'
 
 /**
  *
@@ -56,6 +56,7 @@ export const useSyncedSelectionHandler = (
       const checkedPosList = f.pipe(
         subtractor,
         RS.difference(S.Eq)(subtractee),
+        dump,
         RS.toReadonlyArray(S.Ord),
         RA.filter((checkedPos) => RA.elem(S.Eq)(checkedPos)(indices)),
       )
