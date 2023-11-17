@@ -90,7 +90,6 @@ export default defineConfig(({ mode }) => {
     ],
     preview: {
       cors: false,
-      https: true,
       strictPort: true,
     },
     resolve: {
@@ -101,7 +100,6 @@ export default defineConfig(({ mode }) => {
     // Tauri expects a fixed port, fail if that port is not available
     server: {
       cors: false,
-      https: true,
       strictPort: true,
     },
   }
