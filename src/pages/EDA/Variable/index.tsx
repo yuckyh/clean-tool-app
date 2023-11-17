@@ -177,7 +177,6 @@ export default function Variable() {
                       (x) => dispatch(x),
                       IO.of,
                     )()
-                    return undefined
                   }}
                 />
               </Field>

@@ -43,6 +43,8 @@ export const of = (index: string, column: string, reason: FlagReason) =>
     value: [index, column, reason] as const,
   }) as Flag
 
+export const unwrap = ({ value }: Readonly<Flag>) => value
+
 /**
  *
  */

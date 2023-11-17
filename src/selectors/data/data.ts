@@ -60,44 +60,41 @@ export const getFormattedData = createSelector(
     dataTypes,
   ): readonly CellItem.CellItem[] =>
     f.pipe(
-      data,
-      RA.map(
-        f.flow(
-          CellItem.recordMap(
-            f.flow(
-              Object.entries<CellItem.Value>,
-              RA.zip(dataTypes),
-              RA.map(
-                ([[key, value], dataType]) =>
-                  [
-                    arrayLookup(formattedColumns)('')(
-                      findIndex(originalColumns)(S.Eq)(key),
-                    ),
-                    isCorrectNumber(value.toString()) &&
-                    dataType === 'numerical'
-                      ? parseFloat(value.toString())
-                      : value,
-                  ] as const,
-              ),
-              RR.fromEntries,
+      f.flow(
+        CellItem.recordMap(
+          f.flow(
+            Object.entries<CellItem.Value>,
+            RA.zip(dataTypes),
+            RA.map(
+              ([[key, value], dataType]) =>
+                [
+                  arrayLookup(formattedColumns)('')(
+                    findIndex(originalColumns)(S.Eq)(key),
+                  ),
+                  isCorrectNumber(value.toString()) && dataType === 'numerical'
+                    ? parseFloat(value.toString())
+                    : value,
+                ] as const,
             ),
+            RR.fromEntries,
           ),
-          CellItem.recordMap((entry) =>
-            f.pipe(
-              posList,
-              RA.zip(emptyColumns),
-              RA.reduce(entry, (acc, [pos, value]) =>
-                f.pipe(
-                  acc,
-                  Object.entries<CellItem.Value>,
-                  RA.insertAt(pos, [value, '' as CellItem.Value] as const),
-                  O.map(RR.fromEntries),
-                  O.getOrElse(() => acc),
-                ),
+        ),
+        CellItem.recordMap((entry) =>
+          f.pipe(
+            posList,
+            RA.zip(emptyColumns),
+            RA.reduce(entry, (acc, [pos, value]) =>
+              f.pipe(
+                acc,
+                Object.entries<CellItem.Value>,
+                RA.insertAt(pos, [value, '' as CellItem.Value] as const),
+                O.map(RR.fromEntries),
+                O.getOrElse(() => acc),
               ),
             ),
           ),
         ),
       ),
-    ),
+      RA.map,
+    )(data),
 )

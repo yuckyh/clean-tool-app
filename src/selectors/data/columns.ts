@@ -4,11 +4,12 @@
  */
 
 import type { AppState } from '@/app/store'
-import type * as CellItem from '@/lib/fp/CellItem'
 
 import { getColParam } from '@/app/selectors'
 import { arrayLookup, findIndex, head } from '@/lib/array'
 import { typedIdentity } from '@/lib/fp'
+import * as CellItem from '@/lib/fp/CellItem'
+import { dump } from '@/lib/fp/logger'
 import { getMatchColumns } from '@/selectors/matches/columns'
 import { createSelector } from '@reduxjs/toolkit'
 import * as RA from 'fp-ts/ReadonlyArray'
@@ -33,7 +34,7 @@ export const getOriginalColumns = ({ data }: AppState) => data.originalColumns
 export const getColumnsByData = createSelector(
   [getData],
   f.flow(
-    RA.map(RR.keys),
+    RA.map(f.flow(CellItem.unwrap, RR.keys)),
     head,
     f.apply([] as readonly (keyof CellItem.CellItem)[]),
   ),

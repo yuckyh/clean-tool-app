@@ -86,10 +86,10 @@ const selectCategoricalSeries =
  * @returns
  * @example
  */
-const selectNumericalValues =
+const selectNumericalSeries =
   ({ column, visit }: Readonly<Props>) =>
   (state: AppState) =>
-    RA.map(getIndexedValue)(getIndexedNumericalRow(state, column, visit))
+    getIndexedNumericalRow(state, column, visit)
 
 /**
  * This function is used to render the summary statistics of the selected variable.
@@ -111,7 +111,11 @@ export default function SummaryDataGrid(props: Readonly<Props>) {
   const { isCategorical } = props
 
   const categoricalSeries = useAppSelector(selectCategoricalSeries(props))
-  const numericalValues = useAppSelector(selectNumericalValues(props))
+  const numericalSeries = useAppSelector(selectNumericalSeries(props))
+  const numericalValues = useMemo(
+    () => RA.map(getIndexedValue)(numericalSeries),
+    [numericalSeries],
+  )
 
   const columnDefinition: readonly TableColumnDefinition<SummaryStats>[] =
     useMemo(

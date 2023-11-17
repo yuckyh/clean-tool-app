@@ -4,10 +4,10 @@
  */
 
 import type { AppState } from '@/app/store'
-import type * as CellItem from '@/lib/fp/CellItem'
 
 import { findIndex, recordLookup } from '@/lib/array'
 import { equals } from '@/lib/fp'
+import * as CellItem from '@/lib/fp/CellItem'
 import { stubEq } from '@/lib/fp/Eq'
 import * as Flag from '@/lib/fp/Flag'
 import { getFormattedColumns } from '@/selectors/matches/format'
@@ -99,7 +99,9 @@ export const getHasSheet = f.flow(getDataLength, Boolean)
  *
  */
 const getRenamedSheet = createSelector([getFormattedData], (formattedData) =>
-  utils.json_to_sheet(formattedData as CellItem.CellItem[]),
+  utils.json_to_sheet(
+    RA.map(CellItem.unwrap)(formattedData) as CellItem.CellItem['value'][],
+  ),
 )
 
 /**
@@ -110,12 +112,11 @@ const getFlaggedCellsAddresses = createSelector(
   (flaggedCells, formattedColumns, indexRow) =>
     f.pipe(
       flaggedCells,
-      RA.map((cell) =>
-        f.pipe(
-          flaggedCells,
-          RA.filter(
-            f.pipe(Eq.tuple(S.Eq, S.Eq, stubEq()), Flag.getEq, equals)(cell),
-          ),
+      RA.map(
+        f.flow(
+          f.pipe(Eq.tuple(S.Eq, S.Eq, stubEq()), Flag.getEq, equals),
+          RA.filter<Flag.Flag>,
+          f.apply(flaggedCells),
           (x) =>
             x.length > 1
               ? x.filter(({ value: [, , reason] }) => reason !== 'outlier')

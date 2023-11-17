@@ -9,6 +9,7 @@ import { equals, isCorrectNumber } from '@/lib/fp'
 import * as CellItem from '@/lib/fp/CellItem'
 import { refinedEq, stubEq } from '@/lib/fp/Eq'
 import * as Flag from '@/lib/fp/Flag'
+import { dump } from '@/lib/fp/logger'
 import { getIndexColumnPos, getSearchedPos } from '@/selectors/matches/pos'
 import { createSelector } from '@reduxjs/toolkit'
 import * as Eq from 'fp-ts/Eq'
@@ -58,7 +59,7 @@ const rowByColumnPos = (
           f.apply(arrayLookup(originalColumns)('')(pos)),
         ),
       ),
-      toString,
+      (x) => x.toString(),
     ),
   )(data)
 

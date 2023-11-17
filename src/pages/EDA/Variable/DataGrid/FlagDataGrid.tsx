@@ -51,10 +51,12 @@ interface Props {
  * @param props.subtitleText
  * @param props.emptyText
  * @param props.series
+ * @param props.reason
  * @example
  */
 export default function IncorrectDataGrid({
   emptyText,
+  reason,
   series,
   subtitleText,
   titleText,
@@ -63,7 +65,6 @@ export default function IncorrectDataGrid({
   const classes = useClasses()
 
   const title = useAppSelector(selectFormattedColumn(props))
-  const reason: FlagReason = 'incorrect'
   const flaggedRows = useAppSelector(selectFlaggedRows(title, reason))
   const handleSelectionChange = useSyncedSelectionHandler(reason, title, series)
 

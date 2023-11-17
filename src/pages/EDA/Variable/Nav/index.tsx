@@ -1,7 +1,7 @@
 import type { AppState } from '@/app/store'
 import type { Progress } from '@/reducers/progress'
 
-import { arrayLookup, findIndex } from '@/lib/array'
+import { arrayLookup, findIndex, head, tail } from '@/lib/array'
 import { kebabToSnake } from '@/lib/fp/string'
 import { useAppDispatch, useAppSelector } from '@/lib/hooks'
 import { setProgress } from '@/reducers/progress'
@@ -148,12 +148,11 @@ export default function Nav() {
   const nextColumnPath = useAppSelector(selectNextVariablePath(pos))
 
   const handlePrevVariable = useCallback(() => {
-    if (depth === 2) {
-      navigate(arrayLookup(columnPaths)('')(0))
-      return
-    }
-
-    if (!f.pipe(prevColumnPath, S.split('/'), arrayLookup)('')(2)) {
+    if (
+      depth === 1 ||
+      !f.pipe(prevColumnPath, S.split('/'), arrayLookup)('')(2)
+    ) {
+      navigate(tail(columnPaths)(''))
       return
     }
 
@@ -161,12 +160,11 @@ export default function Nav() {
   }, [columnPaths, depth, navigate, prevColumnPath])
 
   const handleNextVariable = useCallback(() => {
-    if (depth === 2) {
-      navigate(arrayLookup(columnPaths)('')(0))
-      return
-    }
-
-    if (!f.pipe(nextColumnPath, S.split('/'), arrayLookup)('')(2)) {
+    if (
+      depth === 1 ||
+      !f.pipe(nextColumnPath, S.split('/'), arrayLookup)('')(2)
+    ) {
+      navigate(head(columnPaths)(''))
       return
     }
 

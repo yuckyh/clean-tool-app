@@ -216,7 +216,10 @@ const sheetSlice = createSlice({
         RA.map(f.tupled(setPersisted)),
       )
 
-      setPersisted('flaggedCells', `[${flaggedCells.join('],[')}]`)
+      setPersisted(
+        'flaggedCells',
+        `[${RA.map(Flag.unwrap)(flaggedCells).join('],[')}]`,
+      )
 
       return state
     },
@@ -248,8 +251,8 @@ const sheetSlice = createSlice({
         [...state.flaggedCells],
         E.fromPredicate(RA.elem(Flag.Eq)(payload), f.identity),
         E.match(
-          f.pipe(equals(Flag.Eq)(payload), P.not, RA.filter<Flag.Flag>),
           RA.append(payload),
+          f.pipe(equals(Flag.Eq)(payload), P.not, RA.filter<Flag.Flag>),
         ),
       ) as typeof state.flaggedCells
 
