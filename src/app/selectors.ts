@@ -6,6 +6,15 @@
 import type * as Flag from '@/lib/fp/Flag'
 import type { RouteObject } from 'react-router-dom'
 
+import globalStyles from '@/app/global.css?inline'
+import { dumpError } from '@/lib/fp/logger'
+import { makeStaticStyles } from '@fluentui/react-components'
+import * as O from 'fp-ts/Option'
+import * as T from 'fp-ts/Task'
+import * as TO from 'fp-ts/TaskOption'
+import * as f from 'fp-ts/function'
+import { useEffect } from 'react'
+
 import type { AppState } from './store'
 
 /**
@@ -163,3 +172,21 @@ export const getReasonParam = (
   _title: string,
   reason: Flag.FlagReason,
 ) => reason
+
+/**
+ * 
+ * @returns
+ * @example
+ */
+export const useStorage = () => {
+  useEffect(() => {
+    f.pipe(
+      navigator.storage.persisted.bind(navigator.storage),
+      T.map(O.fromPredicate(f.identity)),
+      TO.flatMapTask(() => navigator.storage.persist.bind(navigator.storage)),
+      TO.getOrElse(() => T.of(false)),
+    )().catch(dumpError)
+  }, [])
+}
+
+export const useGlobalStyles = makeStaticStyles(globalStyles)

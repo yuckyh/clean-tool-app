@@ -1,4 +1,11 @@
-/* eslint-disable import/prefer-default-export */
+/**
+ * @file This file contains the utilities for fuse.js
+ * @module lib/fuse
+ */
+
+/* eslint-disable
+  import/prefer-default-export
+*/
 import { codebook } from '@/data'
 import Fuse from 'fuse.js'
 

@@ -37,17 +37,18 @@ const useClasses = makeStyles({
     backgroundColor: tokens.colorStatusWarningBackground2,
     color: tokens.colorStatusWarningForeground2,
   },
-  none: {
+  none: {},
+  outlier: {
+    backgroundColor: tokens.colorNeutralForeground3,
+    color: tokens.colorNeutralBackground3,
+  },
+  root: {
     alignItems: 'center',
     display: 'flex',
     minHeight: '44px',
     width: '100%',
     ...shorthands.padding(0, tokens.spacingHorizontalS),
     justifyContent: 'center',
-  },
-  outlier: {
-    backgroundColor: tokens.colorNeutralForeground3,
-    color: tokens.colorNeutralBackground3,
   },
   suspected: {
     backgroundColor: tokens.colorStatusDangerBackground2,
@@ -122,7 +123,7 @@ export default function PreviewCell(props: Readonly<Props>) {
         f.apply(Flag.of('', '', 'none')),
         Flag.unwrap,
         ([, , reason]) => reason,
-        recordLookup(classes)(''),
+        recordLookup(classes)('none'),
       ),
     [classes, flaggedCells, formattedColumn, index],
   )

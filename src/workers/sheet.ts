@@ -104,8 +104,8 @@ const get: Handler<'get'> = async ({ fileName, method }) => {
   const workbook = await f.pipe(
     fileName,
     getRootFileHandle,
-    T.flatMap((handle) => f.constant(handle.getFile())),
-    T.flatMap((file) => f.constant(file.arrayBuffer())),
+    T.flatMap((handle) => handle.getFile.bind(handle)),
+    T.flatMap((file) => file.arrayBuffer.bind(file)),
     T.map(XLSX.read),
   )()
 
@@ -124,10 +124,12 @@ const get: Handler<'get'> = async ({ fileName, method }) => {
 const postFile: Handler<'postFile'> = async ({ file, method }) => {
   const writableStream = await f.pipe(
     getRootFileHandle(file.name, true),
-    T.flatMap((handle) => f.constant(handle.createWritable())),
+    T.flatMap((handle) => handle.createWritable.bind(handle)),
   )()
 
-  await writableStream.write(file).then(() => writableStream.close())
+  await writableStream
+    .write(file)
+    .then(writableStream.close.bind(writableStream))
 
   return { fileName: file.name, method, status: 'ok' }
 }

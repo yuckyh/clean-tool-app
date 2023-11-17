@@ -92,7 +92,7 @@ export const getIndexedRowMissings = createSelector(
     f.flow(
       isMissingData,
       RA.some,
-      f.apply(['', 'na', 'none', 'blank'] as const),
+      f.apply(['', '-', 'na', 'none', 'blank'] as const),
     ),
   ),
 )

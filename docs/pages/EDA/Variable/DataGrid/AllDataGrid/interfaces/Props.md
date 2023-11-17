@@ -20,7 +20,7 @@
 
 #### Source
 
-[Projects/clean-tool-app/src/pages/EDA/Variable/DataGrid/AllDataGrid.tsx:77](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/pages/EDA/Variable/DataGrid/AllDataGrid.tsx:78](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 
@@ -30,7 +30,7 @@
 
 #### Source
 
-[Projects/clean-tool-app/src/pages/EDA/Variable/DataGrid/AllDataGrid.tsx:81](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/pages/EDA/Variable/DataGrid/AllDataGrid.tsx:82](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

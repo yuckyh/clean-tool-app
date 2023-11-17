@@ -24,6 +24,8 @@ This file contains the global app selectors.
 - [getRowParam](functions/getRowParam.md)
 - [getTitleParam](functions/getTitleParam.md)
 - [getVisitParam](functions/getVisitParam.md)
+- [useGlobalStyles](functions/useGlobalStyles.md)
+- [useStorage](functions/useStorage.md)
 
 ***
 

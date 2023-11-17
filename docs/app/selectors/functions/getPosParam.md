@@ -50,7 +50,7 @@ const getPath = createSelector([getPaths, getPosParam], (paths, pos) =>
 
 ## Source
 
-[Projects/clean-tool-app/src/app/selectors.ts:120](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/app/selectors.ts:129](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

@@ -16,6 +16,10 @@ This file contains the main app component.
 
 - [App](functions/App.md)
 
+### Other
+
+- [useThemePreference](functions/useThemePreference.md)
+
 ***
 
 Generated using [typedoc-plugin-markdown](https://www.npmjs.com/package/typedoc-plugin-markdown) and [TypeDoc](https://typedoc.org/)

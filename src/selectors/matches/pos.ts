@@ -32,7 +32,7 @@ const searchPos = (
         arrayLookup(visits)('')(matchVisit),
       ]),
     ),
-    O.getOrElse(f.constant(-1)),
+    O.getOrElse(() => -1),
   )
 
 /**

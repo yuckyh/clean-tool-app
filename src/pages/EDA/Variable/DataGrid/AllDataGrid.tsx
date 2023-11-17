@@ -8,7 +8,6 @@ import SimpleDataGrid from '@/components/SimpleDataGrid'
 import { getIndexedIndex } from '@/lib/array'
 import { isCorrectNumber } from '@/lib/fp'
 import * as Flag from '@/lib/fp/Flag'
-import { dump } from '@/lib/fp/logger'
 import { useAppDispatch, useAppSelector } from '@/lib/hooks'
 import { syncFlaggedCells } from '@/reducers/data'
 import {
@@ -115,7 +114,7 @@ export default function AllDataGrid(props: Readonly<Props>) {
     [incorrectSeries],
   )
   const suspectedIndices = useMemo(
-    () => RA.map(getIndexedIndex)(dump(suspectedSeries)),
+    () => RA.map(getIndexedIndex)(suspectedSeries),
     [suspectedSeries],
   )
 

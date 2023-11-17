@@ -6,6 +6,10 @@
 
 # lib/fuse
 
+## File
+
+This file contains the utilities for fuse.js
+
 ## Index
 
 ### Functions

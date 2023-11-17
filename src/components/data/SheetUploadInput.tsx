@@ -3,6 +3,7 @@
 */
 import type { FileTaskType } from '@/components/FileToast'
 import type { SheetResponse } from '@/workers/sheet'
+import type * as IO from 'fp-ts/IO'
 import type { Dispatch, SetStateAction } from 'react'
 import type { DropzoneOptions } from 'react-dropzone'
 
@@ -10,7 +11,8 @@ import { fetchSheet, postFile } from '@/actions/data'
 import { sheetWorker } from '@/app/workers'
 import FileToast from '@/components/FileToast'
 import { asIO, equals } from '@/lib/fp'
-import { dumpError } from '@/lib/fp/logger'
+import { refinedEq } from '@/lib/fp/Eq'
+import { dumpError, dumpName } from '@/lib/fp/logger'
 import { useAppDispatch, useAppSelector } from '@/lib/hooks'
 import { getDataLength } from '@/selectors/data'
 import { getFileName } from '@/selectors/data/sheet'
@@ -62,6 +64,30 @@ interface Props {
    * The toaster id for controlling the toaster.
    */
   toasterId: string
+}
+
+const useOnWorkerMessage = (
+  setFileTask: Dispatch<SetStateAction<FileTaskType>>,
+  toastNotify: IO.IO<void>,
+) => {
+  useEffect(() => {
+    const handleWorkerLoad = ({
+      data: { method, status },
+    }: Readonly<MessageEvent<SheetResponse>>) => {
+      dumpName({ method, status })
+      if (status === 'fail' || method === 'get') {
+        setFileTask('none')
+        return
+      }
+      toastNotify()
+    }
+
+    sheetWorker.addEventListener('message', handleWorkerLoad)
+
+    return asIO(() => {
+      sheetWorker.removeEventListener('message', handleWorkerLoad)
+    })
+  }, [setFileTask, toastNotify])
 }
 
 /**
@@ -119,8 +145,13 @@ const SheetUploadInput = forwardRef<SheetInputRef, Props>(
 
     const toastNotify = useCallback(() => {
       f.pipe(
-        fileTask,
-        f.pipe('none', equals(S.Eq), P.not, IOO.fromPredicate<FileTaskType>),
+        S.Eq,
+        refinedEq<FileTaskType, string>,
+        equals,
+        f.apply('none' as FileTaskType),
+        P.not,
+        IOO.fromPredicate<FileTaskType>,
+        f.apply(fileTask),
         IOO.match(
           () => {},
           (task) => {
@@ -136,23 +167,7 @@ const SheetUploadInput = forwardRef<SheetInputRef, Props>(
       setFileTask,
     }))
 
-    useEffect(() => {
-      const handleWorkerLoad = ({
-        data: { method, status },
-      }: Readonly<MessageEvent<SheetResponse>>) => {
-        if (status === 'fail' || method === 'get') {
-          setFileTask('none')
-          return
-        }
-        toastNotify()
-      }
-
-      sheetWorker.addEventListener('message', handleWorkerLoad)
-
-      return asIO(() => {
-        sheetWorker.removeEventListener('message', handleWorkerLoad)
-      })
-    }, [toastNotify])
+    useOnWorkerMessage(setFileTask, toastNotify)
 
     return (
       <Field label="File" required>

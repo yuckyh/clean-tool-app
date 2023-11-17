@@ -53,7 +53,7 @@ export const getIndices = createSelector(
 /**
  *
  */
-const getResolvedIndices = createSelector(
+export const getResolvedIndices = createSelector(
   [getMatchColumns, getResolvedVisits],
   RA.zip<string, string>,
 )

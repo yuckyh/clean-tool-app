@@ -2,30 +2,13 @@ import type { AppDispatch, AppState } from '@/app/store'
 import type { ColorTokens } from '@fluentui/react-components'
 import type { TypedUseSelectorHook } from 'react-redux'
 
-import globalStyles from '@/app/global.css?inline'
-import {
-  makeStaticStyles,
-  useThemeClassName,
-  webDarkTheme,
-  webLightTheme,
-} from '@fluentui/react-components'
+import { useThemeClassName } from '@fluentui/react-components'
 import * as IO from 'fp-ts/IO'
-import * as O from 'fp-ts/Option'
-import * as T from 'fp-ts/Task'
-import * as TO from 'fp-ts/TaskOption'
 import * as f from 'fp-ts/function'
-import {
-  useCallback,
-  useEffect,
-  useMemo,
-  useState,
-  useSyncExternalStore,
-  useTransition,
-} from 'react'
+import { useCallback, useEffect, useMemo, useState, useTransition } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { asIO } from './fp'
-import { dumpError } from './fp/logger'
 
 export const useAppDispatch: () => AppDispatch = useDispatch
 export const useAppSelector: TypedUseSelectorHook<AppState> = useSelector
@@ -63,34 +46,6 @@ export const useLoadingTransition = asIO(() => {
 
 /**
  *
- * @param dark
- * @param light
- * @example
- */
-export const useThemePreference = (
-  dark = webDarkTheme,
-  light = webLightTheme,
-) => {
-  const themeMedia = useMemo(
-    () => matchMedia('(prefers-color-scheme: dark)'),
-    [],
-  )
-
-  const theme = useSyncExternalStore(
-    (cb) => {
-      themeMedia.addEventListener('change', cb)
-      return asIO(() => {
-        themeMedia.removeEventListener('change', cb)
-      })
-    },
-    () => themeMedia.matches,
-  )
-
-  return theme ? dark : light
-}
-
-/**
- *
  * @param token
  * @example
  */
@@ -113,21 +68,3 @@ export const useTokenToHex = (token: Property<ColorTokens>) => {
 
   return color
 }
-
-/**
- * @returns
- * @example
- */
-
-export const useStorage = () => {
-  useEffect(() => {
-    f.pipe(
-      () => navigator.storage.persisted(),
-      T.map(f.flow(f.constant, O.fromPredicate)),
-      TO.fromTask,
-      TO.map(() => navigator.storage.persist()),
-    )().catch(dumpError)
-  }, [])
-}
-
-export const useGlobalStyles = makeStaticStyles(globalStyles)

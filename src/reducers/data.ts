@@ -4,7 +4,6 @@
 */
 import type { RejectedAction } from '@/types/redux'
 import type { PayloadAction } from '@reduxjs/toolkit'
-import type { BookType, WorkSheet } from 'xlsx'
 
 import { deleteSheet, fetchSheet, postFile, sliceName } from '@/actions/data'
 import { head } from '@/lib/array'
@@ -22,7 +21,7 @@ import * as RA from 'fp-ts/ReadonlyArray'
 import * as RR from 'fp-ts/ReadonlyRecord'
 import * as f from 'fp-ts/function'
 import * as S from 'fp-ts/string'
-import { utils } from 'xlsx'
+import { type BookType, type WorkSheet, utils } from 'xlsx'
 
 /**
  * The state struct for the sheet slice.
@@ -126,6 +125,7 @@ const sheetSlice = createSlice({
 
         state.visits = state.visits.length ? state.visits : ['1']
 
+        state.sheets = Sheets ?? {}
         const sheet = Sheets?.[state.sheetName] ?? {}
 
         state.data = f.pipe(
@@ -234,7 +234,7 @@ const sheetSlice = createSlice({
 
       state.visits = f.pipe(
         visits,
-        RA.modifyAt(pos, f.constant(visit)),
+        RA.modifyAt(pos, () => visit),
         O.getOrElse(() => visits),
       ) as string[]
 

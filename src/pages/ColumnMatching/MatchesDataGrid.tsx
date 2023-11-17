@@ -15,7 +15,7 @@ import type { RefObject } from 'react'
 import { fetchMatches } from '@/actions/matches'
 import Loader from '@/components/Loader'
 import SimpleDataGrid from '@/components/SimpleDataGrid'
-import { dump, dumpError } from '@/lib/fp/logger'
+import { dumpError } from '@/lib/fp/logger'
 import { add } from '@/lib/fp/number'
 import {
   useAppDispatch,
@@ -92,7 +92,7 @@ const useInferVisitAlert = (infoAlertRef: RefObject<AlertRef>) => {
   useEffect(() => {
     f.pipe(
       visitsLength,
-      IOO.fromPredicate((x) => Math.max(...dump(matchVisits)) >= x && x > 0),
+      IOO.fromPredicate((x) => Math.max(...matchVisits) >= x && x > 0),
       IOO.map(
         f.flow(
           () => matchVisits as number[],

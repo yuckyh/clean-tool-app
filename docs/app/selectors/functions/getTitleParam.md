@@ -43,7 +43,7 @@ const getFlaggedRows = createSelector(
 
 ## Source
 
-[Projects/clean-tool-app/src/app/selectors.ts:146](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/app/selectors.ts:155](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

@@ -18,7 +18,7 @@
 
 ## Source
 
-[Projects/clean-tool-app/src/lib/fuse.ts:13](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/lib/fuse.ts:20](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

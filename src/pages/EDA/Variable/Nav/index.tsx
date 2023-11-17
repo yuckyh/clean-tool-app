@@ -5,8 +5,8 @@ import { kebabToSnake } from '@/lib/fp/string'
 import { useAppDispatch, useAppSelector } from '@/lib/hooks'
 import { setProgress } from '@/reducers/progress'
 import { getColumnsLength } from '@/selectors/data/columns'
-import { getFirstVisit, getVisits } from '@/selectors/data/visits'
-import { getColumnPaths, getIndices } from '@/selectors/matches/format'
+import { getFirstVisit } from '@/selectors/data/visits'
+import { getColumnPaths, getResolvedIndices } from '@/selectors/matches/format'
 import {
   Button,
   TabList,
@@ -88,8 +88,7 @@ export default function Nav() {
   const dispatch = useAppDispatch()
 
   const columnsLength = useAppSelector(getColumnsLength)
-  const indices = useAppSelector(getIndices)
-  const visits = useAppSelector(getVisits)
+  const resolvedIndices = useAppSelector(getResolvedIndices)
   const firstVisit = useAppSelector(getFirstVisit)
   const columnPaths = useAppSelector(getColumnPaths)
   const pathWords = useAppSelector(selectPathWords(pathname))
@@ -104,16 +103,12 @@ export default function Nav() {
   const pos = useMemo(
     () =>
       f.pipe(
-        indices,
-        RA.map(
-          ([matchColumn, matchVisit]) =>
-            [matchColumn, arrayLookup(visits)('')(matchVisit)] as const,
-        ),
+        resolvedIndices,
         findIndex,
         f.apply(Eq.tuple(S.Eq, S.Eq)),
         f.apply([column, visit || firstVisit] as const),
       ),
-    [column, firstVisit, indices, visit, visits],
+    [column, firstVisit, resolvedIndices, visit],
   )
 
   const prevColumnPath = useAppSelector(selectPrevVariablePath(pos))

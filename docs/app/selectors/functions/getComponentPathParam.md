@@ -44,7 +44,7 @@ const getPaths = createSelector(
 
 ## Source
 
-[Projects/clean-tool-app/src/app/selectors.ts:103](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/app/selectors.ts:112](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

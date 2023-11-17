@@ -147,17 +147,12 @@ export default function Upload() {
       [deleteProgress, deleteMatches] as const,
       RA.map(f.flow((x) => dispatch(x()), IO.of)),
       IO.sequenceArray,
-      f.constant(sheetInputRef.current?.setFileTask('deleted')),
+      () => sheetInputRef.current?.setFileTask('deleted'),
       IO.of,
-      IO.tap(IO.of),
       () => deleteSheet,
       T.of,
       T.tap((x) => f.pipe(dispatch(x()), promisedTask)),
-      T.tapIO(() =>
-        IO.of(() => {
-          localStorage.clear()
-        }),
-      ),
+      T.tapIO(() => window.localStorage.clear.bind(window.localStorage)),
     )().catch(dumpError)
   }, [dispatch])
 

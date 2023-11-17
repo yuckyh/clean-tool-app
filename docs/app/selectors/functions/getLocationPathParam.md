@@ -48,7 +48,7 @@ const getTitle = createSelector(
 
 ## Source
 
-[Projects/clean-tool-app/src/app/selectors.ts:85](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/app/selectors.ts:94](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

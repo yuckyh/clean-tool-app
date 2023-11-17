@@ -15,6 +15,7 @@
 - [getFormattedColumn](functions/getFormattedColumn.md)
 - [getFormattedColumns](functions/getFormattedColumns.md)
 - [getIndices](functions/getIndices.md)
+- [getResolvedIndices](functions/getResolvedIndices.md)
 
 ***
 

@@ -43,7 +43,7 @@ const getSearchedPos = createSelector(
 
 ## Source
 
-[Projects/clean-tool-app/src/app/selectors.ts:52](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/app/selectors.ts:61](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

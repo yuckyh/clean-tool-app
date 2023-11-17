@@ -208,15 +208,10 @@ const { actions, reducer } = createSlice({
       return state
     },
     saveMatchesState: (state) => {
-      const {
-        columns: matchColumns,
-        dataTypes,
-        scores: matchScores,
-        visits: matchVisits,
-      } = state
+      const { columns, dataTypes, scores, visits } = state
 
       f.pipe(
-        [matchColumns, matchVisits, matchScores, dataTypes] as const,
+        [columns, visits, scores, dataTypes] as const,
         RA.map((x) => x.join(',')),
         RA.zip<string>,
         f.apply(keys),
@@ -323,7 +318,7 @@ const { actions, reducer } = createSlice({
 
       const newScore = f.pipe(
         matchColumn,
-        findIndex(result)(S.Eq),
+        findIndex([...result])(S.Eq),
         arrayLookup(resultScores)(
           f.pipe(
             matchColumn,

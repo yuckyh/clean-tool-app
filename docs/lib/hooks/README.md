@@ -13,10 +13,7 @@
 - [useAppDispatch](functions/useAppDispatch.md)
 - [useAppSelector](functions/useAppSelector.md)
 - [useDebounced](functions/useDebounced.md)
-- [useGlobalStyles](functions/useGlobalStyles.md)
 - [useLoadingTransition](functions/useLoadingTransition.md)
-- [useStorage](functions/useStorage.md)
-- [useThemePreference](functions/useThemePreference.md)
 - [useTokenToHex](functions/useTokenToHex.md)
 
 ***
