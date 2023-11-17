@@ -8,13 +8,19 @@
 
 > **selectRow**(`props`): (`state`) => readonly `string`[]
 
+Selector function to get the row.
+
 ## Parameters
 
 ▪ **props**: `Readonly`\<[`BaseProps`](../private/interfaces/BaseProps.md)\>
 
+The [props](../private/interfaces/BaseProps.md) for the component.
+
 ## Returns
 
 `function`
+
+The row.
 
 > > (`state`): readonly `string`[]
 >
@@ -34,18 +40,18 @@
 >
 > ### Source
 >
-> [Projects/clean-tool-app/src/components/matches/selectors.ts:73](https://github.com/yuckyh/clean-tool-app/)
+> [Projects/clean-tool-app/src/components/matches/selectors.ts:107](https://github.com/yuckyh/clean-tool-app/)
 >
 
 ## Example
 
-```ts
-
+```tsx
+ const row = useAppSelector(selectRow(props))
 ```
 
 ## Source
 
-[Projects/clean-tool-app/src/components/matches/selectors.ts:73](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/components/matches/selectors.ts:107](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

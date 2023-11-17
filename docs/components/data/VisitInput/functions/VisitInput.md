@@ -8,23 +8,29 @@
 
 > **VisitInput**(`props`): `Element`
 
+The visit input component.
+
 ## Parameters
 
 ▪ **props**: `Readonly`\<[`Props`](../interfaces/Props.md)\>
+
+The [props](../interfaces/Props.md) for the component.
 
 ## Returns
 
 `Element`
 
+The component object.
+
 ## Example
 
-```ts
-
+```tsx
+ <VisitInput pos={pos} />
 ```
 
 ## Source
 
-[Projects/clean-tool-app/src/components/data/VisitInput.tsx:35](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/components/data/VisitInput.tsx:44](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

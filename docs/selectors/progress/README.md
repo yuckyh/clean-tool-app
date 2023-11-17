@@ -8,7 +8,7 @@
 
 ## File
 
-This file contains the selectors for the progress slice of the app state.
+This file contains the selectors for the progress slice.
 
 ## Index
 

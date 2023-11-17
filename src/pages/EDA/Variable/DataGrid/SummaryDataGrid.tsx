@@ -66,9 +66,9 @@ export interface Props {
 
 /**
  * This function is used to render the summary statistics of the selected variable.
- * @category Components
  * @param props - The {@link Props props} for the component.
  * @returns The component object.
+ * @category Component
  * @example
  * ```tsx
  *  <SummaryDataGrid

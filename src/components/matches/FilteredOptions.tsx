@@ -1,3 +1,8 @@
+/**
+ * @file This file contains the filtered options component for the column matching page.
+ * @module pages/ColumnMatching/FilteredOptions
+ */
+
 import { equals } from '@/lib/fp'
 import { add, multiply } from '@/lib/fp/number'
 import { search } from '@/lib/fuse'
@@ -37,11 +42,15 @@ interface Props {
 }
 
 /**
- *
+ * The filtered options component for the column matching page.
  * @param props - The {@link Props props} for the component.
- * @param props.filteredMatches
- * @param props.value
+ * @param props.filteredMatches - The matches that has been filtered by a combo box.
+ * @param props.value - The value of the column.
+ * @returns A component object.
  * @example
+ * ```tsx
+ *  <FilteredOptions filteredMatches={filteredMatches} value={value} />
+ * ```
  */
 export default function FilteredOptions({
   filteredMatches,

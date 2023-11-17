@@ -1,5 +1,5 @@
 /**
- * @file The file contains the selectors for the columns in the data slice.
+ * @file The file contains the column selectors for the data slice.
  * @module selectors/data/columns
  */
 
@@ -19,11 +19,12 @@ import * as S from 'fp-ts/string'
 import { getData } from '.'
 
 /**
- * This selector is used to get the original columns in the data slice.
+ * This selector is used to get the original columns.
  * @param state - The application state {@link AppState}
  * @param state.data - The data slice of the application state {@link AppState.data data}
- * @returns
+ * @returns The original columns.
  * @example
+ *  const originalColumns = useAppSelector(getOriginalColumns)
  */
 export const getOriginalColumns = ({ data }: AppState) => data.originalColumns
 

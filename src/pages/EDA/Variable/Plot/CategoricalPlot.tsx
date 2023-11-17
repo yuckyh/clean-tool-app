@@ -1,3 +1,8 @@
+/**
+ * @file This file contains the categorical plot component.
+ * @module pages/EDA/Variable/Plot/CategoricalPlot
+ */
+
 import type { Data, Layout } from 'plotly.js-cartesian-dist'
 
 import { getIndexedValue, recordLookup } from '@/lib/array'
@@ -27,9 +32,17 @@ interface Props {
 }
 
 /**
- *
+ * The categorical plot component is used to create more complex plots.
  * @param props - The {@link Props props} for the component.
+ * @returns The component object.
+ * @category Component
  * @example
+ * ```tsx
+ *  <CategoricalPlot
+ *    column="al_r"
+ *    variable="al_r_1"
+ *    visit="1" />
+ * ```
  */
 export default function CategoricalPlot(props: Readonly<Props>) {
   const { variable } = props

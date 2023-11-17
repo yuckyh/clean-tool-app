@@ -24,7 +24,7 @@ The component object
 
 ## Source
 
-[Projects/clean-tool-app/src/pages/EDA/Variable/Nav/index.tsx:82](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/pages/EDA/Variable/Nav/index.tsx:86](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

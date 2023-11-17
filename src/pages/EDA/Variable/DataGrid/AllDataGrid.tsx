@@ -1,3 +1,8 @@
+/**
+ * @file This file contains the data grid component for flagging all data.
+ * @module pages/EDA/Variable/DataGrid/AllDataGrid
+ */
+
 import type {
   DataGridProps,
   InputProps,
@@ -83,11 +88,15 @@ export interface Props {
 }
 
 /**
- *
+ * The base data grid for flagging cells across various reasons.
  * @param props - The {@link Props props} for the component.
- * @param props.column
- * @param props.visit
+ * @param props.column - The column of the variable.
+ * @param props.visit - The visit of the variable.
+ * @returns The component object.
  * @example
+ * ```tsx
+ *  <AllDataGrid column={column} visit={visit} />
+ * ```
  */
 export default function AllDataGrid(props: Readonly<Props>) {
   const classes = useClasses()

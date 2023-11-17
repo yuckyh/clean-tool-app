@@ -1,6 +1,11 @@
+/**
+ * @file This file contains the preview data grid component.
+ */
+
 /* eslint-disable
   functional/immutable-data
 */
+
 import type { Props as SimpleDataGridProps } from '@/components/SimpleDataGrid'
 
 import { useAppSelector } from '@/lib/hooks'
@@ -50,10 +55,14 @@ interface Props {
 }
 
 /**
- *
+ * The data grid for previewing data.
  * @param props - The {@link Props props} for the component.
- * @param props.isOriginal
+ * @param props.isOriginal - Whether the data grid is for the original data.
+ * @returns The component object.
  * @example
+ * ```tsx
+ *  <PreviewDataGrid isOriginal={isOriginal} />
+ *  ```
  */
 function PreviewDataGrid({ isOriginal = false }: Readonly<Props>) {
   const classes = useClasses()

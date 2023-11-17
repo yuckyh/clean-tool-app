@@ -8,7 +8,7 @@
 
 ## File
 
-This file contains the data types selectors.
+This file contains the data types selectors for the matches slice.
 
 ## Index
 

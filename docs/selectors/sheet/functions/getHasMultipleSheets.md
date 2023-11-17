@@ -38,7 +38,7 @@ const hasMultipleSheets = useAppSelector(getHasMultipleSheets)
 
 ## Source
 
-[Projects/clean-tool-app/src/selectors/data/sheet.ts:88](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/selectors/data/sheet.ts:89](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

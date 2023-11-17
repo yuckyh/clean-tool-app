@@ -8,6 +8,8 @@
 
 > **kebabToSnake**(`s`): `string`
 
+Utility function to convert a kebab case string to a snake case string.
+
 ## Parameters
 
 ▪ **s**: `string`
@@ -15,6 +17,14 @@
 ## Returns
 
 `string`
+
+The snake case string.
+
+## Example
+
+```ts
+kebabToSnake('foo-bar') // 'foo_bar'
+```
 
 ## Source
 

@@ -8,6 +8,8 @@
 
 > **useDebounced**\<`T`\>(`value`, `delay`): `T`
 
+This hook is used to create a debounced value.
+
 ## Type parameters
 
 ▪ **T**
@@ -16,15 +18,27 @@
 
 ▪ **value**: `T`
 
+The value to debounce
+
 ▪ **delay**: `number`= `100`
+
+The delay in milliseconds
 
 ## Returns
 
 `T`
 
+The debounced value
+
+## Example
+
+```ts
+const debouncedValue = useDebounced(value, delay)
+```
+
 ## Source
 
-[Projects/clean-tool-app/src/lib/hooks.ts:16](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/lib/hooks.ts:29](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

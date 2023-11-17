@@ -1,5 +1,5 @@
 /**
- * @file This file contains the match results selectors.
+ * @file This file contains the results selectors for the matches slice.
  * @module selectors/matches/results
  */
 

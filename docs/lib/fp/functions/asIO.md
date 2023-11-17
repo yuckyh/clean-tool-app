@@ -8,6 +8,8 @@
 
 > **asIO**\<`As`, `V`\>(`fn`): `IO`\<`V`\>
 
+Converts a function that returns a value into a IO.
+
 ## Type parameters
 
 ▪ **As** extends readonly `unknown`[]
@@ -18,13 +20,24 @@
 
 ▪ **fn**: (...`args`) => `V`
 
+The function that returns a value.
+
 ## Returns
 
 `IO`\<`V`\>
 
+An IO representing the function.
+
+## Example
+
+```ts
+const fn = () => 1
+ const io = asIO(fn)
+```
+
 ## Source
 
-[Projects/clean-tool-app/src/lib/fp/index.ts:32](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/lib/fp/index.ts:49](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

@@ -8,13 +8,13 @@
 
 ## Index
 
-### Modules
-
-- [private](private/README.md)
-
-### Functions
+### Component
 
 - [Loader](functions/Loader.md)
+
+### Other
+
+- [private](private/README.md)
 
 ***
 

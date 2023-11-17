@@ -12,7 +12,7 @@ This file contains the value cell component for the matches data grid.
 
 ## Index
 
-### Components
+### Component
 
 - [ValueCell](functions/ValueCell.md)
 

@@ -64,13 +64,13 @@ export interface Props {
  * The box plot is rendered with the outliers as red x's and the non-outliers as blue x's.
  *
  * The y-axis is jittered to prevent the x's from overlapping.
- * @category Component
  * @param props - The {@link Props props} for the component.
  * @param props.column - The column used to get the row for plotting
  * @param props.unit - The unit of measurement for the variable
  * @param props.variable - The variable name of the formatted column and visit for the plot
  * @param props.visit - The visit for the plot
  * @returns The numerical plot component
+ * @category Component
  * @example A variable with column name `al_r` and visit `1` with unit `mm` will have variable `al_r_1` resulting to the following usage:
  * ```tsx
  * <NumericalPlot

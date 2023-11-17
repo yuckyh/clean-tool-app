@@ -1,6 +1,6 @@
 /**
  * @file The file contains the reducers for the columns slice.
- * @module features/columns/reducers
+ * @module reducers/matches
  */
 
 /* eslint-disable

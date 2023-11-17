@@ -8,6 +8,8 @@
 
 > **ioDumpError**\<`E`\>(`err`): `IO`\<`void`\>
 
+The function to dump an error to the console.
+
 ## Type parameters
 
 ▪ **E**
@@ -16,13 +18,23 @@
 
 ▪ **err**: `E`
 
+The error to dump.
+
 ## Returns
 
 `IO`\<`void`\>
 
+An IO that dumps the error to the console.
+
+## Example
+
+```ts
+const fooError = dumpError(new Error('foo'))
+```
+
 ## Source
 
-[Projects/clean-tool-app/src/lib/fp/logger.ts:30](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/lib/fp/logger.ts:56](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

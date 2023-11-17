@@ -128,12 +128,11 @@ interface Props {
  * 2. The possible replacements
  * 3. The matching visit number
  * 4. The fuzzy search score
- * @category Component
  * @param props - The {@link Props props} for the component.
  * @param props.errorAlertRef - The alert ref for the error alert used by the {@link pages/ColumnMatching ColumnMatching} page.
  * @param props.infoAlertRef - The alert ref for the info alert used by the {@link pages/ColumnMatching ColumnMatching} page.
- * @category Component
  * @returns A data grid for the user to match columns
+ * @category Component
  * @example
  * ```ts
  * <ColumnsDataGrid errorAlertRef={errorAlertRef} infoAlertRef={infoAlertRef} />

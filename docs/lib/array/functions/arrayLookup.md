@@ -8,6 +8,8 @@
 
 > **arrayLookup**\<`T`\>(`arr`): (`defaultValue`) => (`pos`) => `T`
 
+The function to access an array element safely.
+
 ## Type parameters
 
 ▪ **T**
@@ -16,9 +18,13 @@
 
 ▪ **arr**: readonly `T`[]
 
+The array to access.
+
 ## Returns
 
 `function`
+
+A function that returns the element at the specified position or the provided default value.
 
 > > (`defaultValue`): (`pos`) => `T`
 >
@@ -42,23 +48,23 @@
 > >
 > > #### Source
 > >
-> > [Projects/clean-tool-app/src/lib/array.ts:40](https://github.com/yuckyh/clean-tool-app/)
+> > [Projects/clean-tool-app/src/lib/array.ts:46](https://github.com/yuckyh/clean-tool-app/)
 > >
 >
 > ### Source
 >
-> [Projects/clean-tool-app/src/lib/array.ts:39](https://github.com/yuckyh/clean-tool-app/)
+> [Projects/clean-tool-app/src/lib/array.ts:45](https://github.com/yuckyh/clean-tool-app/)
 >
 
 ## Example
 
 ```ts
-
+const value = arrayLookup(arr)(defaultValue)(pos)
 ```
 
 ## Source
 
-[Projects/clean-tool-app/src/lib/array.ts:38](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/lib/array.ts:44](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

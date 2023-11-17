@@ -1,5 +1,5 @@
 /**
- * @file This file contains the data types selectors.
+ * @file This file contains the data types selectors for the matches slice.
  * @module selectors/matches/dataTypes
  */
 

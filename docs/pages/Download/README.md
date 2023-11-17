@@ -12,7 +12,7 @@ This file contains the download page component.
 
 ## Index
 
-### Functions
+### Component
 
 - [Download](functions/Download.md)
 

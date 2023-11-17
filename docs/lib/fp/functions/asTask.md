@@ -31,12 +31,13 @@ A task representing the function.
 ## Example
 
 ```ts
-
+const promise = Promise.resolve(1)
+ const task = promisedTask(() => promise)
 ```
 
 ## Source
 
-[Projects/clean-tool-app/src/lib/fp/index.ts:28](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/lib/fp/index.ts:37](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

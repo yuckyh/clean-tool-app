@@ -8,9 +8,13 @@
 
 > **noOpIO**(): () => `void`
 
+Function to create an instance of a void IO.
+
 ## Returns
 
 `function`
+
+An IO that does nothing.
 
 > > (): `void`
 >
@@ -20,8 +24,14 @@
 >
 > ### Source
 >
-> [Projects/clean-tool-app/src/lib/fp/index.ts:49](https://github.com/yuckyh/clean-tool-app/)
+> [Projects/clean-tool-app/src/lib/fp/index.ts:104](https://github.com/yuckyh/clean-tool-app/)
 >
+
+## Example
+
+```ts
+const io = noOpIO()
+```
 
 ## Source
 

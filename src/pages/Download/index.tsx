@@ -63,9 +63,15 @@ const useClasses = makeStyles({
 })
 
 /**
+ * The download page component.
  *
- * @returns
+ * In this page, the user can preview and download the flagged data.
+ * @returns The component object.
+ * @category Component
  * @example
+ * ```tsx
+ *  <Route lazy={defaultLazyImport(() => import('./pages/Download'))} />
+ * ```
  */
 export default function Download() {
   const classes = useClasses()

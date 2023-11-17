@@ -28,8 +28,8 @@ const useClasses = makeStyles({
 
 /**
  * This component is used to render the progress navigation bar and the main content of the page.
- * @category Component
  * @returns The main layout component
+ * @category Component
  * @example
  * ```tsx
  * <Layout />

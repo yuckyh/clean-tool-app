@@ -1,3 +1,8 @@
+/**
+ * @file This file contains the header cell component for the download preview data grid.
+ * @module pages/Download/HeaderCell
+ */
+
 import { makeStyles, shorthands, tokens } from '@fluentui/react-components'
 
 const useClasses = makeStyles({

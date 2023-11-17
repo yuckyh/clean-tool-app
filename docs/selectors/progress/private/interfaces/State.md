@@ -23,7 +23,7 @@ The progress state
 
 #### Source
 
-[Projects/clean-tool-app/src/reducers/progress.ts:22](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/reducers/progress.ts:26](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

@@ -6,6 +6,10 @@
 
 # pages/Upload
 
+## File
+
+This file contains the upload page component.
+
 ## Index
 
 ### Page

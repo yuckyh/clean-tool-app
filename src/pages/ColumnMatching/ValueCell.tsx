@@ -31,8 +31,8 @@ export interface Props {
  * A cell in the {@link pages/ColumnMatching/ColumnsDataGrid ColumnsDataGrid} that displays the value of the original column
  * @param props - The {@link Props props} for the component.
  * @param props.pos - The column index
- * @category Components
  * @returns The component object
+ * @category Component
  * @example
  * ```tsx
  *  <ValueCell pos={pos} />

@@ -6,6 +6,10 @@
 
 # pages/EDA/Variable
 
+## File
+
+This file contains the variable page component.
+
 ## Index
 
 ### Functions

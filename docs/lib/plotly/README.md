@@ -6,6 +6,10 @@
 
 # lib/plotly
 
+## File
+
+This file contains the utilities for plotly.js
+
 ## Index
 
 ### Functions

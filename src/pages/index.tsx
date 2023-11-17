@@ -1,3 +1,7 @@
+/**
+ * @file This file contains the home page component.
+ */
+
 /* eslint-disable
   functional/immutable-data
 */
@@ -29,8 +33,8 @@ const useClasses = makeStyles({
  * The home page.
  * This page is simply used to navigate to the upload page
  * @todo Add a quick introduction text to the tool in this page
- * @category Page
  * @returns The component object.
+ * @category Page
  * @example
  * ```tsx
  *  <Route lazy={defaultLazyComponent(import('../pages'))} />

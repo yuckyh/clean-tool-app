@@ -6,6 +6,10 @@
 
 # lib/fp/logger
 
+## File
+
+This file contains the logger utilities.
+
 ## Index
 
 ### Functions

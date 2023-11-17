@@ -10,7 +10,7 @@
 
 ## Source
 
-[Projects/clean-tool-app/src/components/Loader.tsx:7](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/components/Loader.tsx:11](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

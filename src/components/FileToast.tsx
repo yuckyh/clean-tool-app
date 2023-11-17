@@ -1,5 +1,5 @@
 /**
- * @file This file contains the FileToast component.
+ * @file This file contains the file toast component.
  * @module components/FileToast
  */
 import { useAppSelector } from '@/lib/hooks'

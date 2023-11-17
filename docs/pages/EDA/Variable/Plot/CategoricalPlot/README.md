@@ -6,15 +6,19 @@
 
 # pages/EDA/Variable/Plot/CategoricalPlot
 
+## File
+
+This file contains the categorical plot component.
+
 ## Index
 
-### Modules
-
-- [private](private/README.md)
-
-### Functions
+### Component
 
 - [CategoricalPlot](functions/CategoricalPlot.md)
+
+### Other
+
+- [private](private/README.md)
 
 ***
 

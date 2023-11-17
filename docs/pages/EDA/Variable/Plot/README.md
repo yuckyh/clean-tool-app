@@ -6,6 +6,10 @@
 
 # pages/EDA/Variable/Plot
 
+## File
+
+This file contains the variable plot component.
+
 ## Index
 
 ### Modules

@@ -44,7 +44,7 @@ The selector function.
 >
 > ### Source
 >
-> [Projects/clean-tool-app/src/components/progress/ProgressNav/selectors.ts:41](https://github.com/yuckyh/clean-tool-app/)
+> [Projects/clean-tool-app/src/components/progress/ProgressNav/selectors.ts:45](https://github.com/yuckyh/clean-tool-app/)
 >
 
 ## Example
@@ -57,7 +57,7 @@ The selector function.
 
 ## Source
 
-[Projects/clean-tool-app/src/components/progress/ProgressNav/selectors.ts:41](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/components/progress/ProgressNav/selectors.ts:45](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

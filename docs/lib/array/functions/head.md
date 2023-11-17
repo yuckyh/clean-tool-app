@@ -8,6 +8,8 @@
 
 > **head**\<`T`\>(`arr`): (`defaultValue`) => `T`
 
+The function to get the first element of an array.
+
 ## Type parameters
 
 ▪ **T**
@@ -16,13 +18,13 @@
 
 ▪ **arr**: readonly `T`[]
 
-The array
+The array.
 
 ## Returns
 
 `function`
 
-A function that returns the first element of the array or the provided default value
+A function that returns the first element of the array or the provided default value.
 
 > > (`defaultValue`): `T`
 >
@@ -30,34 +32,24 @@ A function that returns the first element of the array or the provided default v
 >
 > ▪ **defaultValue**: `T`
 >
-> The default value
->
 > ### Returns
 >
 > `T`
 >
-> The first element of the array or the provided default value
->
-> ### Example
->
-> ```ts
->
-> ```
->
 > ### Source
 >
-> [Projects/clean-tool-app/src/lib/array.ts:73](https://github.com/yuckyh/clean-tool-app/)
+> [Projects/clean-tool-app/src/lib/array.ts:77](https://github.com/yuckyh/clean-tool-app/)
 >
 
 ## Example
 
 ```ts
-
+const value = head(arr)(defaultValue)
 ```
 
 ## Source
 
-[Projects/clean-tool-app/src/lib/array.ts:67](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/lib/array.ts:76](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

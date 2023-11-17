@@ -8,6 +8,8 @@
 
 > **dumpError**\<`E`\>(`err`): `void`
 
+The function to dump an error to the console.
+
 ## Type parameters
 
 ▪ **E**
@@ -16,13 +18,21 @@
 
 ▪ **err**: `E`
 
+The error to dump.
+
 ## Returns
 
 `void`
 
+## Example
+
+```ts
+dumpError(new Error('foo')) // Error: foo
+```
+
 ## Source
 
-[Projects/clean-tool-app/src/lib/fp/logger.ts:32](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/lib/fp/logger.ts:64](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

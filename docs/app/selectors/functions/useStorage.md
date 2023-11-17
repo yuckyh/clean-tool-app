@@ -8,19 +8,21 @@
 
 > **useStorage**(): `void`
 
+This hook is used to persist the OPFS data in the browser.
+
 ## Returns
 
 `void`
 
 ## Example
 
-```ts
-
+```tsx
+ useStorage()
 ```
 
 ## Source
 
-[Projects/clean-tool-app/src/app/selectors.ts:181](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/app/selectors.ts:183](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

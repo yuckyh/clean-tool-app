@@ -1,5 +1,6 @@
 /**
- * @file This file contains
+ * @file This file contains the visits selectors for the matches slice.
+ * @module selectors/matches
  */
 
 import type { AppState } from '@/app/store'
@@ -14,11 +15,12 @@ import * as f from 'fp-ts/function'
 import * as N from 'fp-ts/number'
 
 /**
- *
- * @param state
- * @param state.matches
- * @returns
+ * Selector function to get the match visits.
+ * @param state - The application state {@link AppState}
+ * @param state.matches - The matches slice of the state
+ * @returns The match visits.
  * @example
+ *  const matchVisits = useAppSelector(getMatchVisits)
  */
 export const getMatchVisits = ({ matches }: AppState) => matches.visits
 

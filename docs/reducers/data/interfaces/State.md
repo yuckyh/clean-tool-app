@@ -37,7 +37,7 @@ The type of the workbook. This determines whether to show the sheet picker input
 
 #### Source
 
-[Projects/clean-tool-app/src/reducers/data.ts:36](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/reducers/data.ts:40](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 
@@ -49,7 +49,7 @@ The data from the selected sheet. The data is a list of records with keys as the
 
 #### Source
 
-[Projects/clean-tool-app/src/reducers/data.ts:40](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/reducers/data.ts:44](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 
@@ -61,7 +61,7 @@ The name of the file.
 
 #### Source
 
-[Projects/clean-tool-app/src/reducers/data.ts:44](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/reducers/data.ts:48](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 
@@ -73,7 +73,7 @@ The list of flagged cells.
 
 #### Source
 
-[Projects/clean-tool-app/src/reducers/data.ts:48](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/reducers/data.ts:52](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 
@@ -85,7 +85,7 @@ The list of original column names.
 
 #### Source
 
-[Projects/clean-tool-app/src/reducers/data.ts:52](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/reducers/data.ts:56](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 
@@ -97,7 +97,7 @@ The name of the selected sheet.
 
 #### Source
 
-[Projects/clean-tool-app/src/reducers/data.ts:56](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/reducers/data.ts:60](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 
@@ -107,7 +107,7 @@ The name of the selected sheet.
 
 #### Source
 
-[Projects/clean-tool-app/src/reducers/data.ts:60](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/reducers/data.ts:64](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 
@@ -117,7 +117,7 @@ The name of the selected sheet.
 
 #### Source
 
-[Projects/clean-tool-app/src/reducers/data.ts:64](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/reducers/data.ts:68](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

@@ -6,7 +6,7 @@
 
 # Function: getDataType()
 
-> **getDataType**(`state`, ...`params`): [`DataType`](../../../../features/columns/reducers/type-aliases/DataType.md)
+> **getDataType**(`state`, ...`params`): [`DataType`](../../../../reducers/matches/type-aliases/DataType.md)
 
 Selector function to get the data type from the data types array.
 
@@ -26,7 +26,7 @@ The application state [AppState](../../../../app/store/type-aliases/AppState.md)
 
 ## Returns
 
-[`DataType`](../../../../features/columns/reducers/type-aliases/DataType.md)
+[`DataType`](../../../../reducers/matches/type-aliases/DataType.md)
 
 The data type from the data types array
 

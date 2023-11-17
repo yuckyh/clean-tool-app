@@ -1,3 +1,7 @@
+/**
+ * @file This file contains the navigation component for the variable page.
+ */
+
 import type { Progress } from '@/reducers/progress'
 
 import { arrayLookup, findIndex, head, tail } from '@/lib/array'

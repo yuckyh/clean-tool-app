@@ -6,6 +6,10 @@
 
 # lib/localStorage
 
+## File
+
+This file contains utilities for localStorage.
+
 ## Index
 
 ### Functions

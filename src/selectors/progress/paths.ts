@@ -1,5 +1,5 @@
 /**
- * @file The file contains the selectors for the paths in the progress slice.
+ * @file The file contains the path selectors for the progress slice.
  * @module selectors/progress/paths
  */
 

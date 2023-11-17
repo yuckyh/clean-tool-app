@@ -6,7 +6,7 @@
 
 # Function: getDataTypes()
 
-> **getDataTypes**(`state`): readonly [`DataType`](../../../../features/columns/reducers/type-aliases/DataType.md)[]
+> **getDataTypes**(`state`): readonly [`DataType`](../../../../reducers/matches/type-aliases/DataType.md)[]
 
 Selector function to get the data types from the matches slice of the state.
 
@@ -26,7 +26,7 @@ The matches slice of the state.
 
 ## Returns
 
-readonly [`DataType`](../../../../features/columns/reducers/type-aliases/DataType.md)[]
+readonly [`DataType`](../../../../reducers/matches/type-aliases/DataType.md)[]
 
 The data types from the matches slice of the state.
 

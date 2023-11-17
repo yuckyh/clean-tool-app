@@ -8,7 +8,7 @@
 
 ## File
 
-This file contains the FileToast component.
+This file contains the file toast component.
 
 ## Index
 

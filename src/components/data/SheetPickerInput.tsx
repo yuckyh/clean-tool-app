@@ -1,3 +1,7 @@
+/**
+ * @file This file contains the sheet picker input component.
+ */
+
 import type { DropdownProps } from '@fluentui/react-components'
 
 import { useAppDispatch, useAppSelector } from '@/lib/hooks'
@@ -19,9 +23,12 @@ const useClasses = makeStyles({
 })
 
 /**
- *
- * @returns
+ * The sheet picker input component.
+ * @returns A sheet picker input component.
  * @example
+ * ```tsx
+ *  <SheetPickerInput />
+ * ```
  */
 export default function SheetPickerInput() {
   const classes = useClasses()

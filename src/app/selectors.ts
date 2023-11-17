@@ -174,9 +174,11 @@ export const getReasonParam = (
 ) => reason
 
 /**
- * 
- * @returns
+ * This hook is used to persist the OPFS data in the browser.
  * @example
+ * ```tsx
+ *  useStorage()
+ * ```
  */
 export const useStorage = () => {
   useEffect(() => {

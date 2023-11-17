@@ -8,6 +8,8 @@
 
 > **ioDumpName**\<`T`\>(`obj`): `IO`\<readonly `T`[]\>
 
+The function to dump a value with its name to the console.
+
 ## Type parameters
 
 ▪ **T**
@@ -16,13 +18,23 @@
 
 ▪ **obj**: `Readonly`\<`Record`\<`string`, `T`\>\>
 
+The value with the key as its name to dump.
+
 ## Returns
 
 `IO`\<readonly `T`[]\>
 
+An IO that dumps the value to the console.
+
+## Example
+
+```ts
+const ioDumpName = dumpName({ foo: 'bar' })
+```
+
 ## Source
 
-[Projects/clean-tool-app/src/lib/fp/logger.ts:43](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/lib/fp/logger.ts:96](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

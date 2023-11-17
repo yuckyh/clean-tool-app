@@ -1,3 +1,8 @@
+/**
+ * @file This file contains the visits input component for the upload page.
+ * @module pages/Upload/VisitsInput
+ */
+
 import type { InputProps } from '@fluentui/react-components'
 
 import { useAppDispatch, useAppSelector } from '@/lib/hooks'
@@ -19,8 +24,12 @@ const useClasses = makeStyles({
 })
 
 /**
- *
+ * The visits input component props.
+ * @returns The visits input component.
  * @example
+ * ```tsx
+ *  <VisitsInput />
+ * ```
  */
 export default function VisitsInput() {
   const classes = useClasses()

@@ -1,3 +1,8 @@
+/**
+ * @file This file contains the flag data grid component.
+ * @module pages/EDA/Variable/DataGrid/FlagDataGrid
+ */
+
 import type { FlagReason } from '@/lib/fp/Flag'
 import type { TableColumnDefinition } from '@fluentui/react-components'
 
@@ -47,15 +52,23 @@ interface Props {
 
 /**
  * The base data grid for flagging cells across various reasons.
- * @category Component
  * @param props - The {@link Props props} for the component.
- * @param props.titleText
- * @param props.subtitleText
- * @param props.emptyText
- * @param props.series
- * @param props.reason
+ * @param props.titleText - The data grid title.
+ * @param props.subtitleText - The data grid subtitle.
+ * @param props.emptyText - The text to display when there are no flagged cells.
+ * @param props.series - The series to display.
+ * @param props.reason - The reason for flagging.
  * @returns The component object.
+ * @category Component
  * @example
+ * ```tsx
+ *  <FlagDataGrid
+ *    titleText={titleText}
+ *    subtitleText={subtitleText}
+ *    emptyText={emptyText}
+ *    series={series}
+ *    reason={reason}
+ * />
  */
 export default function FlagDataGrid({
   emptyText,

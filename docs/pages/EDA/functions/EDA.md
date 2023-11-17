@@ -8,19 +8,23 @@
 
 > **EDA**(): `Element`
 
+The EDA page is where the users can explore the data to flag any potential issues.
+
 ## Returns
 
 `Element`
 
+The component object.
+
 ## Example
 
-```ts
-
+```tsx
+ <Route lazy={defaultLazyComponent(import('../pages/EDA'))} />
 ```
 
 ## Source
 
-[Projects/clean-tool-app/src/pages/EDA/index.tsx:19](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/pages/EDA/index.tsx:28](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

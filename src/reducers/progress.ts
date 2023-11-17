@@ -1,3 +1,7 @@
+/**
+ * @file This file contains the progress slice reducer.
+ */
+
 /* eslint-disable
   no-param-reassign,
   functional/immutable-data

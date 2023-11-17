@@ -23,7 +23,7 @@ The position of the column.
 
 #### Source
 
-[Projects/clean-tool-app/src/components/matches/selectors.ts:16](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/components/matches/selectors.ts:20](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

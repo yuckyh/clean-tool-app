@@ -8,23 +8,29 @@
 
 > **useTokenToHex**(`token`): `string`
 
+This hook is used to create a hex color from a token.
+
 ## Parameters
 
 ▪ **token**: `string`
+
+The token to convert
 
 ## Returns
 
 `string`
 
+The hex color
+
 ## Example
 
 ```ts
-
+const color = useTokenToHex(token)
 ```
 
 ## Source
 
-[Projects/clean-tool-app/src/lib/hooks.ts:52](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/lib/hooks.ts:73](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

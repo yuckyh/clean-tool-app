@@ -8,6 +8,8 @@
 
 > **toString**\<`V`\>(`val`): `string`
 
+Function to convert a primitive to a string.
+
 ## Type parameters
 
 ▪ **V** extends [`Primitive`](../../../types/utils/type-aliases/Primitive.md)
@@ -16,13 +18,25 @@
 
 ▪ **val**: `V`
 
+The primitive to convert.
+
 ## Returns
 
 `string`
 
+The string representation of the primitive.
+
+## Example
+
+```ts
+toString(1) // '1'
+ toString('1') // '1'
+ toString(true) // 'true'
+```
+
 ## Source
 
-[Projects/clean-tool-app/src/lib/fp/index.ts:39](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/lib/fp/index.ts:72](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

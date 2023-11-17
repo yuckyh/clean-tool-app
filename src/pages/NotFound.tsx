@@ -1,3 +1,8 @@
+/**
+ * @file This file is for the 404 page component.
+ * @module pages/NotFound
+ */
+
 import { Link, Subtitle1, Title1, makeStyles } from '@fluentui/react-components'
 import { useHref } from 'react-router-dom'
 
@@ -13,9 +18,12 @@ const useClasses = makeStyles({
 
 /**
  * The 404 page component
- * @category Page
  * @returns The component object
+ * @category Page
  * @example
+ * ```tsx
+ *  <Route lazy={defaultLazyComponent(import('../pages'))} />
+ * ```
  */
 export default function NotFound() {
   const classes = useClasses()

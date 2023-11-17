@@ -8,9 +8,19 @@
 
 > **useLoadingTransition**(): readonly [`boolean`, `IO`\<`void`\>]
 
+This hook is used to help loading transitions.
+
 ## Returns
 
 readonly [`boolean`, `IO`\<`void`\>]
+
+The loading transition
+
+## Example
+
+```ts
+const [isLoading, stopLoading] = useLoadingTransition()
+```
 
 ## Source
 

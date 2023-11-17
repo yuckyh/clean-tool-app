@@ -39,8 +39,8 @@ interface Props {
  * @param props - The {@link Props props} for the component.
  * @param props.header - The header text.
  * @param props.subtitle - The header subtitle text.
- * @category Components
  * @returns The component object.
+ * @category Component
  * @example
  * ```tsx
  *  <HeaderCell header={header} subtitle={subtitle} />

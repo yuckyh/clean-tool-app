@@ -6,6 +6,10 @@
 
 # components/data/VisitInput
 
+## File
+
+This file contains the visit input component.
+
 ## Index
 
 ### Interfaces

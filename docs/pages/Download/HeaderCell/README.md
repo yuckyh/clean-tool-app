@@ -6,6 +6,10 @@
 
 # pages/Download/HeaderCell
 
+## File
+
+This file contains the header cell component for the download preview data grid.
+
 ## Index
 
 ### Modules

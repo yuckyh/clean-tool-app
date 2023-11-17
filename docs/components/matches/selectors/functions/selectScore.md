@@ -8,13 +8,19 @@
 
 > **selectScore**(`props`): (`state`) => `string`
 
+Selector function to get the score.
+
 ## Parameters
 
 ▪ **props**: `Readonly`\<[`BaseProps`](../private/interfaces/BaseProps.md)\>
 
+The [props](../private/interfaces/BaseProps.md) for the component.
+
 ## Returns
 
 `function`
+
+The score.
 
 > > (`state`): `string`
 >
@@ -34,18 +40,18 @@
 >
 > ### Source
 >
-> [Projects/clean-tool-app/src/components/matches/selectors.ts:89](https://github.com/yuckyh/clean-tool-app/)
+> [Projects/clean-tool-app/src/components/matches/selectors.ts:126](https://github.com/yuckyh/clean-tool-app/)
 >
 
 ## Example
 
-```ts
-
+```tsx
+ const score = useAppSelector(selectScore(props))
 ```
 
 ## Source
 
-[Projects/clean-tool-app/src/components/matches/selectors.ts:88](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/components/matches/selectors.ts:125](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

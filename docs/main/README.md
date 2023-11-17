@@ -6,6 +6,10 @@
 
 # main
 
+## File
+
+This file contains the main entry point for the application.
+
 ***
 
 Generated using [typedoc-plugin-markdown](https://www.npmjs.com/package/typedoc-plugin-markdown) and [TypeDoc](https://typedoc.org/)

@@ -8,6 +8,8 @@
 
 > **setPersisted**\<`T`, `K`\>(`key`, `value`): `T`
 
+The function to set a persisted value in localStorage.
+
 ## Type parameters
 
 ▪ **T** extends `string`
@@ -18,15 +20,27 @@
 
 ▪ **key**: `K`
 
+The key to set the value to.
+
 ▪ **value**: `T`
+
+The value to set.
 
 ## Returns
 
 `T`
 
+The value that was set.
+
+## Example
+
+```ts
+const foo = setPersisted('foo', 'bar') // foo === 'bar'
+```
+
 ## Source
 
-[Projects/clean-tool-app/src/lib/localStorage.ts:6](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/lib/localStorage.ts:27](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

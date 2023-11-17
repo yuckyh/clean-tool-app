@@ -8,6 +8,8 @@
 
 > **indexDuplicateSearcher**\<`T`, `U`\>(`indices`, `filterIndex`): readonly `T`[]
 
+The function to get duplicates in an array.
+
 ## Type parameters
 
 ▪ **T** extends readonly `U`[]
@@ -18,21 +20,27 @@
 
 ▪ **indices**: readonly `T`[]
 
+The array to search for duplicates
+
 ▪ **filterIndex**: `T`
+
+The array to filter for duplicates
 
 ## Returns
 
 readonly `T`[]
 
+The duplicates in the array
+
 ## Example
 
 ```ts
-
+const duplicates = indexDuplicateSearcher(indices, filterIndex)
 ```
 
 ## Source
 
-[Projects/clean-tool-app/src/lib/array.ts:17](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/lib/array.ts:22](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

@@ -6,6 +6,10 @@
 
 # components/data/SheetUploadInput
 
+## File
+
+This file contains the sheet upload input component.
+
 ## Index
 
 ### Modules

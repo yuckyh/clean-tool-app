@@ -6,6 +6,10 @@
 
 # pages/EDA/Variable/DataGrid/AllDataGrid
 
+## File
+
+This file contains the data grid component for flagging all data.
+
 ## Index
 
 ### Interfaces

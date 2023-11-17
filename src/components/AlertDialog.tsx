@@ -1,5 +1,5 @@
 /**
- * @file This file is for the alert dialog component.
+ * @file This file contains the alert dialog component.
  * @module components/AlertDialog
  */
 
@@ -71,6 +71,7 @@ interface Props {
  * @param props.noCancel - Whether to show the cancel button.
  * @param props.onConfirm - The function to run when the confirm button is clicked.
  * @returns The component object.
+ * @category Component
  * @example
  * ```tsx
  *  <AlertDialog ref={alertRef} />

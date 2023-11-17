@@ -1,5 +1,5 @@
 /**
- * @file This file contains selectors for the data in the data slice.
+ * @file This file contains the data selectors for the data slice.
  * @module selectors/data/data
  */
 

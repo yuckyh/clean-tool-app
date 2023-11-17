@@ -8,13 +8,19 @@
 
 > **selectMatchColumn**(`props`): (`state`) => `string`
 
+Selector function to get the column.
+
 ## Parameters
 
 ▪ **props**: `Readonly`\<[`BaseProps`](../private/interfaces/BaseProps.md)\>
 
+The [props](../private/interfaces/BaseProps.md) for the component.
+
 ## Returns
 
 `function`
+
+The column.
 
 > > (`state`): `string`
 >
@@ -34,18 +40,18 @@
 >
 > ### Source
 >
-> [Projects/clean-tool-app/src/components/matches/selectors.ts:28](https://github.com/yuckyh/clean-tool-app/)
+> [Projects/clean-tool-app/src/components/matches/selectors.ts:35](https://github.com/yuckyh/clean-tool-app/)
 >
 
 ## Example
 
-```ts
-
+```tsx
+ const column = useAppSelector(selectColumn(props))
 ```
 
 ## Source
 
-[Projects/clean-tool-app/src/components/matches/selectors.ts:27](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/components/matches/selectors.ts:34](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

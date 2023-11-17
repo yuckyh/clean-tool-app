@@ -12,7 +12,7 @@ The possible progress states
 
 ## Source
 
-[Projects/clean-tool-app/src/reducers/progress.ts:13](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/reducers/progress.ts:17](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

@@ -21,7 +21,7 @@
 
 #### Source
 
-[Projects/clean-tool-app/src/pages/EDA/Variable/Plot/CategoricalPlot.tsx:18](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/pages/EDA/Variable/Plot/CategoricalPlot.tsx:23](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 
@@ -31,7 +31,7 @@
 
 #### Source
 
-[Projects/clean-tool-app/src/pages/EDA/Variable/Plot/CategoricalPlot.tsx:22](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/pages/EDA/Variable/Plot/CategoricalPlot.tsx:27](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 
@@ -41,7 +41,7 @@
 
 #### Source
 
-[Projects/clean-tool-app/src/pages/EDA/Variable/Plot/CategoricalPlot.tsx:26](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/pages/EDA/Variable/Plot/CategoricalPlot.tsx:31](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

@@ -6,6 +6,10 @@
 
 # pages/EDA/Variable/DataGrid/ValueCell
 
+## File
+
+This file contains the value cell component for the EDA data grid.
+
 ## Index
 
 ### Modules

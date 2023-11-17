@@ -8,6 +8,8 @@
 
 > **useLoggerEffect**\<`T`\>(`dep`): `void`
 
+This hook is used to dump a value with its name to the console.
+
 ## Type parameters
 
 ▪ **T** extends `unknown`
@@ -16,13 +18,21 @@
 
 ▪ **dep**: `Record`\<`string`, `T`\>
 
+The value with the key as its name to dump.
+
 ## Returns
 
 `void`
 
+## Example
+
+```tsx
+ useLoggerEffect({ foo: 'bar' })
+```
+
 ## Source
 
-[Projects/clean-tool-app/src/lib/fp/logger.ts:63](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/lib/fp/logger.ts:131](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

@@ -8,7 +8,7 @@
 
 > **getIndexedIndex**\<`I`, `V`\>(`tuple`): `I`
 
-Retrieves the index from an indexed tuple
+Retrieves the index from an indexed tuple.
 
 ## Type parameters
 
@@ -20,23 +20,23 @@ Retrieves the index from an indexed tuple
 
 ▪ **tuple**: readonly [`I`, `V`]
 
-The indexed tuple
+The indexed tuple.
 
 ## Returns
 
 `I`
 
-The index
+The index.
 
 ## Example
 
 ```ts
-
+const index = getIndexedIndex([0, 'foo']) // 0
 ```
 
 ## Source
 
-[Projects/clean-tool-app/src/lib/array.ts:121](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/lib/array.ts:129](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

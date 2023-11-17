@@ -1,3 +1,8 @@
+/**
+ * @file This file contains the sheet upload input component.
+ * @module components/data/SheetUploadInput
+ */
+
 /* eslint-disable
   functional/immutable-data
 */

@@ -12,7 +12,7 @@ This file contains the SummaryDataGrid component.
 
 ## Index
 
-### Components
+### Component
 
 - [SummaryDataGrid](functions/SummaryDataGrid.md)
 

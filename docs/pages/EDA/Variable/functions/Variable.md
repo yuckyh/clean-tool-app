@@ -8,19 +8,29 @@
 
 > **Variable**(): `Element`
 
+The variable page is where the specific features of EDA is shown.
+
+The features that this page has are the following:
+- The plot of the variable.
+- The summary statistics of the variable.
+- The flagged data of the variable.
+- The data grid of the variable.
+
 ## Returns
 
 `Element`
 
+The component object.
+
 ## Example
 
-```ts
-
+```tsx
+ <Route lazy={defaultLazyComponent(import('../pages/EDA/Variable'))} />
 ```
 
 ## Source
 
-[Projects/clean-tool-app/src/pages/EDA/Variable/index.tsx:85](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/pages/EDA/Variable/index.tsx:99](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

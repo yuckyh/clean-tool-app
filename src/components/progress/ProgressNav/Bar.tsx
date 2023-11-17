@@ -31,9 +31,8 @@ const useClasses = makeStyles({
  *
  * This component is used to control the length of the progress bar's fill
  * @see {@link components/progress/ProgressNav ProgressNav} for details of the overall navigation component
- * @category Component
- * @group Progress slice
  * @returns The component object
+ * @category Component
  * @example
  * ```tsx
  *    <ProgressNavBar />

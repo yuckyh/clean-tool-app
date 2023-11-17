@@ -8,6 +8,8 @@
 
 > **dumpName**\<`T`\>(`obj`): `T`
 
+The function to dump a value with its name to the console.
+
 ## Type parameters
 
 ▪ **T**
@@ -16,13 +18,23 @@
 
 ▪ **obj**: `Readonly`\<`Record`\<`string`, `T`\>\>
 
+The value with the key as its name to dump.
+
 ## Returns
 
 `T`
 
+The value that was dumped.
+
+## Example
+
+```ts
+const foo = dumpName({ foo: 'bar' }) // foo === 'bar'
+```
+
 ## Source
 
-[Projects/clean-tool-app/src/lib/fp/logger.ts:60](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/lib/fp/logger.ts:120](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

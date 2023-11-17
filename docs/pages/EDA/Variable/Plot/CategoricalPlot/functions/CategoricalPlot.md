@@ -8,6 +8,8 @@
 
 > **CategoricalPlot**(`props`): `Element`
 
+The categorical plot component is used to create more complex plots.
+
 ## Parameters
 
 ▪ **props**: `Readonly`\<[`Props`](../private/interfaces/Props.md)\>
@@ -18,15 +20,20 @@ The [props](../private/interfaces/Props.md) for the component.
 
 `Element`
 
+The component object.
+
 ## Example
 
-```ts
-
+```tsx
+ <CategoricalPlot
+   column="al_r"
+   variable="al_r_1"
+   visit="1" />
 ```
 
 ## Source
 
-[Projects/clean-tool-app/src/pages/EDA/Variable/Plot/CategoricalPlot.tsx:34](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/pages/EDA/Variable/Plot/CategoricalPlot.tsx:47](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

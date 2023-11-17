@@ -18,13 +18,13 @@ The component object
 
 ## Example
 
-```ts
-
+```tsx
+ <Route lazy={defaultLazyComponent(import('../pages'))} />
 ```
 
 ## Source
 
-[Projects/clean-tool-app/src/pages/NotFound.tsx:20](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/pages/NotFound.tsx:28](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

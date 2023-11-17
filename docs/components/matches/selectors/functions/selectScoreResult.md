@@ -8,13 +8,19 @@
 
 > **selectScoreResult**(`props`): (`state`) => readonly `number`[]
 
+Selector function to get the score result.
+
 ## Parameters
 
 ▪ **props**: `Readonly`\<[`BaseProps`](../private/interfaces/BaseProps.md)\>
 
+The [props](../private/interfaces/BaseProps.md) for the component.
+
 ## Returns
 
 `function`
+
+The score result.
 
 > > (`state`): readonly `number`[]
 >
@@ -34,18 +40,18 @@
 >
 > ### Source
 >
-> [Projects/clean-tool-app/src/components/matches/selectors.ts:64](https://github.com/yuckyh/clean-tool-app/)
+> [Projects/clean-tool-app/src/components/matches/selectors.ts:80](https://github.com/yuckyh/clean-tool-app/)
 >
 
 ## Example
 
-```ts
-
+```tsx
+ const scoreResult = useAppSelector(selectScoreResult(pos))
 ```
 
 ## Source
 
-[Projects/clean-tool-app/src/components/matches/selectors.ts:63](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/components/matches/selectors.ts:79](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

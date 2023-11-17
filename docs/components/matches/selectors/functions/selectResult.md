@@ -8,13 +8,19 @@
 
 > **selectResult**(`props`): (`state`) => readonly `string`[]
 
+Selector function to get the match result.
+
 ## Parameters
 
 ▪ **props**: `Readonly`\<[`BaseProps`](../private/interfaces/BaseProps.md)\>
 
+The [props](../private/interfaces/BaseProps.md) for the component.
+
 ## Returns
 
 `function`
+
+The match result.
 
 > > (`state`): readonly `string`[]
 >
@@ -34,18 +40,18 @@
 >
 > ### Source
 >
-> [Projects/clean-tool-app/src/components/matches/selectors.ts:52](https://github.com/yuckyh/clean-tool-app/)
+> [Projects/clean-tool-app/src/components/matches/selectors.ts:65](https://github.com/yuckyh/clean-tool-app/)
 >
 
 ## Example
 
-```ts
-
+```tsx
+ const matchResult = useAppSelector(selectMatchResult(pos))
 ```
 
 ## Source
 
-[Projects/clean-tool-app/src/components/matches/selectors.ts:51](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/components/matches/selectors.ts:64](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

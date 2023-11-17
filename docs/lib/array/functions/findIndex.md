@@ -8,6 +8,8 @@
 
 > **findIndex**\<`T`\>(`arr`): (`eq`) => (`value`) => `number`
 
+The function to get the index of an element in an array.
+
 ## Type parameters
 
 ▪ **T**
@@ -16,9 +18,13 @@
 
 ▪ **arr**: readonly `T`[]
 
+The array.
+
 ## Returns
 
 `function`
+
+A function that returns the index of the element or -1 if the element is not found.
 
 > > (`eq`): (`value`) => `number`
 >
@@ -42,23 +48,23 @@
 > >
 > > #### Source
 > >
-> > [Projects/clean-tool-app/src/lib/array.ts:97](https://github.com/yuckyh/clean-tool-app/)
+> > [Projects/clean-tool-app/src/lib/array.ts:103](https://github.com/yuckyh/clean-tool-app/)
 > >
 >
 > ### Source
 >
-> [Projects/clean-tool-app/src/lib/array.ts:96](https://github.com/yuckyh/clean-tool-app/)
+> [Projects/clean-tool-app/src/lib/array.ts:102](https://github.com/yuckyh/clean-tool-app/)
 >
 
 ## Example
 
 ```ts
-
+const index = findIndex(arr)(eq)(value)
 ```
 
 ## Source
 
-[Projects/clean-tool-app/src/lib/array.ts:95](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/lib/array.ts:101](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

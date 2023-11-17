@@ -37,7 +37,7 @@ To create a lazy import for the home page a route will be declared as such:
 
 ## Source
 
-[Projects/clean-tool-app/src/lib/utils.ts:40](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/lib/utils.ts:44](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

@@ -6,9 +6,13 @@
 
 # pages/EDA
 
+## File
+
+This file contains the EDA page component.
+
 ## Index
 
-### Functions
+### Page
 
 - [EDA](functions/EDA.md)
 

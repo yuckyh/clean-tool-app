@@ -8,13 +8,19 @@
 
 > **gt**(`x`): (`y`) => `boolean`
 
+The function to compare whether the first is greater than the second.
+
 ## Parameters
 
 ▪ **x**: `number`
 
+The first number.
+
 ## Returns
 
 `function`
+
+A function that takes a number and compares it to the first number.
 
 > > (`y`): `boolean`
 >
@@ -28,12 +34,18 @@
 >
 > ### Source
 >
-> [Projects/clean-tool-app/src/lib/fp/number.ts:11](https://github.com/yuckyh/clean-tool-app/)
+> [Projects/clean-tool-app/src/lib/fp/number.ts:57](https://github.com/yuckyh/clean-tool-app/)
 >
+
+## Example
+
+```ts
+const isGreaterThanFive = gt(5) // isGreaterThanFive(5) === false
+```
 
 ## Source
 
-[Projects/clean-tool-app/src/lib/fp/number.ts:11](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/lib/fp/number.ts:57](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

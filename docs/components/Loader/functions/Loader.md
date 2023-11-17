@@ -8,6 +8,8 @@
 
 > **Loader**(`props`): `Element`
 
+The loader component displays a [Spinner spinner]([object Object]) while the component is loading.
+
 ## Parameters
 
 ▪ **props**: `Readonly`\<[`Props`](../private/type-aliases/Props.md)\>
@@ -18,15 +20,19 @@ The [props](../private/type-aliases/Props.md) for the component.
 
 `Element`
 
+The component object.
+
 ## Example
 
-```ts
-
+```tsx
+ <Loader>
+   <Component />
+ </Loader>
 ```
 
 ## Source
 
-[Projects/clean-tool-app/src/components/Loader.tsx:16](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/components/Loader.tsx:26](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

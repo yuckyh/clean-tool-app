@@ -8,9 +8,19 @@
 
 > **noOpTask**(): `Promise`\<() => `void`\>
 
+Function to create an instance of a void task.
+
 ## Returns
 
 `Promise`\<() => `void`\>
+
+A task that does nothing.
+
+## Example
+
+```ts
+const task = noOpTask()
+```
 
 ## Source
 

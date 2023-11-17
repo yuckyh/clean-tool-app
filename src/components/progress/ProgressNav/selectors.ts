@@ -1,3 +1,7 @@
+/**
+ * @file This file contains the selectors for the progress nav component.
+ */
+
 import type { AppState } from '@/app/store'
 
 import {

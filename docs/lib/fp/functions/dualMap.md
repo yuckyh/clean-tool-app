@@ -8,6 +8,8 @@
 
 > **dualMap**\<`A`, `B`\>(`fn`): (`tuple`) => [`B`, `B`]
 
+Function to apply a function to a bifunctor.
+
 ## Type parameters
 
 ▪ **A**
@@ -18,9 +20,13 @@
 
 ▪ **fn**: (`a`) => `B`
 
+The function to apply.
+
 ## Returns
 
 `function`
+
+A function that applies the function to a bifunctor.
 
 > > (`tuple`): [`B`, `B`]
 >
@@ -34,12 +40,18 @@
 >
 > ### Source
 >
-> [Projects/clean-tool-app/src/lib/fp/index.ts:55](https://github.com/yuckyh/clean-tool-app/)
+> [Projects/clean-tool-app/src/lib/fp/index.ts:123](https://github.com/yuckyh/clean-tool-app/)
 >
+
+## Example
+
+```ts
+const fn = (x: number) => x + 1
+```
 
 ## Source
 
-[Projects/clean-tool-app/src/lib/fp/index.ts:54](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/lib/fp/index.ts:122](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

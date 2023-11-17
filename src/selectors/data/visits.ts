@@ -1,5 +1,5 @@
 /**
- * @file This file contains the selectors for the visits in the data slice.
+ * @file This file contains the visits selectors for the data slice.
  * @module selectors/data/visits
  */
 

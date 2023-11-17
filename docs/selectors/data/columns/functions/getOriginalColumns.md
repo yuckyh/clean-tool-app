@@ -8,7 +8,7 @@
 
 > **getOriginalColumns**(`state`): readonly `string`[]
 
-This selector is used to get the original columns in the data slice.
+This selector is used to get the original columns.
 
 ## Parameters
 
@@ -28,15 +28,17 @@ The data slice of the application state [data](Property data:Readonly`<State>` )
 
 readonly `string`[]
 
+The original columns.
+
 ## Example
 
 ```ts
-
+const originalColumns = useAppSelector(getOriginalColumns)
 ```
 
 ## Source
 
-[Projects/clean-tool-app/src/selectors/data/columns.ts:28](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/selectors/data/columns.ts:29](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

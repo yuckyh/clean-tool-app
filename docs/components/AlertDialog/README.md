@@ -8,21 +8,18 @@
 
 ## File
 
-This file is for the alert dialog component.
+This file contains the alert dialog component.
 
 ## Index
 
-### Modules
-
-- [private](private/README.md)
-
-### Interfaces
-
-- [AlertRef](interfaces/AlertRef.md)
-
-### Functions
+### Component
 
 - [AlertDialog](functions/AlertDialog.md)
+
+### Other
+
+- [private](private/README.md)
+- [AlertRef](interfaces/AlertRef.md)
 
 ***
 

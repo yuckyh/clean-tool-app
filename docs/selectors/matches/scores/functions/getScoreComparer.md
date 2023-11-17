@@ -38,7 +38,7 @@
 >
 > ### Source
 >
-> [Projects/clean-tool-app/src/selectors/matches/scores.ts:32](https://github.com/yuckyh/clean-tool-app/)
+> [Projects/clean-tool-app/src/selectors/matches/scores.ts:36](https://github.com/yuckyh/clean-tool-app/)
 >
 
 ## Source

@@ -1,3 +1,7 @@
+/**
+ * @file This file contains the formatting selectors for the matches slice.
+ */
+
 import { equals } from '@/lib/fp'
 import { gt } from '@/lib/fp/number'
 import { snakeToKebab } from '@/lib/fp/string'
@@ -21,23 +25,25 @@ import {
 } from './visits'
 
 /**
- * Utility function to convert the column name to a path
- * @param shouldFormat - Whether the column should be formatted
- * @param column - The column to be converted
- * @param visit - The visit to be converted
- * @returns The converted column path
+ * Utility function to convert the column name to a path.
+ * @param shouldFormat - Whether the column should be formatted.
+ * @param column - The column to be converted.
+ * @param visit - The visit to be converted.
+ * @returns The converted column path.
  * @example
+ *  pathColumn(true, 'sno', '1') // '/eda/sno/1'
  */
 const pathColumn = (shouldFormat: boolean, column: string, visit: string) =>
   `/eda/${snakeToKebab(column)}${shouldFormat ? `/${visit}` : ''}`
 
 /**
- *
- * @param shouldFormat
- * @param column
- * @param visit
- * @returns
+ * Utility function to convert the column name to a formatted column name.
+ * @param shouldFormat - Whether the column should be formatted.
+ * @param column - The column to be converted.
+ * @param visit - The visit to be converted.
+ * @returns The converted column name.
  * @example
+ *  formatColumn(true, 'sno', '1') // 'sno_1'
  */
 const formatColumn = (shouldFormat: boolean, column: string, visit: string) =>
   shouldFormat ? `${column}_${visit}` : column

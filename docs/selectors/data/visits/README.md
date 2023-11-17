@@ -8,7 +8,7 @@
 
 ## File
 
-This file contains the selectors for the visits in the data slice.
+This file contains the visits selectors for the data slice.
 
 ## Index
 

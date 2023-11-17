@@ -11,7 +11,7 @@
 The application's store.
 
 Consists of the following slices:
-- [matches](../../../features/columns/reducers/functions/reducer.md)
+- [matches](../../../reducers/matches/functions/reducer.md)
 - [progress](../../../reducers/progress/functions/reducer.md)
 - [data](../../../data/README.md)
 

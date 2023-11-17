@@ -1,3 +1,7 @@
+/**
+ * @file This file contains the selectors for the data slice.
+ */
+
 import type { AppState } from '@/app/store'
 
 /**
@@ -18,10 +22,11 @@ import type { AppState } from '@/app/store'
 export const getData = ({ data }: AppState) => data.data
 
 /**
- *
- * @param state
- * @param state.data
- * @returns
+ * Selector function to get the data length.
+ * @param state - The application state {@link AppState}.
+ * @param state.data - The data slice of the state.
+ * @returns The data length.
  * @example
+ *  const dataLength = useAppSelector(getDataLength)
  */
 export const getDataLength = ({ data }: AppState) => data.data.length

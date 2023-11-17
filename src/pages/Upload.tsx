@@ -1,6 +1,6 @@
 /**
- * @file This file is for the sheet upload input component.
- * @module features/sheet/components/SheetUploadInput
+ * @file This file contains the upload page component.
+ * @module pages/Upload
  */
 
 import type { AlertRef } from '@/components/AlertDialog'
@@ -107,8 +107,8 @@ const useFetchSheet = (stopLoading: IO.IO<void>) => {
  * The upload page.
  * This page is used to upload the file, select the sheet if it has more than one sheet, and also specify the visit information.
  * This page is also where the user can reset the cleaning process.
- * @category Page
  * @returns The component object
+ * @category Page
  * @example
  * ```tsx
  *  <Upload />

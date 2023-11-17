@@ -8,7 +8,7 @@
 
 > **getIndexedValue**\<`I`, `V`\>(`tuple`): `V`
 
-Retrieves the value from an indexed tuple
+Retrieves the value from an indexed tuple.
 
 ## Type parameters
 
@@ -20,23 +20,23 @@ Retrieves the value from an indexed tuple
 
 ▪ **tuple**: readonly [`I`, `V`]
 
-The indexed tuple
+The indexed tuple.
 
 ## Returns
 
 `V`
 
-The value
+The value.
 
 ## Example
 
 ```ts
-
+const value = getIndexedValue([0, 'foo']) // 'foo'
 ```
 
 ## Source
 
-[Projects/clean-tool-app/src/lib/array.ts:112](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/lib/array.ts:119](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

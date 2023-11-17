@@ -8,6 +8,8 @@
 
 > **VariablePlot**(`props`): `Element`
 
+The variable plot component is used to create more complex plots.
+
 ## Parameters
 
 ▪ **props**: `Readonly`\<[`Props`](../private/interfaces/Props.md)\>
@@ -18,15 +20,20 @@ The [props](../private/interfaces/Props.md) for the component.
 
 `Element`
 
+The component object.
+
 ## Example
 
-```ts
-
+```tsx
+ <VariablePlot
+   data={data}
+   layout={layout}
+   variable={variable} />
 ```
 
 ## Source
 
-[Projects/clean-tool-app/src/pages/EDA/Variable/Plot/index.tsx:35](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/pages/EDA/Variable/Plot/index.tsx:46](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

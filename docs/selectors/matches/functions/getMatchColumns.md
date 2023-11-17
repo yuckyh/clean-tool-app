@@ -28,7 +28,7 @@ The matches slice of the state
 
 readonly `string`[]
 
-The match columns
+The match columns.
 
 ## Example
 

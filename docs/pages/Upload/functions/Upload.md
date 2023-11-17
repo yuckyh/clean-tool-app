@@ -20,13 +20,13 @@ The component object
 
 ## Example
 
-```ts
-
+```tsx
+ <Upload />
 ```
 
 ## Source
 
-[Projects/clean-tool-app/src/pages/Upload.tsx:85](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/pages/Upload.tsx:117](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

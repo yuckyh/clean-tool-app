@@ -8,7 +8,7 @@
 
 ## File
 
-The file contains the selectors for the paths in the progress slice.
+The file contains the path selectors for the progress slice.
 
 ## Index
 

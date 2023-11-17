@@ -1,3 +1,8 @@
+/**
+ * @file This file contains the custom hooks for the app.
+ * @module lib/hooks
+ */
+
 import type { AppDispatch, AppState } from '@/app/store'
 import type { ColorTokens } from '@fluentui/react-components'
 import type { TypedUseSelectorHook } from 'react-redux'
@@ -13,6 +18,14 @@ import { asIO } from './fp'
 export const useAppDispatch: () => AppDispatch = useDispatch
 export const useAppSelector: TypedUseSelectorHook<AppState> = useSelector
 
+/**
+ * This hook is used to create a debounced value.
+ * @param value - The value to debounce
+ * @param delay - The delay in milliseconds
+ * @returns The debounced value
+ * @example
+ *  const debouncedValue = useDebounced(value, delay)
+ */
 export const useDebounced = <T>(value: T, delay = 100) => {
   const [debouncedValue, setDebouncedValue] = useState(value)
 
@@ -25,6 +38,12 @@ export const useDebounced = <T>(value: T, delay = 100) => {
   return debouncedValue
 }
 
+/**
+ * This hook is used to help loading transitions.
+ * @returns The loading transition
+ * @example
+ *  const [isLoading, stopLoading] = useLoadingTransition()
+ */
 export const useLoadingTransition = asIO(() => {
   const [isLoading, setIsLoading] = useState(true)
   const [isPending, startTransition] = useTransition()
@@ -45,9 +64,11 @@ export const useLoadingTransition = asIO(() => {
 })
 
 /**
- *
- * @param token
+ * This hook is used to create a hex color from a token.
+ * @param token - The token to convert
+ * @returns The hex color
  * @example
+ *  const color = useTokenToHex(token)
  */
 export const useTokenToHex = (token: Property<ColorTokens>) => {
   const [color, setColor] = useState('#000')

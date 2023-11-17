@@ -39,9 +39,8 @@ const useClasses = makeStyles({
  *
  * This components is used as the main navigation with the functionality of showing the user's progress
  * @see {@link ProgressNavBar} for details on the bar's functionality
- * @category Component
- * @group Progress slice
  * @returns The component object
+ * @category Component
  * @example
  * ```tsx
  * <ProgressNav />

@@ -45,7 +45,7 @@ const getColumnsByData = createSelector(
 
 ## Source
 
-[Projects/clean-tool-app/src/selectors/data/index.ts:18](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/selectors/data/index.ts:22](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

@@ -8,6 +8,8 @@
 
 > **dumpTrace**\<`T`\>(`arg`): `T`
 
+The function to dump a value with its trace to the console.
+
 ## Type parameters
 
 ▪ **T** extends `unknown`
@@ -16,13 +18,23 @@
 
 ▪ **arg**: `T`
 
+The value to dump.
+
 ## Returns
 
 `T`
 
+The value that was dumped.
+
+## Example
+
+```ts
+const foo = dumpTrace('foo') // foo === 'foo'
+```
+
 ## Source
 
-[Projects/clean-tool-app/src/lib/fp/logger.ts:24](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/lib/fp/logger.ts:43](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

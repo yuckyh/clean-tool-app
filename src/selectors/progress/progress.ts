@@ -1,5 +1,5 @@
 /**
- * @file This file contains the selectors for the progress slice of the state.
+ * @file This file contains the progress selectors for the progress slice.
  * @module selectors/progress
  */
 

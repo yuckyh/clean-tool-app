@@ -6,7 +6,7 @@
 
 # Function: selectDataType()
 
-> **selectDataType**(`props`): (`state`) => [`DataType`](../../../../features/columns/reducers/type-aliases/DataType.md)
+> **selectDataType**(`props`): (`state`) => [`DataType`](../../../../reducers/matches/type-aliases/DataType.md)
 
 Selector function to get the data type of the column.
 
@@ -22,7 +22,7 @@ The props for the component.
 
 The data type of the column.
 
-> > (`state`): [`DataType`](../../../../features/columns/reducers/type-aliases/DataType.md)
+> > (`state`): [`DataType`](../../../../reducers/matches/type-aliases/DataType.md)
 >
 > ### Parameters
 >
@@ -36,7 +36,7 @@ The data type of the column.
 >
 > ### Returns
 >
-> [`DataType`](../../../../features/columns/reducers/type-aliases/DataType.md)
+> [`DataType`](../../../../reducers/matches/type-aliases/DataType.md)
 >
 > ### Source
 >

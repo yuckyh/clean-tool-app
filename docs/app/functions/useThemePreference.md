@@ -8,31 +8,33 @@
 
 > **useThemePreference**(`dark`, `light`): `Theme`
 
+This hook is used to get the theme preference of the user.
+
 ## Parameters
 
 ▪ **dark**: `Theme`= `webDarkTheme`
 
+The dark theme.
+
 ▪ **light**: `Theme`= `webLightTheme`
+
+The light theme.
 
 ## Returns
 
 `Theme`
 
-## Example
-
-```ts
-
-```
+The theme preference of the user.
 
 ## Example
 
-```ts
-
+```tsx
+ const theme = useThemePreference()
 ```
 
 ## Source
 
-[Projects/clean-tool-app/src/app/index.tsx:30](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/app/index.tsx:33](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

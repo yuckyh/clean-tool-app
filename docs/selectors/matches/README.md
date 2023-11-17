@@ -8,7 +8,7 @@
 
 ## File
 
-This file contains the selectors for the columns in the matches slice.
+This file contains the columns selectors for the matches slice.
 
 ## Index
 
@@ -19,6 +19,11 @@ This file contains the selectors for the columns in the matches slice.
 - [getMatchColumns](functions/getMatchColumns.md)
 - [getMatchColumnsComparer](functions/getMatchColumnsComparer.md)
 - [getMatchColumnsDuplicates](functions/getMatchColumnsDuplicates.md)
+- [getMatchVisit](functions/getMatchVisit.md)
+- [getMatchVisits](functions/getMatchVisits.md)
+- [getResolvedVisits](functions/getResolvedVisits.md)
+- [getVisitByMatchVisit](functions/getVisitByMatchVisit.md)
+- [getVisitsComparer](functions/getVisitsComparer.md)
 
 ***
 

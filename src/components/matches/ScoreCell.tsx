@@ -1,3 +1,8 @@
+/**
+ * @file This file contains the score cell component for the matches data grid.
+ * @module components/ColumnMatching/ScoreCell
+ */
+
 import Plot from '@/components/Plot'
 import { useAppSelector } from '@/lib/hooks'
 import { useFluentColorScale } from '@/lib/plotly'
@@ -33,9 +38,13 @@ export interface Props {
 }
 
 /**
- *
+ * This function renders the score cell that contains a score bar.
  * @param props - The {@link Props props} for the component.
+ * @returns The component object.
  * @example
+ * ```tsx
+ *  <ScoreCell pos={pos} />
+ * ```
  */
 export default function ScoreCell(props: Readonly<Props>) {
   const classes = useClasses()

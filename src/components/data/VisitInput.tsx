@@ -1,3 +1,8 @@
+/**
+ * @file This file contains the visit input component.
+ * @module components/data/VisitInput
+ */
+
 import type { InputProps } from '@fluentui/react-components'
 
 import { useAppDispatch, useAppSelector } from '@/lib/hooks'
@@ -27,10 +32,14 @@ export interface Props {
 }
 
 /**
- *
- * @param props
- * @param props.pos
+ * The visit input component.
+ * @param props - The {@link Props props} for the component.
+ * @param props.pos - The position of the visit.
+ * @returns The component object.
  * @example
+ * ```tsx
+ *  <VisitInput pos={pos} />
+ * ```
  */
 export default function VisitInput(props: Readonly<Props>) {
   const classes = useClasses()

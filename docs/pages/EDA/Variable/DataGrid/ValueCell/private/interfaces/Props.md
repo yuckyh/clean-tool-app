@@ -19,7 +19,7 @@
 
 #### Source
 
-[Projects/clean-tool-app/src/pages/EDA/Variable/DataGrid/ValueCell.tsx:21](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/pages/EDA/Variable/DataGrid/ValueCell.tsx:26](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

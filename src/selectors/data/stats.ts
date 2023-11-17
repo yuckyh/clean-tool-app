@@ -1,3 +1,7 @@
+/**
+ *@file This file contains the stats selectors for the data slice.
+ */
+
 import { arrayLookup, getIndexedValue } from '@/lib/array'
 import { add, divideBy, multiply } from '@/lib/fp/number'
 import { createSelector } from '@reduxjs/toolkit'

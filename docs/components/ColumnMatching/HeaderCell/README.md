@@ -12,7 +12,7 @@ This file contains the header cell component for the preview data grid.
 
 ## Index
 
-### Components
+### Component
 
 - [HeaderCell](functions/HeaderCell.md)
 

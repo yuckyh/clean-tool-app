@@ -8,6 +8,8 @@
 
 > **AllDataGrid**(`props`): `Element`
 
+The base data grid for flagging cells across various reasons.
+
 ## Parameters
 
 ▪ **props**: `Readonly`\<[`Props`](../interfaces/Props.md)\>
@@ -18,15 +20,17 @@ The [props](../interfaces/Props.md) for the component.
 
 `Element`
 
+The component object.
+
 ## Example
 
-```ts
-
+```tsx
+ <AllDataGrid column={column} visit={visit} />
 ```
 
 ## Source
 
-[Projects/clean-tool-app/src/pages/EDA/Variable/DataGrid/AllDataGrid.tsx:92](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/pages/EDA/Variable/DataGrid/AllDataGrid.tsx:101](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

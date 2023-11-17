@@ -8,6 +8,8 @@
 
 > **ioDump**\<`A`\>(`a`): `IO`\<`void`\>
 
+The function to dump a value to the console.
+
 ## Type parameters
 
 ▪ **A**
@@ -20,9 +22,13 @@
 
 `IO`\<`void`\>
 
-## Since
+An IO that dumps the value to the console.
 
-2.0.0
+## Example
+
+```ts
+const foo = ioDump('foo')
+```
 
 ## Source
 

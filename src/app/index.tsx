@@ -21,11 +21,14 @@ import { useRegisterSW } from 'virtual:pwa-register/react'
 import { useGlobalStyles, useStorage } from './selectors'
 
 /**
- *
- * @param dark
- * @param light
+ * This hook is used to get the theme preference of the user.
+ * @param dark -The dark theme.
+ * @param light - The light theme.
+ * @returns The theme preference of the user.
  * @example
- * @example
+ * ```tsx
+ *  const theme = useThemePreference()
+ * ```
  */
 export const useThemePreference = (
   dark = webDarkTheme,

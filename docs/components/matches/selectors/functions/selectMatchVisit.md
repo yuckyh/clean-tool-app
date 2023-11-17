@@ -8,13 +8,19 @@
 
 > **selectMatchVisit**(`props`): (`state`) => `number`
 
+Selector function to get the match visit.
+
 ## Parameters
 
 ▪ **props**: `Readonly`\<[`BaseProps`](../private/interfaces/BaseProps.md)\>
 
+The [props](../private/interfaces/BaseProps.md) for the component.
+
 ## Returns
 
 `function`
+
+The match visit.
 
 > > (`state`): `number`
 >
@@ -34,18 +40,18 @@
 >
 > ### Source
 >
-> [Projects/clean-tool-app/src/components/matches/selectors.ts:40](https://github.com/yuckyh/clean-tool-app/)
+> [Projects/clean-tool-app/src/components/matches/selectors.ts:50](https://github.com/yuckyh/clean-tool-app/)
 >
 
 ## Example
 
-```ts
-
+```tsx
+ const matchVisit = useAppSelector(selectMatchVisit(props))
 ```
 
 ## Source
 
-[Projects/clean-tool-app/src/components/matches/selectors.ts:39](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/components/matches/selectors.ts:49](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

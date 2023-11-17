@@ -24,7 +24,7 @@ The column index
 
 #### Source
 
-[Projects/clean-tool-app/src/pages/Download/PreviewCell.tsx:72](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/pages/Download/PreviewCell.tsx:71](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 
@@ -36,7 +36,7 @@ The row index
 
 #### Source
 
-[Projects/clean-tool-app/src/pages/Download/PreviewCell.tsx:76](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/pages/Download/PreviewCell.tsx:75](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

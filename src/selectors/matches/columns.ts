@@ -1,5 +1,5 @@
 /**
- * @file This file contains the selectors for the columns in the matches slice.
+ * @file This file contains the columns selectors for the matches slice.
  * @module selectors/matches
  */
 
@@ -17,7 +17,7 @@ import * as S from 'fp-ts/string'
  * Selector function to get the match columns
  * @param state - The {@link AppState application state}
  * @param state.matches - The matches slice of the state
- * @returns The match columns
+ * @returns The match columns.
  * @example
  *  const matchColumns = useAppSelector(getMatchColumns)
  */

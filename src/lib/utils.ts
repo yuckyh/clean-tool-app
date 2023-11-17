@@ -1,3 +1,7 @@
+/**
+ * @file This file contains the utilities for the app.
+ */
+
 import type { ComponentType } from 'react'
 
 import * as f from 'fp-ts/function'

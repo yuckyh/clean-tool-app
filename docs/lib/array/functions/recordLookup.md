@@ -8,6 +8,8 @@
 
 > **recordLookup**\<`K`, `T`\>(`record`): (`defaultValue`) => (`key`) => `T`
 
+The function to access a record element safely.
+
 ## Type parameters
 
 ▪ **K** extends `string`
@@ -18,9 +20,13 @@
 
 ▪ **record**: `Readonly`\<`Record`\<`K`, `T`\>\>
 
+The record to access.
+
 ## Returns
 
 `function`
+
+A function that returns the element with the specified key or the provided default value.
 
 > > (`defaultValue`): (`key`) => `T`
 >
@@ -44,23 +50,23 @@
 > >
 > > #### Source
 > >
-> > [Projects/clean-tool-app/src/lib/array.ts:55](https://github.com/yuckyh/clean-tool-app/)
+> > [Projects/clean-tool-app/src/lib/array.ts:62](https://github.com/yuckyh/clean-tool-app/)
 > >
 >
 > ### Source
 >
-> [Projects/clean-tool-app/src/lib/array.ts:54](https://github.com/yuckyh/clean-tool-app/)
+> [Projects/clean-tool-app/src/lib/array.ts:61](https://github.com/yuckyh/clean-tool-app/)
 >
 
 ## Example
 
 ```ts
-
+const value = recordLookup(record)(defaultValue)(key)
 ```
 
 ## Source
 
-[Projects/clean-tool-app/src/lib/array.ts:53](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/lib/array.ts:60](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

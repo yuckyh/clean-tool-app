@@ -8,6 +8,8 @@
 
 > **tail**\<`T`\>(`arr`): (`defaultValue`) => `T`
 
+The function to get the last element of an array.
+
 ## Type parameters
 
 ▪ **T**
@@ -16,9 +18,13 @@
 
 ▪ **arr**: readonly `T`[]
 
+The array.
+
 ## Returns
 
 `function`
+
+A function that returns the last element of the array or the provided default value.
 
 > > (`defaultValue`): `T`
 >
@@ -26,34 +32,24 @@
 >
 > ▪ **defaultValue**: `T`
 >
-> The default value
->
 > ### Returns
 >
 > `T`
 >
-> The first element of the array or the provided default value
->
-> ### Example
->
-> ```ts
->
-> ```
->
 > ### Source
 >
-> [Projects/clean-tool-app/src/lib/array.ts:73](https://github.com/yuckyh/clean-tool-app/)
+> [Projects/clean-tool-app/src/lib/array.ts:77](https://github.com/yuckyh/clean-tool-app/)
 >
 
 ## Example
 
 ```ts
-
+const value = tail(arr)(defaultValue)
 ```
 
 ## Source
 
-[Projects/clean-tool-app/src/lib/array.ts:86](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/lib/array.ts:91](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

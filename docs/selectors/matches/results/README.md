@@ -8,7 +8,7 @@
 
 ## File
 
-This file contains the match results selectors.
+This file contains the results selectors for the matches slice.
 
 ## Index
 

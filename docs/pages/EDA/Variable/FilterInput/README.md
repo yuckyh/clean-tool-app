@@ -6,6 +6,10 @@
 
 # pages/EDA/Variable/FilterInput
 
+## File
+
+This file contains the filter input component.
+
 ## Index
 
 ### Modules

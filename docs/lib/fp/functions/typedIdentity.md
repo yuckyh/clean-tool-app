@@ -8,6 +8,8 @@
 
 > **typedIdentity**\<`V`\>(`val`): `V`
 
+An identity function that is typed.
+
 ## Type parameters
 
 ▪ **V**
@@ -16,13 +18,24 @@
 
 ▪ **val**: `unknown`
 
+The value to return.
+
 ## Returns
 
 `V`
 
+The typed value.
+
+## Example
+
+```ts
+type CoolNumber = number & { readonly cool: true }
+ typedIdentity<CoolNumber>(1) // 1
+```
+
 ## Source
 
-[Projects/clean-tool-app/src/lib/fp/index.ts:41](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/lib/fp/index.ts:82](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

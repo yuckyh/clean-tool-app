@@ -6,6 +6,10 @@
 
 # pages/NotFound
 
+## File
+
+This file is for the 404 page component.
+
 ## Index
 
 ### Page

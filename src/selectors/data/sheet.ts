@@ -1,5 +1,5 @@
 /**
- * @file This file contains the selectors for the sheet in the data slice.
+ * @file This file contains the sheet selectors for the data slice.
  * @module selectors/sheet
  */
 
@@ -59,11 +59,12 @@ export const getFileName = ({ data }: AppState) => data.fileName
 export const getSheetName = ({ data }: AppState) => data.sheetName
 
 /**
- *
- * @param state
- * @param state.data
- * @returns
+ * Selector function to get the sheets from the app state.
+ * @param state - The application state {@link AppState}
+ * @param state.data - The data slice of the state.
+ * @returns The sheet from the app state.
  * @example
+ *  const sheets = useAppSelector(getSheets)
  */
 const getSheets = ({ data }: AppState) => data.sheets
 

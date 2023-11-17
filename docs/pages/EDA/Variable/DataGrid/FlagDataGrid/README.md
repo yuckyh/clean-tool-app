@@ -6,6 +6,10 @@
 
 # pages/EDA/Variable/DataGrid/FlagDataGrid
 
+## File
+
+This file contains the flag data grid component.
+
 ## Index
 
 ### Component

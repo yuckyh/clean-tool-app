@@ -8,6 +8,8 @@
 
 > **PreviewDataGrid**(`props`): `false` \| `Element`
 
+The data grid for previewing data.
+
 ## Parameters
 
 ▪ **props**: `Readonly`\<[`Props`](../private/interfaces/Props.md)\>
@@ -18,15 +20,17 @@ The [props](../private/interfaces/Props.md) for the component.
 
 `false` \| `Element`
 
+The component object.
+
 ## Example
 
-```ts
-
-```
+```tsx
+ <PreviewDataGrid isOriginal={isOriginal} />
+ ```
 
 ## Source
 
-[Projects/clean-tool-app/src/components/data/PreviewDataGrid.tsx:58](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/components/data/PreviewDataGrid.tsx:67](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

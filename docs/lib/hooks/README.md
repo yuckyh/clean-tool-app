@@ -6,6 +6,10 @@
 
 # lib/hooks
 
+## File
+
+This file contains the custom hooks for the app.
+
 ## Index
 
 ### Functions

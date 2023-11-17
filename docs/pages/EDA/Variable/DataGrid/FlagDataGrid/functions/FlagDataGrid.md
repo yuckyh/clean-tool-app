@@ -24,13 +24,18 @@ The component object.
 
 ## Example
 
-```ts
-
-```
+```tsx
+ `<FlagDataGrid
+   titleText={titleText}
+   subtitleText={subtitleText}
+   emptyText={emptyText}
+   series={series}
+   reason={reason}
+/>` 
 
 ## Source
 
-[Projects/clean-tool-app/src/pages/EDA/Variable/DataGrid/FlagDataGrid.tsx:60](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/pages/EDA/Variable/DataGrid/FlagDataGrid.tsx:73](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

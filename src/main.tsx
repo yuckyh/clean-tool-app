@@ -1,3 +1,8 @@
+/**
+ * @file This file contains the main entry point for the application.
+ * @module main
+ */
+
 import { router } from '@/app/Router'
 import { Spinner } from '@fluentui/react-components'
 import { createRoot } from 'react-dom/client'
