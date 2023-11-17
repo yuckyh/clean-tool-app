@@ -1,8 +1,7 @@
 /**
- * @file This file contains the VisitsCell component.
+ * @file This file contains the visits cell component for the preview data grid.
  * @module components/data/VisitsCell
  */
-import type { AppState } from '@/app/store'
 import type { AlertRef } from '@/components/AlertDialog'
 import type { DropdownProps } from '@fluentui/react-components'
 
@@ -10,9 +9,7 @@ import { indexDuplicateSearcher } from '@/lib/array'
 import { useAppDispatch, useAppSelector } from '@/lib/hooks'
 import { setMatchVisit } from '@/reducers/matches'
 import { getVisits } from '@/selectors/data/visits'
-import { getMatchColumn } from '@/selectors/matches/columns'
 import { getIndices } from '@/selectors/matches/format'
-import { getMatchVisit, getVisitByMatchVisit } from '@/selectors/matches/visits'
 import {
   Dropdown,
   Option,
@@ -25,6 +22,12 @@ import * as RA from 'fp-ts/ReadonlyArray'
 import * as f from 'fp-ts/function'
 import { type RefObject, useCallback } from 'react'
 
+import {
+  selectMatchColumn,
+  selectMatchVisit,
+  selectVisitByMatchVisit,
+} from './selectors'
+
 const useClasses = makeStyles({
   root: {
     minWidth: '150px',
@@ -33,9 +36,9 @@ const useClasses = makeStyles({
 })
 
 /**
- *
+ * The props for {@link VisitsCell}.
  */
-interface Props {
+export interface Props {
   /**
    *
    */
@@ -45,42 +48,6 @@ interface Props {
    */
   pos: number
 }
-
-/**
- *
- * @param props
- * @param props.pos
- * @returns
- * @example
- */
-const selectMatchColumn =
-  ({ pos }: Readonly<Props>) =>
-  (state: AppState) =>
-    getMatchColumn(state, pos)
-
-/**
- *
- * @param props
- * @param props.pos
- * @returns
- * @example
- */
-const selectMatchVisit =
-  ({ pos }: Readonly<Props>) =>
-  (state: AppState) =>
-    getMatchVisit(state, pos)
-
-/**
- *
- * @param props
- * @param props.pos
- * @returns
- * @example
- */
-const selectVisitByMatchVisit =
-  ({ pos }: Readonly<Props>) =>
-  (state: AppState) =>
-    getVisitByMatchVisit(state, pos)
 
 /**
  * This function is used to render the visits cell in the data grid.

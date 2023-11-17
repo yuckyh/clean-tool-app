@@ -6,6 +6,8 @@
 
 # Interface: Props
 
+The props for [FilteredOptions](../../functions/FilteredOptions.md).
+
 ## Contents
 
 - [Properties](Props.md#properties)

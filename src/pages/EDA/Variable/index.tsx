@@ -1,5 +1,3 @@
-import type { AppState } from '@/app/store'
-
 import { codebook } from '@/data'
 import { equals } from '@/lib/fp'
 import { kebabToSnake } from '@/lib/fp/string'
@@ -7,9 +5,6 @@ import { useAppDispatch, useAppSelector } from '@/lib/hooks'
 import CategoricalPlot from '@/pages/EDA/Variable/Plot/CategoricalPlot'
 import NumericalPlot from '@/pages/EDA/Variable/Plot/NumericalPlot'
 import { setDataType } from '@/reducers/matches'
-import { getFirstVisit } from '@/selectors/data/visits'
-import { getSearchedDataType } from '@/selectors/matches/dataTypes'
-import { getSearchedPos } from '@/selectors/matches/pos'
 import {
   Card,
   Field,
@@ -27,12 +22,17 @@ import { useParams } from 'react-router-dom'
 
 import AllDataGrid from './DataGrid/AllDataGrid'
 import FlagDataGrid from './DataGrid/FlagDataGrid'
-import OutlierDataGrid from './DataGrid/OutlierDataGrid'
 import SummaryDataGrid from './DataGrid/SummaryDataGrid'
 import {
   selectIncorrectSeries,
   selectMissingSeries,
+  selectSuspectedSeries,
 } from './DataGrid/selectors'
+import {
+  selectIsCategorical,
+  selectSearchedPos,
+  selectVisit,
+} from './selectors'
 
 const useClasses = makeStyles({
   actions: {
@@ -79,37 +79,6 @@ const useClasses = makeStyles({
 
 /**
  *
- * @param column
- * @param visit
- * @returns
- * @example
- */
-const selectSearchedPos =
-  (column: string, visit: string) => (state: AppState) =>
-    getSearchedPos(state, column, visit)
-
-/**
- *
- * @param column
- * @param visit
- * @returns
- * @example
- */
-const selectIsCategorical =
-  (column: string, visit: string) => (state: AppState) =>
-    getSearchedDataType(state, column, visit) === 'categorical'
-
-/**
- *
- * @param visit
- * @returns
- * @example
- */
-const selectVisit = (visit?: string) => (state: AppState) =>
-  visit ?? getFirstVisit(state)
-
-/**
- *
  * @returns
  * @example
  */
@@ -153,8 +122,8 @@ export default function Variable() {
   const seriesProps = { column, visit }
 
   const incorrectSeries = useAppSelector(selectIncorrectSeries(seriesProps))
-
   const missingSeries = useAppSelector(selectMissingSeries(seriesProps))
+  const suspectedSeries = useAppSelector(selectSuspectedSeries(seriesProps))
 
   return (
     <section className={classes.root}>
@@ -203,7 +172,15 @@ export default function Variable() {
       </div>
       <div className={classes.columns}>
         <div className={classes.rows}>
-          <OutlierDataGrid column={column} visit={visit} />
+          <FlagDataGrid
+            column={column}
+            emptyText="There are no suspected outliers."
+            reason="outlier"
+            series={suspectedSeries}
+            subtitleText="The data shown here are suspected outliers based on the bell curve distribution."
+            titleText="Suspected Outliers"
+            visit={visit}
+          />
         </div>
         <div className={classes.rows}>
           <FlagDataGrid

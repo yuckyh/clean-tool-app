@@ -8,13 +8,19 @@
 
 > **selectFormattedColumn**(`props`): (`state`) => `string`
 
+Selector function to get the column.
+
 ## Parameters
 
 ▪ **props**: `Readonly`\<[`BaseProps`](../interfaces/BaseProps.md)\>
 
+The [props](../interfaces/BaseProps.md) for the component.
+
 ## Returns
 
 `function`
+
+The column.
 
 > > (`state`): `string`
 >
@@ -24,9 +30,9 @@
 >
 > ▪ **state.data**: `Readonly`\<[`State`](../../../../../../reducers/data/interfaces/State.md)\>
 >
-> ▪ **state.matches**: `Readonly`\<[`State`](../../../../../../selectors/progress/progress/private/interfaces/State.md)\>
+> ▪ **state.matches**: `Readonly`\<[`State`](../../../../../../selectors/progress/private/interfaces/State.md)\>
 >
-> ▪ **state.progress**: `Readonly`\<[`State`](../../../../../../selectors/progress/progress/private/interfaces/State.md)\>
+> ▪ **state.progress**: `Readonly`\<[`State`](../../../../../../selectors/progress/private/interfaces/State.md)\>
 >
 > ### Returns
 >
@@ -34,18 +40,18 @@
 >
 > ### Source
 >
-> [Projects/clean-tool-app/src/pages/EDA/Variable/DataGrid/selectors.ts:38](https://github.com/yuckyh/clean-tool-app/)
+> [Projects/clean-tool-app/src/pages/EDA/Variable/DataGrid/selectors.ts:47](https://github.com/yuckyh/clean-tool-app/)
 >
 
 ## Example
 
-```ts
-
+```tsx
+ const column = useAppSelector(selectColumn(props))
 ```
 
 ## Source
 
-[Projects/clean-tool-app/src/pages/EDA/Variable/DataGrid/selectors.ts:37](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/pages/EDA/Variable/DataGrid/selectors.ts:46](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

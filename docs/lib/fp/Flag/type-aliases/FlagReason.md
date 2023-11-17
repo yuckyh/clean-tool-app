@@ -8,9 +8,11 @@
 
 > **FlagReason**: `"incorrect"` \| `"missing"` \| `"none"` \| `"outlier"` \| `"suspected"`
 
+The possible reasons for a flag.
+
 ## Source
 
-[Projects/clean-tool-app/src/lib/fp/Flag.ts:11](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/lib/fp/Flag.ts:19](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

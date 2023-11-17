@@ -1,14 +1,13 @@
 /**
- * @file This file contains the Tab component for the Nav component.
+ * @file This file contains the Tab component for the EDA variable nav component.
  * @module pages/EDA/Variable/Nav/Tab
  */
 
-import type { AppState } from '@/app/store'
-
 import { useAppSelector } from '@/lib/hooks'
-import { getColumnPath, getFormattedColumn } from '@/selectors/matches/format'
 import { Link, Tab, makeStyles } from '@fluentui/react-components'
 import { useHref, useLinkClickHandler } from 'react-router-dom'
+
+import { selectLabel, selectPath } from './selectors'
 
 const useClasses = makeStyles({
   root: {
@@ -18,42 +17,18 @@ const useClasses = makeStyles({
 })
 
 /**
- *
- * @param props
- * @param props.pos
- * @returns
- * @example
+ * The props for the {@link NavTab} component.
  */
-const selectPath =
-  ({ pos }: Readonly<Props>) =>
-  (state: AppState) =>
-    getColumnPath(state, pos)
-
-/**
- *
- * @param props
- * @param props.pos
- * @returns
- * @example
- */
-const selectLabel =
-  ({ pos }: Readonly<Props>) =>
-  (state: AppState) =>
-    getFormattedColumn(state, pos)
-
-/**
- *
- */
-interface Props {
+export interface Props {
   /**
-   *
+   * The position of the column.
    */
   pos: number
 }
 
 /**
  * This function renders the Tab component for the Nav component.
- * @param props - The {@link Props} object.
+ * @param props - The {@link Props props} for the component.
  * @returns The component obj
  * @example
  * ```tsx

@@ -8,9 +8,20 @@
 
 > **deleteSheet**(): `AsyncThunkAction`\<`void`, `void`, `AsyncThunkConfig`\>
 
+This action deletes the current sheet from the worker.
+
 ## Returns
 
 `AsyncThunkAction`\<`void`, `void`, `AsyncThunkConfig`\>
+
+A promise containing the sheetWorker response.
+
+## Example
+
+```tsx
+ const dispatch = useAppDispatch()
+ const deleteSheet = useCallback(() => dispatch(deleteSheet()), [dispatch])
+```
 
 ## Source
 

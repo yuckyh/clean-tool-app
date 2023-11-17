@@ -18,9 +18,9 @@ The application state [AppState](../../store/type-aliases/AppState.md)
 
 ▪ **\_state.data**: `Readonly`\<[`State`](../../../reducers/data/interfaces/State.md)\>
 
-▪ **\_state.matches**: `Readonly`\<[`State`](../../../selectors/progress/progress/private/interfaces/State.md)\>
+▪ **\_state.matches**: `Readonly`\<[`State`](../../../selectors/progress/private/interfaces/State.md)\>
 
-▪ **\_state.progress**: `Readonly`\<[`State`](../../../selectors/progress/progress/private/interfaces/State.md)\>
+▪ **\_state.progress**: `Readonly`\<[`State`](../../../selectors/progress/private/interfaces/State.md)\>
 
 ▪ **\_column**: `string`
 
@@ -47,7 +47,7 @@ const getSearchedPos = createSelector(
 
 ## Source
 
-[Projects/clean-tool-app/src/app/selectors.ts:65](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/app/selectors.ts:66](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

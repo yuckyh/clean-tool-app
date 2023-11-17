@@ -6,11 +6,22 @@
 
 # selectors/progress
 
+## File
+
+This file contains the selectors for the progress slice of the app state.
+
 ## Index
+
+### Modules
+
+- [private](private/README.md)
 
 ### Functions
 
+- [getAllowedPaths](functions/getAllowedPaths.md)
+- [getIsDisabled](functions/getIsDisabled.md)
 - [getProgress](functions/getProgress.md)
+- [getShouldNavigateToAllowed](functions/getShouldNavigateToAllowed.md)
 
 ***
 

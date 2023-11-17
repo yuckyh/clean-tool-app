@@ -8,7 +8,7 @@
 
 ## File
 
-This file contains selectors for the data in the sheet slice.
+This file contains selectors for the data in the data slice.
 
 ## Index
 

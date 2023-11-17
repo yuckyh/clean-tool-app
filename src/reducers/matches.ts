@@ -17,7 +17,7 @@ import { arrayLookup, findIndex, getIndexedValue, head } from '@/lib/array'
 import { equals, isCorrectNumber, typedIdentity } from '@/lib/fp'
 import { stubOrd } from '@/lib/fp/Ord'
 import { add, multiply } from '@/lib/fp/number'
-import  { search } from '@/lib/fuse'
+import { search } from '@/lib/fuse'
 import { getPersisted, setPersisted } from '@/lib/localStorage'
 import { createSlice } from '@reduxjs/toolkit'
 import * as O from 'fp-ts/Option'
@@ -315,11 +315,11 @@ const { actions, reducer } = createSlice({
 
       const result = arrayLookup([
         ...results,
-      ] as readonly (readonly string[])[])([] as readonly string[])(0)
+      ] as readonly (readonly string[])[])([] as readonly string[])(pos)
 
       const resultScores = arrayLookup([
         ...resultsScores,
-      ] as readonly (readonly number[])[])([] as readonly number[])(0)
+      ] as readonly (readonly number[])[])([] as readonly number[])(pos)
 
       const newScore = f.pipe(
         matchColumn,

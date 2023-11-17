@@ -1,3 +1,7 @@
+/**
+ * @file This file contains
+ */
+
 import type { AppState } from '@/app/store'
 
 import { getColParam } from '@/app/selectors'

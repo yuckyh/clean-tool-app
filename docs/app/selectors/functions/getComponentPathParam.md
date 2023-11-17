@@ -18,13 +18,13 @@ The application state [AppState](../../store/type-aliases/AppState.md)
 
 ▪ **\_state.data**: `Readonly`\<[`State`](../../../reducers/data/interfaces/State.md)\>
 
-▪ **\_state.matches**: `Readonly`\<[`State`](../../../selectors/progress/progress/private/interfaces/State.md)\>
+▪ **\_state.matches**: `Readonly`\<[`State`](../../../selectors/progress/private/interfaces/State.md)\>
 
-▪ **\_state.progress**: `Readonly`\<[`State`](../../../selectors/progress/progress/private/interfaces/State.md)\>
+▪ **\_state.progress**: `Readonly`\<[`State`](../../../selectors/progress/private/interfaces/State.md)\>
 
 ▪ **componentPath**: `string`
 
-The component path parameter
+The progress nav's component path in the router.
 
 ## Returns
 
@@ -44,7 +44,7 @@ const getPaths = createSelector(
 
 ## Source
 
-[Projects/clean-tool-app/src/app/selectors.ts:102](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/app/selectors.ts:103](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

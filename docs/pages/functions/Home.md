@@ -8,24 +8,24 @@
 
 > **Home**(): `Element`
 
-The home page component
+The home page.
 This page is simply used to navigate to the upload page
 
 ## Returns
 
 `Element`
 
-The component object
-
-## Example
-
-```tsx
-<Route lazy={defaultLazyComponent(import('@/pages'))} />
-```
+The component object.
 
 ## Todo
 
 Add a quick introduction text to the tool in this page
+
+## Example
+
+```tsx
+ <Route lazy={defaultLazyComponent(import('../pages'))} />
+```
 
 ## Source
 

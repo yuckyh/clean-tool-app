@@ -8,6 +8,8 @@
 
 > **recordMap**\<`A`, `B`\>(`fn`): (`cellItem`) => `Readonly`\<[`CellItem`](../interfaces/CellItem.md)\<`B`\>\>
 
+The function to map over a cell item.
+
 ## Type parameters
 
 ▪ **A** extends [`Value`](../type-aliases/Value.md)
@@ -18,9 +20,13 @@
 
 ▪ **fn**: (`a`) => `Readonly`\<`Record`\<`string`, `B`\>\>
 
+The function to map over the cell item.
+
 ## Returns
 
 `function`
+
+The mapped cell item.
 
 > > (`cellItem`): `Readonly`\<[`CellItem`](../interfaces/CellItem.md)\<`B`\>\>
 >
@@ -34,18 +40,18 @@
 >
 > ### Source
 >
-> [Projects/clean-tool-app/src/lib/fp/CellItem.ts:58](https://github.com/yuckyh/clean-tool-app/)
+> [Projects/clean-tool-app/src/lib/fp/CellItem.ts:66](https://github.com/yuckyh/clean-tool-app/)
 >
 
 ## Example
 
 ```ts
-
+const mappedCellItem = map((x) => {...x, a: 'foo'})(cellItem)
 ```
 
 ## Source
 
-[Projects/clean-tool-app/src/lib/fp/CellItem.ts:55](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/lib/fp/CellItem.ts:63](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

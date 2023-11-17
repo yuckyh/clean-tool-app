@@ -6,7 +6,7 @@
 
 # Function: reducer()
 
-> **reducer**(`state`, `action`): `Readonly`\<[`State`](../../../../selectors/progress/progress/private/interfaces/State.md)\>
+> **reducer**(`state`, `action`): `Readonly`\<[`State`](../../../../selectors/progress/private/interfaces/State.md)\>
 
 A *reducer* (also called a *reducing function*) is a function that accepts
 an accumulation and a value and returns a new accumulation. They are used
@@ -30,13 +30,13 @@ Reducers are the most important concept in Redux.
 
 ## Parameters
 
-▪ **state**: `undefined` \| `Readonly`\<[`State`](../../../../selectors/progress/progress/private/interfaces/State.md)\>
+▪ **state**: `undefined` \| `Readonly`\<[`State`](../../../../selectors/progress/private/interfaces/State.md)\>
 
 ▪ **action**: `AnyAction`
 
 ## Returns
 
-`Readonly`\<[`State`](../../../../selectors/progress/progress/private/interfaces/State.md)\>
+`Readonly`\<[`State`](../../../../selectors/progress/private/interfaces/State.md)\>
 
 ## Source
 

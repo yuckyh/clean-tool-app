@@ -8,27 +8,37 @@
 
 > **of**(`index`, `column`, `reason`): [`Flag`](../interfaces/Flag.md)
 
+The constructor for a flag.
+
 ## Parameters
 
 ▪ **index**: `string`
 
+The index of the flag.
+
 ▪ **column**: `string`
 
+The column of the flag.
+
 ▪ **reason**: [`FlagReason`](../type-aliases/FlagReason.md)
+
+The reason for the flag.
 
 ## Returns
 
 [`Flag`](../interfaces/Flag.md)
 
+The flag.
+
 ## Example
 
 ```ts
-
+const flag = of('foo', 'bar', 'incorrect')
 ```
 
 ## Source
 
-[Projects/clean-tool-app/src/lib/fp/Flag.ts:40](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/lib/fp/Flag.ts:49](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

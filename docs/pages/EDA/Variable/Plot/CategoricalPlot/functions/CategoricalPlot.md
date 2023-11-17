@@ -12,6 +12,8 @@
 
 ▪ **props**: `Readonly`\<[`Props`](../private/interfaces/Props.md)\>
 
+The [props](../private/interfaces/Props.md) for the component.
+
 ## Returns
 
 `Element`
@@ -24,7 +26,7 @@
 
 ## Source
 
-[Projects/clean-tool-app/src/pages/EDA/Variable/Plot/CategoricalPlot.tsx:40](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/pages/EDA/Variable/Plot/CategoricalPlot.tsx:34](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

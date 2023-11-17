@@ -6,6 +6,8 @@
 
 # Interface: SheetInputRef
 
+The ref for [SheetUploadInput](../functions/SheetUploadInput.md).
+
 ## Contents
 
 - [Properties](SheetInputRef.md#properties)
@@ -17,9 +19,11 @@
 
 > **setFileTask**: `Dispatch`\<`SetStateAction`\<[`FileTaskType`](../../../FileToast/type-aliases/FileTaskType.md)\>\>
 
+Function to set the file task.
+
 #### Source
 
-[Projects/clean-tool-app/src/components/data/SheetUploadInput.tsx:46](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/components/data/SheetUploadInput.tsx:45](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

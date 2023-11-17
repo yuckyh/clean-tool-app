@@ -1,4 +1,3 @@
-import type { AppState } from '@/app/store'
 import type { Progress } from '@/reducers/progress'
 
 import { arrayLookup, findIndex, head, tail } from '@/lib/array'
@@ -7,12 +6,7 @@ import { useAppDispatch, useAppSelector } from '@/lib/hooks'
 import { setProgress } from '@/reducers/progress'
 import { getColumnsLength } from '@/selectors/data/columns'
 import { getFirstVisit, getVisits } from '@/selectors/data/visits'
-import {
-  getColumnPath,
-  getColumnPaths,
-  getIndices,
-} from '@/selectors/matches/format'
-import { getLocationPathWords } from '@/selectors/progress/paths'
+import { getColumnPaths, getIndices } from '@/selectors/matches/format'
 import {
   Button,
   TabList,
@@ -29,6 +23,11 @@ import { useCallback, useMemo } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 
 import NavTab from './Tab'
+import {
+  selectNextVariablePath,
+  selectPathWords,
+  selectPrevVariablePath,
+} from './selectors'
 
 const useClasses = makeStyles({
   actionPositive: {
@@ -71,33 +70,6 @@ const useClasses = makeStyles({
     ...shorthands.padding(0, '32px'),
   },
 })
-
-/**
- *
- * @param pathname
- * @returns
- * @example
- */
-const selectPathWords = (pathname: string) => (state: AppState) =>
-  getLocationPathWords(state, '', pathname)
-
-/**
- *
- * @param pos
- * @returns
- * @example
- */
-const selectPrevVariablePath = (pos: number) => (state: AppState) =>
-  getColumnPath(state, pos - 1)
-
-/**
- *
- * @param pos
- * @returns
- * @example
- */
-const selectNextVariablePath = (pos: number) => (state: AppState) =>
-  getColumnPath(state, pos + 1)
 
 /**
  * The navigation for the variable page.

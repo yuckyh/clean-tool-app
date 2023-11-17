@@ -8,13 +8,13 @@
 
 ## File
 
-This file contains the VisitsCell component.
+This file contains the visits cell component for the preview data grid.
 
 ## Index
 
-### Modules
+### Interfaces
 
-- [private](private/README.md)
+- [Props](interfaces/Props.md)
 
 ### Functions
 

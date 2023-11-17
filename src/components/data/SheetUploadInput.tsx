@@ -6,6 +6,7 @@ import type { SheetResponse } from '@/workers/sheet'
 import type { Dispatch, SetStateAction } from 'react'
 import type { DropzoneOptions } from 'react-dropzone'
 
+import { fetchSheet, postFile } from '@/actions/data'
 import { sheetWorker } from '@/app/workers'
 import FileToast from '@/components/FileToast'
 import { asIO, equals } from '@/lib/fp'
@@ -34,14 +35,12 @@ import {
 } from 'react'
 import { useDropzone } from 'react-dropzone'
 
-import { fetchSheet, postFile } from '../../actions/data'
-
 /**
- *
+ * The ref for {@link SheetUploadInput}.
  */
 export interface SheetInputRef {
   /**
-   *
+   * Function to set the file task.
    */
   setFileTask: Dispatch<SetStateAction<FileTaskType>>
 }
@@ -56,15 +55,25 @@ const useClasses = makeStyles({
 })
 
 /**
- *
+ * The props for {@link SheetUploadInput}.
  */
 interface Props {
   /**
-   *
+   * The toaster id for controlling the toaster.
    */
   toasterId: string
 }
 
+/**
+ * The sheet upload input component.
+ * @param props - The {@link Props props} for the component.
+ * @param props.toasterId - The toaster id for controlling the toaster.
+ * @param ref - The ref for controlling the component.
+ * @example
+ * ```tsx
+ *   <SheetUploadInput toasterId={useId('toaster')} ref={sheetInputRef} />
+ * ```
+ */
 const SheetUploadInput = forwardRef<SheetInputRef, Props>(
   ({ toasterId }, ref) => {
     const classes = useClasses()
@@ -99,7 +108,7 @@ const SheetUploadInput = forwardRef<SheetInputRef, Props>(
           setFileTask('uploaded')
 
           f.pipe(file, postFile, (x) => dispatch(x), T.of)()
-            .then(() => f.pipe(fetchSheet(), (x) => dispatch(x), T.of))
+            .then(() => f.pipe(fetchSheet, (x) => dispatch(x()), T.of))
             .catch(dumpError)
         },
       }),

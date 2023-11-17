@@ -6,7 +6,7 @@
 
 # Interface: Props
 
-The props for the [ProgressNavLink](../../functions/ProgressNavLink.md) component.
+The props for the [ProgressNavLink](../../functions/ProgressNavLink.md).
 
 ## Contents
 

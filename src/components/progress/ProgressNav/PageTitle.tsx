@@ -3,14 +3,13 @@
  * @module components/progress/ProgressNav/PageTitle
  */
 
-import type { AppState } from '@/app/store'
-
 import { useAppSelector } from '@/lib/hooks'
-import { getTitle } from '@/selectors/progress/paths'
 import { Helmet } from 'react-helmet-async'
 
+import { selectTitle } from './selectors'
+
 /**
- * The props for the {@link ProgressNavPageTitle} component.
+ * The props for the {@link ProgressNavPageTitle}.
  */
 interface Props {
   /**
@@ -23,14 +22,11 @@ interface Props {
   locationPath: string
 }
 
-const selectTitle =
-  ({ componentPath, locationPath }: Readonly<Props>) =>
-  (state: AppState) =>
-    getTitle(state, componentPath, locationPath)
-
 /**
  * This component provides the page title for the current progress navigation using react-helmet-async.
- * @param props - The {@link Props props} passed to the component.
+ * @param props - The {@link Props props} for the component.
+ * @param props.componentPath - The progress nav's component path in the router.
+ * @param props.locationPath - The current location path.
  * @returns - The {@link Helmet} component.
  * @example
  * ```tsx
@@ -40,8 +36,11 @@ const selectTitle =
  *  />
  * ```
  */
-export default function ProgressNavPageTitle(props: Readonly<Props>) {
-  const title = useAppSelector(selectTitle(props))
+export default function ProgressNavPageTitle({
+  componentPath,
+  locationPath,
+}: Readonly<Props>) {
+  const title = useAppSelector(selectTitle(componentPath, locationPath))
 
   return (
     <Helmet>

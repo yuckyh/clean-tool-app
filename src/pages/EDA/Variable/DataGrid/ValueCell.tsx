@@ -23,7 +23,7 @@ interface Props {
 
 /**
  *
- * @param props
+ * @param props - The {@link Props props} for the component.
  * @param props.value
  * @returns
  * @example

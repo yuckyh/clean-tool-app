@@ -1,10 +1,9 @@
-import type { AppState } from '@/app/store'
-
 import Plot from '@/components/Plot'
 import { useAppSelector } from '@/lib/hooks'
 import { useFluentColorScale } from '@/lib/plotly'
-import { getScore } from '@/selectors/matches/scores'
 import { makeStyles, shorthands, tokens } from '@fluentui/react-components'
+
+import { selectScore } from './selectors'
 
 const useClasses = makeStyles({
   plot: {
@@ -24,9 +23,9 @@ const useClasses = makeStyles({
 })
 
 /**
- *
+ * The props for {@link ScoreCell}.
  */
-interface Props {
+export interface Props {
   /**
    *
    */
@@ -35,19 +34,7 @@ interface Props {
 
 /**
  *
- * @param props
- * @param props.pos
- * @returns
- * @example
- */
-const selectScore =
-  ({ pos }: Readonly<Props>) =>
-  (state: AppState) =>
-    getScore(state, pos)
-
-/**
- *
- * @param props
+ * @param props - The {@link Props props} for the component.
  * @example
  */
 export default function ScoreCell(props: Readonly<Props>) {

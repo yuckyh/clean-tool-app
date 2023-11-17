@@ -15,7 +15,7 @@ import type { RefObject } from 'react'
 import { fetchMatches } from '@/actions/matches'
 import Loader from '@/components/Loader'
 import SimpleDataGrid from '@/components/SimpleDataGrid'
-import { dumpError } from '@/lib/fp/logger'
+import { dump, dumpError } from '@/lib/fp/logger'
 import { add } from '@/lib/fp/number'
 import {
   useAppDispatch,
@@ -65,7 +65,7 @@ const focusMode: DataGridFocusMode = 'composite'
 
 /**
  * The hook for fetching the matches.
- * @param stopLoading
+ * @param stopLoading - The function to stop the loading transition.
  * @example
  * ```tsx
  *    useFetchMatches()
@@ -92,7 +92,7 @@ const useInferVisitAlert = (infoAlertRef: RefObject<AlertRef>) => {
   useEffect(() => {
     f.pipe(
       visitsLength,
-      IOO.fromPredicate((x) => Math.max(...matchVisits) > x && x > 0),
+      IOO.fromPredicate((x) => Math.max(...dump(matchVisits)) >= x && x > 0),
       IOO.map(
         f.flow(
           () => matchVisits as number[],
@@ -108,7 +108,7 @@ const useInferVisitAlert = (infoAlertRef: RefObject<AlertRef>) => {
 }
 
 /**
- * The props for {@link ColumnsDataGrid}.
+ * The props for {@link MatchesDataGrid}.
  */
 interface Props {
   /**
@@ -129,16 +129,17 @@ interface Props {
  * 3. The matching visit number
  * 4. The fuzzy search score
  * @category Component
- * @param props - The props {@link Props}
+ * @param props - The {@link Props props} for the component.
  * @param props.errorAlertRef - The alert ref for the error alert used by the {@link pages/ColumnMatching ColumnMatching} page.
  * @param props.infoAlertRef - The alert ref for the info alert used by the {@link pages/ColumnMatching ColumnMatching} page.
+ * @category Component
  * @returns A data grid for the user to match columns
  * @example
  * ```ts
  * <ColumnsDataGrid errorAlertRef={errorAlertRef} infoAlertRef={infoAlertRef} />
  * ```
  */
-export default function ColumnsDataGrid({
+export default function MatchesDataGrid({
   errorAlertRef,
   infoAlertRef,
 }: Readonly<Props>) {

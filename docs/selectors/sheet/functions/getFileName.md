@@ -20,9 +20,9 @@ The application state [AppState](../../../app/store/type-aliases/AppState.md)
 
 The data slice of the state.
 
-▪ **state.matches**: `Readonly`\<[`State`](../../progress/progress/private/interfaces/State.md)\>
+▪ **state.matches**: `Readonly`\<[`State`](../../progress/private/interfaces/State.md)\>
 
-▪ **state.progress**: `Readonly`\<[`State`](../../progress/progress/private/interfaces/State.md)\>
+▪ **state.progress**: `Readonly`\<[`State`](../../progress/private/interfaces/State.md)\>
 
 ## Returns
 
@@ -38,7 +38,7 @@ const fileName = useAppSelector(getFileName)
 
 ## Source
 
-[Projects/clean-tool-app/src/selectors/data/sheet.ts:48](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/selectors/data/sheet.ts:49](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

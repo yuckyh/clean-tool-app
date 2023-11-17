@@ -12,9 +12,9 @@ The cell in the [SimpleDataGrid](../../../../components/SimpleDataGrid/README.md
 
 ## Parameters
 
-▪ **props**: `Readonly`\<[`Props`](../private/interfaces/Props.md)\>
+▪ **props**: `Readonly`\<[`Props`](../interfaces/Props.md)\>
 
-The component's props
+The [props](../interfaces/Props.md) for the component.
 
 ## Returns
 
@@ -30,7 +30,7 @@ JSX.Element
 
 ## Source
 
-[Projects/clean-tool-app/src/pages/Download/PreviewCell.tsx:123](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/pages/Download/PreviewCell.tsx:87](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

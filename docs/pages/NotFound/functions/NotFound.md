@@ -24,7 +24,7 @@ The component object
 
 ## Source
 
-[Projects/clean-tool-app/src/pages/NotFound.tsx:21](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/pages/NotFound.tsx:20](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

@@ -1,3 +1,8 @@
+/**
+ * @file This file is for the alert dialog component.
+ * @module components/AlertDialog
+ */
+
 /* eslint-disable
   functional/immutable-data
 */
@@ -19,53 +24,72 @@ import * as f from 'fp-ts/function'
 import { forwardRef, useImperativeHandle, useState } from 'react'
 
 /**
- *
+ * The ref for {@link AlertDialog}.
  */
 export interface AlertRef {
   /**
-   *
+   * Function to open the dialog.
    */
   open: IO.IO<void>
   /**
-   *
+   * Function to set the content of the dialog.
+   * @param content - The content to set.
+   * @example
+   * ```tsx
+   *  alertRef.current?.setContent('Hello World')
+   * ```
    */
   setContent: (content: string) => void
   /**
-   *
-   * @param title
-   * @returns
+   * Function to set the title of the dialog.
+   * @param title - The title to set.
+   * @example
+   * ```tsx
+   *  alertRef.current?.setTitle('Hello World')
+   * ```
    */
   setTitle: (title: string) => void
 }
 
 /**
- *
+ * The props for {@link AlertDialog}.
  */
 interface Props {
   /**
-   *
+   * Whether to show the cancel button.
    */
   noCancel?: boolean
   /**
-   *
+   * The function to run when the confirm button is clicked.
    */
   onConfirm?: IO.IO<void>
 }
 
+/**
+ * The alert dialog component.
+ * @param props - The {@link Props props} for the component.
+ * @param props.noCancel - Whether to show the cancel button.
+ * @param props.onConfirm - The function to run when the confirm button is clicked.
+ * @returns The component object.
+ * @example
+ * ```tsx
+ *  <AlertDialog ref={alertRef} />
+ * ```
+ */
 const AlertDialog = forwardRef<AlertRef, Props>(
   ({ noCancel = false, onConfirm = noOpIO() }, ref) => {
-    const [open, setOpen] = useState(false)
+    const [alertOpen, setAlertOpen] = useState(false)
     const [content, setContent] = useState('')
     const [title, setTitle] = useState('')
 
     const handleOpen: DialogProps['onOpenChange'] = (_event, { open }) => {
-      setOpen(open)
+      setAlertOpen(open)
     }
 
     useImperativeHandle(
       ref,
       () => ({
-        open: f.pipe(setOpen, IO.of, IO.flap(true)),
+        open: f.pipe(setAlertOpen, IO.of, IO.flap(true)),
         setContent,
         setTitle,
       }),
@@ -73,7 +97,7 @@ const AlertDialog = forwardRef<AlertRef, Props>(
     )
 
     return (
-      <Dialog modalType="alert" onOpenChange={handleOpen} open={open}>
+      <Dialog modalType="alert" onOpenChange={handleOpen} open={alertOpen}>
         <DialogSurface>
           <DialogBody>
             <DialogTitle>{title}</DialogTitle>

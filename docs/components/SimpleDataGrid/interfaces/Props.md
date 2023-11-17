@@ -6,6 +6,8 @@
 
 # Interface: Props`<T>`
 
+The props for [SimpleDataGrid](../functions/SimpleDataGrid.md).
+
 ## Contents
 
 - [Extends](Props.md#extends)
@@ -22,15 +24,19 @@
 
 ▪ **T**
 
+The type of the items.
+
 ## Properties
 
 ### columns
 
 > **columns**: readonly `TableColumnDefinition`\<`T`\>[]
 
+The columns definitions of the data grid made using createTableColumn.
+
 #### Source
 
-[Projects/clean-tool-app/src/components/SimpleDataGrid.tsx:59](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/components/SimpleDataGrid.tsx:60](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 
@@ -38,9 +44,11 @@
 
 > **items**: readonly `T`[]
 
+The items to display in the data grid.
+
 #### Source
 
-[Projects/clean-tool-app/src/components/SimpleDataGrid.tsx:63](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/components/SimpleDataGrid.tsx:64](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

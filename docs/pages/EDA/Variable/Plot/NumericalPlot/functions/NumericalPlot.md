@@ -16,9 +16,9 @@ The y-axis is jittered to prevent the x's from overlapping.
 
 ## Parameters
 
-▪ **props**: `Readonly`\<[`Props`](../private/interfaces/Props.md)\>
+▪ **props**: `Readonly`\<[`Props`](../interfaces/Props.md)\>
 
-The component's props
+The [props](../interfaces/Props.md) for the component.
 
 ## Returns
 
@@ -39,7 +39,7 @@ A variable with column name `al_r` and visit `1` with unit `mm` will have variab
 
 ## Source
 
-[Projects/clean-tool-app/src/pages/EDA/Variable/Plot/NumericalPlot.tsx:116](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/pages/EDA/Variable/Plot/NumericalPlot.tsx:83](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

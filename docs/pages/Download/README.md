@@ -8,7 +8,7 @@
 
 ## File
 
-This file contains the download page component declaration.
+This file contains the download page component.
 
 ## Index
 

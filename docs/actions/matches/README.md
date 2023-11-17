@@ -8,7 +8,7 @@
 
 ## File
 
-This file contains the matches actions.
+This file contains the actions for the matches slice.
 
 ## Index
 

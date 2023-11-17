@@ -10,8 +10,11 @@
 
 ### Functions
 
+- [getMean](functions/getMean.md)
+- [getMedian](functions/getMedian.md)
 - [getNotOutliers](functions/getNotOutliers.md)
 - [getOutliers](functions/getOutliers.md)
+- [getSd](functions/getSd.md)
 
 ***
 

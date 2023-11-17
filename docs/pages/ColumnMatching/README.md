@@ -8,11 +8,11 @@
 
 ## File
 
-This file contains the column matching page component declaration.
+This file contains the column matching page component.
 
 ## Index
 
-### Functions
+### Page
 
 - [ColumnMatching](functions/ColumnMatching.md)
 

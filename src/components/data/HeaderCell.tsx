@@ -1,20 +1,17 @@
 /**
- * @file This file contains the HeaderCell component.
- * @module components/sheet/HeaderCell
+ * @file This file contains the header cell component for the preview data grid
+ * @module components/data/HeaderCell
  */
 
-import type { AppState } from '@/app/store'
-
 import { useAppSelector } from '@/lib/hooks'
-import { getOriginalColumn } from '@/selectors/data/columns'
-import { getDataType } from '@/selectors/matches/dataTypes'
-import { getFormattedColumn } from '@/selectors/matches/format'
 import {
   makeStyles,
   mergeClasses,
   shorthands,
   tokens,
 } from '@fluentui/react-components'
+
+import { selectColumn, selectDataType } from './selectors'
 
 const useClasses = makeStyles({
   categoricalHeader: {
@@ -38,47 +35,22 @@ const useClasses = makeStyles({
 })
 
 /**
- *
+ * The props for {@link HeaderCell}.
  */
-interface Props {
+export interface Props {
   /**
-   *
+   * Whether the column is the original column or the formatted column.
    */
   isOriginal: boolean
   /**
-   *
+   * The position of the column.
    */
   pos: number
 }
 
 /**
- *
- * @param props
- * @param props.isOriginal
- * @param props.pos
- * @returns
- * @example
- */
-const selectColumn =
-  ({ isOriginal, pos }: Readonly<Props>) =>
-  (state: AppState) =>
-    isOriginal ? getOriginalColumn(state, pos) : getFormattedColumn(state, pos)
-
-/**
- *
- * @param props
- * @param props.pos
- * @returns
- * @example
- */
-const selectDataType =
-  ({ pos }: Readonly<Props>) =>
-  (state: AppState) =>
-    getDataType(state, pos)
-
-/**
  * This function renders the header cell for the preview data grid.
- * @param props - The props for the component.
+ * @param props - The {@link Props props} for the component.
  * @returns The component object.
  * @example
  * ```tsx

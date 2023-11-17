@@ -60,3 +60,40 @@ export const getNotOutliers = createSelector(
       ),
     ),
 )
+
+/**
+ *
+ */
+const getSum = createSelector(
+  [getIndexedNumericalRow],
+  f.flow(RA.map(getIndexedValue), RA.foldMap(N.MonoidSum)(f.identity)),
+)
+
+/**
+ *
+ */
+export const getMean = createSelector(
+  [getIndexedNumericalRow, getSum],
+  (row, sum) => sum / row.length,
+)
+
+/**
+ *
+ */
+export const getMedian = createSelector([getSortedNumericalRow], (row) =>
+  arrayLookup(row)(0)(Math.floor(row.length / 2)),
+)
+
+/**
+ *
+ */
+export const getSd = createSelector(
+  [getSortedNumericalRow, getMean],
+  (row, mean) =>
+    f.pipe(
+      row,
+      RA.foldMap(N.MonoidSum)(f.flow(add(-1 * mean), (x) => x * x)),
+      f.flip(divideBy)(row.length),
+      Math.sqrt,
+    ),
+)

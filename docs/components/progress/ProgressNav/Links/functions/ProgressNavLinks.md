@@ -14,7 +14,7 @@ This component provides the links for the current progress navigation.
 
 ▪ **props**: `Readonly`\<[`Props`](../private/interfaces/Props.md)\>
 
-The [props](../private/interfaces/Props.md) passed to the component.
+The [props](../private/interfaces/Props.md) for the component.
 
 ## Returns
 

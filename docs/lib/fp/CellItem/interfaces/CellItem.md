@@ -6,6 +6,8 @@
 
 # Interface: CellItem`<V>`
 
+A cell item is a record of string keys and values.
+
 ## Contents
 
 - [Type parameters](CellItem.md#type-parameters)
@@ -23,9 +25,11 @@
 
 > **`readonly`** **\_tag**: `"CellItem"`
 
+The tag for the cell item HKT.
+
 #### Source
 
-[Projects/clean-tool-app/src/lib/fp/CellItem.ts:17](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/lib/fp/CellItem.ts:22](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 
@@ -33,9 +37,11 @@
 
 > **value**: `Readonly`\<`Record`\<`string`, `V`\>\>
 
+The value of the cell item.
+
 #### Source
 
-[Projects/clean-tool-app/src/lib/fp/CellItem.ts:21](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/lib/fp/CellItem.ts:26](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

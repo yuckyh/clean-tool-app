@@ -8,21 +8,33 @@
 
 > **getIsDisabled**(`state`, ...`params`): `boolean`
 
+Selector function to get whether the current path is disabled.
+
 ## Parameters
 
 ▪ **state**: `object`
 
-▪ **state.data**: `Readonly`\<[`State`](../../../features/sheet/reducers/interfaces/State.md)\>
+The application state [AppState](../../../app/store/type-aliases/AppState.md)
 
-▪ **state.matches**: `Readonly`\<[`State`](../paths/private/interfaces/State.md)\>
+▪ **state.data**: `Readonly`\<[`State`](../../../reducers/data/interfaces/State.md)\>
 
-▪ **state.progress**: `Readonly`\<[`State`](../paths/private/interfaces/State.md)\>
+▪ **state.matches**: `Readonly`\<[`State`](../private/interfaces/State.md)\>
+
+▪ **state.progress**: `Readonly`\<[`State`](../private/interfaces/State.md)\>
 
 ▪ ...**params**: [`string`, `string`, `number`]
 
 ## Returns
 
 `boolean`
+
+Whether the current path is disabled.
+
+## Example
+
+```tsx
+ const isDisabled = useAppSelector(getIsDisabled)
+```
 
 ## Source
 

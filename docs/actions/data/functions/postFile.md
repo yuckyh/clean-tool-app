@@ -8,6 +8,8 @@
 
 > **postFile**(`arg`): `AsyncThunkAction`\<`string`, `File`, `AsyncThunkConfig`\>
 
+This action posts the given file to the worker.
+
 ## Parameters
 
 ▪ **arg**: `File`
@@ -15,6 +17,17 @@
 ## Returns
 
 `AsyncThunkAction`\<`string`, `File`, `AsyncThunkConfig`\>
+
+A promise containing the sheetWorker response.
+
+## Example
+
+```tsx
+ const dispatch = useAppDispatch()
+ const postFile = useCallback((file: File) => dispatch(postFile(file)), [
+  dispatch,
+ ])
+```
 
 ## Source
 

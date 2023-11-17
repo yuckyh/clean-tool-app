@@ -1,5 +1,5 @@
 /**
- * @file This file contains the ProgressNavLinks component.
+ * @file This file contains the progress navigation links component.
  * @module components/progress/ProgressNav/Links
  */
 
@@ -20,7 +20,7 @@ const useClasses = makeStyles({
 })
 
 /**
- * The props for the {@link ProgressNavLinks} component.
+ * The props for the {@link ProgressNavLinks}.
  */
 interface Props {
   /**
@@ -35,7 +35,7 @@ interface Props {
 
 /**
  * This component provides the links for the current progress navigation.
- * @param props - The {@link Props props} passed to the component.
+ * @param props - The {@link Props props} for the component.
  * @param props.componentPath - The progress nav's component path in the router.
  * @param props.locationPath - The current location path.
  * @returns - The {@link ProgressNavLink} components.

@@ -14,7 +14,7 @@ This file is for the columns data grid component.
 
 ### Component
 
-- [ColumnsDataGrid](functions/ColumnsDataGrid.md)
+- [MatchesDataGrid](functions/MatchesDataGrid.md)
 
 ### Other
 

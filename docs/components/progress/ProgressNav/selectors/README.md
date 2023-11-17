@@ -16,6 +16,7 @@
 - [selectPosition](functions/selectPosition.md)
 - [selectProgressValue](functions/selectProgressValue.md)
 - [selectShouldNavigateToAllowed](functions/selectShouldNavigateToAllowed.md)
+- [selectTitle](functions/selectTitle.md)
 
 ***
 

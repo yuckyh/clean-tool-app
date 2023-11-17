@@ -20,7 +20,7 @@ The main app component
 ## Example
 
 ```tsx
-<Route element={<App />} />
+ <Route element={<App />} />
 ```
 
 ## Source

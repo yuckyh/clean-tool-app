@@ -1,10 +1,11 @@
 /**
- * @file This file contains the column matching page component declaration.
+ * @file This file contains the column matching page component.
  * @module pages/ColumnMatching
  */
 
 import type { AlertRef } from '@/components/AlertDialog'
 import type { Progress } from '@/reducers/progress'
+import type { RefObject } from 'react'
 
 import AlertDialog from '@/components/AlertDialog'
 import { useAppDispatch } from '@/lib/hooks'
@@ -24,7 +25,7 @@ import { useNavigate } from 'react-router-dom'
 
 const MemoizedColumnsDataGrid = createLazyMemo(
   'MemoizedColumnsDataGrid',
-  import('@/pages/ColumnMatching/ColumnsDataGrid'),
+  import('@/pages/ColumnMatching/MatchesDataGrid'),
 )
 
 const MemoizedPreviewDataGrid = createLazyMemo(
@@ -43,10 +44,42 @@ const useClasses = makeStyles({
 })
 
 /**
+ * This hook is used to initialize the alert dialogs.
+ * @param errorAlertRef - The error alert ref object.
+ * @param infoAlertRef - The info alert ref object.
+ * @example
+ * ```tsx
+ *  useAlertInit(errorAlertRef, infoAlertRef)
+ * ```
+ */
+const useAlertInit = (
+  errorAlertRef: RefObject<AlertRef>,
+  infoAlertRef: RefObject<AlertRef>,
+) => {
+  useEffect(() => {
+    errorAlertRef.current?.setContent(
+      'You have selected the same column multiple times. Changes will not be made. Please select a different match and visit first if this was your intention',
+    )
+    errorAlertRef.current?.setTitle('Column Matching Error')
+  }, [errorAlertRef])
+
+  useEffect(() => {
+    infoAlertRef.current?.setContent(
+      'We have automatically set the visit based on duplicating matches, if this was a mistake please edit accordingly.',
+    )
+    infoAlertRef.current?.setTitle('Visits Inferred')
+  }, [infoAlertRef])
+}
+
+/**
  * The column matching page.
  * This page is responsible for matching the columns of the uploaded sheet to the columns from the codebook.
- * @returns The component object
+ * @category Page
+ * @returns The component object.
  * @example
+ * ```tsx
+ *  <Route lazy={defaultLazyComponent(import('../pages/ColumnMatching'))} />
+ * ```
  */
 export default function ColumnMatching() {
   const classes = useClasses()
@@ -70,16 +103,7 @@ export default function ColumnMatching() {
   const errorAlertRef = useRef<AlertRef>(null)
   const infoAlertRef = useRef<AlertRef>(null)
 
-  useEffect(() => {
-    errorAlertRef.current?.setContent(
-      'You have selected the same column multiple times. Changes will not be made. Please select a different match and visit first if this was your intention',
-    )
-    errorAlertRef.current?.setTitle('Column Matching Error')
-    infoAlertRef.current?.setContent(
-      'We have automatically set the visit based on duplicating matches, if this was a mistake please edit accordingly.',
-    )
-    infoAlertRef.current?.setTitle('Visits Inferred')
-  }, [errorAlertRef])
+  useAlertInit(errorAlertRef, infoAlertRef)
 
   return (
     <section className={classes.root}>

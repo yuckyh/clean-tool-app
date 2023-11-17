@@ -18,9 +18,9 @@ The application state [AppState](../../store/type-aliases/AppState.md)
 
 ▪ **\_state.data**: `Readonly`\<[`State`](../../../reducers/data/interfaces/State.md)\>
 
-▪ **\_state.matches**: `Readonly`\<[`State`](../../../selectors/progress/progress/private/interfaces/State.md)\>
+▪ **\_state.matches**: `Readonly`\<[`State`](../../../selectors/progress/private/interfaces/State.md)\>
 
-▪ **\_state.progress**: `Readonly`\<[`State`](../../../selectors/progress/progress/private/interfaces/State.md)\>
+▪ **\_state.progress**: `Readonly`\<[`State`](../../../selectors/progress/private/interfaces/State.md)\>
 
 ▪ **\_componentPath**: `string`
 
@@ -28,7 +28,7 @@ The component path parameter
 
 ▪ **locationPath**: `string`
 
-The location path parameter
+The current location path.
 
 ## Returns
 
@@ -48,7 +48,7 @@ const getTitle = createSelector(
 
 ## Source
 
-[Projects/clean-tool-app/src/app/selectors.ts:84](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/app/selectors.ts:85](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

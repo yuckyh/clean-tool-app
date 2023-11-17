@@ -8,9 +8,11 @@
 
 > **`const`** **Eq**: `_Eq.Eq`\<[`Flag`](../interfaces/Flag.md)\>
 
+The default Eq instance of the flag.
+
 ## Source
 
-[Projects/clean-tool-app/src/lib/fp/Flag.ts:56](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/lib/fp/Flag.ts:73](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

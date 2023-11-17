@@ -6,6 +6,10 @@
 
 # actions/data
 
+## File
+
+This file contains the actions for the data slice.
+
 ## Index
 
 ### Variables

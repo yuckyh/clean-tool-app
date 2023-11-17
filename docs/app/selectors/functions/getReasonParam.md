@@ -18,9 +18,9 @@ The application state [AppState](../../store/type-aliases/AppState.md)
 
 ▪ **\_state.data**: `Readonly`\<[`State`](../../../reducers/data/interfaces/State.md)\>
 
-▪ **\_state.matches**: `Readonly`\<[`State`](../../../selectors/progress/progress/private/interfaces/State.md)\>
+▪ **\_state.matches**: `Readonly`\<[`State`](../../../selectors/progress/private/interfaces/State.md)\>
 
-▪ **\_state.progress**: `Readonly`\<[`State`](../../../selectors/progress/progress/private/interfaces/State.md)\>
+▪ **\_state.progress**: `Readonly`\<[`State`](../../../selectors/progress/private/interfaces/State.md)\>
 
 ▪ **\_title**: `string`
 
@@ -48,7 +48,7 @@ const getFlaggedRows = createSelector(
 
 ## Source
 
-[Projects/clean-tool-app/src/app/selectors.ts:152](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/app/selectors.ts:161](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

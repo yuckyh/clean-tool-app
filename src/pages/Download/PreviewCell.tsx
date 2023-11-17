@@ -1,14 +1,15 @@
-import type { AppState } from '@/app/store'
+/**
+ * @file This file is for the preview cell component.
+ * @module pages/Download/PreviewCell
+ */
 
-import { arrayLookup, head, recordLookup } from '@/lib/array'
+import { head, recordLookup } from '@/lib/array'
 import { equals } from '@/lib/fp'
 import { refinedEq, stubEq } from '@/lib/fp/Eq'
 import * as Flag from '@/lib/fp/Flag'
 import { lt } from '@/lib/fp/number'
 import { useAppSelector } from '@/lib/hooks'
-import { getCell, getFlaggedCells } from '@/selectors/data/cells'
-import { getIndexRow } from '@/selectors/data/rows'
-import { getFormattedColumn } from '@/selectors/matches/format'
+import { getFlaggedCells } from '@/selectors/data/cells'
 import {
   makeStyles,
   mergeClasses,
@@ -25,7 +26,7 @@ import * as N from 'fp-ts/number'
 import * as S from 'fp-ts/string'
 import { useMemo } from 'react'
 
-// import Download from './index'
+import { selectCell, selectFormattedColumn, selectIndex } from './selectors'
 
 const useClasses = makeStyles({
   incorrect: {
@@ -63,7 +64,7 @@ const reasonInFlagEq = Eq.tuple(
 /**
  * The props for {@link pages/Download Download}.
  */
-interface Props {
+export interface Props {
   /**
    * The column index
    */
@@ -75,45 +76,8 @@ interface Props {
 }
 
 /**
- *
- * @param props
- * @param props.col
- * @param props.row
- * @returns
- * @example
- */
-const selectCell =
-  ({ col, row }: Readonly<Props>) =>
-  (state: AppState) =>
-    getCell(state, col, row)
-
-/**
- *
- * @param props
- * @param props.col
- * @returns
- * @example
- */
-const selectFormattedColumn =
-  ({ col }: Readonly<Props>) =>
-  (state: AppState) =>
-    getFormattedColumn(state, col)
-
-/**
- *
- * @param props
- * @param props.row
- * @returns
- * @example
- */
-const selectIndex =
-  ({ row }: Readonly<Props>) =>
-  (state: AppState) =>
-    arrayLookup(getIndexRow(state))('')(row)
-
-/**
  * The cell in the {@link components/SimpleDataGrid SimpleDataGrid} that displays the value of the data value with the flag formatting
- * @param props - The component's props
+ * @param props - The {@link Props props} for the component.
  * @returns JSX.Element
  * @example
  * ```tsx

@@ -8,15 +8,25 @@
 
 > **AlertDialog**(`props`): `ReactNode`
 
-**NOTE**: Exotic components are not callable.
+The alert dialog component.
 
 ## Parameters
 
 ▪ **props**: [`Props`](../private/interfaces/Props.md) & `RefAttributes`\<[`AlertRef`](../interfaces/AlertRef.md)\>
 
+The [props](../private/interfaces/Props.md) for the component.
+
 ## Returns
 
 `ReactNode`
+
+The component object.
+
+## Example
+
+```tsx
+ <AlertDialog ref={alertRef} />
+```
 
 ## Source
 

@@ -1,8 +1,12 @@
-import type { AppState } from '@/app/store'
+/**
+ * @file This file contains the value cell component for the matches data grid.
+ * @module components/matches/ValueCell
+ */
 
 import { useAppSelector } from '@/lib/hooks'
-import { getOriginalColumn } from '@/selectors/data/columns'
 import { makeStyles, shorthands, tokens } from '@fluentui/react-components'
+
+import { selectOriginalColumn } from './selectors'
 
 const useClasses = makeStyles({
   root: {
@@ -16,24 +20,23 @@ const useClasses = makeStyles({
 /**
  * The props for {@link ValueCell}
  */
-interface Props {
+export interface Props {
   /**
    * The column index
    */
   pos: number
 }
 
-const selectOriginalColumn =
-  ({ pos }: Readonly<Props>) =>
-  (state: AppState) =>
-    getOriginalColumn(state, pos)
-
 /**
  * A cell in the {@link pages/ColumnMatching/ColumnsDataGrid ColumnsDataGrid} that displays the value of the original column
- * @param props - The component's props
+ * @param props - The {@link Props props} for the component.
  * @param props.pos - The column index
+ * @category Components
  * @returns The component object
  * @example
+ * ```tsx
+ *  <ValueCell pos={pos} />
+ * ```
  */
 export default function ValueCell(props: Readonly<Props>) {
   const classes = useClasses()

@@ -8,9 +8,9 @@
 
 ## Index
 
-### Modules
+### Interfaces
 
-- [private](private/README.md)
+- [Props](interfaces/Props.md)
 
 ### Functions
 

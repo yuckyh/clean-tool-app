@@ -12,6 +12,8 @@
 
 ▪ **props**: `Readonly`\<[`Props`](../interfaces/Props.md)\>
 
+The [props](../interfaces/Props.md) for the component.
+
 ## Returns
 
 `Element`

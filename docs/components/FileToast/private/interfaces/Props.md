@@ -6,7 +6,7 @@
 
 # Interface: Props
 
-The props for the [FileToast](../../functions/FileToast.md) component.
+The props for the [FileToast](../../functions/FileToast.md).
 
 ## Contents
 

@@ -8,6 +8,8 @@
 
 > **unwrap**\<`V`\>(`cellItem`): `Readonly`\<`Record`\<`string`, `V`\>\>
 
+The function to unwrap a cell item.
+
 ## Type parameters
 
 ▪ **V** extends [`Value`](../type-aliases/Value.md)
@@ -16,19 +18,23 @@
 
 ▪ **cellItem**: `Readonly`\<[`CellItem`](../interfaces/CellItem.md)\<`V`\>\>
 
+The cell item instance.
+
 ## Returns
 
 `Readonly`\<`Record`\<`string`, `V`\>\>
 
+The value of the cell item.
+
 ## Example
 
 ```ts
-
+const value = unwrap(cellItem)
 ```
 
 ## Source
 
-[Projects/clean-tool-app/src/lib/fp/CellItem.ts:44](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/lib/fp/CellItem.ts:51](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

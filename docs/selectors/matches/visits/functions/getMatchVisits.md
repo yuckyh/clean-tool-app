@@ -14,9 +14,9 @@
 
 ▪ **state.data**: `Readonly`\<[`State`](../../../../reducers/data/interfaces/State.md)\>
 
-▪ **state.matches**: `Readonly`\<[`State`](../../../progress/progress/private/interfaces/State.md)\>
+▪ **state.matches**: `Readonly`\<[`State`](../../../progress/private/interfaces/State.md)\>
 
-▪ **state.progress**: `Readonly`\<[`State`](../../../progress/progress/private/interfaces/State.md)\>
+▪ **state.progress**: `Readonly`\<[`State`](../../../progress/private/interfaces/State.md)\>
 
 ## Returns
 
@@ -30,7 +30,7 @@ readonly `number`[]
 
 ## Source
 
-[Projects/clean-tool-app/src/selectors/matches/visits.ts:19](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/selectors/matches/visits.ts:23](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

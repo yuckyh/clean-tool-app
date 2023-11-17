@@ -1,15 +1,16 @@
 import type { AppState } from '@/app/store'
 
 import {
+  getPaths,
+  getPosition,
+  getProgressValue,
+  getTitle,
+} from '@/selectors/progress/paths'
+import {
   getAllowedPaths,
   getIsDisabled,
   getShouldNavigateToAllowed,
 } from '@/selectors/progress/progress'
-import {
-  getPaths,
-  getPosition,
-  getProgressValue,
-} from '@/selectors/progress/paths'
 
 /**
  * The selector to get the allowed paths for the current progress navigation.
@@ -95,3 +96,7 @@ export const selectIsDisabled =
 export const selectProgressValue =
   (componentPath: string, locationPath: string) => (state: AppState) =>
     getProgressValue(state, componentPath, locationPath)
+
+export const selectTitle =
+  (componentPath: string, locationPath: string) => (state: AppState) =>
+    getTitle(state, componentPath, locationPath)

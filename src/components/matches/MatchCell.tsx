@@ -1,8 +1,11 @@
-import type { AppState } from '@/app/store'
+/**
+ * @file This file contains the match cell component for the matches data grid.
+ * @module components/matches/MatchCell
+ */
 import type { AlertRef } from '@/components/AlertDialog'
 import type { ComboboxProps } from '@fluentui/react-components'
 
-import { findIndex, indexDuplicateSearcher } from '@/lib/array'
+import { findIndex, getIndexedIndex, indexDuplicateSearcher } from '@/lib/array'
 import { useAppDispatch, useAppSelector, useDebounced } from '@/lib/hooks'
 import { createMemo } from '@/lib/utils'
 import {
@@ -11,12 +14,8 @@ import {
   setMatchScoreByColumn,
   setMatchVisit,
 } from '@/reducers/matches'
-import { getRow } from '@/selectors/data/rows'
 import { getVisits } from '@/selectors/data/visits'
-import { getMatchColumn } from '@/selectors/matches/columns'
 import { getIndices } from '@/selectors/matches/format'
-import { getMatchResult, getScoreResult } from '@/selectors/matches/results'
-import { getMatchVisit, getVisitByMatchVisit } from '@/selectors/matches/visits'
 import {
   Combobox,
   Option,
@@ -33,6 +32,13 @@ import * as S from 'fp-ts/string'
 import { useCallback, useMemo, useState } from 'react'
 
 import FilteredOptions from './FilteredOptions'
+import {
+  selectMatchColumn,
+  selectMatchVisit,
+  selectResult,
+  selectRow,
+  selectScoreResult,
+} from './selectors'
 
 const MemoizedFilteredOptions = createMemo('FilteredOptions', FilteredOptions)
 
@@ -44,98 +50,27 @@ const useClasses = makeStyles({
 })
 
 /**
- *
+ * The props for {@link MatchCell}.
  */
 interface Props {
   /**
-   *
+   * The alert ref object.
    */
   alertRef: React.RefObject<AlertRef>
   /**
-   *
+   * The position of the column.
    */
   pos: number
 }
 
 /**
- *
- * @param props
- * @param props.pos
- * @returns
+ * This function is used to render the match cell in the data grid.
+ * @param props - The {@link Props props} for the component.
+ * @returns The component object.
  * @example
- */
-const selectMatchColumn =
-  ({ pos }: Readonly<Props>) =>
-  (state: AppState) =>
-    getMatchColumn(state, pos)
-
-/**
- *
- * @param props
- * @param props.pos
- * @returns
- * @example
- */
-const selectMatchVisit =
-  ({ pos }: Readonly<Props>) =>
-  (state: AppState) =>
-    getMatchVisit(state, pos)
-
-/**
- *
- * @param props
- * @param props.pos
- * @returns
- * @example
- */
-const selectResult =
-  ({ pos }: Readonly<Props>) =>
-  (state: AppState) =>
-    getMatchResult(state, pos)
-
-/**
- *
- * @param props
- * @param props.pos
- * @returns
- * @example
- */
-const selectScoreResult =
-  ({ pos }: Readonly<Props>) =>
-  (state: AppState) =>
-    getScoreResult(state, pos)
-
-/**
- *
- * @param props
- * @param props.pos
- * @returns
- * @example
- */
-const selectVisitByMatchVisit =
-  ({ pos }: Readonly<Props>) =>
-  (state: AppState) =>
-    getVisitByMatchVisit(state, pos)
-
-/**
- *
- * @param props
- * @returns
- * @example
- */
-const selectRow = (props: Readonly<Props>) => (state: AppState) =>
-  getRow(
-    state,
-    selectMatchColumn(props)(state),
-    selectVisitByMatchVisit(props)(state),
-  )
-
-/**
- *
- * @param props
- * @param props.alertRef
- * @param props.pos
- * @example
+ * ```tsx
+ *  <MatchCell alertRef={alertRef} pos={pos} />
+ * ```
  */
 export default function MatchCell(props: Readonly<Props>) {
   const classes = useClasses()
@@ -163,8 +98,8 @@ export default function MatchCell(props: Readonly<Props>) {
     () =>
       f.pipe(
         result,
-        f.pipe(deferredValue, S.includes, RA.filter<string>),
         RA.zip(scoreResult),
+        RA.filter(f.flow(getIndexedIndex, S.includes(deferredValue))),
         RA.map(([match, score]) => ({
           match,
           score,

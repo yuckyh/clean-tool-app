@@ -1,9 +1,10 @@
 /**
- * @file This file contains the selectors for the sheet slice.
+ * @file This file contains the selectors for the sheet in the data slice.
  * @module selectors/sheet
  */
 
 import type { AppState } from '@/app/store'
+import type { WorkBook } from 'xlsx'
 
 import { findIndex, recordLookup } from '@/lib/array'
 import { equals } from '@/lib/fp'
@@ -170,10 +171,18 @@ export const getFormattedSheet = createSelector(
  *
  */
 export const getFormattedWorkbook = createSelector(
-  [getFormattedSheet, getSheetName],
-  (formattedSheet, sheetName) => {
+  [getFormattedSheet, getSheetName, getSheets],
+  (formattedSheet, sheetName, sheets) => {
     const newWorkbook = utils.book_new()
+    f.pipe(
+      sheets,
+      RR.deleteAt(sheetName),
+      RR.mapWithIndex((key, sheet) => {
+        utils.book_append_sheet(newWorkbook, sheet, key)
+        return sheet
+      }),
+    )
     utils.book_append_sheet(newWorkbook, formattedSheet, sheetName)
-    return newWorkbook
+    return JSON.parse(JSON.stringify(newWorkbook)) as WorkBook
   },
 )

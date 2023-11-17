@@ -6,6 +6,8 @@
 
 # Interface: BaseProps
 
+The base props for the data grid selectors.
+
 ## Contents
 
 - [Properties](BaseProps.md#properties)
@@ -18,9 +20,11 @@
 
 > **column**: `string`
 
+The column name.
+
 #### Source
 
-[Projects/clean-tool-app/src/pages/EDA/Variable/DataGrid/selectors.ts:21](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/pages/EDA/Variable/DataGrid/selectors.ts:27](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 
@@ -28,9 +32,11 @@
 
 > **visit**: `string`
 
+The visit value.
+
 #### Source
 
-[Projects/clean-tool-app/src/pages/EDA/Variable/DataGrid/selectors.ts:25](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/pages/EDA/Variable/DataGrid/selectors.ts:31](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

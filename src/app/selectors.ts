@@ -4,6 +4,7 @@
  */
 
 import type * as Flag from '@/lib/fp/Flag'
+import type { RouteObject } from 'react-router-dom'
 
 import type { AppState } from './store'
 
@@ -72,7 +73,7 @@ export const getVisitParam = (
  * Utility function to get the location path parameter
  * @param _state - The application state {@link AppState}
  * @param _componentPath - The component path parameter
- * @param locationPath - The location path parameter
+ * @param locationPath - The current location path.
  * @returns The location path parameter
  * @example
  *  const getTitle = createSelector(
@@ -90,7 +91,7 @@ export const getLocationPathParam = (
 /**
  * Utility function to get the component path parameter
  * @param _state - The application state {@link AppState}
- * @param componentPath - The component path parameter
+ * @param componentPath - The progress nav's component path in the router.
  * @returns The component path parameter
  * @example
  *  const getPaths = createSelector(
@@ -122,6 +123,14 @@ export const getPosParam = (
   _locationPath: string,
   pos: number,
 ) => pos
+
+export const getRoutesParam = (
+  _state: AppState,
+  _componentPath: string,
+  _locationPath: string,
+  _pos: number,
+  routes: readonly RouteObject[],
+) => routes
 
 /**
  * Utility function to get the title parameter

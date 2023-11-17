@@ -6,6 +6,8 @@
 
 # Interface: Flag
 
+The flag type.
+
 ## Contents
 
 - [Properties](Flag.md#properties)
@@ -18,9 +20,11 @@
 
 > **`readonly`** **\_tag**: `"Flag"`
 
+The tag for the flag HKT.
+
 #### Source
 
-[Projects/clean-tool-app/src/lib/fp/Flag.ts:25](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/lib/fp/Flag.ts:33](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 
@@ -28,9 +32,11 @@
 
 > **value**: readonly [`string`, `string`, [`FlagReason`](../type-aliases/FlagReason.md)]
 
+The value of the flag.
+
 #### Source
 
-[Projects/clean-tool-app/src/lib/fp/Flag.ts:29](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/lib/fp/Flag.ts:37](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

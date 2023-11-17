@@ -10,7 +10,9 @@
 
 ## Parameters
 
-▪ **props**: `Readonly`\<[`Props`](../private/interfaces/Props.md)\>
+▪ **props**: `Readonly`\<[`Props`](../interfaces/Props.md)\>
+
+The [props](../interfaces/Props.md) for the component.
 
 ## Returns
 
@@ -24,7 +26,7 @@
 
 ## Source
 
-[Projects/clean-tool-app/src/components/matches/ScoreCell.tsx:53](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/components/matches/ScoreCell.tsx:40](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

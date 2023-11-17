@@ -8,9 +8,11 @@
 
 > **`const`** **Ord**: `_Ord.Ord`\<[`Flag`](../interfaces/Flag.md)\>
 
+The default Ord instance of the flag.
+
 ## Source
 
-[Projects/clean-tool-app/src/lib/fp/Flag.ts:63](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/lib/fp/Flag.ts:80](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

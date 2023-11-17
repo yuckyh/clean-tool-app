@@ -1,5 +1,5 @@
 /**
- * @file This file contains the main app component declaration.
+ * @file This file contains the main app component.
  * @module app
  */
 
@@ -20,7 +20,7 @@ import { useRegisterSW } from 'virtual:pwa-register/react'
  * @returns The main app component
  * @example
  * ```tsx
- * <Route element={<App />} />
+ *  <Route element={<App />} />
  * ```
  */
 export default function App() {

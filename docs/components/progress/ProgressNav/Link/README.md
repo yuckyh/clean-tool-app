@@ -8,7 +8,7 @@
 
 ## File
 
-This file contains the ProgressNavLink component.
+This file contains the progress navigation link component.
 
 ## Index
 

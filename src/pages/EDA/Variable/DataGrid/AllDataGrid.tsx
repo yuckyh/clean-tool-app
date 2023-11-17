@@ -83,7 +83,7 @@ export interface Props {
 
 /**
  *
- * @param props
+ * @param props - The {@link Props props} for the component.
  * @param props.column
  * @param props.visit
  * @example

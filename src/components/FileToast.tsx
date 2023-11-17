@@ -12,7 +12,7 @@ import { Toast, ToastBody, ToastTitle } from '@fluentui/react-components'
 export type FileTaskType = 'deleted' | 'downloaded' | 'none' | 'uploaded'
 
 /**
- * The props for the {@link FileToast} component.
+ * The props for the {@link FileToast}.
  */
 interface Props {
   /**
@@ -23,7 +23,7 @@ interface Props {
 
 /**
  * The {@link FileToast} component displays a toast notification for file I/O
- * @param props -The props for the {@link FileToast} component.
+ * @param props - The {@link Props props} for the component.
  * @param props.fileTask - The file task to display.
  * @returns The component object.
  * @example

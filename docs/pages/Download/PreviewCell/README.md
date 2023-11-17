@@ -6,11 +6,15 @@
 
 # pages/Download/PreviewCell
 
+## File
+
+This file is for the preview cell component.
+
 ## Index
 
-### Modules
+### Interfaces
 
-- [private](private/README.md)
+- [Props](interfaces/Props.md)
 
 ### Functions
 

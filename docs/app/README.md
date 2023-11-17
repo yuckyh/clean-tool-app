@@ -8,7 +8,7 @@
 
 ## File
 
-This file contains the main app component declaration.
+This file contains the main app component.
 
 ## Index
 

@@ -8,13 +8,19 @@
 
 > **selectTitle**(`props`): (`state`) => `string`
 
+Selector function to get the variable title.
+
 ## Parameters
 
 ▪ **props**: `Readonly`\<[`BaseProps`](../interfaces/BaseProps.md)\>
 
+The [props](../interfaces/BaseProps.md) for the component.
+
 ## Returns
 
 `function`
+
+The variable title.
 
 > > (`state`): `string`
 >
@@ -24,9 +30,9 @@
 >
 > ▪ **state.data**: `Readonly`\<[`State`](../../../../../../reducers/data/interfaces/State.md)\>
 >
-> ▪ **state.matches**: `Readonly`\<[`State`](../../../../../../selectors/progress/progress/private/interfaces/State.md)\>
+> ▪ **state.matches**: `Readonly`\<[`State`](../../../../../../selectors/progress/private/interfaces/State.md)\>
 >
-> ▪ **state.progress**: `Readonly`\<[`State`](../../../../../../selectors/progress/progress/private/interfaces/State.md)\>
+> ▪ **state.progress**: `Readonly`\<[`State`](../../../../../../selectors/progress/private/interfaces/State.md)\>
 >
 > ### Returns
 >
@@ -34,18 +40,18 @@
 >
 > ### Source
 >
-> [Projects/clean-tool-app/src/pages/EDA/Variable/DataGrid/selectors.ts:88](https://github.com/yuckyh/clean-tool-app/)
+> [Projects/clean-tool-app/src/pages/EDA/Variable/DataGrid/selectors.ts:125](https://github.com/yuckyh/clean-tool-app/)
 >
 
 ## Example
 
-```ts
-
+```tsx
+ const title = useAppSelector(selectTitle(props))
 ```
 
 ## Source
 
-[Projects/clean-tool-app/src/pages/EDA/Variable/DataGrid/selectors.ts:87](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/pages/EDA/Variable/DataGrid/selectors.ts:124](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

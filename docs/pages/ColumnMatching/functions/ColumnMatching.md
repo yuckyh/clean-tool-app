@@ -15,17 +15,17 @@ This page is responsible for matching the columns of the uploaded sheet to the c
 
 `Element`
 
-The component object
+The component object.
 
 ## Example
 
-```ts
-
+```tsx
+ <Route lazy={defaultLazyComponent(import('../pages/ColumnMatching'))} />
 ```
 
 ## Source
 
-[Projects/clean-tool-app/src/pages/ColumnMatching/index.tsx:51](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/pages/ColumnMatching/index.tsx:84](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

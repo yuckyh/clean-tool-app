@@ -6,6 +6,10 @@
 
 # pages/EDA/Variable/DataGrid/selectors
 
+## File
+
+This file contains the selectors for the EDA data grids.
+
 ## Index
 
 ### Interfaces
@@ -18,8 +22,12 @@
 - [selectFlaggedRows](functions/selectFlaggedRows.md)
 - [selectFormattedColumn](functions/selectFormattedColumn.md)
 - [selectIncorrectSeries](functions/selectIncorrectSeries.md)
+- [selectMean](functions/selectMean.md)
+- [selectMedian](functions/selectMedian.md)
 - [selectMissingSeries](functions/selectMissingSeries.md)
+- [selectSd](functions/selectSd.md)
 - [selectSeries](functions/selectSeries.md)
+- [selectSuspectedSeries](functions/selectSuspectedSeries.md)
 - [selectTitle](functions/selectTitle.md)
 
 ***

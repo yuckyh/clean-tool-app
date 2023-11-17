@@ -14,7 +14,6 @@ const useClasses = makeStyles({
 /**
  * The 404 page component
  * @category Page
- * @group Component
  * @returns The component object
  * @example
  */

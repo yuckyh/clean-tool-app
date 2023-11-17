@@ -6,6 +6,10 @@
 
 # components/AlertDialog
 
+## File
+
+This file is for the alert dialog component.
+
 ## Index
 
 ### Modules

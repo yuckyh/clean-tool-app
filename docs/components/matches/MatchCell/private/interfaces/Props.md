@@ -6,6 +6,8 @@
 
 # Interface: Props
 
+The props for [MatchCell](../../functions/MatchCell.md).
+
 ## Contents
 
 - [Properties](Props.md#properties)
@@ -18,9 +20,11 @@
 
 > **alertRef**: `RefObject`\<[`AlertRef`](../../../../AlertDialog/interfaces/AlertRef.md)\>
 
+The alert ref object.
+
 #### Source
 
-[Projects/clean-tool-app/src/components/matches/MatchCell.tsx:53](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/components/matches/MatchCell.tsx:59](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 
@@ -28,9 +32,11 @@
 
 > **pos**: `number`
 
+The position of the column.
+
 #### Source
 
-[Projects/clean-tool-app/src/components/matches/MatchCell.tsx:57](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/components/matches/MatchCell.tsx:63](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

@@ -1,3 +1,8 @@
+/**
+ * @file This file contains the selectors for the progress slice of the state.
+ * @module selectors/progress
+ */
+
 import type { Progress } from '@/reducers/progress'
 
 import { arrayLookup, recordLookup } from '@/lib/array'
@@ -12,9 +17,15 @@ import { getProgress } from '.'
 import { getLocationPathWords, getPath, getPaths } from './paths'
 
 /**
- *
+ * Selector function to get the allowed paths
+ * @param state - The application state {@link app/store.AppState AppState}
+ * @param componentPath - The progress nav's component path in the router.
+ * @returns The allowed paths.
+ * @example
+ * ```tsx
+ *  const allowedPaths = useAppSelector(getAllowedPaths)
+ * ```
  */
-
 export const getAllowedPaths = createSelector(
   [getPaths, getProgress],
   (paths, progress) =>
@@ -25,18 +36,34 @@ export const getAllowedPaths = createSelector(
       recordLookup,
     )([])(progress),
 )
-/**
- *
- */
 
+/**
+ * Selector function to get whether the current path is disabled.
+ * @param state - The application state {@link app/store.AppState AppState}
+ * @param componentPath - The progress nav's component path in the router.
+ * @param locationPath - The current location path.
+ * @returns Whether the current path is disabled.
+ * @example
+ * ```tsx
+ *  const isDisabled = useAppSelector(getIsDisabled)
+ * ```
+ */
 export const getIsDisabled = createSelector(
   [getPath, getAllowedPaths],
   (path, allowedPaths) => P.not(RA.elem(S.Eq)(path))(allowedPaths),
 )
-/**
- *
- */
 
+/**
+ * Selector function to get whether the user should be navigated to the allowed path.
+ * @param state - The application state {@link app/store.AppState AppState}
+ * @param componentPath - The progress nav's component path in the router.
+ * @param locationPath - The current location path.
+ * @returns Whether the user should be navigated to the allowed path.
+ * @example
+ * ```tsx
+ *  const shouldNavigateToAllowed = useAppSelector(getShouldNavigateToAllowed)
+ * ```
+ */
 export const getShouldNavigateToAllowed = createSelector(
   [getLocationPathWords, getAllowedPaths],
   (locationPathWords, allowedPaths) =>

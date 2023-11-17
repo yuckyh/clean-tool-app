@@ -8,6 +8,8 @@
 
 > **fold**\<`A`, `T`\>(`fn`): (`cellItem`) => `T`
 
+The function to fold a cell item.
+
 ## Type parameters
 
 ▪ **A** extends [`Value`](../type-aliases/Value.md)
@@ -18,9 +20,13 @@
 
 ▪ **fn**: (`a`) => `T`
 
+The function that converts the value of the cell item.
+
 ## Returns
 
 `function`
+
+The converted value.
 
 > > (`cellItem`): `T`
 >
@@ -34,18 +40,18 @@
 >
 > ### Source
 >
-> [Projects/clean-tool-app/src/lib/fp/CellItem.ts:69](https://github.com/yuckyh/clean-tool-app/)
+> [Projects/clean-tool-app/src/lib/fp/CellItem.ts:78](https://github.com/yuckyh/clean-tool-app/)
 >
 
 ## Example
 
 ```ts
-
+const value = fold((x) => x['a'])(cellItem)
 ```
 
 ## Source
 
-[Projects/clean-tool-app/src/lib/fp/CellItem.ts:68](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/lib/fp/CellItem.ts:77](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

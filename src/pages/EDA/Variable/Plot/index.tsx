@@ -25,7 +25,7 @@ interface Props {
 
 /**
  *
- * @param props
+ * @param props - The {@link Props props} for the component.
  * @param props.data
  * @param props.layout
  * @param props.variable

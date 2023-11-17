@@ -1,5 +1,5 @@
 /**
- * @file This file contains the download page component declaration.
+ * @file This file contains the download page component.
  * @module pages/Download
  */
 
@@ -93,7 +93,7 @@ export default function Download() {
   const workbook = useAppSelector(getFormattedWorkbook)
 
   const handleFileDownload = () => {
-    writeFile(workbook, `flagged-${fileName}`, { type: 'file' }) as File
+    writeFile({ ...workbook }, `flagged-${fileName}`, { type: 'file' }) as File
   }
 
   return (

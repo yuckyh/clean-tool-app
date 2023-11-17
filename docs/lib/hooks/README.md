@@ -16,7 +16,6 @@
 - [useGlobalStyles](functions/useGlobalStyles.md)
 - [useLoadingTransition](functions/useLoadingTransition.md)
 - [useStorage](functions/useStorage.md)
-- [useSyncedSelectionHandler](functions/useSyncedSelectionHandler.md)
 - [useThemePreference](functions/useThemePreference.md)
 - [useTokenToHex](functions/useTokenToHex.md)
 

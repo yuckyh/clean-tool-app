@@ -30,9 +30,9 @@ The selector function.
 >
 > ▪ **state.data**: `Readonly`\<[`State`](../../../../../reducers/data/interfaces/State.md)\>
 >
-> ▪ **state.matches**: `Readonly`\<[`State`](../../../../../selectors/progress/progress/private/interfaces/State.md)\>
+> ▪ **state.matches**: `Readonly`\<[`State`](../../../../../selectors/progress/private/interfaces/State.md)\>
 >
-> ▪ **state.progress**: `Readonly`\<[`State`](../../../../../selectors/progress/progress/private/interfaces/State.md)\>
+> ▪ **state.progress**: `Readonly`\<[`State`](../../../../../selectors/progress/private/interfaces/State.md)\>
 >
 > ### Returns
 >
@@ -40,7 +40,7 @@ The selector function.
 >
 > ### Source
 >
-> [Projects/clean-tool-app/src/components/progress/ProgressNav/selectors.ts:52](https://github.com/yuckyh/clean-tool-app/)
+> [Projects/clean-tool-app/src/components/progress/ProgressNav/selectors.ts:53](https://github.com/yuckyh/clean-tool-app/)
 >
 
 ## Example
@@ -51,7 +51,7 @@ The selector function.
 
 ## Source
 
-[Projects/clean-tool-app/src/components/progress/ProgressNav/selectors.ts:52](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/components/progress/ProgressNav/selectors.ts:53](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

@@ -6,6 +6,8 @@
 
 # Interface: Props
 
+The props for [SheetUploadInput](../../functions/SheetUploadInput.md).
+
 ## Contents
 
 - [Properties](Props.md#properties)
@@ -17,9 +19,11 @@
 
 > **toasterId**: `string`
 
+The toaster id for controlling the toaster.
+
 #### Source
 
-[Projects/clean-tool-app/src/components/data/SheetUploadInput.tsx:65](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/components/data/SheetUploadInput.tsx:64](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

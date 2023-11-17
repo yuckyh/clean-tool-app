@@ -12,9 +12,9 @@ This function is used to render the summary statistics of the selected variable.
 
 ## Parameters
 
-▪ **props**: `Readonly`\<[`Props`](../private/interfaces/Props.md)\>
+▪ **props**: `Readonly`\<[`Props`](../interfaces/Props.md)\>
 
-The [Props](../private/interfaces/Props.md) object.
+The [props](../interfaces/Props.md) for the component.
 
 ## Returns
 
@@ -34,7 +34,7 @@ The component object.
 
 ## Source
 
-[Projects/clean-tool-app/src/pages/EDA/Variable/DataGrid/SummaryDataGrid.tsx:108](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/pages/EDA/Variable/DataGrid/SummaryDataGrid.tsx:81](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

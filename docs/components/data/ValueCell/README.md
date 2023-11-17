@@ -6,6 +6,10 @@
 
 # components/data/ValueCell
 
+## File
+
+This file contains the value cell component for the preview data grid.
+
 ## Index
 
 ### Modules

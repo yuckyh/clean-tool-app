@@ -12,9 +12,9 @@ This function renders the Tab component for the Nav component.
 
 ## Parameters
 
-▪ **props**: `Readonly`\<[`Props`](../private/interfaces/Props.md)\>
+▪ **props**: `Readonly`\<[`Props`](../interfaces/Props.md)\>
 
-The [Props](../private/interfaces/Props.md) object.
+The [props](../interfaces/Props.md) for the component.
 
 ## Returns
 
@@ -30,7 +30,7 @@ The component obj
 
 ## Source
 
-[Projects/clean-tool-app/src/pages/EDA/Variable/Nav/Tab.tsx:63](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/pages/EDA/Variable/Nav/Tab.tsx:38](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

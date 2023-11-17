@@ -1,5 +1,5 @@
 /**
- * @file This file contains the simple data grid component.
+ * @file This file contains the base data grid component.
  * @module components/SimpleDataGrid
  */
 
@@ -49,26 +49,32 @@ const useClasses = makeStyles({
 })
 
 /**
- *
+ * The props for {@link SimpleDataGrid}.
+ * @template T - The type of the items.
  */
 export interface Props<T>
   extends Partial<Omit<DataGridProps, 'columns' | 'items'>> {
   /**
-   *
+   * The columns definitions of the data grid made using createTableColumn.
    */
   columns: readonly TableColumnDefinition<T>[]
   /**
-   *
+   * The items to display in the data grid.
    */
   items: readonly T[]
 }
 
 /**
- *
- * @param props
- * @param props.columns
- * @param props.items
+ * This is the base component for all data grids.
+ * @param props - The {@link Props props} for the component.
+ * @param props.columns - The columns definitions of the data grid made using createTableColumn.
+ * @param props.items - The items to display in the data grid.
+ * @template T - The type of the items.
+ * @returns The component object.
  * @example
+ * ```tsx
+ *  <SimpleDataGrid columns={columns} items={items} />
+ * ```
  */
 export default function SimpleDataGrid<T>({
   columns,

@@ -8,9 +8,20 @@
 
 > **fetchSheet**(): `AsyncThunkAction`\<`object`, `void`, `AsyncThunkConfig`\>
 
+This action fetches the sheet from the worker.
+
 ## Returns
 
 `AsyncThunkAction`\<`object`, `void`, `AsyncThunkConfig`\>
+
+A promise containing the sheetWorker response.
+
+## Example
+
+```tsx
+ const dispatch = useAppDispatch()
+ const fetchSheet = useCallback(() => dispatch(fetchSheet()), [dispatch])
+```
 
 ## Source
 

@@ -14,7 +14,7 @@ The [FileToast](FileToast.md) component displays a toast notification for file I
 
 ▪ **props**: `Readonly`\<[`Props`](../private/interfaces/Props.md)\>
 
-The props for the [FileToast](FileToast.md) component.
+The [props](../private/interfaces/Props.md) for the component.
 
 ## Returns
 

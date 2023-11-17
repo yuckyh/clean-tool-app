@@ -20,7 +20,7 @@
 
 ## Source
 
-[Projects/clean-tool-app/src/pages/EDA/Variable/index.tsx:116](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/pages/EDA/Variable/index.tsx:85](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

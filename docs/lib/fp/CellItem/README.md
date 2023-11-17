@@ -6,6 +6,10 @@
 
 # lib/fp/CellItem
 
+## File
+
+This file contains the cell item typeclass.
+
 ## Index
 
 ### Interfaces

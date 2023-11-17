@@ -8,6 +8,8 @@
 
 > **of**\<`V`\>(`value`): `Readonly`\<[`CellItem`](../interfaces/CellItem.md)\<`V`\>\>
 
+The constructor for a cell item.
+
 ## Type parameters
 
 ▪ **V** extends [`Value`](../type-aliases/Value.md)
@@ -16,19 +18,23 @@
 
 ▪ **value**: `Readonly`\<`Record`\<`string`, `V`\>\>
 
+The value of the cell item.
+
 ## Returns
 
 `Readonly`\<[`CellItem`](../interfaces/CellItem.md)\<`V`\>\>
 
+The cell item.
+
 ## Example
 
 ```ts
-
+const cellItem = of({ foo: 1, bar: 'baz' })
 ```
 
 ## Source
 
-[Projects/clean-tool-app/src/lib/fp/CellItem.ts:30](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/lib/fp/CellItem.ts:36](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

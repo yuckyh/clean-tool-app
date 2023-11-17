@@ -8,7 +8,7 @@ type Props = SpinnerProps & PropsWithChildren
 
 /**
  *
- * @param props
+ * @param props - The {@link Props props} for the component.
  * @param props.children
  * @returns
  * @example

@@ -18,7 +18,7 @@ This file contains the SummaryDataGrid component.
 
 ### Other
 
-- [private](private/README.md)
+- [Props](interfaces/Props.md)
 
 ***
 

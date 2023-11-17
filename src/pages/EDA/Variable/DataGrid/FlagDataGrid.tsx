@@ -3,7 +3,8 @@ import type { TableColumnDefinition } from '@fluentui/react-components'
 
 import SimpleDataGrid from '@/components/SimpleDataGrid'
 import { getIndexedIndex } from '@/lib/array'
-import { useAppSelector, useSyncedSelectionHandler } from '@/lib/hooks'
+import { useAppSelector } from '@/lib/hooks'
+import { useSyncedSelectionHandler } from '@/pages/EDA/Variable/DataGrid/hooks'
 import {
   Body2,
   Card,
@@ -38,23 +39,25 @@ interface Props {
   column: string
   emptyText: string
   reason: FlagReason
-  series: readonly (readonly [string, string])[]
+  series: readonly (readonly [string, number | string])[]
   subtitleText: string
   titleText: string
   visit: string
 }
 
 /**
- *
- * @param props
+ * The base data grid for flagging cells across various reasons.
+ * @category Component
+ * @param props - The {@link Props props} for the component.
  * @param props.titleText
  * @param props.subtitleText
  * @param props.emptyText
  * @param props.series
  * @param props.reason
+ * @returns The component object.
  * @example
  */
-export default function IncorrectDataGrid({
+export default function FlagDataGrid({
   emptyText,
   reason,
   series,
@@ -69,7 +72,7 @@ export default function IncorrectDataGrid({
   const handleSelectionChange = useSyncedSelectionHandler(reason, title, series)
 
   const columnDefinition: Readonly<
-    TableColumnDefinition<readonly [string, string]>[]
+    TableColumnDefinition<readonly [string, number | string]>[]
   > = useMemo(
     () => [
       createTableColumn({

@@ -13,10 +13,10 @@ The type of the worker's request.
 ## Example
 
 ```ts
-const request: ColumnRequest = {
-  columns: ['foo', 'foo2'],
-  method: 'get',
-}
+ const request: ColumnRequest = {
+   columns: ['foo', 'foo2'],
+   method: 'get',
+ }
 ```
 
 ## Type declaration

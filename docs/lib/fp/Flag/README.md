@@ -6,6 +6,10 @@
 
 # lib/fp/Flag
 
+## File
+
+This file contains the flag typeclass.
+
 ## Index
 
 ### Interfaces

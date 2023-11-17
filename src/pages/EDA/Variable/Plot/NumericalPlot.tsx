@@ -1,23 +1,30 @@
-import type { AppState } from '@/app/store'
+/**
+ * @file This file contains the numerical plot component.
+ * @module pages/EDA/Variable/Plot/NumericalPlot
+ */
+
 import type { Data, Layout } from 'plotly.js-cartesian-dist'
 
 import { getIndexedIndex, getIndexedValue } from '@/lib/array'
 import { useAppSelector, useTokenToHex } from '@/lib/hooks'
-import { getIndexedNumericalRow } from '@/selectors/data/rows'
-import { getNotOutliers, getOutliers } from '@/selectors/data/stats'
 import { tokens } from '@fluentui/react-components'
 import * as RA from 'fp-ts/ReadonlyArray'
 import { useMemo } from 'react'
 
 import VariablePlot from '.'
+import { selectNumericalSeries } from '../selectors'
+import { selectNonOutliers, selectOutliers } from './selectors'
 
 const jitterPower = 0.3
 
 /**
- *
- * @param jitter
- * @returns
+ * The function to generate a random jitter value.
+ * @param jitter - The jitter magnitude.
+ * @returns A random jitter value.
  * @example
+ * ```ts
+ *  const jitter = jitterY(0.3)
+ * ```
  */
 const jitterY = (jitter: number) => Math.random() * jitter * 2 - jitter
 
@@ -32,7 +39,7 @@ const jitterY = (jitter: number) => Math.random() * jitter * 2 - jitter
  *   visit="1" />
  * ```
  */
-interface Props {
+export interface Props {
   /**
    * The column used to get the row for plotting.
    */
@@ -52,53 +59,13 @@ interface Props {
 }
 
 /**
- *
- * @param props
- * @param props.column
- * @param props.visit
- * @returns
- * @example
- */
-const selectSeries =
-  ({ column, visit }: Readonly<Props>) =>
-  (state: AppState) =>
-    getIndexedNumericalRow(state, column, visit)
-
-/**
- *
- * @param props
- * @param props.column
- * @param props.visit
- * @returns
- * @example
- */
-const selectOutliers =
-  ({ column, visit }: Readonly<Props>) =>
-  (state: AppState) =>
-    getOutliers(state, column, visit)
-
-/**
- *
- * @param props
- * @param props.column
- * @param props.visit
- * @returns
- * @example
- */
-const selectNonOutliers =
-  ({ column, visit }: Readonly<Props>) =>
-  (state: AppState) =>
-    getNotOutliers(state, column, visit)
-
-/**
  * The function to generate render the numerical plot. The plot is currently configured to render only a box plot.
  *
  * The box plot is rendered with the outliers as red x's and the non-outliers as blue x's.
  *
  * The y-axis is jittered to prevent the x's from overlapping.
  * @category Component
- * @group Plot
- * @param props - The component's props
+ * @param props - The {@link Props props} for the component.
  * @param props.column - The column used to get the row for plotting
  * @param props.unit - The unit of measurement for the variable
  * @param props.variable - The variable name of the formatted column and visit for the plot
@@ -118,7 +85,7 @@ export default function NumericalPlot(
 ): Readonly<JSX.Element> {
   const { unit, variable } = props
 
-  const series = useAppSelector(selectSeries(props))
+  const series = useAppSelector(selectNumericalSeries(props))
 
   const outliers = useAppSelector(selectOutliers(props))
 

@@ -8,6 +8,8 @@
 
 > **isFlagValue**(`a`): `a is readonly [string, string, FlagReason]`
 
+This refinement checks if a string array is a flag value.
+
 ## Parameters
 
 ▪ **a**: readonly `string`[]
@@ -16,10 +18,12 @@
 
 `a is readonly [string, string, FlagReason]`
 
+True if the string array is a flag value.
+
 ## Example
 
 ```ts
-
+const isFlagValue = isFlagValue(['foo', 'bar', 'incorrect']) // true
 ```
 
 ## Source

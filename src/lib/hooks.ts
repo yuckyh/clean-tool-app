@@ -1,11 +1,8 @@
 import type { AppDispatch, AppState } from '@/app/store'
-import type { ColorTokens, DataGridProps } from '@fluentui/react-components'
+import type { ColorTokens } from '@fluentui/react-components'
 import type { TypedUseSelectorHook } from 'react-redux'
 
 import globalStyles from '@/app/global.css?inline'
-import { getIndexedIndex } from '@/lib/array'
-import { syncFlaggedCells } from '@/reducers/data'
-import { getFlaggedRows } from '@/selectors/data/rows'
 import {
   makeStaticStyles,
   useThemeClassName,
@@ -14,12 +11,9 @@ import {
 } from '@fluentui/react-components'
 import * as IO from 'fp-ts/IO'
 import * as O from 'fp-ts/Option'
-import * as RA from 'fp-ts/ReadonlyArray'
-import * as RS from 'fp-ts/ReadonlySet'
 import * as T from 'fp-ts/Task'
 import * as TO from 'fp-ts/TaskOption'
 import * as f from 'fp-ts/function'
-import * as S from 'fp-ts/string'
 import {
   useCallback,
   useEffect,
@@ -31,7 +25,6 @@ import {
 import { useDispatch, useSelector } from 'react-redux'
 
 import { asIO } from './fp'
-import * as Flag from './fp/Flag'
 import { dumpError } from './fp/logger'
 
 export const useAppDispatch: () => AppDispatch = useDispatch
@@ -138,72 +131,3 @@ export const useStorage = () => {
 }
 
 export const useGlobalStyles = makeStaticStyles(globalStyles)
-
-/**
- *
- * @param title
- * @param reason
- * @returns
- * @example
- */
-const selectFlaggedRows =
-  (title: string, reason: Flag.FlagReason) => (state: AppState) =>
-    getFlaggedRows(state, title, reason)
-
-/**
- *
- * @param reason
- * @param title
- * @param series
- * @returns
- * @example
- */
-export const useSyncedSelectionHandler = (
-  reason: Flag.FlagReason,
-  title: string,
-  series: readonly (readonly [string, number | string])[],
-) => {
-  const dispatch = useAppDispatch()
-
-  const flaggedRows = useAppSelector(selectFlaggedRows(title, reason))
-
-  const indices = useMemo(() => RA.map(getIndexedIndex)(series), [series])
-
-  return useCallback<Required<DataGridProps>['onSelectionChange']>(
-    (_event, { selectedItems }) => {
-      const shouldAdd = flaggedRows.size < selectedItems.size
-
-      const subtractor = (
-        shouldAdd ? selectedItems : flaggedRows
-      ) as ReadonlySet<string>
-
-      const subtractee = (
-        shouldAdd ? flaggedRows : selectedItems
-      ) as ReadonlySet<string>
-
-      const checkedPosList = f.pipe(
-        subtractor,
-        RS.difference(S.Eq)(subtractee),
-        RS.toReadonlyArray(S.Ord),
-        RA.filter((checkedPos) => RA.elem(S.Eq)(checkedPos)(indices)),
-      )
-
-      const payloads = f.pipe(
-        checkedPosList,
-        RA.map((currentIndex) => Flag.of(currentIndex, title, reason)),
-      )
-
-      const unfilteredPayloads = f.pipe(
-        checkedPosList,
-        RA.map((currentIndex) => Flag.of(currentIndex, title, 'outlier')),
-      )
-
-      return f.pipe(
-        [...payloads, ...unfilteredPayloads] as const,
-        RA.map(f.flow(syncFlaggedCells, (x) => dispatch(x), IO.of)),
-        IO.sequenceArray,
-      )()
-    },
-    [dispatch, flaggedRows, indices, reason, title],
-  )
-}

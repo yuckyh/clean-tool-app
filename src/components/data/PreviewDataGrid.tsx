@@ -40,7 +40,7 @@ const useClasses = makeStyles({
 })
 
 /**
- *
+ * The props for {@link PreviewDataGrid}.
  */
 interface Props {
   /**
@@ -51,7 +51,7 @@ interface Props {
 
 /**
  *
- * @param props
+ * @param props - The {@link Props props} for the component.
  * @param props.isOriginal
  * @example
  */

@@ -12,6 +12,8 @@
 
 ▪ **props**: `Readonly`\<[`Props`](../private/interfaces/Props.md)\>
 
+The [props](../private/interfaces/Props.md) for the component.
+
 ## Returns
 
 `false` \| `Element`

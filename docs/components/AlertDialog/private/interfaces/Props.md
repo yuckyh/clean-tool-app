@@ -6,6 +6,8 @@
 
 # Interface: Props
 
+The props for [AlertDialog](../../functions/AlertDialog.md).
+
 ## Contents
 
 - [Properties](Props.md#properties)
@@ -18,9 +20,11 @@
 
 > **noCancel**?: `boolean`
 
+Whether to show the cancel button.
+
 #### Source
 
-[Projects/clean-tool-app/src/components/AlertDialog.tsx:48](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/components/AlertDialog.tsx:61](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 
@@ -28,9 +32,11 @@
 
 > **onConfirm**?: `IO`\<`void`\>
 
+The function to run when the confirm button is clicked.
+
 #### Source
 
-[Projects/clean-tool-app/src/components/AlertDialog.tsx:52](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/components/AlertDialog.tsx:65](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

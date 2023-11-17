@@ -6,6 +6,7 @@ import type { RejectedAction } from '@/types/redux'
 import type { PayloadAction } from '@reduxjs/toolkit'
 import type { BookType, WorkSheet } from 'xlsx'
 
+import { deleteSheet, fetchSheet, postFile, sliceName } from '@/actions/data'
 import { head } from '@/lib/array'
 import { equals, typedIdentity } from '@/lib/fp'
 import * as CellItem from '@/lib/fp/CellItem'
@@ -22,10 +23,6 @@ import * as RR from 'fp-ts/ReadonlyRecord'
 import * as f from 'fp-ts/function'
 import * as S from 'fp-ts/string'
 import { utils } from 'xlsx'
-
-import { deleteSheet, fetchSheet, postFile, sliceName } from '../actions/data'
-
-// export type Flag = readonly [string, string, FlagReason]
 
 /**
  * The state struct for the sheet slice.
@@ -93,7 +90,7 @@ const initialState: Readonly<State> = {
     S.split(','),
     RA.filter(P.not(S.isEmpty)),
   ),
-  sheetName: getPersisted(sliceName, defaultValue),
+  sheetName: getPersisted('sheetName', defaultValue),
   sheets: f.pipe(getPersisted('sheets', '{}'), JSON.parse) as Record<
     string,
     WorkSheet
@@ -198,7 +195,7 @@ const sheetSlice = createSlice({
         visits,
       } = state
 
-      setPersisted(sliceName, sheetName)
+      setPersisted('sheetName', sheetName)
       setPersisted(fileNameKey, fileName)
       setPersisted(
         'data',

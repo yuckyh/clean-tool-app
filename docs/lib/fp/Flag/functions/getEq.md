@@ -8,6 +8,8 @@
 
 > **getEq**(`fa`): `Eq`\<`Readonly`\<[`Flag`](../interfaces/Flag.md)\>\>
 
+The function to get the Eq instance of its value.
+
 ## Parameters
 
 ▪ **fa**: `Eq`\<readonly [`string`, `string`, [`FlagReason`](../type-aliases/FlagReason.md)]\>

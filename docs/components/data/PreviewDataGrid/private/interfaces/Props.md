@@ -6,6 +6,8 @@
 
 # Interface: Props
 
+The props for [PreviewDataGrid](../../functions/PreviewDataGrid.md).
+
 ## Contents
 
 - [Properties](Props.md#properties)

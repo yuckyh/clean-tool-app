@@ -6,6 +6,10 @@
 
 # pages/EDA/Variable/Plot/NumericalPlot
 
+## File
+
+This file contains the numerical plot component.
+
 ## Index
 
 ### Component
@@ -14,7 +18,7 @@
 
 ### Other
 
-- [private](private/README.md)
+- [Props](interfaces/Props.md)
 
 ***
 

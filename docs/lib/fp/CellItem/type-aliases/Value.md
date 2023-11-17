@@ -8,9 +8,11 @@
 
 > **Value**: `number` \| `string`
 
+A value can be either a number or a string.
+
 ## Source
 
-[Projects/clean-tool-app/src/lib/fp/CellItem.ts:8](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/lib/fp/CellItem.ts:13](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

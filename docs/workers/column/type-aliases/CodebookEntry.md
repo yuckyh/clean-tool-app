@@ -13,13 +13,13 @@ The type of the [codebook](../../../data/README.md#codebook) entries.
 ## Example
 
 ```ts
-const entry: CodebookEntry = {
- category: 'quux',
- description: 'baz',
- name: 'foo',
- type: 'bar',
- unit: 'qux',
-}
+ const entry: CodebookEntry = {
+   category: 'quux',
+   description: 'baz',
+   name: 'foo',
+   type: 'bar',
+   unit: 'qux',
+ }
 ```
 
 ## Source

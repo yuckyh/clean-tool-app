@@ -8,15 +8,23 @@
 
 > **SheetUploadInput**(`props`): `ReactNode`
 
-**NOTE**: Exotic components are not callable.
+The sheet upload input component.
 
 ## Parameters
 
 ▪ **props**: [`Props`](../private/interfaces/Props.md) & `RefAttributes`\<[`SheetInputRef`](../interfaces/SheetInputRef.md)\>
 
+The [props](../private/interfaces/Props.md) for the component.
+
 ## Returns
 
 `ReactNode`
+
+## Example
+
+```tsx
+  <SheetUploadInput toasterId={useId('toaster')} ref={sheetInputRef} />
+```
 
 ## Source
 

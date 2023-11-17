@@ -8,13 +8,13 @@
 
 ## Index
 
-### Modules
+### Component
+
+- [FlagDataGrid](functions/FlagDataGrid.md)
+
+### Other
 
 - [private](private/README.md)
-
-### Functions
-
-- [IncorrectDataGrid](functions/IncorrectDataGrid.md)
 
 ***
 

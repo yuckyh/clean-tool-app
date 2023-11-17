@@ -6,6 +6,10 @@
 
 # components/matches/MatchCell
 
+## File
+
+This file contains the match cell component for the matches data grid.
+
 ## Index
 
 ### Modules

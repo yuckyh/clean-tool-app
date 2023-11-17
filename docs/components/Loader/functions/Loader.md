@@ -12,6 +12,8 @@
 
 ▪ **props**: `Readonly`\<[`Props`](../private/type-aliases/Props.md)\>
 
+The [props](../private/type-aliases/Props.md) for the component.
+
 ## Returns
 
 `Element`

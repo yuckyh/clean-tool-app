@@ -20,6 +20,7 @@ This file contains the global app selectors.
 - [getLocationPathParam](functions/getLocationPathParam.md)
 - [getPosParam](functions/getPosParam.md)
 - [getReasonParam](functions/getReasonParam.md)
+- [getRoutesParam](functions/getRoutesParam.md)
 - [getRowParam](functions/getRowParam.md)
 - [getTitleParam](functions/getTitleParam.md)
 - [getVisitParam](functions/getVisitParam.md)

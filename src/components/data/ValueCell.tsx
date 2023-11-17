@@ -1,8 +1,12 @@
-import type { AppState } from '@/app/store'
+/**
+ * @file This file contains the value cell component for the preview data grid.
+ * @module components/data/ValueCell
+ */
 
 import { useAppSelector } from '@/lib/hooks'
-import { getCell } from '@/selectors/data/cells'
 import { makeStyles, shorthands, tokens } from '@fluentui/react-components'
+
+import { selectCell } from './selectors'
 
 const useClasses = makeStyles({
   root: {
@@ -14,37 +18,27 @@ const useClasses = makeStyles({
 })
 
 /**
- *
+ * The props for {@link ValueCell}.
  */
 interface Props {
   /**
-   *
+   * The column position of the cell.
    */
   col: number
   /**
-   *
+   * The row position of the cell.
    */
   row: number
 }
 
 /**
- *
- * @param props
- * @param props.col
- * @param props.row
- * @returns
+ * This function renders the value cell for the preview data grid.
+ * @param props - The {@link Props props} for the component.
+ * @returns The component object.
  * @example
- */
-const selectCell =
-  ({ col, row }: Readonly<Props>) =>
-  (state: AppState) =>
-    getCell(state, col, row)
-
-/**
- *
- * @param props
- * @returns
- * @example
+ * ```tsx
+ *  <ValueCell col={col} row={row} />
+ * ```
  */
 export default function ValueCell(props: Readonly<Props>) {
   const classes = useClasses()

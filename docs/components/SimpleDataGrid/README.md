@@ -8,7 +8,7 @@
 
 ## File
 
-This file contains the simple data grid component.
+This file contains the base data grid component.
 
 ## Index
 

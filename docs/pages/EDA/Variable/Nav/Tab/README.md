@@ -8,13 +8,13 @@
 
 ## File
 
-This file contains the Tab component for the Nav component.
+This file contains the Tab component for the EDA variable nav component.
 
 ## Index
 
-### Modules
+### Interfaces
 
-- [private](private/README.md)
+- [Props](interfaces/Props.md)
 
 ### Functions
 

@@ -16,9 +16,9 @@ The selector to get whether the current location is at the EDA page.
 
 ▪ **state.data**: `Readonly`\<[`State`](../../../../reducers/data/interfaces/State.md)\>
 
-▪ **state.matches**: `Readonly`\<[`State`](../../progress/private/interfaces/State.md)\>
+▪ **state.matches**: `Readonly`\<[`State`](../../private/interfaces/State.md)\>
 
-▪ **state.progress**: `Readonly`\<[`State`](../../progress/private/interfaces/State.md)\>
+▪ **state.progress**: `Readonly`\<[`State`](../../private/interfaces/State.md)\>
 
 ▪ ...**params**: [`string`, `string`]
 

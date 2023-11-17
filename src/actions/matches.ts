@@ -1,5 +1,5 @@
 /**
- * @file This file contains the matches actions.
+ * @file This file contains the actions for the matches slice.
  * @module actions/matches
  */
 

@@ -1,3 +1,8 @@
+/**
+ * @file This file contains the header cell component for the preview data grid.
+ * @module components/ColumnMatching/HeaderCell
+ */
+
 import {
   Caption1,
   Subtitle1,
@@ -16,7 +21,7 @@ const useClasses = makeStyles({
 })
 
 /**
- *
+ * The props for {@link HeaderCell}.
  */
 interface Props {
   /**
@@ -30,12 +35,16 @@ interface Props {
 }
 
 /**
- *
- * @param props
- * @param props.header
- * @param props.subtitle
- * @returns
+ * This function renders the header cell for the preview data grid.
+ * @param props - The {@link Props props} for the component.
+ * @param props.header - The header text.
+ * @param props.subtitle - The header subtitle text.
+ * @category Components
+ * @returns The component object.
  * @example
+ * ```tsx
+ *  <HeaderCell header={header} subtitle={subtitle} />
+ * ```
  */
 export default function HeaderCell({ header, subtitle }: Readonly<Props>) {
   const classes = useClasses()

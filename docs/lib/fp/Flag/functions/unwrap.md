@@ -6,19 +6,31 @@
 
 # Function: unwrap()
 
-> **unwrap**(`__namedParameters`): readonly [`string`, `string`, [`FlagReason`](../type-aliases/FlagReason.md)]
+> **unwrap**(`flag`): readonly [`string`, `string`, [`FlagReason`](../type-aliases/FlagReason.md)]
+
+The function to unwrap a flag.
 
 ## Parameters
 
-▪ **\_\_namedParameters**: `Readonly`\<[`Flag`](../interfaces/Flag.md)\>
+▪ **flag**: `Readonly`\<[`Flag`](../interfaces/Flag.md)\>
+
+The flag instance.
 
 ## Returns
 
 readonly [`string`, `string`, [`FlagReason`](../type-aliases/FlagReason.md)]
 
+The value of the flag.
+
+## Example
+
+```ts
+const value = unwrap(flag)
+```
+
 ## Source
 
-[Projects/clean-tool-app/src/lib/fp/Flag.ts:46](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/lib/fp/Flag.ts:63](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

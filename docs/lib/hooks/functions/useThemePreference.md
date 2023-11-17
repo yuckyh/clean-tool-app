@@ -26,7 +26,7 @@
 
 ## Source
 
-[Projects/clean-tool-app/src/lib/hooks.ts:77](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/lib/hooks.ts:70](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

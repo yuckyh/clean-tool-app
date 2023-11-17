@@ -1,5 +1,5 @@
 /**
- * @file This file contains selectors for the data in the sheet slice.
+ * @file This file contains selectors for the data in the data slice.
  * @module selectors/data/data
  */
 

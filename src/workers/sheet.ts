@@ -61,16 +61,23 @@ export type SheetResponse<
 type Handler<Method extends SheetRequest['method'] = SheetRequest['method']> =
   RequestHandler<SheetRequest<Method>, SheetResponse<Method>>
 
+/**
+ * The function to get the root directory handle in the OPFS.
+ * @returns The root directory handle in the OPFS.
+ * @example
+ *  const rootHandle = await getRootHandle()
+ */
 const getRootHandle: T.Task<FileSystemDirectoryHandle> = f.constant(
   navigator.storage.getDirectory(),
 )
 
 /**
- *
- * @param fileName
- * @param create
- * @returns
+ * The function to get the root file handle in the OPFS.
+ * @param fileName - The name of the file to be retrieved.
+ * @param create - Whether to create the file if it doesn't exist.
+ * @returns The root file handle in the OPFS.
  * @example
+ *  const rootFileHandle = await getRootFileHandle('foo.xlsx')
  */
 const getRootFileHandle = (fileName: string, create?: boolean) =>
   f.pipe(
@@ -84,6 +91,15 @@ const getRootFileHandle = (fileName: string, create?: boolean) =>
     ),
   )
 
+/**
+ * The function to get the workbook from the OPFS.
+ * @param request - The {@link SheetRequest request} for the function.
+ * @param request.fileName - The name of the file to be retrieved.
+ * @param request.method - The request's method that was sent.
+ * @returns The {@link SheetResponse response} for the function with a workbook on success.
+ * @example
+ *  const response = get({ fileName: 'foo.xlsx', method: 'get' })
+ */
 const get: Handler<'get'> = async ({ fileName, method }) => {
   const workbook = await f.pipe(
     fileName,
@@ -96,6 +112,15 @@ const get: Handler<'get'> = async ({ fileName, method }) => {
   return { fileName, method, status: 'ok', workbook }
 }
 
+/**
+ * The function to post a file to the OPFS.
+ * @param request - The {@link SheetRequest request} for the function.
+ * @param request.file - The file to be posted.
+ * @param request.method - The request's method that was sent.
+ * @returns The {@link SheetResponse response} for the function.
+ * @example
+ *  const response = postFile({ file: file, method: 'postFile' })
+ */
 const postFile: Handler<'postFile'> = async ({ file, method }) => {
   const writableStream = await f.pipe(
     getRootFileHandle(file.name, true),
@@ -107,6 +132,15 @@ const postFile: Handler<'postFile'> = async ({ file, method }) => {
   return { fileName: file.name, method, status: 'ok' }
 }
 
+/**
+ * The function to remove a file from the OPFS.
+ * @param request - The {@link SheetRequest request} for the function.
+ * @param request.fileName - The name of the file to be removed.
+ * @param request.method - The request's method that was sent.
+ * @returns The {@link SheetResponse response} for the function.
+ * @example
+ *  const response = remove({ fileName: 'foo.xlsx', method: 'remove' })
+ */
 const remove: Handler<'remove'> = async ({ fileName, method }) => {
   await f
     .pipe(
@@ -118,12 +152,22 @@ const remove: Handler<'remove'> = async ({ fileName, method }) => {
   return { fileName, method, status: 'ok' }
 }
 
+/**
+ * The controller for the worker.
+ */
 const controller: Readonly<Controller<SheetRequest, SheetResponse>> = {
   get: get as Handler,
   postFile: postFile as Handler,
   remove: remove as Handler,
 }
 
+/**
+ * The main function for the worker.
+ * @param data - The {@link SheetRequest request} for the function.
+ * @returns The {@link SheetResponse response} for the function.
+ * @example
+ *  const response = main({ fileName: 'foo.xlsx', method: 'get' })
+ */
 const main = async (data: Readonly<SheetRequest>) => {
   const { method } = data
   try {

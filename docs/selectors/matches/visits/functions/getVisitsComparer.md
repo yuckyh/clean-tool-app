@@ -14,9 +14,9 @@
 
 ▪ **state.data**: `Readonly`\<[`State`](../../../../reducers/data/interfaces/State.md)\>
 
-▪ **state.matches**: `Readonly`\<[`State`](../../../progress/progress/private/interfaces/State.md)\>
+▪ **state.matches**: `Readonly`\<[`State`](../../../progress/private/interfaces/State.md)\>
 
-▪ **state.progress**: `Readonly`\<[`State`](../../../progress/progress/private/interfaces/State.md)\>
+▪ **state.progress**: `Readonly`\<[`State`](../../../progress/private/interfaces/State.md)\>
 
 ▪ ...**params**: []
 
@@ -38,7 +38,7 @@
 >
 > ### Source
 >
-> [Projects/clean-tool-app/src/selectors/matches/visits.ts:50](https://github.com/yuckyh/clean-tool-app/)
+> [Projects/clean-tool-app/src/selectors/matches/visits.ts:54](https://github.com/yuckyh/clean-tool-app/)
 >
 
 ## Source

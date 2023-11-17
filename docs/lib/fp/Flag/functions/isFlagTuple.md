@@ -8,6 +8,8 @@
 
 > **isFlagTuple**(`a`): `a is readonly [string, string, string]`
 
+This refinement checks if a string array is a flag tuple.
+
 ## Parameters
 
 ▪ **a**: readonly `string`[]
@@ -16,10 +18,12 @@
 
 `a is readonly [string, string, string]`
 
+True if the string array is a flag tuple.
+
 ## Example
 
 ```ts
-
+const isFlagTuple = isFlagTuple(['foo', 'bar', 'incorrect']) // true
 ```
 
 ## Source

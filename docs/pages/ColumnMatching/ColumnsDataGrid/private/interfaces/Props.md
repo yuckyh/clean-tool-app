@@ -6,7 +6,7 @@
 
 # Interface: Props
 
-The props for [ColumnsDataGrid](../../functions/ColumnsDataGrid.md).
+The props for [MatchesDataGrid](../../functions/MatchesDataGrid.md).
 
 ## Contents
 
@@ -24,7 +24,7 @@ The alert ref for the error alert used by the [ColumnMatching](../../../README.m
 
 #### Source
 
-[Projects/clean-tool-app/src/pages/ColumnMatching/ColumnsDataGrid.tsx:117](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/pages/ColumnMatching/MatchesDataGrid.tsx:117](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 
@@ -36,7 +36,7 @@ The alert ref for the info alert used by the [ColumnMatching](../../../README.md
 
 #### Source
 
-[Projects/clean-tool-app/src/pages/ColumnMatching/ColumnsDataGrid.tsx:121](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/pages/ColumnMatching/MatchesDataGrid.tsx:121](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

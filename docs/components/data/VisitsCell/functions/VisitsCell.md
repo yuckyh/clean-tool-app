@@ -12,9 +12,9 @@ This function is used to render the visits cell in the data grid.
 
 ## Parameters
 
-▪ **props**: `Readonly`\<[`Props`](../private/interfaces/Props.md)\>
+▪ **props**: `Readonly`\<[`Props`](../interfaces/Props.md)\>
 
-The [props](../private/interfaces/Props.md) for the component.
+The [props](../interfaces/Props.md) for the component.
 
 ## Returns
 
@@ -30,7 +30,7 @@ The compoonent object.
 
 ## Source
 
-[Projects/clean-tool-app/src/components/matches/VisitsCell.tsx:94](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/components/matches/VisitsCell.tsx:61](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 

@@ -6,6 +6,8 @@
 
 # Interface: Props
 
+The props for [ValueCell](../../functions/ValueCell.md).
+
 ## Contents
 
 - [Properties](Props.md#properties)
@@ -18,9 +20,11 @@
 
 > **col**: `number`
 
+The column position of the cell.
+
 #### Source
 
-[Projects/clean-tool-app/src/components/data/ValueCell.tsx:23](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/components/data/ValueCell.tsx:27](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 
@@ -28,9 +32,11 @@
 
 > **row**: `number`
 
+The row position of the cell.
+
 #### Source
 
-[Projects/clean-tool-app/src/components/data/ValueCell.tsx:27](https://github.com/yuckyh/clean-tool-app/)
+[Projects/clean-tool-app/src/components/data/ValueCell.tsx:31](https://github.com/yuckyh/clean-tool-app/)
 
 ***
 
