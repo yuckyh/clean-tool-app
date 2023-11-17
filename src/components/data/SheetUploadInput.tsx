@@ -129,9 +129,9 @@ const SheetUploadInput = forwardRef<SheetInputRef, Props>(
 
     useEffect(() => {
       const handleWorkerLoad = ({
-        data: { status },
+        data: { method, status },
       }: Readonly<MessageEvent<SheetResponse>>) => {
-        if (status === 'fail') {
+        if (status === 'fail' || method === 'get') {
           setFileTask('none')
           return
         }

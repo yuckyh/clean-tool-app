@@ -4,6 +4,7 @@
 */
 import type { RejectedAction } from '@/types/redux'
 import type { PayloadAction } from '@reduxjs/toolkit'
+import type { BookType, WorkSheet } from 'xlsx'
 
 import { head } from '@/lib/array'
 import { equals, typedIdentity } from '@/lib/fp'
@@ -17,11 +18,12 @@ import * as E from 'fp-ts/Either'
 import * as O from 'fp-ts/Option'
 import * as P from 'fp-ts/Predicate'
 import * as RA from 'fp-ts/ReadonlyArray'
+import * as RR from 'fp-ts/ReadonlyRecord'
 import * as f from 'fp-ts/function'
 import * as S from 'fp-ts/string'
-import { type BookType, utils } from 'xlsx'
+import { utils } from 'xlsx'
 
-import { deleteData, fetchSheet, postFile, sliceName } from '../actions/data'
+import { deleteSheet, fetchSheet, postFile, sliceName } from '../actions/data'
 
 // export type Flag = readonly [string, string, FlagReason]
 
@@ -59,7 +61,7 @@ export interface State {
   /**
    *
    */
-  sheetNames: readonly string[]
+  sheets: Readonly<Record<string, WorkSheet>>
   /**
    *
    */
@@ -67,7 +69,7 @@ export interface State {
 }
 
 const defaultValue = ''
-const keys = ['sheetNames', 'visits', 'originalColumns'] as const
+const keys = ['visits', 'originalColumns'] as const
 const fileNameKey = 'fileName'
 
 const initialState: Readonly<State> = {
@@ -87,18 +89,17 @@ const initialState: Readonly<State> = {
     RA.map((arg) => Flag.of(...arg)),
   ),
   originalColumns: f.pipe(
-    getPersisted(keys[2], defaultValue),
+    getPersisted(keys[1], defaultValue),
     S.split(','),
     RA.filter(P.not(S.isEmpty)),
   ),
   sheetName: getPersisted(sliceName, defaultValue),
-  sheetNames: f.pipe(
-    getPersisted(keys[0], defaultValue),
-    S.split(','),
-    RA.filter(P.not(S.isEmpty)),
-  ),
+  sheets: f.pipe(getPersisted('sheets', '{}'), JSON.parse) as Record<
+    string,
+    WorkSheet
+  >,
   visits: f.pipe(
-    getPersisted(keys[1], defaultValue),
+    getPersisted(keys[0], defaultValue),
     S.split(','),
     RA.filter(P.not(S.isEmpty)),
   ),
@@ -114,7 +115,6 @@ const sheetSlice = createSlice({
           RA.some(f.flow(O.fromNullable, O.isNone))([
             SheetNames,
             Sheets,
-            bookType,
           ] as const)
         ) {
           return state
@@ -122,8 +122,10 @@ const sheetSlice = createSlice({
 
         state.bookType = bookType
 
-        state.sheetNames = SheetNames ?? []
-        state.sheetName ||= state.sheetNames[0] ?? defaultValue
+        state.sheets = Sheets ?? {}
+
+        const sheetNames = RR.keys(state.sheets)
+        state.sheetName ||= sheetNames[0] ?? defaultValue
 
         state.visits = state.visits.length ? state.visits : ['1']
 
@@ -149,11 +151,11 @@ const sheetSlice = createSlice({
 
         return state
       })
-      .addCase(deleteData.fulfilled, (state) => {
+      .addCase(deleteSheet.fulfilled, (state) => {
         state.fileName = defaultValue
         state.sheetName = defaultValue
         state.originalColumns = []
-        state.sheetNames = []
+        state.sheets = {}
         state.data = []
         state.visits = []
         state.flaggedCells = []
@@ -172,6 +174,14 @@ const sheetSlice = createSlice({
   initialState,
   name: sliceName,
   reducers: {
+    deleteData: (state) => {
+      state.visits = []
+      state.originalColumns = []
+      state.data = []
+      state.flaggedCells = []
+
+      return state
+    },
     deleteVisits: (state) => {
       state.visits = []
 
@@ -184,7 +194,7 @@ const sheetSlice = createSlice({
         flaggedCells,
         originalColumns,
         sheetName,
-        sheetNames,
+        sheets,
         visits,
       } = state
 
@@ -195,8 +205,10 @@ const sheetSlice = createSlice({
         f.pipe(CellItem.unwrap, RA.map, f.apply(data), JSON.stringify),
       )
 
+      setPersisted('sheets', JSON.stringify(sheets))
+
       f.pipe(
-        [sheetNames, visits, originalColumns] as const,
+        [visits, originalColumns] as const,
         RA.map((x) => x.join(',')),
         RA.zip<string>,
         f.apply(keys),
@@ -263,6 +275,7 @@ const sheetSlice = createSlice({
 })
 
 export const {
+  deleteData,
   deleteVisits,
   saveSheetState,
   setSheetName,

@@ -7,7 +7,7 @@ import type { AlertRef } from '@/components/AlertDialog'
 import type { SheetInputRef } from '@/components/data/SheetUploadInput'
 import type { Progress } from '@/reducers/progress'
 
-import { deleteData, fetchSheet } from '@/actions/data'
+import { deleteSheet, fetchSheet } from '@/actions/data'
 import AlertDialog from '@/components/AlertDialog'
 import PreviewDataGrid from '@/components/data/PreviewDataGrid'
 import SheetPickerInput from '@/components/data/SheetPickerInput'
@@ -144,13 +144,13 @@ export default function Upload() {
 
   const handleResetConfirm = useCallback(() => {
     f.pipe(
-      [deleteProgress, deleteMatches, deleteData] as const,
+      [deleteProgress, deleteMatches] as const,
       RA.map(f.flow((x) => dispatch(x()), IO.of)),
       IO.sequenceArray,
       f.constant(sheetInputRef.current?.setFileTask('deleted')),
       IO.of,
       IO.tap(IO.of),
-      () => deleteData,
+      () => deleteSheet,
       T.of,
       T.tap((x) => f.pipe(dispatch(x()), promisedTask)),
       T.tapIO(() =>

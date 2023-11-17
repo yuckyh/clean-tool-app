@@ -1,14 +1,15 @@
 import type { DropdownProps } from '@fluentui/react-components'
 
 import { useAppDispatch, useAppSelector } from '@/lib/hooks'
+import { deleteData, setSheetName } from '@/reducers/data'
+import { deleteMatches } from '@/reducers/matches'
+import { deleteProgress } from '@/reducers/progress'
 import { getSheetName, getSheetNames } from '@/selectors/data/sheet'
 import { Dropdown, Field, Option, makeStyles } from '@fluentui/react-components'
 import * as IO from 'fp-ts/IO'
 import * as RA from 'fp-ts/ReadonlyArray'
 import * as f from 'fp-ts/function'
 import { useCallback } from 'react'
-
-import { setSheetName } from '../../reducers/data'
 
 const useClasses = makeStyles({
   input: {
@@ -33,7 +34,16 @@ export default function SheetPickerInput() {
   const handleSheetSelect: Required<DropdownProps>['onOptionSelect'] =
     useCallback(
       (_event, { optionValue = '' }) =>
-        f.pipe(optionValue, setSheetName, (x) => dispatch(x), IO.of),
+        f.pipe(
+          [
+            deleteData(),
+            deleteProgress(),
+            deleteMatches(),
+            setSheetName(optionValue),
+          ] as const,
+          RA.map(f.flow((x) => dispatch(x), IO.of)),
+          IO.sequenceArray,
+        ),
       [dispatch],
     )
 

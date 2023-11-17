@@ -1,14 +1,12 @@
 import { equals } from '@/lib/fp'
 import { add, multiply } from '@/lib/fp/number'
-import fuse from '@/lib/fuse'
+import { search } from '@/lib/fuse'
 import { Option } from '@fluentui/react-components'
 import * as O from 'fp-ts/Option'
 import * as P from 'fp-ts/Predicate'
 import * as RA from 'fp-ts/ReadonlyArray'
 import * as f from 'fp-ts/function'
 import * as S from 'fp-ts/string'
-
-const search = fuse.search.bind(fuse)
 
 /**
  *

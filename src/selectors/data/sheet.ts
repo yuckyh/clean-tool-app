@@ -58,6 +58,15 @@ export const getFileName = ({ data }: AppState) => data.fileName
 export const getSheetName = ({ data }: AppState) => data.sheetName
 
 /**
+ *
+ * @param state
+ * @param state.data
+ * @returns
+ * @example
+ */
+const getSheets = ({ data }: AppState) => data.sheets
+
+/**
  * Selector function to get the sheet names from the app state.
  * @param state - The application state {@link AppState}
  * @param state.data - The data slice of the state.
@@ -65,7 +74,7 @@ export const getSheetName = ({ data }: AppState) => data.sheetName
  * @example
  *  const sheetNames = useAppSelector(getSheetNames)
  */
-export const getSheetNames = ({ data }: AppState) => data.sheetNames
+export const getSheetNames = createSelector([getSheets], RR.keys)
 
 /**
  * Selector function to get whether the workbook has multiple sheets.

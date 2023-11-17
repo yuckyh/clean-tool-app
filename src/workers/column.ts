@@ -6,7 +6,7 @@ import type { codebook } from '@/data'
 import type * as Fuse from 'fuse.js'
 
 import { dumpError } from '@/lib/fp/logger'
-import fuse from '@/lib/fuse'
+import { search } from '@/lib/fuse'
 import * as RA from 'fp-ts/ReadonlyArray'
 
 /**
@@ -111,7 +111,7 @@ type Handler = RequestHandler<ColumnRequest, ColumnResponse>
  * @example
  */
 const get: Handler = ({ columns, method }) => ({
-  matches: RA.map(fuse.search.bind(fuse))(columns),
+  matches: RA.map(search)(columns),
   method,
   status: 'ok',
 })

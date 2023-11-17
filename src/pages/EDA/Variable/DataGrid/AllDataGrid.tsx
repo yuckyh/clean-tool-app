@@ -5,11 +5,11 @@ import type {
 } from '@fluentui/react-components'
 
 import SimpleDataGrid from '@/components/SimpleDataGrid'
-import { syncFlaggedCells } from '@/reducers/data'
 import { getIndexedIndex } from '@/lib/array'
 import { isCorrectNumber } from '@/lib/fp'
 import * as Flag from '@/lib/fp/Flag'
 import { useAppDispatch, useAppSelector } from '@/lib/hooks'
+import { syncFlaggedCells } from '@/reducers/data'
 import {
   Body2,
   Card,

@@ -102,7 +102,7 @@ export const postFile = createAsyncThunk(
 /**
  *
  */
-export const deleteData = createAsyncThunk(
+export const deleteSheet = createAsyncThunk(
   `${sliceName}/deleteSheet`,
   /**
    *

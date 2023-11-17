@@ -1,6 +1,6 @@
 import type { AppState } from '@/app/store'
 
-import { arrayLookup } from '@/lib/array'
+import { arrayLookup, recordLookup } from '@/lib/array'
 import { equals } from '@/lib/fp'
 import { refinedEq, stubEq } from '@/lib/fp/Eq'
 import * as Flag from '@/lib/fp/Flag'
@@ -18,7 +18,6 @@ import * as E from 'fp-ts/Either'
 import * as Eq from 'fp-ts/Eq'
 import * as O from 'fp-ts/Option'
 import * as RA from 'fp-ts/ReadonlyArray'
-import * as RR from 'fp-ts/ReadonlyRecord'
 import * as f from 'fp-ts/function'
 import * as S from 'fp-ts/string'
 import { useMemo } from 'react'
@@ -153,8 +152,7 @@ export default function PreviewCell(props: Readonly<Props>) {
         ),
         RA.head,
         O.getOrElse(() => Flag.of('', '', 'outlier')),
-        ({ value }) => RR.lookup(value[2])(classes),
-        O.getOrElse(() => ''),
+        recordLookup(classes)(''),
       ),
     [classes, flaggedCells, formattedColumn, index],
   )

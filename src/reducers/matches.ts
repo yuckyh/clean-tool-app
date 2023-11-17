@@ -17,7 +17,7 @@ import { arrayLookup, findIndex, getIndexedValue, head } from '@/lib/array'
 import { equals, isCorrectNumber, typedIdentity } from '@/lib/fp'
 import { stubOrd } from '@/lib/fp/Ord'
 import { add, multiply } from '@/lib/fp/number'
-import fuse from '@/lib/fuse'
+import  { search } from '@/lib/fuse'
 import { getPersisted, setPersisted } from '@/lib/localStorage'
 import { createSlice } from '@reduxjs/toolkit'
 import * as O from 'fp-ts/Option'
@@ -327,7 +327,7 @@ const { actions, reducer } = createSlice({
         arrayLookup(resultScores)(
           f.pipe(
             matchColumn,
-            fuse.search.bind(fuse),
+            search,
             RA.head,
             O.flatMap(({ score }) => O.fromNullable(score)),
             O.getOrElse(() => 0),

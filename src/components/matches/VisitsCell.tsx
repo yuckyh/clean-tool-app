@@ -7,6 +7,7 @@ import type { AlertRef } from '@/components/AlertDialog'
 import type { DropdownProps } from '@fluentui/react-components'
 
 import { indexDuplicateSearcher } from '@/lib/array'
+import { useLoggerEffect } from '@/lib/fp/logger'
 import { useAppDispatch, useAppSelector } from '@/lib/hooks'
 import { setMatchVisit } from '@/reducers/matches'
 import { getVisits } from '@/selectors/data/visits'
@@ -24,7 +25,6 @@ import * as IO from 'fp-ts/IO'
 import * as RA from 'fp-ts/ReadonlyArray'
 import * as f from 'fp-ts/function'
 import { type RefObject, useCallback } from 'react'
-import { useLoggerEffect } from '@/lib/fp/logger'
 
 const useClasses = makeStyles({
   root: {

@@ -44,7 +44,8 @@ import {
 export const saveStates = (dispatch: AppDispatch) =>
   f.pipe(
     [saveSheetState, saveMatchesState, saveProgressState] as const,
-    IO.traverseArray(f.flow((x) => dispatch(x()), IO.of)),
+    RA.map(f.flow((x) => dispatch(x()), IO.of)),
+    IO.sequenceArray,
   )()
 
 /**

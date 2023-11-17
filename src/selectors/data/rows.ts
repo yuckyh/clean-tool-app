@@ -79,7 +79,7 @@ export const getRow = createSelector(
  *
  */
 export const getIndexedRow = createSelector(
-  [getRow, getIndexRow],
+  [getIndexRow, getRow],
   RA.zip<string, string>,
 )
 
